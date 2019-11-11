@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table (name = "join_table")
+@Table (name = "join_group")
 public class JoinGroup
 {
     @Id
