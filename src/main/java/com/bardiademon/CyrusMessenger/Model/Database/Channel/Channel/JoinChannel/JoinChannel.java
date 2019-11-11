@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Entity
 @Table (name = "join_channel")
 public class JoinChannel
