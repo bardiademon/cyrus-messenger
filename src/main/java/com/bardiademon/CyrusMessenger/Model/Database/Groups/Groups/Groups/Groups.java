@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table (name = "groups")
+@Table (name = "users_groups")
 public class Groups
 {
     @Id

@@ -25,7 +25,7 @@ public class UserLogin
 
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
-    private List<MainAccount> mainAccount;
+    private MainAccount mainAccount;
 
     @Column (nullable = false)
     private boolean successful;
@@ -53,7 +53,7 @@ public class UserLogin
     {
     }
 
-    public UserLogin (List<MainAccount> mainAccount , boolean successful , String ip , LocalDateTime timeTTLI , LocalDateTime timeLogin , LocalDateTime timeLogout , String codeLogin)
+    public UserLogin (MainAccount mainAccount , boolean successful , String ip , LocalDateTime timeTTLI , LocalDateTime timeLogin , LocalDateTime timeLogout , String codeLogin)
     {
         this.mainAccount = mainAccount;
         this.successful = successful;
@@ -74,12 +74,12 @@ public class UserLogin
         this.id = id;
     }
 
-    public List<MainAccount> getMainAccount ()
+    public MainAccount getMainAccount ()
     {
         return mainAccount;
     }
 
-    public void setMainAccount (List<MainAccount> mainAccount)
+    public void setMainAccount (MainAccount mainAccount)
     {
         this.mainAccount = mainAccount;
     }

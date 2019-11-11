@@ -13,10 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table (name = "join_group")
+@Table (name = "list_join_group")
 public class JoinGroup
 {
     @Id
@@ -26,7 +25,7 @@ public class JoinGroup
 
     @ManyToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
-    private List<Groups> groups;
+    private Groups groups;
 
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
@@ -44,13 +43,15 @@ public class JoinGroup
     {
     }
 
-    public JoinGroup (List<Groups> groups , MainAccount mainAccount , LocalDateTime timeJoin , LocalDateTime timeLeave)
+    public JoinGroup (Groups groups , MainAccount mainAccount , LocalDateTime timeJoin , LocalDateTime timeLeave)
     {
         this.groups = groups;
         this.mainAccount = mainAccount;
         this.timeJoin = timeJoin;
         this.timeLeave = timeLeave;
     }
+
+
 
     public long getId ()
     {
@@ -62,12 +63,12 @@ public class JoinGroup
         this.id = id;
     }
 
-    public List<Groups> getGroups ()
+    public Groups getGroups ()
     {
         return groups;
     }
 
-    public void setGroups (List<Groups> groups)
+    public void setGroups (Groups groups)
     {
         this.groups = groups;
     }

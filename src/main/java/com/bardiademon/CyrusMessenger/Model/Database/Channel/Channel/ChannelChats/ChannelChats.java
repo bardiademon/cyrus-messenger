@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
@@ -26,15 +26,15 @@ public class ChannelChats
     @Column (unique = true, nullable = false)
     private long id;
 
-    @OneToOne
-    @JoinColumn (name = "from", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn (name = "message_from", referencedColumnName = "id")
     private MainAccount from;
 
-    @OneToOne
-    @JoinColumn (name = "to", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn (name = "message_to", referencedColumnName = "id")
     private MainAccount to;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn (name = "reply", referencedColumnName = "id")
     private ChannelChats reply;
 

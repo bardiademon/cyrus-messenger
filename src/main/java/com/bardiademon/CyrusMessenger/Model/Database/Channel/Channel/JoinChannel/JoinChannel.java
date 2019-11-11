@@ -13,10 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table (name = "join_channel")
+@Table (name = "list_join_channel")
 public class JoinChannel
 {
     @Id
@@ -26,7 +25,7 @@ public class JoinChannel
 
     @ManyToOne
     @JoinColumn (name = "id_channel", referencedColumnName = "id")
-    private List<Channel> channels;
+    private Channel channels;
 
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
@@ -44,7 +43,7 @@ public class JoinChannel
     {
     }
 
-    public JoinChannel (List<Channel> channels , MainAccount mainAccount , LocalDateTime timeJoin , LocalDateTime timeLeave)
+    public JoinChannel (Channel channels , MainAccount mainAccount , LocalDateTime timeJoin , LocalDateTime timeLeave)
     {
         this.channels = channels;
         this.mainAccount = mainAccount;
@@ -62,12 +61,12 @@ public class JoinChannel
         this.id = id;
     }
 
-    public List<Channel> getChannels ()
+    public Channel getChannels ()
     {
         return channels;
     }
 
-    public void setChannels (List<Channel> channels)
+    public void setChannels (Channel channels)
     {
         this.channels = channels;
     }

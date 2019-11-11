@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table (name = "channel")
+@Table (name = "users_channel")
 public class Channel
 {
     @Id
