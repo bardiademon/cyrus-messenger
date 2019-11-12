@@ -4,7 +4,15 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLe
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Table;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import java.time.LocalDateTime;
 
 @Entity

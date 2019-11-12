@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table (name = "user_login")
