@@ -30,55 +30,55 @@ public class SecurityUserProfile
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_cover", nullable = false)
-    private AccessLevel showCover;
+    private AccessLevel showCover = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_seen_message", nullable = false)
-    private AccessLevel showSeenMessage;
+    private AccessLevel showSeenMessage = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_last_seen", nullable = false)
-    private AccessLevel showLastSeen;
+    private AccessLevel showLastSeen = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_phone", nullable = false)
-    private AccessLevel showPhone;
+    private AccessLevel showPhone = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_username", nullable = false)
-    private AccessLevel showUsername;
+    private AccessLevel showUsername = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_bio", nullable = false)
-    private AccessLevel showBio;
+    private AccessLevel showBio = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_mylink", nullable = false)
-    private AccessLevel showMyLink;
+    private AccessLevel showMyLink = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_personal_information", nullable = false)
-    private AccessLevel showPersonalInformation;
+    private AccessLevel showPersonalInformation = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_name", nullable = false)
-    private AccessLevel showName;
+    private AccessLevel showName = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_in_search", nullable = false)
-    private AccessLevel showInSearch;
+    private AccessLevel showInSearch = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_in_group", nullable = false)
-    private AccessLevel showInGroup;
+    private AccessLevel showInGroup = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_in_channel", nullable = false)
-    private AccessLevel showInChannel;
+    private AccessLevel showInChannel = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_profile", nullable = false)
-    private AccessLevel showInProfile;
+    private AccessLevel showInProfile = AccessLevel.all;
 
     @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp

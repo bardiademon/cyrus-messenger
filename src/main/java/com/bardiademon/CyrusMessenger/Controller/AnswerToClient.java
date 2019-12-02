@@ -1,0 +1,48 @@
+package com.bardiademon.CyrusMessenger.Controller;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class AnswerToClient
+{
+
+    private int statusCode;
+    private Map<String, Object> message;
+    private boolean ok;
+
+
+    public AnswerToClient (int StatusCode , boolean Ok)
+    {
+        this.statusCode = StatusCode;
+        this.ok = Ok;
+        message = new LinkedHashMap<> ();
+    }
+
+    public static AnswerToClient error400 ()
+    {
+        return new AnswerToClient (200 , false);
+    }
+
+    public void put (String key , Object value)
+    {
+        message.put (key , value);
+    }
+
+    @JsonProperty ("status_code")
+    public int getStatusCode ()
+    {
+        return statusCode;
+    }
+
+    public Map<String, Object> getMessage ()
+    {
+        return message;
+    }
+
+    public boolean isOk ()
+    {
+        return ok;
+    }
+}

@@ -1,15 +1,15 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +23,6 @@ public class MainAccount
     @Column (unique = true, nullable = false)
     private long id;
 
-    @OneToOne
-    private SecurityUserProfile securityUserProfile;
-
     @Column (nullable = false)
     private String name;
 
@@ -34,13 +31,19 @@ public class MainAccount
     @Column (nullable = false)
     private String phone;
 
+    @Column (name = "active_phone", insertable = false)
+    private LocalDateTime activePhone;
+
     @Column (nullable = false, unique = true)
     private String username;
+
+    @Column (nullable = false)
+    private String password;
 
     @Column (unique = true)
     private String email;
 
-    @Column (name = "created_at", updatable = false)
+    @Column (name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -55,24 +58,29 @@ public class MainAccount
     @Column (name = "my_link")
     private String myLink;
 
+    @Column (nullable = false)
+    @Enumerated (EnumType.STRING)
+    private MainAccountStatus status = MainAccountStatus.phone_not_confirmed;
 
     public MainAccount ()
     {
     }
 
-    public MainAccount (SecurityUserProfile securityUserProfile , String name , String family , String phone , String username , String email , LocalDateTime createdAt , LocalDateTime updatedAt , String cover , String bio , String myLink)
+    public MainAccount (String name , String family , String phone , LocalDateTime activePhone , String username , String password , String email , LocalDateTime createdAt , LocalDateTime updatedAt , String cover , String bio , String myLink , MainAccountStatus status)
     {
-        this.securityUserProfile = securityUserProfile;
         this.name = name;
         this.family = family;
         this.phone = phone;
+        this.activePhone = activePhone;
         this.username = username;
+        this.password = password;
         this.email = email;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.cover = cover;
         this.bio = bio;
         this.myLink = myLink;
+        this.status = status;
     }
 
     public long getId ()
@@ -115,6 +123,16 @@ public class MainAccount
         this.phone = phone;
     }
 
+    public LocalDateTime getActivePhone ()
+    {
+        return activePhone;
+    }
+
+    public void setActivePhone (LocalDateTime activePhone)
+    {
+        this.activePhone = activePhone;
+    }
+
     public String getUsername ()
     {
         return username;
@@ -123,6 +141,16 @@ public class MainAccount
     public void setUsername (String username)
     {
         this.username = username;
+    }
+
+    public String getPassword ()
+    {
+        return password;
+    }
+
+    public void setPassword (String password)
+    {
+        this.password = password;
     }
 
     public String getEmail ()
@@ -185,13 +213,13 @@ public class MainAccount
         this.myLink = myLink;
     }
 
-    public SecurityUserProfile getSecurityUserProfile ()
+    public MainAccountStatus getStatus ()
     {
-        return securityUserProfile;
+        return status;
     }
 
-    public void setSecurityUserProfile (SecurityUserProfile securityUserProfile)
+    public void setStatus (MainAccountStatus status)
     {
-        this.securityUserProfile = securityUserProfile;
+        this.status = status;
     }
 }

@@ -70,7 +70,7 @@ public class SecurityUserChat
     @Column (name = "can_send_invitation")
     private AccessLevel canSendInvitation = AccessLevel.all;
 
-    @Column (name = "updated_at", nullable = false, insertable = false)
+    @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
