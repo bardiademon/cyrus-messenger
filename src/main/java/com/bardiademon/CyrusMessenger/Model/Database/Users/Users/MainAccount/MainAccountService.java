@@ -5,9 +5,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileRepository;
+import com.bardiademon.CyrusMessenger.bardiademon.PassEn;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,7 +36,7 @@ public class MainAccountService
         mainAccount.setFamily (registerRequest.family);
         mainAccount.setPhone (registerRequest.getPhone ());
         mainAccount.setUsername (registerRequest.username);
-        mainAccount.setPassword (((PasswordEncoder) new BCryptPasswordEncoder ()).encode (registerRequest.password));
+        mainAccount.setPassword (PassEn.encoder (registerRequest.password));
 
         MainAccount save = Repository.save (mainAccount);
 

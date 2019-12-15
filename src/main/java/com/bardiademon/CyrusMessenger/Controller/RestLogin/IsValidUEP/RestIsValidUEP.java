@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin;
+package com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Vaidation.VEmail;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RestIsValidUEP
 {
 
-    private LoginRequest request;
+    private IsValidUEPRequest request;
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
@@ -35,7 +35,7 @@ public class RestIsValidUEP
     }
 
     @RequestMapping ({"/" , ""})
-    public Object login (@RequestBody LoginRequest request , HttpServletRequest httpServletRequest)
+    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletRequest httpServletRequest)
     {
         this.request = request;
         if (!validation ()) return error (httpServletRequest , "Phone,Username,Email");
@@ -44,13 +44,13 @@ public class RestIsValidUEP
             MainAccount mainAccount;
             switch (request.getValueUEP ())
             {
-                case LoginRequest.PHONE:
+                case IsValidUEPRequest.PHONE:
                     mainAccount = mainAccountService.Repository.findByPhone (request.uep);
                     break;
-                case LoginRequest.EMAIL:
+                case IsValidUEPRequest.EMAIL:
                     mainAccount = mainAccountService.Repository.findByEmail (request.uep);
                     break;
-                case LoginRequest.USERNAME:
+                case IsValidUEPRequest.USERNAME:
                     mainAccount = mainAccountService.Repository.findByUsername (request.uep);
                     break;
                 default:
@@ -62,23 +62,25 @@ public class RestIsValidUEP
             {
                 AnswerToClient answerToClient = new AnswerToClient (200 , true);
                 userLoginService.validUEP (httpServletRequest.getRemoteAddr ());
-                answerToClient.put ("uep" , "valid");
-                answerToClient.put ("phone" , phoneIsActive (mainAccount.getId ()));
+                answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
+                answerToClient.put (KeyAnswer.is_valid.name () , true);
+                answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (mainAccount.getId ()));
                 return answerToClient;
             }
         }
     }
 
-    private String phoneIsActive (long id)
+    private boolean phoneIsActive (long id)
     {
         MainAccount byIdAndStatusNot = mainAccountService.Repository.findByIdAndStatusNot (id , MainAccountStatus.phone_not_confirmed);
-        return (byIdAndStatusNot != null) ? "confirmed" : "not confirmed";
+        return (byIdAndStatusNot != null);
     }
 
-    private AnswerToClient error (HttpServletRequest httpServletRequest , String invalid)
+    private AnswerToClient error (HttpServletRequest httpServletRequest , String uep)
     {
         AnswerToClient answerToClient = AnswerToClient.error400 ();
-        answerToClient.put ("uep" , String.format ("%s is invalid" , invalid));
+        answerToClient.put (KeyAnswer.uep.name () , uep);
+        answerToClient.put (KeyAnswer.is_valid.name () , false);
         userLoginService.loginFailed (httpServletRequest.getRemoteAddr ());
         return answerToClient;
     }
@@ -87,11 +89,17 @@ public class RestIsValidUEP
     {
         boolean isJustNumber = request.uep.matches ("[0-9]*");
 
-        if (new VPhone (request.uep , request.region).check ()) request.setValueUEP (LoginRequest.PHONE);
-        else if (!isJustNumber && new VUsername (request.uep).check ()) request.setValueUEP (LoginRequest.USERNAME);
-        else if (!isJustNumber && new VEmail (request.uep).check ()) request.setValueUEP (LoginRequest.EMAIL);
+        if (new VPhone (request.uep , request.region).check ()) request.setValueUEP (IsValidUEPRequest.PHONE);
+        else if (!isJustNumber && new VUsername (request.uep).check ())
+            request.setValueUEP (IsValidUEPRequest.USERNAME);
+        else if (!isJustNumber && new VEmail (request.uep).check ()) request.setValueUEP (IsValidUEPRequest.EMAIL);
         else return false;
 
         return true;
+    }
+
+    public enum KeyAnswer
+    {
+        uep, is_valid, phone_is_confirmed
     }
 }

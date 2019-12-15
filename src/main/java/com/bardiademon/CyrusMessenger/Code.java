@@ -18,7 +18,7 @@ public class Code
 
     private String code;
 
-    public Code (int NumberOfChar , boolean Number , boolean LowercaseLetters , boolean CapitalLetters , boolean Other)
+    private Code (int NumberOfChar , boolean Number , boolean LowercaseLetters , boolean CapitalLetters , boolean Other)
     {
         if (NumberOfChar > 8) this._charInt = NumberOfChar;
         this.isNumber = Number;
@@ -36,7 +36,14 @@ public class Code
     {
         Code code = new Code (NumberOfChar , true , false , false , false);
         code.createCode ();
-        return (Long.parseLong (code.code));
+        return (Long.parseLong (code.getCode ()));
+    }
+
+    public static String CreateCode ()
+    {
+        Code code = new Code (100 , true , true , true , true);
+        code.createCode ();
+        return code.getCode ();
     }
 
     @bardiademon

@@ -45,6 +45,9 @@ public class UserLogin
     @Column (name = "time_logout")
     private LocalDateTime timeLogout;
 
+    @Column (name = "credit_up")
+    private LocalDateTime creditUp;
+
     @Column (name = "code_login")
     private String codeLogin;
 
@@ -52,7 +55,7 @@ public class UserLogin
     {
     }
 
-    public UserLogin (MainAccount mainAccount , boolean successful , String ip , LocalDateTime timeTTLI , LocalDateTime timeLogin , LocalDateTime timeLogout , String codeLogin)
+    public UserLogin (MainAccount mainAccount , boolean successful , String ip , LocalDateTime timeTTLI , LocalDateTime timeLogin , LocalDateTime timeLogout , LocalDateTime creditUp , String codeLogin)
     {
         this.mainAccount = mainAccount;
         this.successful = successful;
@@ -60,6 +63,7 @@ public class UserLogin
         this.timeTTLI = timeTTLI;
         this.timeLogin = timeLogin;
         this.timeLogout = timeLogout;
+        this.creditUp = creditUp;
         this.codeLogin = codeLogin;
     }
 
@@ -141,5 +145,15 @@ public class UserLogin
     public void setCodeLogin (String codeLogin)
     {
         this.codeLogin = codeLogin;
+    }
+
+    public LocalDateTime getCreditUp ()
+    {
+        return creditUp;
+    }
+
+    public void setCreditUp (LocalDateTime creditUp)
+    {
+        this.creditUp = creditUp;
     }
 }

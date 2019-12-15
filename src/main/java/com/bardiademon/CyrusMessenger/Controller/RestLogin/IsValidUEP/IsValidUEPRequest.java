@@ -1,8 +1,8 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin;
+package com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public final class LoginRequest
+public class IsValidUEPRequest
 {
 
     @JsonIgnore
@@ -15,12 +15,12 @@ public final class LoginRequest
 
     public final String region;
 
-    public LoginRequest ()
+    public IsValidUEPRequest ()
     {
         this (null , null);
     }
 
-    public LoginRequest (String uep , String region)
+    public IsValidUEPRequest (String uep , String region)
     {
         this.uep = uep;
         this.region = region;

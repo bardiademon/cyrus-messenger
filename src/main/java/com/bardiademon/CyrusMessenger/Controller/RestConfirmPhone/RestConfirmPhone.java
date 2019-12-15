@@ -102,8 +102,6 @@ public class RestConfirmPhone
                 answerToClient.put ("answer" , "Phone confirmed");
             }
         }
-
-
         return answerToClient;
     }
 

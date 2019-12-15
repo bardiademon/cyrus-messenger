@@ -25,6 +25,11 @@ public class AnswerToClient
         return new AnswerToClient (200 , false);
     }
 
+    public static AnswerToClient ServerError ()
+    {
+        return new AnswerToClient (500 , false);
+    }
+
     public void put (String key , Object value)
     {
         message.put (key , value);
