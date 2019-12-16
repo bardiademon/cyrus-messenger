@@ -1,6 +1,6 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin.Login;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login;
 
-import com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP.IsValidUEPRequest;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsValidUEPRequest;
 
 public final class LoginRequest extends IsValidUEPRequest
 {

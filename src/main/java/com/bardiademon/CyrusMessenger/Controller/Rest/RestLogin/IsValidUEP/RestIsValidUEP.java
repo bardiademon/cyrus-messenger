@@ -1,9 +1,9 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VEmail;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VPhone;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VUsername;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountStatus;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping (value = "/login/is_valid_uep", method = RequestMethod.POST)
+@RequestMapping (value = "/api/login/is_valid_uep", method = RequestMethod.POST)
 public class RestIsValidUEP
 {
 
@@ -45,13 +45,13 @@ public class RestIsValidUEP
             switch (request.getValueUEP ())
             {
                 case IsValidUEPRequest.PHONE:
-                    mainAccount = mainAccountService.Repository.findByPhone (request.uep);
+                    mainAccount = mainAccountService.Repository.findByPhone (request.getUep ());
                     break;
                 case IsValidUEPRequest.EMAIL:
-                    mainAccount = mainAccountService.Repository.findByEmail (request.uep);
+                    mainAccount = mainAccountService.Repository.findByEmail (request.getUep ());
                     break;
                 case IsValidUEPRequest.USERNAME:
-                    mainAccount = mainAccountService.Repository.findByUsername (request.uep);
+                    mainAccount = mainAccountService.Repository.findByUsername (request.getUep ());
                     break;
                 default:
                     return error (httpServletRequest , "Phone,Username,Email");
@@ -87,12 +87,19 @@ public class RestIsValidUEP
 
     private boolean validation ()
     {
-        boolean isJustNumber = request.uep.matches ("[0-9]*");
+        boolean isJustNumber = request.getUep ().matches ("[0-9]*");
 
-        if (new VPhone (request.uep , request.region).check ()) request.setValueUEP (IsValidUEPRequest.PHONE);
-        else if (!isJustNumber && new VUsername (request.uep).check ())
+        VPhone vPhone;
+        if ((vPhone = new VPhone (request.getUep () , request.region)).check ())
+        {
+            request.setUep (vPhone.getPhone ());
+            request.setValueUEP (IsValidUEPRequest.PHONE);
+        }
+
+        else if (!isJustNumber && new VUsername (request.getUep ()).check ())
             request.setValueUEP (IsValidUEPRequest.USERNAME);
-        else if (!isJustNumber && new VEmail (request.uep).check ()) request.setValueUEP (IsValidUEPRequest.EMAIL);
+        else if (!isJustNumber && new VEmail (request.getUep ()).check ())
+            request.setValueUEP (IsValidUEPRequest.EMAIL);
         else return false;
 
         return true;

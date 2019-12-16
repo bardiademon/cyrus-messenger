@@ -1,11 +1,11 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
-import com.bardiademon.CyrusMessenger.Controller.RestRegister.RegisterRequest;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister.RegisterRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileRepository;
-import com.bardiademon.CyrusMessenger.bardiademon.PassEn;
+import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class MainAccountService
         mainAccount.setFamily (registerRequest.family);
         mainAccount.setPhone (registerRequest.getPhone ());
         mainAccount.setUsername (registerRequest.username);
-        mainAccount.setPassword (PassEn.encoder (registerRequest.password));
+        mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.password));
 
         MainAccount save = Repository.save (mainAccount);
 

@@ -1,9 +1,9 @@
-package com.bardiademon.CyrusMessenger.Controller.RestRegister;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VEmail;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VPhone;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VUsername;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping (value = "/register", method = RequestMethod.POST)
+@RequestMapping (value = "/api/register", method = RequestMethod.POST)
 public class RestRegister
 {
 

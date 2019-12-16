@@ -1,13 +1,13 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin.Login;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP.IsValidUEPRequest;
-import com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP.RestIsValidUEP;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsValidUEPRequest;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.RestIsValidUEP;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.bardiademon.PassEn;
+import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
-@RequestMapping (value = "/login", method = RequestMethod.POST)
+@RequestMapping (value = "/api/login", method = RequestMethod.POST)
 public class RestLogin
 {
 
-    private static final String KEY_CODE_LOGIN_COOKIE = "code_login";
+    public static final String KEY_CODE_LOGIN_COOKIE = "code_login";
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
@@ -36,7 +36,6 @@ public class RestLogin
         this.mainAccountService = _MainAccountService;
     }
 
-
     @RequestMapping ({"/" , ""})
     public AnswerToClient login (@RequestBody LoginRequest request , HttpServletRequest httpServletRequest , HttpServletResponse response)
     {
@@ -46,14 +45,19 @@ public class RestLogin
         Map<String, Object> message = isValid.getMessage ();
 
         boolean valid = (boolean) message.get (RestIsValidUEP.KeyAnswer.is_valid.name ());
-        boolean phoneIsConfirmed = (boolean) message.get (RestIsValidUEP.KeyAnswer.phone_is_confirmed.name ());
+
+        Object objPhoneIsConfirmed = message.get (RestIsValidUEP.KeyAnswer.phone_is_confirmed.name ());
+
+        boolean phoneIsConfirmed = false;
+        if (objPhoneIsConfirmed != null) phoneIsConfirmed = (boolean) objPhoneIsConfirmed;
+
         boolean isOk = isValid.isOk ();
         boolean is200 = isValid.getStatusCode () == 200;
         if (isOk && is200 && valid && phoneIsConfirmed)
         {
             AnswerToClient answerToClient;
             MainAccount mainAccount;
-            if ((mainAccount = checkPassword (request.getValueUEP () , request.uep , request.getPassword ())) != null)
+            if ((mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
             {
                 int counterCreateCode = 0;
 
@@ -62,7 +66,7 @@ public class RestLogin
                 int MAX_CREATE_CODE = 5;
                 while ((counterCreateCode++) <= MAX_CREATE_CODE)
                 {
-                    code = Code.CreateCode ();
+                    code = Code.CreateCodeLogin ();
                     if (userLoginService.Repository.findByCodeLogin (code) == null)
                     {
                         createCode = true;
@@ -88,6 +92,7 @@ public class RestLogin
             {
                 answerToClient = new AnswerToClient (400 , false);
                 answerToClient.put (KeyAnswer.password_is_valid.name () , false);
+                answerToClient.put ("PassEn" , new Hash256 ().hash (request.getPassword ()));
             }
             return answerToClient;
         }
@@ -96,7 +101,7 @@ public class RestLogin
 
     private MainAccount checkPassword (String uep , String valueEup , String password)
     {
-        password = PassEn.encoder (password);
+        password = (new Hash256 ()).hash (password);
 
         MainAccount mainAccount = null;
         switch (uep)

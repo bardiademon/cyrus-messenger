@@ -30,6 +30,13 @@ public class AnswerToClient
         return new AnswerToClient (500 , false);
     }
 
+    public static AnswerToClient NotLoggedIn ()
+    {
+        AnswerToClient answerToClient = new AnswerToClient (400 , false);
+        answerToClient.put ("answer" , "not logged in");
+        return answerToClient;
+    }
+
     public void put (String key , Object value)
     {
         message.put (key , value);

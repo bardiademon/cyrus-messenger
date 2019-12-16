@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.RestLogin.IsValidUEP;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -11,7 +11,7 @@ public class IsValidUEPRequest
     private String valueUEP;
 
     // UEP => Username , Email , Phone
-    public final String uep;
+    private String uep;
 
     public final String region;
 
@@ -34,5 +34,15 @@ public class IsValidUEPRequest
     public void setValueUEP (String valueUEP)
     {
         this.valueUEP = valueUEP;
+    }
+
+    public String getUep ()
+    {
+        return uep;
+    }
+
+    public void setUep (String uep)
+    {
+        this.uep = uep;
     }
 }

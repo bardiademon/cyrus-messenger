@@ -41,7 +41,14 @@ public class Code
 
     public static String CreateCode ()
     {
-        Code code = new Code (100 , true , true , true , true);
+        Code code = new Code (8 , true , true , true , true);
+        code.createCode ();
+        return code.getCode ();
+    }
+
+    public static String CreateCodeLogin ()
+    {
+        Code code = new Code (100 , true , true , true , false);
         code.createCode ();
         return code.getCode ();
     }

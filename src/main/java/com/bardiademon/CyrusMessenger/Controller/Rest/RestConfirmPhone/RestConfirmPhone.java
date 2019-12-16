@@ -1,7 +1,7 @@
-package com.bardiademon.CyrusMessenger.Controller.RestConfirmPhone;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestConfirmPhone;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Vaidation.VPhone;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Model.AfterConfirm;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = "/confirm_phone", method = RequestMethod.POST)
+@RequestMapping (value = "/api/confirm_phone", method = RequestMethod.POST)
 public class RestConfirmPhone
 {
 

@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Vaidation;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation;
 
 import java.util.regex.Pattern;
 

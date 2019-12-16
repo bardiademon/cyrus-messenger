@@ -37,11 +37,11 @@ public class UserLoginService
         userLogin.setIp (ip);
         userLogin.setCodeLogin (code);
         userLogin.setMainAccount (mainAccount);
-
-        final int CREADIT_UP = 1;
-        creditUp = LocalDateTime.now ().plusDays (CREADIT_UP);
+        userLogin.setTimeLogin (LocalDateTime.now ());
+        creditUp = LocalDateTime.now ().plusDays (1);
         userLogin.setCreditUp (creditUp);
         userLogin.setSuccessful (true);
+
         return ((Repository.save (userLogin)) != null);
     }
 

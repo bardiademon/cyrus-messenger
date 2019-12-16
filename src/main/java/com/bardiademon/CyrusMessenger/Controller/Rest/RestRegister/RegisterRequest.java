@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.RestRegister;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 public final class RegisterRequest
 {
