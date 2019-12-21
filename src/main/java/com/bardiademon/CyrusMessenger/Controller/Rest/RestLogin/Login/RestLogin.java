@@ -57,7 +57,7 @@ public class RestLogin
         {
             AnswerToClient answerToClient;
             MainAccount mainAccount;
-            if ((mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
+            if ((request.getPassword () != null && !request.getPassword ().equals ("")) && (mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
             {
                 int counterCreateCode = 0;
 
@@ -92,7 +92,6 @@ public class RestLogin
             {
                 answerToClient = new AnswerToClient (400 , false);
                 answerToClient.put (KeyAnswer.password_is_valid.name () , false);
-                answerToClient.put ("PassEn" , new Hash256 ().hash (request.getPassword ()));
             }
             return answerToClient;
         }
@@ -101,6 +100,8 @@ public class RestLogin
 
     private MainAccount checkPassword (String uep , String valueEup , String password)
     {
+        if (password == null || password.equals ("")) return null;
+
         password = (new Hash256 ()).hash (password);
 
         MainAccount mainAccount = null;

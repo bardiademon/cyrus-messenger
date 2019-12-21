@@ -20,9 +20,14 @@ public class AnswerToClient
         message = new LinkedHashMap<> ();
     }
 
+    public static AnswerToClient OK ()
+    {
+        return new AnswerToClient (200 , true);
+    }
+
     public static AnswerToClient error400 ()
     {
-        return new AnswerToClient (200 , false);
+        return new AnswerToClient (400 , false);
     }
 
     public static AnswerToClient ServerError ()

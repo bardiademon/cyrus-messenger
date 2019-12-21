@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.SMS.SendSMS;
 
-import com.bardiademon.CyrusMessenger.bardiademon.Default;
+import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import com.bardiademon.CyrusMessenger.Code;
 
 public class ConfirmPhone extends Send

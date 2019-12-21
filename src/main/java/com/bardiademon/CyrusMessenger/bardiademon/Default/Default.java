@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.bardiademon;
+package com.bardiademon.CyrusMessenger.bardiademon.Default;
 
 public abstract class Default
 {

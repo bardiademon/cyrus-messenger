@@ -9,7 +9,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.Con
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.SMS.SendSMS.ConfirmPhone;
-import com.bardiademon.CyrusMessenger.bardiademon.Default;
+import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -87,22 +87,29 @@ public class RestIsValidUEP
 
     private boolean validation ()
     {
-        boolean isJustNumber = request.getUep ().matches ("[0-9]*");
-
-        VPhone vPhone;
-        if ((vPhone = new VPhone (request.getUep () , request.region)).check ())
+        try
         {
-            request.setUep (vPhone.getPhone ());
-            request.setValueUEP (IsValidUEPRequest.PHONE);
+            boolean isJustNumber = request.getUep ().matches ("[0-9]*");
+
+            VPhone vPhone;
+            if ((vPhone = new VPhone (request.getUep () , request.region)).check ())
+            {
+                request.setUep (vPhone.getPhone ());
+                request.setValueUEP (IsValidUEPRequest.PHONE);
+            }
+
+            else if (!isJustNumber && new VUsername (request.getUep ()).check ())
+                request.setValueUEP (IsValidUEPRequest.USERNAME);
+            else if (!isJustNumber && new VEmail (request.getUep ()).check ())
+                request.setValueUEP (IsValidUEPRequest.EMAIL);
+            else return false;
+
+            return true;
         }
-
-        else if (!isJustNumber && new VUsername (request.getUep ()).check ())
-            request.setValueUEP (IsValidUEPRequest.USERNAME);
-        else if (!isJustNumber && new VEmail (request.getUep ()).check ())
-            request.setValueUEP (IsValidUEPRequest.EMAIL);
-        else return false;
-
-        return true;
+        catch (NullPointerException e)
+        {
+            return false;
+        }
     }
 
     public enum KeyAnswer

@@ -3,12 +3,11 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping (value = "/api/info_user", method = RequestMethod.POST)
@@ -31,13 +30,14 @@ public class InfoUser
         if (codeLogin.equals ("")) answerToClient = AnswerToClient.NotLoggedIn ();
         else
         {
-            UserLogin validCode = userLoginService.Repository.findValidCode (codeLogin , LocalDateTime.now ().plusMinutes (5));
-            if (validCode == null) answerToClient = AnswerToClient.NotLoggedIn ();
+            VCodeLogin vCodeLogin = new VCodeLogin ();
+            if (!vCodeLogin.IsValid (userLoginService.Repository , codeLogin))
+                answerToClient = AnswerToClient.NotLoggedIn ();
             else
             {
                 if (requestInfoUser.atLeastOne ())
                 {
-                    MainAccount mainAccount = validCode.getMainAccount ();
+                    MainAccount mainAccount = vCodeLogin.getMainAccount ();
 
                     answerToClient = new AnswerToClient (200 , true);
 

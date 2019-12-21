@@ -53,6 +53,13 @@ public class Code
         return code.getCode ();
     }
 
+    public static String Name ()
+    {
+        Code code = new Code (50 , true , true , true , false);
+        code.createCode ();
+        return code.getCode ();
+    }
+
     @bardiademon
     public void createCode ()
     {

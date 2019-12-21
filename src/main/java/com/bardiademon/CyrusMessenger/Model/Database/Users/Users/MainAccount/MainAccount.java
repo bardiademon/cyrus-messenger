@@ -222,4 +222,9 @@ public class MainAccount
     {
         this.status = status;
     }
+
+    public boolean hasCover ()
+    {
+        return (cover != null && !cover.equals (""));
+    }
 }
