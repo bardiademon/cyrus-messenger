@@ -37,12 +37,14 @@ public class RestLogin
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient login (@RequestBody LoginRequest request , HttpServletRequest httpServletRequest , HttpServletResponse response)
+    public AnswerToClient login (@RequestBody LoginRequest request , HttpServletRequest req , HttpServletResponse res)
     {
-        RestIsValidUEP restIsValidUEP = new RestIsValidUEP (userLoginService , mainAccountService);
-        AnswerToClient isValid = restIsValidUEP.isValid (request.getIsValidUEPRequest () , httpServletRequest);
+        AnswerToClient answerToClient;
 
-        Map<String, Object> message = isValid.getMessage ();
+        RestIsValidUEP restIsValidUEP = new RestIsValidUEP (userLoginService , mainAccountService);
+        answerToClient = restIsValidUEP.isValid (request.getIsValidUEPRequest () , req , res);
+
+        Map<String, Object> message = answerToClient.getMessage ();
 
         boolean valid = (boolean) message.get (RestIsValidUEP.KeyAnswer.is_valid.name ());
 
@@ -51,11 +53,10 @@ public class RestLogin
         boolean phoneIsConfirmed = false;
         if (objPhoneIsConfirmed != null) phoneIsConfirmed = (boolean) objPhoneIsConfirmed;
 
-        boolean isOk = isValid.isOk ();
-        boolean is200 = isValid.getStatusCode () == 200;
+        boolean isOk = answerToClient.isOk ();
+        boolean is200 = answerToClient.getStatusCode () == 200;
         if (isOk && is200 && valid && phoneIsConfirmed)
         {
-            AnswerToClient answerToClient;
             MainAccount mainAccount;
             if ((request.getPassword () != null && !request.getPassword ().equals ("")) && (mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
             {
@@ -76,13 +77,13 @@ public class RestLogin
                 if (createCode)
                 {
                     assert code != null;
-                    if (userLoginService.newLogin (code , mainAccount , httpServletRequest.getRemoteAddr ()))
+                    if (userLoginService.newLogin (code , mainAccount , req.getRemoteAddr ()))
                     {
                         answerToClient = new AnswerToClient (200 , true);
                         answerToClient.put (KeyAnswer.is_login.name () , true);
                         answerToClient.put (KeyAnswer.code_login.name () , code);
                         answerToClient.put (KeyAnswer.credit_up.name () , userLoginService.getCreditUp ());
-                        response.addCookie (new Cookie (KEY_CODE_LOGIN_COOKIE , code));
+                        res.addCookie (new Cookie (KEY_CODE_LOGIN_COOKIE , code));
                     }
                     else answerToClient = AnswerToClient.ServerError ();
                 }
@@ -93,9 +94,9 @@ public class RestLogin
                 answerToClient = new AnswerToClient (400 , false);
                 answerToClient.put (KeyAnswer.password_is_valid.name () , false);
             }
-            return answerToClient;
         }
-        else return isValid;
+        answerToClient.setResponse (res);
+        return answerToClient;
     }
 
     private MainAccount checkPassword (String uep , String valueEup , String password)

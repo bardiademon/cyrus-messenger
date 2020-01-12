@@ -19,22 +19,30 @@ public class RequestInfoUser
     @JsonProperty ("get_phone")
     private boolean getPhone;
 
+    @JsonProperty ("get_mylink")
+    private boolean getMyLink;
+
+    @JsonProperty ("get_bio")
+    private boolean getBio;
+
     public RequestInfoUser ()
     {
     }
 
-    public RequestInfoUser (boolean getName , boolean getFamily , boolean getUsername , boolean getEmail , boolean getPhone)
+    public RequestInfoUser (boolean getName , boolean getFamily , boolean getUsername , boolean getEmail , boolean getPhone , boolean getMyLink , boolean getBio)
     {
         this.getName = getName;
         this.getFamily = getFamily;
         this.getUsername = getUsername;
         this.getEmail = getEmail;
         this.getPhone = getPhone;
+        this.getMyLink = getMyLink;
+        this.getBio = getBio;
     }
 
     public boolean atLeastOne ()
     {
-        return (isGetName () || isGetFamily () || isGetUsername () || isGetEmail () || isGetPhone ());
+        return (isGetName () || isGetFamily () || isGetUsername () || isGetEmail () || isGetPhone () || isGetMyLink () || isGetBio ());
     }
 
     public boolean isGetName ()
@@ -85,5 +93,25 @@ public class RequestInfoUser
     public void setGetPhone (boolean getPhone)
     {
         this.getPhone = getPhone;
+    }
+
+    public boolean isGetMyLink ()
+    {
+        return getMyLink;
+    }
+
+    public void setGetMyLink (boolean getMyLink)
+    {
+        this.getMyLink = getMyLink;
+    }
+
+    public boolean isGetBio ()
+    {
+        return getBio;
+    }
+
+    public void setGetBio (boolean getBio)
+    {
+        this.getBio = getBio;
     }
 }

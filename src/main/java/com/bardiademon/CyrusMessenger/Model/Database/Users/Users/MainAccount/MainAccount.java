@@ -1,11 +1,13 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
@@ -66,7 +68,7 @@ public class MainAccount
     {
     }
 
-    public MainAccount (String name , String family , String phone , LocalDateTime activePhone , String username , String password , String email , LocalDateTime createdAt , LocalDateTime updatedAt , String cover , String bio , String myLink , MainAccountStatus status)
+    public MainAccount (SecurityUserChat securityUserChat , SecurityUserProfile securityUserProfile , String name , String family , String phone , LocalDateTime activePhone , String username , String password , String email , LocalDateTime createdAt , LocalDateTime updatedAt , String cover , String bio , String myLink , MainAccountStatus status)
     {
         this.name = name;
         this.family = family;

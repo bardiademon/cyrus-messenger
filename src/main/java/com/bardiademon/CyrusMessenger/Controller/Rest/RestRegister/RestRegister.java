@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping (value = "/api/register", method = RequestMethod.POST)
 public class RestRegister
@@ -30,7 +32,7 @@ public class RestRegister
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient register (@RequestBody RegisterRequest registerRequest)
+    public AnswerToClient register (HttpServletResponse res , @RequestBody RegisterRequest registerRequest)
     {
         this.registerRequest = registerRequest;
 
@@ -80,6 +82,7 @@ public class RestRegister
                 else setError400 ("Username" , "invalid");
             }
         }
+        answerToClient.setResponse (res);
         return answerToClient;
     }
 

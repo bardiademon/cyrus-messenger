@@ -8,6 +8,8 @@ import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequestMapping (value = "/api/info_user", method = RequestMethod.POST)
@@ -23,7 +25,7 @@ public class InfoUser
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient getInfoUser (@RequestBody RequestInfoUser requestInfoUser ,
+    public AnswerToClient getInfoUser (HttpServletResponse res , @RequestBody RequestInfoUser requestInfoUser ,
                                        @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
@@ -55,15 +57,23 @@ public class InfoUser
 
                     if (requestInfoUser.isGetPhone ())
                         answerToClient.put (KeyAnswer.phone.name () , mainAccount.getPhone ());
+
+                    if (requestInfoUser.isGetMyLink ())
+                        answerToClient.put (KeyAnswer.mylink.name () , mainAccount.getMyLink ());
+
+                    if (requestInfoUser.isGetBio ())
+                        answerToClient.put (KeyAnswer.bio.name () , mainAccount.getBio ());
                 }
                 else answerToClient = AnswerToClient.error400 ();
             }
         }
+        answerToClient.setResponse (res);
         return answerToClient;
     }
 
     private enum KeyAnswer
     {
-        name, family, username, email, phone
+        name, family, username, email, phone,
+        bio, mylink
     }
 }

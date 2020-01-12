@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 
@@ -17,6 +18,8 @@ import javax.persistence.EnumType;
 @Table (name = "show_profile_for")
 public class ShowProfileFor
 {
+    public final static String IsolationWith = ",";
+
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
@@ -25,6 +28,10 @@ public class ShowProfileFor
     @OneToOne
     @JoinColumn (name = "id_security_profile", referencedColumnName = "id")
     private SecurityUserProfile securityUserProfile;
+
+    @OneToOne
+    @JoinColumn (name = "id_security_chat", referencedColumnName = "id")
+    private SecurityUserChat securityUserChat;
 
     @Enumerated (value = EnumType.STRING)
     @Column (nullable = false)
@@ -43,9 +50,10 @@ public class ShowProfileFor
     {
     }
 
-    public ShowProfileFor (SecurityUserProfile securityUserProfile , AccessLevel security , String showJust , String showJustFriends , String showAllExcept)
+    public ShowProfileFor (SecurityUserProfile securityUserProfile , SecurityUserChat securityUserChat , AccessLevel security , String showJust , String showJustFriends , String showAllExcept)
     {
         this.securityUserProfile = securityUserProfile;
+        this.securityUserChat = securityUserChat;
         this.security = security;
         this.showJust = showJust;
         this.showJustFriends = showJustFriends;
@@ -65,6 +73,21 @@ public class ShowProfileFor
     public SecurityUserProfile getSecurityUserProfile ()
     {
         return securityUserProfile;
+    }
+
+    public static String getIsolationWith ()
+    {
+        return IsolationWith;
+    }
+
+    public SecurityUserChat getSecurityUserChat ()
+    {
+        return securityUserChat;
+    }
+
+    public void setSecurityUserChat (SecurityUserChat securityUserChat)
+    {
+        this.securityUserChat = securityUserChat;
     }
 
     public void setSecurityUserProfile (SecurityUserProfile securityUserProfile)

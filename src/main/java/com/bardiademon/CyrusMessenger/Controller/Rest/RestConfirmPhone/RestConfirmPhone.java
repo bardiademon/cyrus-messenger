@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
@@ -33,7 +34,7 @@ public class RestConfirmPhone
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient confirmPhone (@RequestParam String phone , @RequestParam String region)
+    public AnswerToClient confirmPhone (HttpServletResponse res , @RequestParam String phone , @RequestParam String region)
     {
         AnswerToClient answerToClient;
         if (phone == null)
@@ -84,11 +85,12 @@ public class RestConfirmPhone
                 }
             }
         }
+        answerToClient.setResponse (res);
         return answerToClient;
     }
 
     @RequestMapping (value = "code", method = RequestMethod.POST)
-    public AnswerToClient getCode (@RequestParam String id , @RequestParam String code , @RequestParam String phone)
+    public AnswerToClient getCode (HttpServletResponse res , @RequestParam String id , @RequestParam String code , @RequestParam String phone)
     {
         AnswerToClient answerToClient = new AnswerToClient (400 , false);
         if (code.matches ("[0-9]*") && id.matches ("[0-9]*"))
@@ -102,6 +104,7 @@ public class RestConfirmPhone
                 answerToClient.put ("answer" , "Phone confirmed");
             }
         }
+        answerToClient.setResponse (res);
         return answerToClient;
     }
 

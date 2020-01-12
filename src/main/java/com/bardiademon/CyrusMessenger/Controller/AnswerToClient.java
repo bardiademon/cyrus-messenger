@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class AnswerToClient
     private int statusCode;
     private Map<String, Object> message;
     private boolean ok;
-
+    private HttpServletResponse response;
 
     public AnswerToClient (int StatusCode , boolean Ok)
     {
@@ -40,6 +41,17 @@ public class AnswerToClient
         AnswerToClient answerToClient = new AnswerToClient (400 , false);
         answerToClient.put ("answer" , "not logged in");
         return answerToClient;
+    }
+
+    public void setResponse (HttpServletResponse response)
+    {
+        this.response = response;
+        setStatusCode ();
+    }
+
+    private void setStatusCode ()
+    {
+        response.setStatus (getStatusCode ());
     }
 
     public void put (String key , Object value)

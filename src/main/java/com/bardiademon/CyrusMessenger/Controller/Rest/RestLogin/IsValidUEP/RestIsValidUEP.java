@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -35,13 +36,15 @@ public class RestIsValidUEP
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletRequest httpServletRequest)
+    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletRequest req , HttpServletResponse res)
     {
+        AnswerToClient answerToClient = null;
         this.request = request;
-        if (!validation ()) return error (httpServletRequest , "Phone,Username,Email");
+        if (!validation ()) answerToClient = error (req , "Phone,Username,Email");
         else
         {
-            MainAccount mainAccount;
+            boolean error = false;
+            MainAccount mainAccount = null;
             switch (request.getValueUEP ())
             {
                 case IsValidUEPRequest.PHONE:
@@ -54,20 +57,25 @@ public class RestIsValidUEP
                     mainAccount = mainAccountService.Repository.findByUsername (request.getUep ());
                     break;
                 default:
-                    return error (httpServletRequest , "Phone,Username,Email");
+                    answerToClient = error (req , "Phone,Username,Email");
+                    error = true;
             }
-            if (mainAccount == null)
-                return error (httpServletRequest , this.request.getValueUEP ());
-            else
+            if (!error)
             {
-                AnswerToClient answerToClient = new AnswerToClient (200 , true);
-                userLoginService.validUEP (httpServletRequest.getRemoteAddr ());
-                answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
-                answerToClient.put (KeyAnswer.is_valid.name () , true);
-                answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (mainAccount.getId ()));
-                return answerToClient;
+                if (mainAccount == null)
+                    answerToClient = error (req , this.request.getValueUEP ());
+                else
+                {
+                    answerToClient = new AnswerToClient (200 , true);
+                    userLoginService.validUEP (req.getRemoteAddr ());
+                    answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
+                    answerToClient.put (KeyAnswer.is_valid.name () , true);
+                    answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (mainAccount.getId ()));
+                }
             }
         }
+        answerToClient.setResponse (res);
+        return answerToClient;
     }
 
     private boolean phoneIsActive (long id)
@@ -76,12 +84,12 @@ public class RestIsValidUEP
         return (byIdAndStatusNot != null);
     }
 
-    private AnswerToClient error (HttpServletRequest httpServletRequest , String uep)
+    private AnswerToClient error (HttpServletRequest req , String uep)
     {
         AnswerToClient answerToClient = AnswerToClient.error400 ();
         answerToClient.put (KeyAnswer.uep.name () , uep);
         answerToClient.put (KeyAnswer.is_valid.name () , false);
-        userLoginService.loginFailed (httpServletRequest.getRemoteAddr ());
+        userLoginService.loginFailed (req.getRemoteAddr ());
         return answerToClient;
     }
 

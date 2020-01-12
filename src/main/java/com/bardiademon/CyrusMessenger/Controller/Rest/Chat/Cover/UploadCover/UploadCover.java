@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.UploadCover;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.UploadCover;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
@@ -15,6 +15,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,7 +36,7 @@ public class UploadCover
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient upload (@CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+    public AnswerToClient upload (HttpServletResponse res , @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
                                   @ModelAttribute RequestUploadCover requestUploadCover)
     {
         AnswerToClient answerToClient;
@@ -134,6 +135,8 @@ public class UploadCover
             }
         }
         else answerToClient = AnswerToClient.NotLoggedIn ();
+
+        answerToClient.setResponse (res);
 
         return answerToClient;
     }

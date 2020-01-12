@@ -40,8 +40,12 @@ public class MainAccountService
 
         MainAccount save = Repository.save (mainAccount);
 
+
         if (save != null)
         {
+            System.out.println (save.getId ());
+
+
             SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
             securityUserProfile.setMainAccount (save);
 
@@ -54,6 +58,13 @@ public class MainAccountService
             return newSecurityUserChat != null && newSecurityUserProfile != null;
         }
         else return false;
+    }
+
+    public long toId (String username)
+    {
+        MainAccount byUsername = Repository.findByUsername (username);
+        if (byUsername == null) return 0;
+        else return byUsername.getId ();
     }
 
 }

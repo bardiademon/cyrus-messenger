@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.UploadCover;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.UploadCover;
 
 import org.springframework.web.multipart.MultipartFile;
 
