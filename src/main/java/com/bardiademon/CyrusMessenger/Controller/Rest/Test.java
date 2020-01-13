@@ -43,14 +43,14 @@ public class Test
     public boolean test ()
     {
         CheckUserAccessLevel checkUserAccessLevel =
-                new CheckUserAccessLevel ("bardiademon" , "bardia_demon" , mainAccountService);
+                new CheckUserAccessLevel ("bardia_demon" , "bardiademon" , mainAccountService);
 
-        checkUserAccessLevel.setServiceSecurityUserChat (securityUserChatService);
-        checkUserAccessLevel.setServiceShowChatFor (showChatForService);
-        checkUserAccessLevel.setCheckChat (CheckUserAccessLevel.CheckChat.send_file);
+        checkUserAccessLevel.setServiceSecurityUserProfile (securityUserProfileService);
+        checkUserAccessLevel.setServiceShowProfileFor (showProfileForService);
+        checkUserAccessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);
 
 
-        return checkUserAccessLevel.check (checkUserAccessLevel.CHK_CHAT);
+        return checkUserAccessLevel.check (checkUserAccessLevel.CHK_PROFILE);
     }
 
 }

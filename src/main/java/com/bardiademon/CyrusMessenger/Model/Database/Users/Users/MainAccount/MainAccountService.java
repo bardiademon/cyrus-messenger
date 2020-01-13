@@ -5,6 +5,10 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileRepository;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +20,22 @@ public class MainAccountService
     public final MainAccountRepository Repository;
     private SecurityUserChatRepository repositorySecurityChat;
     private SecurityUserProfileRepository repositorySecurityProfile;
+    private ShowProfileForService showProfileForService;
+    private ShowChatForService showChatForService;
 
     @Autowired
     public MainAccountService (MainAccountRepository Repository ,
                                SecurityUserChatRepository RepositorySecurityChat ,
-                               SecurityUserProfileRepository RepositorySecurityProfile)
+                               SecurityUserProfileRepository RepositorySecurityProfile ,
+                               ShowProfileForService _ShowProfileForService ,
+                               ShowChatForService _ShowChatForService
+    )
     {
         this.Repository = Repository;
         this.repositorySecurityChat = RepositorySecurityChat;
         this.repositorySecurityProfile = RepositorySecurityProfile;
+        this.showProfileForService = _ShowProfileForService;
+        this.showChatForService = _ShowChatForService;
     }
 
 
@@ -43,9 +54,6 @@ public class MainAccountService
 
         if (save != null)
         {
-            System.out.println (save.getId ());
-
-
             SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
             securityUserProfile.setMainAccount (save);
 
@@ -55,7 +63,16 @@ public class MainAccountService
             SecurityUserProfile newSecurityUserProfile = repositorySecurityProfile.save (securityUserProfile);
             SecurityUserChat newSecurityUserChat = repositorySecurityChat.save (securityUserChat);
 
-            return newSecurityUserChat != null && newSecurityUserProfile != null;
+            ShowProfileFor showProfileFor = new ShowProfileFor ();
+            showProfileFor.setSecurityUserProfile (newSecurityUserProfile);
+
+            ShowChatFor showChatFor = new ShowChatFor ();
+            showChatFor.setSecurityUserChat (newSecurityUserChat);
+
+            showProfileForService.Repository.save (showProfileFor);
+            showChatForService.Repository.save (showChatFor);
+
+            return true;
         }
         else return false;
     }

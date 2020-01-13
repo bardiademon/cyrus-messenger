@@ -23,7 +23,8 @@ public class CheckUserAccessLevel
 
     private MainAccount mainAccountWhoRequested, mainAccountToCheck;
 
-    private final String userWhoRequested, userToCheck;
+    private String userWhoRequested, userToCheck;
+
     private MainAccountService mainAccountService;
     private SecurityUserChatService securityUserChatService;
     private SecurityUserProfileService securityUserProfileService;
@@ -37,11 +38,18 @@ public class CheckUserAccessLevel
 
     private SecurityUserChat securityUserChat;
 
-    public CheckUserAccessLevel (String UserWhoRequested , String UserToCheck , MainAccountService mainAccountService)
+    public CheckUserAccessLevel (String UserWhoRequested , String UserToCheck , MainAccountService _MainAccountService)
     {
         this.userWhoRequested = UserWhoRequested;
         this.userToCheck = UserToCheck;
-        setService (mainAccountService);
+        setService (_MainAccountService);
+    }
+
+    public CheckUserAccessLevel (MainAccount MainAccountWhoRequested , MainAccount MainAccountToCheck , MainAccountService _MainAccountService)
+    {
+        this.mainAccountWhoRequested = MainAccountWhoRequested;
+        this.mainAccountToCheck = MainAccountToCheck;
+        setService (_MainAccountService);
     }
 
     private void setService (MainAccountService service)
@@ -81,9 +89,15 @@ public class CheckUserAccessLevel
 
     public boolean check (int checkProfileOrChat)
     {
-        mainAccountWhoRequested = mainAccountService.Repository.findByUsername (userWhoRequested);
-        mainAccountToCheck = mainAccountService.Repository.findByUsername (userToCheck);
+        if (mainAccountWhoRequested == null)
+            mainAccountWhoRequested = mainAccountService.Repository.findByUsername (userWhoRequested);
+
+        if (mainAccountToCheck == null)
+            mainAccountToCheck = mainAccountService.Repository.findByUsername (userToCheck);
+
         if (mainAccountWhoRequested == null || mainAccountToCheck == null) return false;
+
+        if (mainAccountWhoRequested.getId () == mainAccountToCheck.getId ()) return true;
         else
         {
             if (checkProfileOrChat == CHK_PROFILE) return checkProfile ();
@@ -94,6 +108,7 @@ public class CheckUserAccessLevel
 
     private boolean checkProfile ()
     {
+        System.out.println ("111");
         if (securityUserProfileService == null) return false;
         else
         {
@@ -150,12 +165,12 @@ public class CheckUserAccessLevel
         else
         {
             SecurityUserProfile byMainAccount
-                    = securityUserProfileService.Repository.findByMainAccount (mainAccountWhoRequested);
+                    = securityUserProfileService.Repository.findByMainAccount (mainAccountToCheck);
+
             if (byMainAccount == null) return false;
             else
             {
                 if (showProfileForService == null) return false;
-
                 showProfileFor
                         = showProfileForService.Repository.findBySecurityUserProfile (byMainAccount);
                 if (showProfileFor == null) return false;
@@ -168,9 +183,15 @@ public class CheckUserAccessLevel
 
     private boolean checkFinal (AccessLevel accessLevel)
     {
+        System.out.println (accessLevel.name ());
+
         String result;
+        boolean has = true;
         if (accessLevel.equals (AccessLevel.all_except))
+        {
             result = showProfileFor.getShowAllExcept ();
+            has = false;
+        }
         else if (accessLevel.equals (AccessLevel.just_my_list))
             result = showProfileFor.getShowJust ();
         else if (accessLevel.equals (AccessLevel.just_list_friends))
@@ -178,13 +199,25 @@ public class CheckUserAccessLevel
         else if (accessLevel.equals (AccessLevel.not)) return false;
         else return false;
 
-        return search (result.split (ShowProfileFor.IsolationWith));
+        boolean resultIsNull = (result == null || result.equals (""));
+        if (!has && resultIsNull) return true;
+        else if (has && resultIsNull) return false;
+
+        return search (result.split (ShowProfileFor.IsolationWith) , has);
     }
 
-    private boolean search (String[] listExcept)
+    private boolean search (String[] listExcept , boolean has)
     {
-        Arrays.sort (listExcept);
-        return Arrays.binarySearch (listExcept , mainAccountWhoRequested.getId ()) < 0;
+        boolean listIsNull = (listExcept == null || listExcept.length == 0);
+        if (!has && listIsNull) return true;
+        else if (has && listIsNull) return false;
+
+        boolean resultSearch = Arrays.asList (listExcept).contains (String.valueOf (mainAccountWhoRequested.getId ()));
+
+        System.out.println (resultSearch);
+
+        if (has && resultSearch) return true;
+        else return (!has && !resultSearch);
     }
 
     private boolean checkChat ()
