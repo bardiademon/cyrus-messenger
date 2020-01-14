@@ -3,10 +3,10 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.Security
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 public class Profile
 {
 
-    private UserLoginService userLoginService;
-    private SecurityUserProfileService securityUserProfileService;
+    private final UserLoginService userLoginService;
+    private final SecurityUserProfileService securityUserProfileService;
 
     @Autowired
     public Profile (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService)
@@ -31,78 +31,75 @@ public class Profile
 
     @RequestMapping (value = {"/" , ""})
     public AnswerToClient getInfoSecurityProfile (@RequestBody RequestProfile requestProfile ,
-            @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+                                                  @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
-        if (codeLogin.equals ("")) answerToClient = AnswerToClient.NotLoggedIn ();
-        else
+        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        if (checkLogin.isValid ())
         {
-            VCodeLogin vCodeLogin = new VCodeLogin ();
-            if (vCodeLogin.IsValid (userLoginService.Repository , codeLogin))
+            if (requestProfile.thereIsAtLeastOneTrue ())
             {
-                if (requestProfile.thereIsAtLeastOneTrue ())
+                SecurityUserProfile securityUserProfile
+                        = securityUserProfileService.Repository.findByMainAccount (checkLogin.getVCodeLogin ().getMainAccount ());
+                if (securityUserProfile != null)
                 {
-                    SecurityUserProfile securityUserProfile
-                            = securityUserProfileService.Repository.findByMainAccount (vCodeLogin.getMainAccount ());
-                    if (securityUserProfile != null)
-                    {
-                        answerToClient = AnswerToClient.OK ();
-                        if (requestProfile.isSecBio ())
-                            answerToClient.put (KeyAnswer.sec_bio.name () , securityUserProfile.getShowBio ().name ());
+                    answerToClient = AnswerToClient.OK ();
+                    if (requestProfile.isSecBio ())
+                        answerToClient.put (KeyAnswer.sec_bio.name () , securityUserProfile.getShowBio ().name ());
 
-                        if (requestProfile.isSecCover ())
-                            answerToClient.put (KeyAnswer.sec_cover.name () , securityUserProfile.getShowCover ().name ());
+                    if (requestProfile.isSecCover ())
+                        answerToClient.put (KeyAnswer.sec_cover.name () , securityUserProfile.getShowCover ().name ());
 
-                        if (requestProfile.isSecShowInChannel ())
-                            answerToClient.put (KeyAnswer.sec_show_in_channel.name () ,
-                                    securityUserProfile.getShowInChannel ().name ());
+                    if (requestProfile.isSecShowInChannel ())
+                        answerToClient.put (KeyAnswer.sec_show_in_channel.name () ,
+                                securityUserProfile.getShowInChannel ().name ());
 
-                        if (requestProfile.isSecShowInGroup ())
-                            answerToClient.put (KeyAnswer.sec_show_in_group.name () ,
-                                    securityUserProfile.getShowInGroup ().name ());
+                    if (requestProfile.isSecShowInGroup ())
+                        answerToClient.put (KeyAnswer.sec_show_in_group.name () ,
+                                securityUserProfile.getShowInGroup ().name ());
 
-                        if (requestProfile.isSecShowProfile ())
-                            answerToClient.put (KeyAnswer.sec_show_profile.name () ,
-                                    securityUserProfile.getShowInProfile ().name ());
+                    if (requestProfile.isSecShowProfile ())
+                        answerToClient.put (KeyAnswer.sec_show_profile.name () ,
+                                securityUserProfile.getShowInProfile ().name ());
 
-                        if (requestProfile.isSecShowInSearch ())
-                            answerToClient.put (KeyAnswer.show_in_search.name () ,
-                                    securityUserProfile.getShowInSearch ().name ());
+                    if (requestProfile.isSecShowInSearch ())
+                        answerToClient.put (KeyAnswer.show_in_search.name () ,
+                                securityUserProfile.getShowInSearch ().name ());
 
-                        if (requestProfile.isSecLastSeen ())
-                            answerToClient.put (KeyAnswer.sec_last_seen.name () ,
-                                    securityUserProfile.getShowLastSeen ().name ());
+                    if (requestProfile.isSecLastSeen ())
+                        answerToClient.put (KeyAnswer.sec_last_seen.name () ,
+                                securityUserProfile.getShowLastSeen ().name ());
 
-                        if (requestProfile.isSecMyLink ())
-                            answerToClient.put (KeyAnswer.sec_mylink.name () ,
-                                    securityUserProfile.getShowMyLink ().name ());
+                    if (requestProfile.isSecMyLink ())
+                        answerToClient.put (KeyAnswer.sec_mylink.name () ,
+                                securityUserProfile.getShowMyLink ().name ());
 
-                        if (requestProfile.isSecName ())
-                            answerToClient.put (KeyAnswer.sec_name.name () ,
-                                    securityUserProfile.getShowName ().name ());
+                    if (requestProfile.isSecName ())
+                        answerToClient.put (KeyAnswer.sec_name.name () ,
+                                securityUserProfile.getShowName ().name ());
 
-                        if (requestProfile.isSecPersonalInformation ())
-                            answerToClient.put (KeyAnswer.sec_personal_information.name () ,
-                                    securityUserProfile.getShowPersonalInformation ().name ());
+                    if (requestProfile.isSecPersonalInformation ())
+                        answerToClient.put (KeyAnswer.sec_personal_information.name () ,
+                                securityUserProfile.getShowPersonalInformation ().name ());
 
-                        if (requestProfile.isSecPhone ())
-                            answerToClient.put (KeyAnswer.sec_phone.name () ,
-                                    securityUserProfile.getShowPhone ().name ());
+                    if (requestProfile.isSecPhone ())
+                        answerToClient.put (KeyAnswer.sec_phone.name () ,
+                                securityUserProfile.getShowPhone ().name ());
 
-                        if (requestProfile.isSecSeenMessage ())
-                            answerToClient.put (KeyAnswer.sec_seen_message.name () ,
-                                    securityUserProfile.getShowSeenMessage ().name ());
+                    if (requestProfile.isSecSeenMessage ())
+                        answerToClient.put (KeyAnswer.sec_seen_message.name () ,
+                                securityUserProfile.getShowSeenMessage ().name ());
 
-                        if (requestProfile.isSecUsername ())
-                            answerToClient.put (KeyAnswer.sec_username.name () ,
-                                    securityUserProfile.getShowUsername ().name ());
-                    }
-                    else answerToClient = AnswerToClient.ServerError ();
+                    if (requestProfile.isSecUsername ())
+                        answerToClient.put (KeyAnswer.sec_username.name () ,
+                                securityUserProfile.getShowUsername ().name ());
                 }
-                else answerToClient = AnswerToClient.error400 ();
+                else answerToClient = AnswerToClient.ServerError ();
             }
             else answerToClient = AnswerToClient.error400 ();
         }
+        else answerToClient = checkLogin.getAnswerToClient ();
+
         return answerToClient;
     }
 
