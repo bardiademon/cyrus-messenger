@@ -50,14 +50,13 @@ public class MainAccountService
         mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.password));
 
         MainAccount save = Repository.save (mainAccount);
-
-
         if (save != null)
         {
             SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
             securityUserProfile.setMainAccount (save);
 
             SecurityUserChat securityUserChat = new SecurityUserChat ();
+            securityUserChat.setCanSendNumberOfMessageUnread (0);
             securityUserChat.setMainAccount (save);
 
             SecurityUserProfile newSecurityUserProfile = repositorySecurityProfile.save (securityUserProfile);
