@@ -12,6 +12,6 @@ public interface UserLoginRepository extends JpaRepository<UserLogin, Long>
 {
     UserLogin findByCodeLogin (String code);
 
-    @Query ("select userLogin from UserLogin userLogin where userLogin.codeLogin=:code and userLogin.creditUp>:time")
+    @Query ("select userLogin from UserLogin userLogin where userLogin.codeLogin=:code and userLogin.creditUp>:time and userLogin.timeLogout=null")
     UserLogin findValidCode (@Param ("code") String code , @Param ("time") LocalDateTime time);
 }
