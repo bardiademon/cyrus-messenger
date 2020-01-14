@@ -108,7 +108,6 @@ public class CheckUserAccessLevel
 
     private boolean checkProfile ()
     {
-        System.out.println ("111");
         if (securityUserProfileService == null) return false;
         else
         {
