@@ -1,8 +1,8 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.General;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RequestInfoUser
+public class RequestGeneral
 {
     @JsonProperty ("get_name")
     private boolean getName;
@@ -25,11 +25,11 @@ public class RequestInfoUser
     @JsonProperty ("get_bio")
     private boolean getBio;
 
-    public RequestInfoUser ()
+    public RequestGeneral ()
     {
     }
 
-    public RequestInfoUser (boolean getName , boolean getFamily , boolean getUsername , boolean getEmail , boolean getPhone , boolean getMyLink , boolean getBio)
+    public RequestGeneral (boolean getName , boolean getFamily , boolean getUsername , boolean getEmail , boolean getPhone , boolean getMyLink , boolean getBio)
     {
         this.getName = getName;
         this.getFamily = getFamily;

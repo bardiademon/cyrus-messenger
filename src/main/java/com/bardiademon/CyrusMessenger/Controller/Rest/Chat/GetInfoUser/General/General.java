@@ -1,31 +1,36 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.General;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping (value = "/api/info_user", method = RequestMethod.POST)
-public class InfoUser
+@RequestMapping (value = RouterName.RNInfoUser.RN_GENERAL, method = RequestMethod.POST)
+public class General
 {
 
     private UserLoginService userLoginService;
 
     @Autowired
-    public InfoUser (UserLoginService _UserLoginService)
+    public General (UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient getInfoUser (HttpServletResponse res , @RequestBody RequestInfoUser requestInfoUser ,
+    public AnswerToClient getInfoUser (HttpServletResponse res , @RequestBody RequestGeneral requestInfoUser ,
                                        @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
