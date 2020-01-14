@@ -43,6 +43,11 @@ public class AnswerToClient
         return answerToClient;
     }
 
+    public static AnswerToClient New (int StatusCode , boolean Ok)
+    {
+        return new AnswerToClient (StatusCode , Ok);
+    }
+
     public void setResponse (HttpServletResponse response)
     {
         this.response = response;
