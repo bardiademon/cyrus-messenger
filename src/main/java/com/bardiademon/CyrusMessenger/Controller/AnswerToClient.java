@@ -33,7 +33,9 @@ public class AnswerToClient
 
     public static AnswerToClient ServerError ()
     {
-        return new AnswerToClient (500 , false);
+        AnswerToClient answerToClient = new AnswerToClient (500 , false);
+        answerToClient.put ("answer" , "Please Try again");
+        return answerToClient;
     }
 
     public static AnswerToClient NotLoggedIn ()
