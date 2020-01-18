@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.General;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
