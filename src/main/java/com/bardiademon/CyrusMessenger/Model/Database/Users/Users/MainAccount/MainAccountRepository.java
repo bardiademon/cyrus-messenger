@@ -21,5 +21,6 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 
     MainAccount findByIdAndStatusNot (long id , MainAccountStatus status);
 
+    MainAccount findByIdAndEmailNotNull (long id);
 
 }
