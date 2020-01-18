@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = RouterName.RNNewInfoUser.RNNewFriend.RN_NEW_FRIEND, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
 public final class NewFriend
 {
 

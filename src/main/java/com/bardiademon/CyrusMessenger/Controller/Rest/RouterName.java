@@ -28,9 +28,16 @@ public abstract class RouterName
         public static final String RN_MAIN = RN_MAIN_API + "/info_user/new/";
         public static final String RN_GENERAL = RN_MAIN + "/general";
 
-        public static abstract class RNNewFriend
-        {
-            public static final String RN_NEW_FRIEND = RNNewInfoUser.RN_MAIN + "/new_friend";
-        }
+        public static final String RN_NEW_FRIEND = RNNewInfoUser.RN_GENERAL + "/new_friend";
+
+        public static final String RN_NEW_EMAIL = RNNewInfoUser.RN_GENERAL + "/new_email";
+
+    }
+
+    public static abstract class RNConfirm
+    {
+        public static final String RN_MAIN = RN_MAIN_API + "/api/conform";
+
+        public static final String RN_CONFIRM_PHONE = RN_MAIN_API + "/phone";
     }
 }
