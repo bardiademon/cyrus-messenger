@@ -1,7 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -58,24 +57,20 @@ public class RestRegister
                     if ((vPhone = new VPhone (registerRequest.getPhone () , registerRequest.region)).check ())
                     {
                         registerRequest.setPhone (vPhone.getPhone ());
-                        if (registerRequest.email.equals ("") || new VEmail (registerRequest.email).check ())
+                        if (!checkExists ()) return answerToClient;
+                        else
                         {
-                            if (!checkExists ()) return answerToClient;
+                            if (mainAccountService.newAccount (registerRequest))
+                            {
+                                answerToClient = new AnswerToClient (200 , true);
+                                answerToClient.put ("answer" , "Recorded");
+                            }
                             else
                             {
-                                if (mainAccountService.newAccount (registerRequest))
-                                {
-                                    answerToClient = new AnswerToClient (200 , true);
-                                    answerToClient.put ("answer" , "Recorded");
-                                }
-                                else
-                                {
-                                    answerToClient = new AnswerToClient (500 , false);
-                                    answerToClient.put ("answer" , "Error record");
-                                }
+                                answerToClient = new AnswerToClient (500 , false);
+                                answerToClient.put ("answer" , "Error record");
                             }
                         }
-                        else setError400 ("Email" , "invalid");
                     }
                     else setError400 ("Phone" , "invalid");
 
@@ -109,17 +104,6 @@ public class RestRegister
                 setError400 ("Phone" , "Exists");
                 return false;
             }
-            else
-            {
-                if (registerRequest.email == null) return true;
-
-                mainAccount = mainAccountService.Repository.findByEmail (registerRequest.email);
-                if (mainAccount != null)
-                {
-                    setError400 ("Email" , "Exists");
-                    return false;
-                }
-            }
         }
         return true;
     }
@@ -132,7 +116,7 @@ public class RestRegister
 
     private boolean isNull ()
     {
-        return (registerRequest.email == null || registerRequest.family == null || registerRequest.name == null || registerRequest.getPhone () == null || registerRequest.username == null);
+        return (registerRequest.family == null || registerRequest.name == null || registerRequest.getPhone () == null || registerRequest.username == null);
     }
 
 }
