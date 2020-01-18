@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.RestConfirmPhone;
+package com.bardiademon.CyrusMessenger.Controller.Rest.RestConfirm.ConfirmPhone;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
@@ -95,14 +95,16 @@ public class RestConfirmPhone
         AnswerToClient answerToClient = new AnswerToClient (400 , false);
         if (code.matches ("[0-9]*") && id.matches ("[0-9]*"))
         {
-            ConfirmCode findCode = confirmCodeService.Repository.findCode (Long.parseLong (id) , code , phone , LocalDateTime.now ());
-            if (findCode != null)
-            {
-                new AfterConfirm (Service , confirmCodeService , findCode).confirm (ConfirmCodeFor.phone);
-
-                answerToClient = new AnswerToClient (200 , true);
-                answerToClient.put ("answer" , "Phone confirmed");
-            }
+            answerToClient = AnswerToClient.OK ();
+//            ConfirmCode findCode =
+//                    confirmCodeService.Repository.findCode (Long.parseLong (id) ,, code , phone , LocalDateTime.now ());
+//            if (findCode != null)
+//            {
+//                new AfterConfirm (Service , confirmCodeService , findCode).confirm (ConfirmCodeFor.phone);
+//
+//                answerToClient = new AnswerToClient (200 , true);
+//                answerToClient.put ("answer" , "Phone confirmed");
+//            }
         }
         answerToClient.setResponse (res);
         return answerToClient;
