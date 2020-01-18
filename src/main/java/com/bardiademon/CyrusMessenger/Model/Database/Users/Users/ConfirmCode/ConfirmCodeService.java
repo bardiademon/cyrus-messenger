@@ -14,4 +14,9 @@ public class ConfirmCodeService
     {
         this.Repository = Repository;
     }
+
+    public boolean isExistsCode (String code)
+    {
+        return (Repository.findByCodeAndTimeToConfirmedIsNull (code) != null);
+    }
 }
