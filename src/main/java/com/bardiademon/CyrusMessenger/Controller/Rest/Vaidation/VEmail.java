@@ -13,11 +13,14 @@ public class VEmail implements Validation
     @Override
     public boolean check ()
     {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
         if (email == null || email.equals ("")) return false;
-        else return email.matches (emailRegex);
+        else
+        {
+            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                    "[a-zA-Z0-9_+&*-]+)*@" +
+                    "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                    "A-Z]{2,7}$";
+            return email.matches (emailRegex);
+        }
     }
 }
