@@ -10,4 +10,10 @@ public abstract class Time
         if (time == null) return null;
         return time.format (DateTimeFormatter.ofPattern ("yyyy-MM-dd HH:mm:ss"));
     }
+
+    public static String getTime (LocalDateTime time)
+    {
+        if (time == null) return null;
+        return time.format (DateTimeFormatter.ofPattern ("HH:mm:ss"));
+    }
 }
