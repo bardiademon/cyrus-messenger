@@ -1,25 +1,28 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table (name = "main_account")
 public class MainAccount
 {
-
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
@@ -32,6 +35,10 @@ public class MainAccount
 
     @Column (nullable = false)
     private String phone;
+
+    @OneToMany
+    @JoinTable (name = "id_user_friend", joinColumns = @JoinColumn (name = "id"))
+    private List<UserFriends> userFriends;
 
     @Column (name = "active_phone", insertable = false)
     private LocalDateTime activePhone;
@@ -62,28 +69,17 @@ public class MainAccount
 
     @Column (nullable = false)
     @Enumerated (EnumType.STRING)
-    private MainAccountStatus status = MainAccountStatus.phone_not_confirmed;
+    private MainAccountStatus status = MainAccountStatus.active;
+
+    @Column (name = "friend_confirmation_method", nullable = false)
+    @Enumerated (EnumType.STRING)
+    private StatusFriends.ApprovalMethod friendConfirmationMethod = StatusFriends.ApprovalMethod.wait;
 
     public MainAccount ()
     {
     }
 
-    public MainAccount (SecurityUserChat securityUserChat , SecurityUserProfile securityUserProfile , String name , String family , String phone , LocalDateTime activePhone , String username , String password , String email , LocalDateTime createdAt , LocalDateTime updatedAt , String cover , String bio , String myLink , MainAccountStatus status)
-    {
-        this.name = name;
-        this.family = family;
-        this.phone = phone;
-        this.activePhone = activePhone;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.cover = cover;
-        this.bio = bio;
-        this.myLink = myLink;
-        this.status = status;
-    }
+
 
     public long getId ()
     {
@@ -133,6 +129,16 @@ public class MainAccount
     public void setActivePhone (LocalDateTime activePhone)
     {
         this.activePhone = activePhone;
+    }
+
+    public List<UserFriends> getUserFriends ()
+    {
+        return userFriends;
+    }
+
+    public void setUserFriends (List<UserFriends> userFriends)
+    {
+        this.userFriends = userFriends;
     }
 
     public String getUsername ()
@@ -228,5 +234,15 @@ public class MainAccount
     public boolean hasCover ()
     {
         return (cover != null && !cover.equals (""));
+    }
+
+    public StatusFriends.ApprovalMethod getFriendConfirmationMethod ()
+    {
+        return friendConfirmationMethod;
+    }
+
+    public void setFriendConfirmationMethod (StatusFriends.ApprovalMethod friendConfirmationMethod)
+    {
+        this.friendConfirmationMethod = friendConfirmationMethod;
     }
 }
