@@ -12,7 +12,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProf
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,6 @@ public class MainAccountService
     {
         MainAccount mainAccount = new MainAccount ();
         mainAccount.setName (registerRequest.name);
-        mainAccount.setEmail (registerRequest.email);
         mainAccount.setFamily (registerRequest.family);
         mainAccount.setPhone (registerRequest.getPhone ());
         mainAccount.setUsername (registerRequest.username);
@@ -115,6 +113,11 @@ public class MainAccountService
 
         Repository.save (mainAccount);
         return req;
+    }
+
+    public boolean hasEmail (long id)
+    {
+        return (Repository.findByIdAndEmailNotNull (id) != null);
     }
 
     public long toId (String username)
