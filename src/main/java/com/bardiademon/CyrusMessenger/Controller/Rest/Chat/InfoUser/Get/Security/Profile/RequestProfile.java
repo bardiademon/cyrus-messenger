@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.Security.Profile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Security.Profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -45,25 +45,11 @@ public class RequestProfile
     @JsonProperty ("sec_username")
     private boolean secUsername;
 
+    @JsonProperty ("sec_list_friends")
+    private boolean secListFriends;
+
     public RequestProfile ()
     {
-    }
-
-    public RequestProfile (boolean secCover , boolean secBio , boolean secShowInChannel , boolean secShowInGroup , boolean secShowProfile , boolean secShowInSearch , boolean secLastSeen , boolean secMyLink , boolean secName , boolean secPersonalInformation , boolean secPhone , boolean secSeenMessage , boolean secUsername)
-    {
-        this.secCover = secCover;
-        this.secBio = secBio;
-        this.secShowInChannel = secShowInChannel;
-        this.secShowInGroup = secShowInGroup;
-        this.secShowProfile = secShowProfile;
-        this.secShowInSearch = secShowInSearch;
-        this.secLastSeen = secLastSeen;
-        this.secMyLink = secMyLink;
-        this.secName = secName;
-        this.secPersonalInformation = secPersonalInformation;
-        this.secPhone = secPhone;
-        this.secSeenMessage = secSeenMessage;
-        this.secUsername = secUsername;
     }
 
     public boolean isSecCover ()
@@ -211,7 +197,17 @@ public class RequestProfile
                         isSecShowInGroup () ||
                         isSecShowProfile () ||
                         isSecUsername () ||
-                        isSecShowInSearch ()
+                        isSecShowInSearch () || isSecListFriends ()
         );
+    }
+
+    public boolean isSecListFriends ()
+    {
+        return secListFriends;
+    }
+
+    public void setSecListFriends (boolean secListFriends)
+    {
+        this.secListFriends = secListFriends;
     }
 }

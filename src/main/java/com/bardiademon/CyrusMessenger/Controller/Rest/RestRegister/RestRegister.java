@@ -6,6 +6,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.FindInTheDatabase.FITD_Username;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,16 +95,15 @@ public class RestRegister
 
     private boolean checkExists ()
     {
-        MainAccount mainAccount;
-        mainAccount = mainAccountService.Repository.findByUsername (registerRequest.username);
-        if (mainAccount != null)
+        FITD_Username fitd_username = new FITD_Username (registerRequest.username , mainAccountService);
+        if (fitd_username.isFound ())
         {
             setError400 ("Username" , "Exists");
             return false;
         }
         else
         {
-            mainAccount = mainAccountService.Repository.findByPhone (registerRequest.getPhone ());
+            MainAccount mainAccount = mainAccountService.Repository.findByPhone (registerRequest.getPhone ());
             if (mainAccount != null)
             {
                 setError400 ("Phone" , "Exists");

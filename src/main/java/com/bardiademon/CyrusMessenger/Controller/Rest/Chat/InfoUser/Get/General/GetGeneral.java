@@ -4,6 +4,8 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +16,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
 @RequestMapping (value = RouterName.RNInfoUser.RN_GENERAL, method = RequestMethod.POST)
-public class General
+public class GetGeneral
 {
 
     private UserLoginService userLoginService;
+    private UserFriendsService userFriendsService;
 
     @Autowired
-    public General (UserLoginService _UserLoginService)
+    public GetGeneral (UserLoginService _UserLoginService , UserFriendsService _UserFriendsService)
     {
         this.userLoginService = _UserLoginService;
+        this.userFriendsService = _UserFriendsService;
     }
 
     @RequestMapping ({"/" , ""})
@@ -68,6 +73,27 @@ public class General
 
                     if (requestInfoUser.isGetBio ())
                         answerToClient.put (KeyAnswer.bio.name () , mainAccount.getBio ());
+
+                    if (requestInfoUser.isGetListFriends ())
+                        answerToClient.put (KeyAnswer.list_friends.name () ,
+                                getListFriend (mainAccount.getId () , StatusFriends.friend));
+
+                    if (requestInfoUser.isGetListFriendsReject ())
+                        answerToClient.put (KeyAnswer.list_friends_reject.name () ,
+                                getListFriend (mainAccount.getId () , StatusFriends.rejected));
+
+                    if (requestInfoUser.isGetListFriendsReject ())
+                        answerToClient.put (KeyAnswer.list_friends_reject.name () ,
+                                getListFriend (mainAccount.getId () , StatusFriends.rejected));
+
+                    if (requestInfoUser.isGetListFriendsAwaitingApproval ())
+                        answerToClient.put (KeyAnswer.list_friends_awaiting_approval.name () ,
+                                getListFriend (mainAccount.getId () , StatusFriends.awaiting_approval));
+
+                    if (requestInfoUser.isGetListFriendsDeleted ())
+                        answerToClient.put (KeyAnswer.list_friends_deleted.name () ,
+                                getListFriend (mainAccount.getId () , StatusFriends.deleted));
+
                 }
                 else answerToClient = AnswerToClient.error400 ();
             }
@@ -76,9 +102,14 @@ public class General
         return answerToClient;
     }
 
+    private List<String> getListFriend (long id , StatusFriends status)
+    {
+        return userFriendsService.Repository.findUsernameUser (id , status);
+    }
+
     private enum KeyAnswer
     {
         name, family, username, email, phone,
-        bio, mylink
+        bio, mylink, list_friends, list_friends_reject, list_friends_awaiting_approval, list_friends_deleted
     }
 }

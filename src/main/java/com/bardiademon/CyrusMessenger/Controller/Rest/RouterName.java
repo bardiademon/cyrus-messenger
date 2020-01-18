@@ -4,10 +4,9 @@ public abstract class RouterName
 {
     public static final String RN_MAIN_API = "/api";
 
-
     public static abstract class RNInfoUser
     {
-        public static final String RN_MAIN = RN_MAIN_API + "/info_user";
+        public static final String RN_MAIN = RN_MAIN_API + "/info_user/get/";
         public static final String RN_GENERAL = RN_MAIN + "/general";
 
         public static abstract class RNSecurity
@@ -16,6 +15,22 @@ public abstract class RouterName
 
             public static final String RN_PROFILE = RN_MAIN + "/profile";
             public static final String RN_CHAT = RN_MAIN + "/chat";
+        }
+
+        public static abstract class RNGetListFriends
+        {
+            public static final String RN_GET_LIST_FRIENDS = RNInfoUser.RN_GENERAL + "/list_friends";
+        }
+    }
+
+    public static abstract class RNNewInfoUser
+    {
+        public static final String RN_MAIN = RN_MAIN_API + "/info_user/new/";
+        public static final String RN_GENERAL = RN_MAIN + "/general";
+
+        public static abstract class RNNewFriend
+        {
+            public static final String RN_NEW_FRIEND = RNNewInfoUser.RN_MAIN + "/new_friend";
         }
     }
 }

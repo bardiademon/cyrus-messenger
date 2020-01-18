@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General.RequestGeneral;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister.RegisterRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
@@ -10,6 +11,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChat
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +77,44 @@ public class MainAccountService
             return true;
         }
         else return false;
+    }
+
+    public RequestGeneral updateGeneral (MainAccount mainAccount , RequestGeneral req)
+    {
+        if (!req.thereIsAtLeastOneTrue ()) return null;
+
+        if (!req.isNull (req.getBio ()))
+        {
+            mainAccount.setBio (req.getBio ());
+            req.setUpdatedBio ();
+        }
+
+        if (!req.isNull (req.getName ()))
+        {
+            mainAccount.setName (req.getName ());
+            req.setUpdatedName ();
+        }
+
+        if (!req.isNull (req.getFamily ()))
+        {
+            mainAccount.setFamily (req.getFamily ());
+            req.setUpdatedFamily ();
+        }
+
+        if (!req.isNull (req.getUsername ()) && Repository.findByUsername (req.getUsername ()) == null)
+        {
+            mainAccount.setUsername (req.getUsername ());
+            req.setUpdatedUsername ();
+        }
+
+        if (!req.isNull (req.getMylink ()) && ((new UrlValidator ()).isValid (req.getMylink ())))
+        {
+            mainAccount.setMyLink (req.getMylink ());
+            req.setUpdatedMylink ();
+        }
+
+        Repository.save (mainAccount);
+        return req;
     }
 
     public long toId (String username)

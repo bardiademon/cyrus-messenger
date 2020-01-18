@@ -4,7 +4,15 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLe
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
@@ -76,27 +84,12 @@ public class SecurityUserProfile
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Enumerated (value = EnumType.STRING)
+    @Column (name = "list_friends", nullable = false)
+    private AccessLevel listFriends = AccessLevel.all;
+
     public SecurityUserProfile ()
     {
-    }
-
-    public SecurityUserProfile (MainAccount mainAccount , AccessLevel showCover , AccessLevel showSeenMessage , AccessLevel showLastSeen , AccessLevel showPhone , AccessLevel showUsername , AccessLevel showBio , AccessLevel showMyLink , AccessLevel showPersonalInformation , AccessLevel showName , AccessLevel showInSearch , AccessLevel showInGroup , AccessLevel showInChannel , AccessLevel showInProfile , LocalDateTime updatedAt)
-    {
-        this.mainAccount = mainAccount;
-        this.showCover = showCover;
-        this.showSeenMessage = showSeenMessage;
-        this.showLastSeen = showLastSeen;
-        this.showPhone = showPhone;
-        this.showUsername = showUsername;
-        this.showBio = showBio;
-        this.showMyLink = showMyLink;
-        this.showPersonalInformation = showPersonalInformation;
-        this.showName = showName;
-        this.showInSearch = showInSearch;
-        this.showInGroup = showInGroup;
-        this.showInChannel = showInChannel;
-        this.showInProfile = showInProfile;
-        this.updatedAt = updatedAt;
     }
 
     public long getId ()
@@ -257,5 +250,15 @@ public class SecurityUserProfile
     public void setUpdatedAt (LocalDateTime updatedAt)
     {
         this.updatedAt = updatedAt;
+    }
+
+    public AccessLevel getListFriends ()
+    {
+        return listFriends;
+    }
+
+    public void setListFriends (AccessLevel listFriends)
+    {
+        this.listFriends = listFriends;
     }
 }

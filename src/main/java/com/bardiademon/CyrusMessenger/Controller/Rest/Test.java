@@ -7,9 +7,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChat
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping (value = "/test", method = RequestMethod.POST)
@@ -26,8 +24,8 @@ public class Test
     public Test
             (MainAccountService mainAccountService ,
              ShowProfileForService showProfileForService ,
-             SecurityUserProfileService securityUserProfileService,
-             ShowChatForService showChatForService,
+             SecurityUserProfileService securityUserProfileService ,
+             ShowChatForService showChatForService ,
              SecurityUserChatService securityUserChatService
             )
     {
@@ -39,18 +37,40 @@ public class Test
         this.securityUserChatService = securityUserChatService;
     }
 
-    @RequestMapping (value = {"/" , ""}, method = RequestMethod.POST)
-    public boolean test ()
+    public static class Request
     {
-        CheckUserAccessLevel checkUserAccessLevel =
-                new CheckUserAccessLevel ("bardia_demon" , "bardiademon" , mainAccountService);
+        TestEnum testEnum;
 
-        checkUserAccessLevel.setServiceSecurityUserProfile (securityUserProfileService);
-        checkUserAccessLevel.setServiceShowProfileFor (showProfileForService);
-        checkUserAccessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);
+        public TestEnum getTestEnum ()
+        {
+            return testEnum;
+        }
+
+        public void setTestEnum (TestEnum testEnum)
+        {
+            this.testEnum = testEnum;
+        }
+
+        public Request (TestEnum testEnum)
+        {
+            this.testEnum = testEnum;
+        }
+
+        public Request ()
+        {
+        }
+    }
+
+    @RequestMapping (value = {"/" , ""}, method = RequestMethod.POST)
+    public String test (@RequestBody Request re)
+    {
+        return re.testEnum.name ();
+    }
 
 
-        return checkUserAccessLevel.check (checkUserAccessLevel.CHK_PROFILE);
+    public enum TestEnum
+    {
+        test_enum
     }
 
 }

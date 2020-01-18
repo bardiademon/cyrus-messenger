@@ -6,6 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
@@ -21,26 +22,29 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping (value = "/api/chat/cover", method = RequestMethod.GET)
+@RequestMapping (value = "/api/cover", method = RequestMethod.GET)
 public class GetCover
 {
     private MainAccountService mainAccountService;
     private UserLoginService userLoginService;
     private SecurityUserProfileService securityUserProfileService;
     private ShowProfileForService showProfileForService;
+    private UserFriendsService userFriendsService;
 
     @Autowired
     public GetCover
             (MainAccountService _MainAccountService ,
              UserLoginService _UserLoginService ,
              SecurityUserProfileService _SecurityUserProfileService ,
-             ShowProfileForService _ShowProfileForService
+             ShowProfileForService _ShowProfileForService ,
+             UserFriendsService _UserFriendsService
             )
     {
         this.mainAccountService = _MainAccountService;
         this.userLoginService = _UserLoginService;
         this.securityUserProfileService = _SecurityUserProfileService;
         this.showProfileForService = _ShowProfileForService;
+        this.userFriendsService = _UserFriendsService;
     }
 
     @RequestMapping (value = {"/{username}" , "/" , ""}, produces = MediaType.IMAGE_JPEG_VALUE, method = RequestMethod.GET)
@@ -75,6 +79,7 @@ public class GetCover
 
             accessLevel.setServiceSecurityUserProfile (securityUserProfileService);
             accessLevel.setServiceShowProfileFor (showProfileForService);
+            accessLevel.setUserFriendsService (userFriendsService);
             accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);
             boolean isAccessLevel = accessLevel.check (accessLevel.CHK_PROFILE);
 

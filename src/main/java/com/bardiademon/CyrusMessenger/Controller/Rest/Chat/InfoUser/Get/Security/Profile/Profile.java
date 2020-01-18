@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.Security.Profile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Security.Profile;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
@@ -93,6 +93,10 @@ public class Profile
                     if (requestProfile.isSecUsername ())
                         answerToClient.put (KeyAnswer.sec_username.name () ,
                                 securityUserProfile.getShowUsername ().name ());
+
+                    if (requestProfile.isSecListFriends ())
+                        answerToClient.put (KeyAnswer.sec_list_friends.name () ,
+                                securityUserProfile.getListFriends ().name ());
                 }
                 else answerToClient = AnswerToClient.ServerError ();
             }
@@ -107,7 +111,7 @@ public class Profile
     {
         sec_cover, sec_bio, sec_show_in_channel, sec_show_in_group,
         sec_show_profile, show_in_search, sec_last_seen, sec_mylink, sec_name,
-        sec_personal_information, sec_phone, sec_seen_message, sec_username
+        sec_personal_information, sec_phone, sec_seen_message, sec_username, sec_list_friends
     }
 
 }

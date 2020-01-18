@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.GetInfoUser.General;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,24 +25,25 @@ public class RequestGeneral
     @JsonProperty ("get_bio")
     private boolean getBio;
 
+    @JsonProperty ("get_list_friends")
+    private boolean getListFriends;
+
+    @JsonProperty ("get_list_friends_reject")
+    private boolean getListFriendsReject;
+
+    @JsonProperty ("get_list_friends_awaiting_approval")
+    private boolean getListFriendsAwaitingApproval;
+
+    @JsonProperty ("get_list_friends_deleted")
+    private boolean getListFriendsDeleted;
+
     public RequestGeneral ()
     {
     }
 
-    public RequestGeneral (boolean getName , boolean getFamily , boolean getUsername , boolean getEmail , boolean getPhone , boolean getMyLink , boolean getBio)
-    {
-        this.getName = getName;
-        this.getFamily = getFamily;
-        this.getUsername = getUsername;
-        this.getEmail = getEmail;
-        this.getPhone = getPhone;
-        this.getMyLink = getMyLink;
-        this.getBio = getBio;
-    }
-
     public boolean atLeastOne ()
     {
-        return (isGetName () || isGetFamily () || isGetUsername () || isGetEmail () || isGetPhone () || isGetMyLink () || isGetBio ());
+        return (isGetName () || isGetFamily () || isGetUsername () || isGetEmail () || isGetPhone () || isGetMyLink () || isGetBio () || isGetListFriends ());
     }
 
     public boolean isGetName ()
@@ -113,5 +114,45 @@ public class RequestGeneral
     public void setGetBio (boolean getBio)
     {
         this.getBio = getBio;
+    }
+
+    public boolean isGetListFriends ()
+    {
+        return getListFriends;
+    }
+
+    public void setGetListFriends (boolean getListFriends)
+    {
+        this.getListFriends = getListFriends;
+    }
+
+    public boolean isGetListFriendsReject ()
+    {
+        return getListFriendsReject;
+    }
+
+    public void setGetListFriendsReject (boolean getListFriendsReject)
+    {
+        this.getListFriendsReject = getListFriendsReject;
+    }
+
+    public boolean isGetListFriendsAwaitingApproval ()
+    {
+        return getListFriendsAwaitingApproval;
+    }
+
+    public void setGetListFriendsAwaitingApproval (boolean getListFriendsAwaitingApproval)
+    {
+        this.getListFriendsAwaitingApproval = getListFriendsAwaitingApproval;
+    }
+
+    public boolean isGetListFriendsDeleted ()
+    {
+        return getListFriendsDeleted;
+    }
+
+    public void setGetListFriendsDeleted (boolean getListFriendsDeleted)
+    {
+        this.getListFriendsDeleted = getListFriendsDeleted;
     }
 }

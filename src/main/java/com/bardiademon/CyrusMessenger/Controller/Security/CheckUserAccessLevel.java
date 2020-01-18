@@ -10,8 +10,12 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProf
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CheckUserAccessLevel
 {
@@ -33,6 +37,8 @@ public class CheckUserAccessLevel
     private ShowProfileForService showProfileForService;
 
     private SecurityUserProfile securityUserProfile;
+
+    private UserFriendsService userFriendsService;
 
     private ShowProfileFor showProfileFor;
 
@@ -65,6 +71,11 @@ public class CheckUserAccessLevel
     public void setServiceSecurityUserProfile (SecurityUserProfileService service)
     {
         securityUserProfileService = service;
+    }
+
+    public void setUserFriendsService (UserFriendsService userFriendsService)
+    {
+        this.userFriendsService = userFriendsService;
     }
 
     public void setServiceShowChatFor (ShowChatForService service)
@@ -182,8 +193,6 @@ public class CheckUserAccessLevel
 
     private boolean checkFinal (AccessLevel accessLevel)
     {
-        System.out.println (accessLevel.name ());
-
         String result;
         boolean has = true;
         if (accessLevel.equals (AccessLevel.all_except))
@@ -194,7 +203,7 @@ public class CheckUserAccessLevel
         else if (accessLevel.equals (AccessLevel.just_my_list))
             result = showProfileFor.getShowJust ();
         else if (accessLevel.equals (AccessLevel.just_list_friends))
-            result = showProfileFor.getShowJustFriends ();
+            return ((userFriendsService.findFriend (mainAccountWhoRequested , mainAccountToCheck , StatusFriends.friend)) != null);
         else if (accessLevel.equals (AccessLevel.not)) return false;
         else return false;
 
