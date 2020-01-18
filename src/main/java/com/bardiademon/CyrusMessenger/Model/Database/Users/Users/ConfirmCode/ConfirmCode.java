@@ -57,19 +57,6 @@ public class ConfirmCode
     {
     }
 
-    public ConfirmCode (MainAccount mainAccount , String code , String sendCodeTo , ConfirmCodeFor confirmCodeFor , LocalDateTime timeToSendCode , LocalDateTime timeToConfirmed , LocalDateTime timeToBeOutdated , boolean using , boolean confirmed)
-    {
-        this.mainAccount = mainAccount;
-        this.code = code;
-        this.sendCodeTo = sendCodeTo;
-        this.confirmCodeFor = confirmCodeFor;
-        this.timeToSendCode = timeToSendCode;
-        this.timeToConfirmed = timeToConfirmed;
-        this.timeToBeOutdated = timeToBeOutdated;
-        this.using = using;
-        this.confirmed = confirmed;
-    }
-
     public Long getId ()
     {
         return id;
