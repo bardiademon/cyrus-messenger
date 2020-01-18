@@ -29,9 +29,6 @@ public class ShowChatFor
     @Column (name = "show_just")
     protected String showJust;
 
-    @Column (name = "list_just_friends")
-    protected String showJustFriends;
-
     @Column (name = "list_all_except")
     protected String showAllExcept;
 
@@ -43,7 +40,6 @@ public class ShowChatFor
     {
         this.securityUserChat = securityUserChat;
         this.showJust = showJust;
-        this.showJustFriends = showJustFriends;
         this.showAllExcept = showAllExcept;
     }
 
@@ -80,16 +76,6 @@ public class ShowChatFor
     public void setShowJust (String showJust)
     {
         this.showJust = showJust;
-    }
-
-    public String getShowJustFriends ()
-    {
-        return showJustFriends;
-    }
-
-    public void setShowJustFriends (String showJustFriends)
-    {
-        this.showJustFriends = showJustFriends;
     }
 
     public String getShowAllExcept ()
