@@ -46,6 +46,14 @@ public class Code
         return code.getCode ();
     }
 
+    // OF => Other false
+    public static String CreateCodeOF ()
+    {
+        Code code = new Code (8 , true , true , true , false);
+        code.createCode ();
+        return code.getCode ();
+    }
+
     public static String CreateCodeLogin ()
     {
         Code code = new Code (100 , true , true , true , false);
