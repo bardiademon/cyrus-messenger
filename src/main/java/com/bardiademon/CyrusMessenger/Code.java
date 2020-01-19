@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger;
 
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Interface.bardiademon;
 
 import java.util.ArrayList;
@@ -39,6 +40,22 @@ public class Code
         return (Long.parseLong (code.getCode ()));
     }
 
+
+    public static void CreateCodeIsNotExists (Code _Code , int NumberOfCreate , CreateCode _CreateCode)
+    {
+        int counter = 0;
+        while ((counter++) <= NumberOfCreate)
+        {
+            _Code.createCode ();
+            if (_CreateCode.AfterCreate (_Code.getCode () , (counter >= NumberOfCreate))) return;
+        }
+    }
+
+    public interface CreateCode
+    {
+        boolean AfterCreate (String code , boolean last);
+    }
+
     public static String CreateCode ()
     {
         Code code = new Code (8 , true , true , true , true);
@@ -52,6 +69,16 @@ public class Code
         Code code = new Code (8 , true , true , true , false);
         code.createCode ();
         return code.getCode ();
+    }    // OF => Other false
+
+    public static Code GetCodeOF ()
+    {
+        return new Code (8 , true , true , true , false);
+    }
+
+    public static Code GetCodeNumber ()
+    {
+        return new Code (8 , true , false , false , false);
     }
 
     public static String CreateCodeLogin ()

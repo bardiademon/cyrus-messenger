@@ -7,20 +7,21 @@ import org.springframework.stereotype.Repository;
 public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 {
 
-    MainAccount findByPhoneAndRegisteredTrueAndDeletedFalse (String phone);
+    MainAccount findByPhoneAndDeletedFalse (String phone);
+
+    MainAccount findByUsernameAndDeletedFalse (String username);
+
+    MainAccount findByEmailAndDeletedFalse (String email);
+
+    MainAccount findByPhoneAndPasswordAndDeletedFalse (String phone , String password);
+
+    MainAccount findByUsernameAndPasswordAndDeletedFalse (String username , String password);
+
+    MainAccount findByEmailAndPasswordAndDeletedFalse (String email , String password);
+
+    MainAccount findByIdAndEmailNotNullAndDeletedFalse (long id);
 
     MainAccount findByPhoneAndRegisteredFalseAndDeletedFalse (String phone);
 
-    MainAccount findByUsernameAndRegisteredTrueAndDeletedFalse (String username);
-
-    MainAccount findByEmailAndRegisteredTrueAndDeletedFalse (String email);
-
-    MainAccount findByPhoneAndPasswordAndRegisteredTrueAndDeletedFalse (String phone , String password);
-
-    MainAccount findByUsernameAndPasswordAndRegisteredTrueAndDeletedFalse (String username , String password);
-
-    MainAccount findByEmailAndPasswordAndRegisteredTrueAndDeletedFalse (String email , String password);
-
-    MainAccount findByIdAndEmailNotNullAndRegisteredTrueAndDeletedFalse (long id);
 
 }

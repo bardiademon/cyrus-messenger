@@ -29,8 +29,8 @@ public final class FITD_Username
 
     private boolean foundUsername ()
     {
-        mainAccount = mainAccountService.findUsername (username);
-        return mainAccount != null;
+        this.mainAccount = mainAccountService.findUsername (username);
+        return this.mainAccount != null;
     }
 
     public MainAccount getMainAccount ()
@@ -47,4 +47,6 @@ public final class FITD_Username
     {
         return found;
     }
+
+
 }

@@ -49,7 +49,8 @@ public class RestLogin
 
         Map<String, Object> message = answerToClient.getMessage ();
 
-        boolean valid = (boolean) message.get (RestIsValidUEP.KeyAnswer.is_valid.name ());
+        Object objValid;
+        boolean valid = (boolean) ((objValid = message.get (RestIsValidUEP.KeyAnswer.is_valid.name ())) == null ? false : objValid);
 
         Object objPhoneIsConfirmed = message.get (RestIsValidUEP.KeyAnswer.phone_is_confirmed.name ());
 
@@ -123,7 +124,6 @@ public class RestLogin
         }
         return mainAccount;
     }
-
 
     public enum KeyAnswer
     {

@@ -3,12 +3,12 @@ package com.bardiademon.CyrusMessenger.SMS.SendSMS;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import com.bardiademon.CyrusMessenger.Code;
 
-public class ConfirmPhone extends Send
+public class SendSMSConfirmPhone extends Send
 {
 
     private static long code;
 
-    public ConfirmPhone (String Name , String Phone)
+    public SendSMSConfirmPhone (String Name , String Phone)
     {
         super (createText (Name) , Phone);
     }

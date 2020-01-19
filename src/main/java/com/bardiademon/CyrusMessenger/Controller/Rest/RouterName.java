@@ -36,8 +36,8 @@ public abstract class RouterName
 
     public static abstract class RNConfirm
     {
-        public static final String RN_MAIN = RN_MAIN_API + "/api/conform";
+        public static final String RN_MAIN = RN_MAIN_API + "/confirm";
 
-        public static final String RN_CONFIRM_PHONE = RN_MAIN_API + "/phone";
+        public static final String RN_CONFIRM_PHONE = RN_MAIN + "/phone";
     }
 }

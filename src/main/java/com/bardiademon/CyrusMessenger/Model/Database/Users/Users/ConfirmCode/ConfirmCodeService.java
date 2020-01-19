@@ -17,6 +17,6 @@ public class ConfirmCodeService
 
     public boolean isExistsCode (String code)
     {
-        return (Repository.findByCodeAndTimeToConfirmedIsNull (code) != null);
+        return (Repository.findByCodeAndConfirmedFalseAndUsingFalse (code) != null);
     }
 }

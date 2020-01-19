@@ -40,9 +40,6 @@ public class MainAccount
     @JoinTable (name = "id_user_friend", joinColumns = @JoinColumn (name = "id"))
     private List<UserFriends> userFriends;
 
-    @Column (name = "active_phone", insertable = false)
-    private LocalDateTime activePhone;
-
     @Column (nullable = false, unique = true)
     private String username;
 
@@ -125,16 +122,6 @@ public class MainAccount
     public void setPhone (String phone)
     {
         this.phone = phone;
-    }
-
-    public LocalDateTime getActivePhone ()
-    {
-        return activePhone;
-    }
-
-    public void setActivePhone (LocalDateTime activePhone)
-    {
-        this.activePhone = activePhone;
     }
 
     public List<UserFriends> getUserFriends ()

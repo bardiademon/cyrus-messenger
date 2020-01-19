@@ -50,9 +50,12 @@ public class RestIsValidUEP
                     mainAccount = mainAccountService.findPhone (request.getUep ());
                     if (mainAccount != null)
                     {
-                        if (!phoneIsActive (mainAccount.getId ()))
-                            answerToClient = error401 (KeyAnswer.phone_is_confirmed , mainAccount.getId ());
-                        else answerToClient = valid (mainAccount.getId ());
+                        if ((answerToClient = isActive (mainAccount)) == null)
+                        {
+                            if (!phoneIsActive (mainAccount.getId ()))
+                                answerToClient = error401 (KeyAnswer.phone_is_confirmed , mainAccount.getId ());
+                            else answerToClient = valid (mainAccount.getId ());
+                        }
                     }
                     else answerToClient = valid (false , 0);
                 }
@@ -62,16 +65,23 @@ public class RestIsValidUEP
                     mainAccount = mainAccountService.findEmail (request.getUep ());
                     if (mainAccount != null)
                     {
-                        if (!emailIsActive (mainAccount.getId ()))
-                            answerToClient = error401 (KeyAnswer.email_is_confirmed , mainAccount.getId ());
-                        else answerToClient = valid (mainAccount.getId ());
+                        if ((answerToClient = isActive (mainAccount)) == null)
+                        {
+                            if (!emailIsActive (mainAccount.getId ()))
+                                answerToClient = error401 (KeyAnswer.email_is_confirmed , mainAccount.getId ());
+                            else answerToClient = valid (mainAccount.getId ());
+                        }
                     }
                     else answerToClient = valid (false , 0);
                 }
                 break;
                 case IsValidUEPRequest.USERNAME:
                     mainAccount = mainAccountService.findUsername (request.getUep ());
-                    if (mainAccount != null) answerToClient = valid (mainAccount.getId ());
+                    if (mainAccount != null)
+                    {
+                        if ((answerToClient = isActive (mainAccount)) == null)
+                            answerToClient = valid (mainAccount.getId ());
+                    }
                     else answerToClient = valid (false , 0);
                     break;
                 default:
@@ -82,6 +92,17 @@ public class RestIsValidUEP
         }
         answerToClient.setResponse (res);
         return answerToClient;
+    }
+
+    private AnswerToClient isActive (MainAccount mainAccount)
+    {
+        if (mainAccount.isActive ()) return null;
+        else
+        {
+            AnswerToClient answerToClient = AnswerToClient.AccountDeactive ();
+            answerToClient.put (KeyAnswer.is_valid.name () , true);
+            return answerToClient;
+        }
     }
 
     private AnswerToClient error401 (KeyAnswer keyAnswer , long idUser)

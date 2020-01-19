@@ -135,7 +135,7 @@ public class NewEmail
 
     private ConfirmCode sendCode (String email , MainAccount mainAccount)
     {
-        return (confirmCodeService.Repository.findCode (mainAccount.getId () , email , LocalDateTime.now ()));
+        return (confirmCodeService.Repository.findCode (mainAccount.getId () , email , LocalDateTime.now () , ConfirmCodeFor.email));
     }
 
     private ConfirmCode saveCode (String code , MainAccount mainAccount , String email)

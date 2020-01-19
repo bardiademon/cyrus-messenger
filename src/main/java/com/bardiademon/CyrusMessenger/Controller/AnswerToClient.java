@@ -31,6 +31,20 @@ public class AnswerToClient
         return new AnswerToClient (400 , false);
     }
 
+    public static AnswerToClient RequestIsNull ()
+    {
+        AnswerToClient answerToClient = error400 ();
+        answerToClient.put ("answer" , "request_is_null");
+        return answerToClient;
+    }
+
+    public static AnswerToClient AccountDeactive ()
+    {
+        AnswerToClient answerToClient = New (HttpServletResponse.SC_FORBIDDEN);
+        answerToClient.put ("answer" , "account_deactive");
+        return answerToClient;
+    }
+
     public static AnswerToClient ServerError ()
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);

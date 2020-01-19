@@ -117,49 +117,59 @@ public class MainAccountService
 
     public boolean hasEmail (long id)
     {
-        return (Repository.findByIdAndEmailNotNullAndRegisteredTrueAndDeletedFalse (id) != null);
+        return (Repository.findByIdAndEmailNotNullAndDeletedFalse (id) != null);
     }
 
     public long toId (String username)
     {
-        MainAccount byUsername = Repository.findByUsernameAndRegisteredTrueAndDeletedFalse (username);
+        MainAccount byUsername = Repository.findByUsernameAndDeletedFalse (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
     }
 
     public MainAccount findPhone (String phone)
     {
-        return Repository.findByPhoneAndRegisteredTrueAndDeletedFalse (phone);
+        return Repository.findByPhoneAndDeletedFalse (phone);
     }
 
     public MainAccount findUsername (String username)
     {
-        return Repository.findByUsernameAndRegisteredTrueAndDeletedFalse (username);
+        return Repository.findByUsernameAndDeletedFalse (username);
+    }
+
+    public MainAccount findUsername2 (String username)
+    {
+        return Repository.findByUsernameAndDeletedFalse (username);
     }
 
     public MainAccount findEmail (String email)
     {
-        return Repository.findByEmailAndRegisteredTrueAndDeletedFalse (email);
+        return Repository.findByEmailAndDeletedFalse (email);
     }
 
     public MainAccount findPhone (String phone , String password)
     {
-        return Repository.findByPhoneAndPasswordAndRegisteredTrueAndDeletedFalse (phone , password);
+        return Repository.findByPhoneAndPasswordAndDeletedFalse (phone , password);
     }
 
     public MainAccount findUsername (String username , String password)
     {
-        return Repository.findByUsernameAndPasswordAndRegisteredTrueAndDeletedFalse (username , password);
+        return Repository.findByUsernameAndPasswordAndDeletedFalse (username , password);
     }
 
     public MainAccount findEmail (String email , String password)
     {
-        return Repository.findByEmailAndPasswordAndRegisteredTrueAndDeletedFalse (email , password);
+        return Repository.findByEmailAndPasswordAndDeletedFalse (email , password);
     }
 
     public MainAccount findId (long id)
     {
-        return Repository.findByIdAndEmailNotNullAndRegisteredTrueAndDeletedFalse (id);
+        return Repository.findByIdAndEmailNotNullAndDeletedFalse (id);
+    }
+
+    public MainAccount findPhoneNotRegistered (String phone)
+    {
+        return Repository.findByPhoneAndRegisteredFalseAndDeletedFalse (phone);
     }
 
 }

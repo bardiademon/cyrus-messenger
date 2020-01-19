@@ -21,9 +21,12 @@ public class Send
 
     private void send ()
     {
-        send = true;
-        delivered = true;
-        error = false;
+        new Thread (() ->
+        {
+            send = true;
+            delivered = true;
+            error = false;
+        }).start ();
     }
 
     public boolean isSend ()
