@@ -11,7 +11,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProf
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 
 import java.util.Arrays;
@@ -101,10 +100,10 @@ public class CheckUserAccessLevel
     public boolean check (int checkProfileOrChat)
     {
         if (mainAccountWhoRequested == null)
-            mainAccountWhoRequested = mainAccountService.Repository.findByUsername (userWhoRequested);
+            mainAccountWhoRequested = mainAccountService.findUsername (userWhoRequested);
 
         if (mainAccountToCheck == null)
-            mainAccountToCheck = mainAccountService.Repository.findByUsername (userToCheck);
+            mainAccountToCheck = mainAccountService.findUsername (userToCheck);
 
         if (mainAccountWhoRequested == null || mainAccountToCheck == null) return false;
 

@@ -21,7 +21,9 @@ public class Send
 
     private void send ()
     {
-
+        send = true;
+        delivered = true;
+        error = false;
     }
 
     public boolean isSend ()

@@ -11,7 +11,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.Con
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountStatus;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.Status;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatus;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
@@ -84,7 +83,7 @@ public class NewEmail
                         }
                         else
                         {
-                            if (mainAccountService.Repository.findByEmail (email) == null)
+                            if (mainAccountService.findEmail (email) == null)
                             {
 
                                 int counter = 0;
@@ -197,20 +196,6 @@ public class NewEmail
         MainAccount mainAccount = confirmCode.getMainAccount ();
 
         mainAccount.setEmail (confirmCode.getSendCodeTo ());
-        if (mainAccount.getStatus ().equals (MainAccountStatus.email_not_confirmed))
-        {
-            MainAccountStatus mainAccountStatus;
-
-            UsersStatus confirmedPhone
-                    = usersStatusService.Repository.findByMainAccountIdAndStatusAndActiveRowTrue (mainAccount.getId () , Status.conformed_phone);
-
-            if (confirmedPhone == null)
-                mainAccountStatus = MainAccountStatus.phone_not_confirmed;
-            else
-                mainAccountStatus = MainAccountStatus.active;
-
-            mainAccount.setStatus (mainAccountStatus);
-        }
 
         confirmCode.setUsing (true);
         confirmCode.setConfirmed (true);

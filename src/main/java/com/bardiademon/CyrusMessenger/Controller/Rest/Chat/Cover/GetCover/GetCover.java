@@ -99,7 +99,7 @@ public class GetCover
 
     private MainAccount findUsername (String username)
     {
-        return mainAccountService.Repository.findByUsername (username);
+        return mainAccountService.findUsername (username);
     }
 
     private byte[] error (String image)

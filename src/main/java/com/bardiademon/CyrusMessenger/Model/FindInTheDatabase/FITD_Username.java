@@ -29,7 +29,7 @@ public final class FITD_Username
 
     private boolean foundUsername ()
     {
-        mainAccount = mainAccountService.Repository.findByUsername (username);
+        mainAccount = mainAccountService.findUsername (username);
         return mainAccount != null;
     }
 

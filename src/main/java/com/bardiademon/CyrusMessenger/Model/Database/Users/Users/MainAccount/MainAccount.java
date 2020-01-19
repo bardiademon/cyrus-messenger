@@ -67,9 +67,17 @@ public class MainAccount
     @Column (name = "my_link")
     private String myLink;
 
-    @Column (nullable = false)
-    @Enumerated (EnumType.STRING)
-    private MainAccountStatus status = MainAccountStatus.active;
+    private boolean active = false;
+
+    private boolean registered = false;
+
+    @Column (name = "registered_at", insertable = false)
+    private LocalDateTime registeredAt;
+
+    private boolean deleted;
+
+    @Column (name = "deleted_at", insertable = false)
+    private LocalDateTime deletedAt;
 
     @Column (name = "friend_confirmation_method", nullable = false)
     @Enumerated (EnumType.STRING)
@@ -78,8 +86,6 @@ public class MainAccount
     public MainAccount ()
     {
     }
-
-
 
     public long getId ()
     {
@@ -221,14 +227,24 @@ public class MainAccount
         this.myLink = myLink;
     }
 
-    public MainAccountStatus getStatus ()
+    public boolean isActive ()
     {
-        return status;
+        return active;
     }
 
-    public void setStatus (MainAccountStatus status)
+    public void setActive (boolean active)
     {
-        this.status = status;
+        this.active = active;
+    }
+
+    public boolean isRegistered ()
+    {
+        return registered;
+    }
+
+    public void setRegistered (boolean registered)
+    {
+        this.registered = registered;
     }
 
     public boolean hasCover ()
@@ -244,5 +260,35 @@ public class MainAccount
     public void setFriendConfirmationMethod (StatusFriends.ApprovalMethod friendConfirmationMethod)
     {
         this.friendConfirmationMethod = friendConfirmationMethod;
+    }
+
+    public LocalDateTime getRegisteredAt ()
+    {
+        return registeredAt;
+    }
+
+    public void setRegisteredAt (LocalDateTime registeredAt)
+    {
+        this.registeredAt = registeredAt;
+    }
+
+    public boolean isDeleted ()
+    {
+        return deleted;
+    }
+
+    public void setDeleted (boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getDeletedAt ()
+    {
+        return deletedAt;
+    }
+
+    public void setDeletedAt (LocalDateTime deletedAt)
+    {
+        this.deletedAt = deletedAt;
     }
 }

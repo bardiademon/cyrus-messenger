@@ -6,6 +6,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsVal
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.RestIsValidUEP;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ public class RestLogin
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
+    private UsersStatusService usersStatusService;
 
     @Autowired
-    public RestLogin (UserLoginService _UserLoginService , MainAccountService _MainAccountService)
+    public RestLogin (UserLoginService _UserLoginService , MainAccountService _MainAccountService , UsersStatusService _UsersStatusService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
+        this.usersStatusService = _UsersStatusService;
     }
 
     @RequestMapping ({"/" , ""})
@@ -41,8 +44,8 @@ public class RestLogin
     {
         AnswerToClient answerToClient;
 
-        RestIsValidUEP restIsValidUEP = new RestIsValidUEP (userLoginService , mainAccountService);
-        answerToClient = restIsValidUEP.isValid (request.getIsValidUEPRequest () , req , res);
+        RestIsValidUEP restIsValidUEP = new RestIsValidUEP (mainAccountService , usersStatusService);
+        answerToClient = restIsValidUEP.isValid (request.getIsValidUEPRequest () , res);
 
         Map<String, Object> message = answerToClient.getMessage ();
 
@@ -109,13 +112,13 @@ public class RestLogin
         switch (uep)
         {
             case IsValidUEPRequest.PHONE:
-                mainAccount = mainAccountService.Repository.findByPhoneAndPassword (valueEup , password);
+                mainAccount = mainAccountService.findPhone (valueEup , password);
                 break;
             case IsValidUEPRequest.EMAIL:
-                mainAccount = mainAccountService.Repository.findByEmailAndPassword (valueEup , password);
+                mainAccount = mainAccountService.findEmail (valueEup , password);
                 break;
             case IsValidUEPRequest.USERNAME:
-                mainAccount = mainAccountService.Repository.findByUsernameAndPassword (valueEup , password);
+                mainAccount = mainAccountService.findUsername (valueEup , password);
                 break;
         }
         return mainAccount;

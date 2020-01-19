@@ -6,15 +6,14 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountStatus;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.Status;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -25,72 +24,109 @@ public class RestIsValidUEP
 
     private IsValidUEPRequest request;
 
-    private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
+    private UsersStatusService usersStatusService;
 
     @Autowired
-    public RestIsValidUEP (UserLoginService _UserLoginService , MainAccountService _MainAccountService)
+    public RestIsValidUEP (MainAccountService _MainAccountService , UsersStatusService _UsersStatusService)
     {
-        this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
+        this.usersStatusService = _UsersStatusService;
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletRequest req , HttpServletResponse res)
+    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletResponse res)
     {
-        AnswerToClient answerToClient = null;
+        AnswerToClient answerToClient;
         this.request = request;
-        if (!validation ()) answerToClient = error (req , "Phone,Username,Email");
+        if (!validation ()) answerToClient = valid (false , 0);
         else
         {
-            boolean error = false;
-            MainAccount mainAccount = null;
+            MainAccount mainAccount;
             switch (request.getValueUEP ())
             {
                 case IsValidUEPRequest.PHONE:
-                    mainAccount = mainAccountService.Repository.findByPhone (request.getUep ());
-                    break;
+                {
+                    mainAccount = mainAccountService.findPhone (request.getUep ());
+                    if (mainAccount != null)
+                    {
+                        if (!phoneIsActive (mainAccount.getId ()))
+                            answerToClient = error401 (KeyAnswer.phone_is_confirmed , mainAccount.getId ());
+                        else answerToClient = valid (mainAccount.getId ());
+                    }
+                    else answerToClient = valid (false , 0);
+                }
+                break;
                 case IsValidUEPRequest.EMAIL:
-                    mainAccount = mainAccountService.Repository.findByEmail (request.getUep ());
-                    break;
+                {
+                    mainAccount = mainAccountService.findEmail (request.getUep ());
+                    if (mainAccount != null)
+                    {
+                        if (!emailIsActive (mainAccount.getId ()))
+                            answerToClient = error401 (KeyAnswer.email_is_confirmed , mainAccount.getId ());
+                        else answerToClient = valid (mainAccount.getId ());
+                    }
+                    else answerToClient = valid (false , 0);
+                }
+                break;
                 case IsValidUEPRequest.USERNAME:
-                    mainAccount = mainAccountService.Repository.findByUsername (request.getUep ());
+                    mainAccount = mainAccountService.findUsername (request.getUep ());
+                    if (mainAccount != null) answerToClient = valid (mainAccount.getId ());
+                    else answerToClient = valid (false , 0);
                     break;
                 default:
-                    answerToClient = error (req , "Phone,Username,Email");
-                    error = true;
+                    request.setValueUEP (String.format ("%s,%s,%s" , IsValidUEPRequest.USERNAME , IsValidUEPRequest.EMAIL , IsValidUEPRequest.PHONE));
+                    answerToClient = valid (false , 0);
             }
-            if (!error)
-            {
-                if (mainAccount == null)
-                    answerToClient = error (req , this.request.getValueUEP ());
-                else
-                {
-                    answerToClient = new AnswerToClient (200 , true);
-                    userLoginService.validUEP (req.getRemoteAddr ());
-                    answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
-                    answerToClient.put (KeyAnswer.is_valid.name () , true);
-                    answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (mainAccount.getId ()));
-                }
-            }
+
         }
         answerToClient.setResponse (res);
         return answerToClient;
     }
 
-    private boolean phoneIsActive (long id)
+    private AnswerToClient error401 (KeyAnswer keyAnswer , long idUser)
     {
-        MainAccount byIdAndStatusNot = mainAccountService.Repository.findByIdAndStatusNot (id , MainAccountStatus.phone_not_confirmed);
-        return (byIdAndStatusNot != null);
+        AnswerToClient answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
+        answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
+        answerToClient.put (KeyAnswer.is_valid.name () , true);
+        answerToClient.put (keyAnswer.name () , false);
+        if (!keyAnswer.equals (KeyAnswer.phone_is_confirmed) && idUser > 0)
+            answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (idUser));
+        return answerToClient;
     }
 
-    private AnswerToClient error (HttpServletRequest req , String uep)
+    private AnswerToClient valid (long idUser)
     {
-        AnswerToClient answerToClient = AnswerToClient.error400 ();
-        answerToClient.put (KeyAnswer.uep.name () , uep);
-        answerToClient.put (KeyAnswer.is_valid.name () , false);
-        userLoginService.loginFailed (req.getRemoteAddr ());
+        return valid (true , idUser);
+    }
+
+    private AnswerToClient valid (boolean valid , long idUser)
+    {
+        AnswerToClient answerToClient;
+        boolean phoneActive = false;
+        if (idUser > 0)
+            answerToClient = ((phoneActive = phoneIsActive (idUser)) ? AnswerToClient.OK () : AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED));
+        else answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.error400 ());
+
+        answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
+        answerToClient.put (KeyAnswer.is_valid.name () , valid);
+        if (idUser > 0) answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneActive);
         return answerToClient;
+    }
+
+    private boolean phoneIsActive (long id)
+    {
+        return isConfirmed (id , Status.conformed_phone);
+    }
+
+    private boolean emailIsActive (long id)
+    {
+        return isConfirmed (id , Status.confirmed_email);
+    }
+
+    private boolean isConfirmed (long idUser , Status status)
+    {
+        return usersStatusService.Repository.findByMainAccountIdAndStatusAndActiveRowTrue (idUser , status) != null;
     }
 
     private boolean validation ()
@@ -122,6 +158,6 @@ public class RestIsValidUEP
 
     public enum KeyAnswer
     {
-        uep, is_valid, phone_is_confirmed
+        uep, is_valid, phone_is_confirmed, email_is_confirmed
     }
 }

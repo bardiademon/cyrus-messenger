@@ -99,7 +99,7 @@ public class MainAccountService
             req.setUpdatedFamily ();
         }
 
-        if (!req.isNull (req.getUsername ()) && Repository.findByUsername (req.getUsername ()) == null)
+        if (!req.isNull (req.getUsername ()) && findUsername (req.getUsername ()) == null)
         {
             mainAccount.setUsername (req.getUsername ());
             req.setUpdatedUsername ();
@@ -117,14 +117,49 @@ public class MainAccountService
 
     public boolean hasEmail (long id)
     {
-        return (Repository.findByIdAndEmailNotNull (id) != null);
+        return (Repository.findByIdAndEmailNotNullAndRegisteredTrueAndDeletedFalse (id) != null);
     }
 
     public long toId (String username)
     {
-        MainAccount byUsername = Repository.findByUsername (username);
+        MainAccount byUsername = Repository.findByUsernameAndRegisteredTrueAndDeletedFalse (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
+    }
+
+    public MainAccount findPhone (String phone)
+    {
+        return Repository.findByPhoneAndRegisteredTrueAndDeletedFalse (phone);
+    }
+
+    public MainAccount findUsername (String username)
+    {
+        return Repository.findByUsernameAndRegisteredTrueAndDeletedFalse (username);
+    }
+
+    public MainAccount findEmail (String email)
+    {
+        return Repository.findByEmailAndRegisteredTrueAndDeletedFalse (email);
+    }
+
+    public MainAccount findPhone (String phone , String password)
+    {
+        return Repository.findByPhoneAndPasswordAndRegisteredTrueAndDeletedFalse (phone , password);
+    }
+
+    public MainAccount findUsername (String username , String password)
+    {
+        return Repository.findByUsernameAndPasswordAndRegisteredTrueAndDeletedFalse (username , password);
+    }
+
+    public MainAccount findEmail (String email , String password)
+    {
+        return Repository.findByEmailAndPasswordAndRegisteredTrueAndDeletedFalse (email , password);
+    }
+
+    public MainAccount findId (long id)
+    {
+        return Repository.findByIdAndEmailNotNullAndRegisteredTrueAndDeletedFalse (id);
     }
 
 }

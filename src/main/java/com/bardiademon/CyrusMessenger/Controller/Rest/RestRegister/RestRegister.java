@@ -39,7 +39,7 @@ public class RestRegister
         if (isNull ())
         {
             answerToClient = AnswerToClient.error400 ();
-            answerToClient.put ("answer" , "Request is null");
+            answerToClient.put (KeyAnswer.answer.name () , ValAnswer.request_is_null.name ());
         }
         else
         {
@@ -63,12 +63,13 @@ public class RestRegister
                             if (mainAccountService.newAccount (registerRequest))
                             {
                                 answerToClient = new AnswerToClient (200 , true);
-                                answerToClient.put ("answer" , "Recorded");
+                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.recorded.name ());
+                                answerToClient.put (KeyAnswer.registered.name () , false);
                             }
                             else
                             {
                                 answerToClient = new AnswerToClient (500 , false);
-                                answerToClient.put ("answer" , "Error record");
+                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.error_recorded.name ());
                             }
                         }
                     }
@@ -98,7 +99,7 @@ public class RestRegister
         }
         else
         {
-            MainAccount mainAccount = mainAccountService.Repository.findByPhone (registerRequest.getPhone ());
+            MainAccount mainAccount = mainAccountService.findPhone (registerRequest.getPhone ());
             if (mainAccount != null)
             {
                 setError400 ("Phone" , "Exists");
@@ -111,12 +112,22 @@ public class RestRegister
     private void setError400 (String what , String is)
     {
         answerToClient = AnswerToClient.error400 ();
-        answerToClient.put ("answer" , String.format ("%s is %s" , what , is));
+        answerToClient.put (KeyAnswer.answer.name () , String.format ("%s is %s" , what , is));
     }
 
     private boolean isNull ()
     {
         return (registerRequest.family == null || registerRequest.name == null || registerRequest.getPhone () == null || registerRequest.username == null);
+    }
+
+    private enum KeyAnswer
+    {
+        answer, registered
+    }
+
+    private enum ValAnswer
+    {
+        recorded, error_recorded, request_is_null
     }
 
 }
