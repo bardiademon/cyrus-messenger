@@ -16,6 +16,7 @@ import com.bardiademon.CyrusMessenger.SMS.SendSMS.SendSMSConfirmPhone;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RouterName.RNConfirm.RN_CONFIRM_PHONE)
+@RequestMapping (value = RouterName.RNConfirm.RN_CONFIRM_PHONE,method = RequestMethod.POST)
 public class ConfirmPhone
 {
 
