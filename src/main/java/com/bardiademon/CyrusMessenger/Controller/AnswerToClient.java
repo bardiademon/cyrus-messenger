@@ -50,6 +50,11 @@ public class AnswerToClient
         return new AnswerToClient (StatusCode , Ok);
     }
 
+    public static AnswerToClient New (int StatusCode)
+    {
+        return New (StatusCode , false);
+    }
+
     public void setResponse (HttpServletResponse response)
     {
         this.response = response;
