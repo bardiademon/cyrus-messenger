@@ -10,6 +10,9 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChat
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,40 +44,42 @@ public class MainAccountService
     }
 
 
-    public boolean newAccount (RegisterRequest registerRequest)
+    public boolean newAccount (RegisterRequest registerRequest , ConfirmedPhone confirmedPhone , ConfirmCodeService confirmCodeService)
     {
         MainAccount mainAccount = new MainAccount ();
-        mainAccount.setName (registerRequest.name);
-        mainAccount.setFamily (registerRequest.family);
-        mainAccount.setPhone (registerRequest.getPhone ());
-        mainAccount.setUsername (registerRequest.username);
-        mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.password));
+        mainAccount.setName (registerRequest.getName ());
+        mainAccount.setFamily (registerRequest.getFamily ());
+        mainAccount.setPhone (confirmedPhone.getPhone ());
+        mainAccount.setUsername (registerRequest.getUsername ());
+        mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.getPassword ()));
 
         MainAccount save = Repository.save (mainAccount);
-        if (save != null)
-        {
-            SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
-            securityUserProfile.setMainAccount (save);
+        SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
+        securityUserProfile.setMainAccount (save);
 
-            SecurityUserChat securityUserChat = new SecurityUserChat ();
-            securityUserChat.setCanSendNumberOfMessageUnread (0);
-            securityUserChat.setMainAccount (save);
+        SecurityUserChat securityUserChat = new SecurityUserChat ();
+        securityUserChat.setCanSendNumberOfMessageUnread (0);
+        securityUserChat.setMainAccount (save);
 
-            SecurityUserProfile newSecurityUserProfile = repositorySecurityProfile.save (securityUserProfile);
-            SecurityUserChat newSecurityUserChat = repositorySecurityChat.save (securityUserChat);
+        SecurityUserProfile newSecurityUserProfile = repositorySecurityProfile.save (securityUserProfile);
+        SecurityUserChat newSecurityUserChat = repositorySecurityChat.save (securityUserChat);
 
-            ShowProfileFor showProfileFor = new ShowProfileFor ();
-            showProfileFor.setSecurityUserProfile (newSecurityUserProfile);
+        ShowProfileFor showProfileFor = new ShowProfileFor ();
+        showProfileFor.setSecurityUserProfile (newSecurityUserProfile);
 
-            ShowChatFor showChatFor = new ShowChatFor ();
-            showChatFor.setSecurityUserChat (newSecurityUserChat);
+        ShowChatFor showChatFor = new ShowChatFor ();
+        showChatFor.setSecurityUserChat (newSecurityUserChat);
 
-            showProfileForService.Repository.save (showProfileFor);
-            showChatForService.Repository.save (showChatFor);
+        showProfileForService.Repository.save (showProfileFor);
+        showChatForService.Repository.save (showChatFor);
 
-            return true;
-        }
-        else return false;
+
+        ConfirmCode confirmCode = confirmedPhone.getConfirmCode ();
+        confirmCode.setMainAccount (mainAccount);
+        confirmCodeService.Repository.save (confirmCode);
+
+        return mainAccount.getId () > 0;
+
     }
 
     public RequestGeneral updateGeneral (MainAccount mainAccount , RequestGeneral req)
@@ -165,11 +170,6 @@ public class MainAccountService
     public MainAccount findId (long id)
     {
         return Repository.findByIdAndEmailNotNullAndDeletedFalse (id);
-    }
-
-    public MainAccount findPhoneNotRegistered (String phone)
-    {
-        return Repository.findByPhoneAndRegisteredFalseAndDeletedFalse (phone);
     }
 
 }

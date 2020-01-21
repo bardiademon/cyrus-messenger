@@ -64,12 +64,7 @@ public class MainAccount
     @Column (name = "my_link")
     private String myLink;
 
-    private boolean active = false;
-
-    private boolean registered = false;
-
-    @Column (name = "registered_at", insertable = false)
-    private LocalDateTime registeredAt;
+    private boolean active = true;
 
     private boolean deleted;
 
@@ -224,20 +219,11 @@ public class MainAccount
         this.active = active;
     }
 
-    public boolean isRegistered ()
-    {
-        return registered;
-    }
-
-    public void setRegistered (boolean registered)
-    {
-        this.registered = registered;
-    }
-
     public boolean hasCover ()
     {
         return (cover != null && !cover.equals (""));
     }
+
 
     public StatusFriends.ApprovalMethod getFriendConfirmationMethod ()
     {
@@ -249,15 +235,6 @@ public class MainAccount
         this.friendConfirmationMethod = friendConfirmationMethod;
     }
 
-    public LocalDateTime getRegisteredAt ()
-    {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt (LocalDateTime registeredAt)
-    {
-        this.registeredAt = registeredAt;
-    }
 
     public boolean isDeleted ()
     {

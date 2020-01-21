@@ -1,8 +1,10 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.FindInTheDatabase.FITD_Username;
@@ -24,11 +26,16 @@ public class RestRegister
     private RegisterRequest registerRequest;
 
     private final MainAccountService mainAccountService;
+    private ConfirmedPhoneService confirmedPhoneService;
+    private ConfirmCodeService confirmCodeService;
 
     @Autowired
-    public RestRegister (MainAccountService _MainAccountService)
+    public RestRegister (MainAccountService _MainAccountService ,
+                         ConfirmedPhoneService _ConfirmedPhoneService , ConfirmCodeService _ConfirmCodeService)
     {
         this.mainAccountService = _MainAccountService;
+        this.confirmedPhoneService = _ConfirmedPhoneService;
+        this.confirmCodeService = _ConfirmCodeService;
     }
 
     @RequestMapping ({"/" , ""})
@@ -43,46 +50,59 @@ public class RestRegister
         }
         else
         {
-            if (isEmpty (registerRequest.username)) setError400 ("Username" , "empty");
-            if (isEmpty (registerRequest.password)) setError400 ("Password" , "empty");
-            else if (isEmpty (registerRequest.region)) setError400 ("Region" , "empty");
-            else if (isEmpty (registerRequest.getPhone ())) setError400 ("Phone" , "empty");
-            else if (isEmpty (registerRequest.name)) setError400 ("Name" , "empty");
-            else if (isEmpty (registerRequest.family)) setError400 ("Family" , "empty");
+            String emptyName = ValAnswer.empty.name ();
+            if (isEmpty (registerRequest.getUsername ())) setError400 (ValAnswer.username.name () , emptyName);
+            if (isEmpty (registerRequest.getPassword ())) setError400 (ValAnswer.password.name () , emptyName);
+            else if (isEmpty (registerRequest.getName ())) setError400 (ValAnswer.name.name () , emptyName);
+            else if (isEmpty (registerRequest.getFamily ())) setError400 (ValAnswer.family.name () , emptyName);
+            else if (isEmpty (registerRequest.getCodeConfirmedPhone ()))
+                setError400 (ValAnswer.code_confirmed_phone.name () , emptyName);
             else
             {
-                if ((new VUsername (registerRequest.username)).check ())
+                if ((new VUsername (registerRequest.getUsername ())).check ())
                 {
-                    VPhone vPhone;
-                    if ((vPhone = new VPhone (registerRequest.getPhone () , registerRequest.region)).check ())
+                    if (!checkExists ()) return answerToClient;
+                    else
                     {
-                        registerRequest.setPhone (vPhone.getPhone ());
-                        if (!checkExists ()) return answerToClient;
+                        ConfirmedPhone confirmedPhone = checkCodeConfirmedPhone (registerRequest.getCodeConfirmedPhone ());
+                        if (confirmedPhone == null)
+                            setError400 (ValAnswer.code_confirmed_phone.name () , ValAnswer.invalid.name ());
                         else
                         {
-                            if (mainAccountService.newAccount (registerRequest))
+                            MainAccount mainAccount = confirmedPhone.getConfirmCode ().getMainAccount ();
+                            if (mainAccount == null || mainAccount.isDeleted ())
                             {
-                                answerToClient = new AnswerToClient (200 , true);
-                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.recorded.name ());
-                                answerToClient.put (KeyAnswer.registered.name () , false);
+                                if (mainAccountService.newAccount (registerRequest , confirmedPhone , confirmCodeService))
+                                {
+                                    answerToClient = new AnswerToClient (200 , true);
+                                    answerToClient.put (KeyAnswer.answer.name () , ValAnswer.recorded.name ());
+                                    answerToClient.put (KeyAnswer.phone.name () , confirmedPhone.getPhone ());
+                                }
+                                else
+                                {
+                                    answerToClient = AnswerToClient.ServerError ();
+                                    answerToClient.put (KeyAnswer.answer.name () , ValAnswer.error_recorded.name ());
+                                }
                             }
                             else
                             {
-                                answerToClient = new AnswerToClient (500 , false);
-                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.error_recorded.name ());
+                                answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
+                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.phone_is_exists.name ());
                             }
                         }
                     }
-                    else setError400 ("Phone" , "invalid");
-
                 }
-                else setError400 ("Username" , "invalid");
+                else setError400 (ValAnswer.username.name () , ValAnswer.invalid.name ());
             }
         }
         answerToClient.setResponse (res);
         return answerToClient;
     }
 
+    private ConfirmedPhone checkCodeConfirmedPhone (String code)
+    {
+        return confirmedPhoneService.getConfirmedPhoneIsActiveConfirmed (code);
+    }
 
     private boolean isEmpty (String value)
     {
@@ -91,20 +111,11 @@ public class RestRegister
 
     private boolean checkExists ()
     {
-        FITD_Username fitd_username = new FITD_Username (registerRequest.username , mainAccountService);
+        FITD_Username fitd_username = new FITD_Username (registerRequest.getUsername () , mainAccountService);
         if (fitd_username.isFound ())
         {
-            setError400 ("Username" , "Exists");
+            setError400 (ValAnswer.username.name () , ValAnswer.exists.name ());
             return false;
-        }
-        else
-        {
-            MainAccount mainAccount = mainAccountService.findPhone (registerRequest.getPhone ());
-            if (mainAccount != null)
-            {
-                setError400 ("Phone" , "Exists");
-                return false;
-            }
         }
         return true;
     }
@@ -112,22 +123,23 @@ public class RestRegister
     private void setError400 (String what , String is)
     {
         answerToClient = AnswerToClient.error400 ();
-        answerToClient.put (KeyAnswer.answer.name () , String.format ("%s is %s" , what , is));
+        answerToClient.put (KeyAnswer.answer.name () , String.format ("%s_is_%s" , what , is));
     }
 
     private boolean isNull ()
     {
-        return (registerRequest.family == null || registerRequest.name == null || registerRequest.getPhone () == null || registerRequest.username == null);
+        return (registerRequest.getFamily () == null || registerRequest.getName () == null || registerRequest.getUsername () == null);
     }
 
     private enum KeyAnswer
     {
-        answer, registered
+        answer, phone
     }
 
     private enum ValAnswer
     {
-        recorded, error_recorded, request_is_null
+        recorded, error_recorded,
+        request_is_null, phone, username, code_confirmed_phone, exists, invalid, empty, password, name, family, phone_is_exists
     }
 
 }

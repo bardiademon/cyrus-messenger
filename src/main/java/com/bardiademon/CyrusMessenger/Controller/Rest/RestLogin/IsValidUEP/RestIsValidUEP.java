@@ -39,7 +39,7 @@ public class RestIsValidUEP
     {
         AnswerToClient answerToClient;
         this.request = request;
-        if (!validation ()) answerToClient = valid (false , 0);
+        if (!validation ()) answerToClient = valid (false);
         else
         {
             MainAccount mainAccount;
@@ -51,13 +51,9 @@ public class RestIsValidUEP
                     if (mainAccount != null)
                     {
                         if ((answerToClient = isActive (mainAccount)) == null)
-                        {
-                            if (!phoneIsActive (mainAccount.getId ()))
-                                answerToClient = error401 (KeyAnswer.phone_is_confirmed , mainAccount.getId ());
-                            else answerToClient = valid (mainAccount.getId ());
-                        }
+                            answerToClient = valid (true);
                     }
-                    else answerToClient = valid (false , 0);
+                    else answerToClient = valid (false);
                 }
                 break;
                 case IsValidUEPRequest.EMAIL:
@@ -68,11 +64,11 @@ public class RestIsValidUEP
                         if ((answerToClient = isActive (mainAccount)) == null)
                         {
                             if (!emailIsActive (mainAccount.getId ()))
-                                answerToClient = error401 (KeyAnswer.email_is_confirmed , mainAccount.getId ());
-                            else answerToClient = valid (mainAccount.getId ());
+                                answerToClient = error401 ();
+                            else answerToClient = valid (true);
                         }
                     }
-                    else answerToClient = valid (false , 0);
+                    else answerToClient = valid (false);
                 }
                 break;
                 case IsValidUEPRequest.USERNAME:
@@ -80,13 +76,13 @@ public class RestIsValidUEP
                     if (mainAccount != null)
                     {
                         if ((answerToClient = isActive (mainAccount)) == null)
-                            answerToClient = valid (mainAccount.getId ());
+                            answerToClient = valid (true);
                     }
-                    else answerToClient = valid (false , 0);
+                    else answerToClient = valid (false);
                     break;
                 default:
                     request.setValueUEP (String.format ("%s,%s,%s" , IsValidUEPRequest.USERNAME , IsValidUEPRequest.EMAIL , IsValidUEPRequest.PHONE));
-                    answerToClient = valid (false , 0);
+                    answerToClient = valid (false);
             }
 
         }
@@ -105,49 +101,33 @@ public class RestIsValidUEP
         }
     }
 
-    private AnswerToClient error401 (KeyAnswer keyAnswer , long idUser)
+    private AnswerToClient error401 ()
     {
         AnswerToClient answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
         answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
         answerToClient.put (KeyAnswer.is_valid.name () , true);
-        answerToClient.put (keyAnswer.name () , false);
-        if (!keyAnswer.equals (KeyAnswer.phone_is_confirmed) && idUser > 0)
-            answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneIsActive (idUser));
+        answerToClient.put (KeyAnswer.email_is_confirmed.name () , false);
         return answerToClient;
     }
 
-    private AnswerToClient valid (long idUser)
-    {
-        return valid (true , idUser);
-    }
-
-    private AnswerToClient valid (boolean valid , long idUser)
+    private AnswerToClient valid (boolean valid)
     {
         AnswerToClient answerToClient;
-        boolean phoneActive = false;
-        if (idUser > 0)
-            answerToClient = ((phoneActive = phoneIsActive (idUser)) ? AnswerToClient.OK () : AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED));
-        else answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.error400 ());
+        answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.error400 ());
 
         answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
         answerToClient.put (KeyAnswer.is_valid.name () , valid);
-        if (idUser > 0) answerToClient.put (KeyAnswer.phone_is_confirmed.name () , phoneActive);
         return answerToClient;
-    }
-
-    private boolean phoneIsActive (long id)
-    {
-        return isConfirmed (id , Status.conformed_phone);
     }
 
     private boolean emailIsActive (long id)
     {
-        return isConfirmed (id , Status.confirmed_email);
+        return isConfirmed (id);
     }
 
-    private boolean isConfirmed (long idUser , Status status)
+    private boolean isConfirmed (long idUser)
     {
-        return usersStatusService.Repository.findByMainAccountIdAndStatusAndActiveRowTrue (idUser , status) != null;
+        return usersStatusService.Repository.findByMainAccountIdAndStatusAndActiveRowTrue (idUser , Status.confirmed_email) != null;
     }
 
     private boolean validation ()
@@ -179,6 +159,6 @@ public class RestIsValidUEP
 
     public enum KeyAnswer
     {
-        uep, is_valid, phone_is_confirmed, email_is_confirmed
+        uep, is_valid, email_is_confirmed
     }
 }

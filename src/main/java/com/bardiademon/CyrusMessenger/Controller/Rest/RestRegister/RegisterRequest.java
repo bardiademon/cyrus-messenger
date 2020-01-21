@@ -1,33 +1,79 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public final class RegisterRequest
 {
 
-    private String phone;
+    private String username;
+    private String name, family;
 
-    public final String username, region;
-    public final String name, family;
+    private String password;
 
-    public final String password;
+    @JsonProperty ("code_confirmed_phone")
+    private String codeConfirmedPhone;
 
-    public RegisterRequest (String phone , String username , String region , String name , String family , String password)
+    public RegisterRequest ()
     {
-        this.phone = phone;
+    }
+
+    public RegisterRequest (String username , String name , String family , String password , String codeConfirmedPhone)
+    {
         this.username = username;
-        this.region = region;
         this.name = name;
         this.family = family;
         this.password = password;
+        this.codeConfirmedPhone = codeConfirmedPhone;
     }
 
-    public String getPhone ()
+    public String getUsername ()
     {
-        return phone;
+        return username;
     }
 
-    public void setPhone (String phone)
+    public void setUsername (String username)
     {
-        this.phone = phone;
+        this.username = username;
+    }
+
+    public String getName ()
+    {
+        return name;
+    }
+
+    public void setName (String name)
+    {
+        this.name = name;
+    }
+
+    public String getFamily ()
+    {
+        return family;
+    }
+
+    public void setFamily (String family)
+    {
+        this.family = family;
+    }
+
+    public String getPassword ()
+    {
+        return password;
+    }
+
+    public void setPassword (String password)
+    {
+        this.password = password;
+    }
+
+    public String getCodeConfirmedPhone ()
+    {
+        return codeConfirmedPhone;
+    }
+
+    public void setCodeConfirmedPhone (String codeConfirmedPhone)
+    {
+        this.codeConfirmedPhone = codeConfirmedPhone;
     }
 }
 

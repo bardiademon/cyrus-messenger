@@ -52,14 +52,10 @@ public class RestLogin
         Object objValid;
         boolean valid = (boolean) ((objValid = message.get (RestIsValidUEP.KeyAnswer.is_valid.name ())) == null ? false : objValid);
 
-        Object objPhoneIsConfirmed = message.get (RestIsValidUEP.KeyAnswer.phone_is_confirmed.name ());
-
-        boolean phoneIsConfirmed = false;
-        if (objPhoneIsConfirmed != null) phoneIsConfirmed = (boolean) objPhoneIsConfirmed;
 
         boolean isOk = answerToClient.isOk ();
         boolean is200 = answerToClient.getStatusCode () == 200;
-        if (isOk && is200 && valid && phoneIsConfirmed)
+        if (isOk && is200 && valid)
         {
             MainAccount mainAccount;
             if ((request.getPassword () != null && !request.getPassword ().equals ("")) && (mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
