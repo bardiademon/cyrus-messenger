@@ -88,6 +88,11 @@ public class Code
         return code.getCode ();
     }
 
+    public static Code CreateCodeLong ()
+    {
+        return new Code (100 , true , true , true , false);
+    }
+
     public static String Name ()
     {
         Code code = new Code (50 , true , true , true , false);
