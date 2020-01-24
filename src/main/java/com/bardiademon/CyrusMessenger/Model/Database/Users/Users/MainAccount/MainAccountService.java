@@ -167,9 +167,9 @@ public class MainAccountService
         return Repository.findByEmailAndPasswordAndDeletedFalse (email , password);
     }
 
-    public MainAccount findId (long id)
+    public MainAccount findValidById (long id)
     {
-        return Repository.findByIdAndEmailNotNullAndDeletedFalse (id);
+        return Repository.findByIdAndDeletedFalse (id);
     }
 
 }

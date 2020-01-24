@@ -34,6 +34,17 @@ public abstract class RouterName
 
     }
 
+    public static abstract class RNOtherUsers
+    {
+        public static final String RN_MAIN = RN_MAIN_API + "/info_user/other_users/";
+
+        public static final String RN_GENERAL = RN_MAIN + "/general";
+
+        public static final String RN_SHOW_PROFILE = RN_GENERAL + "/show_profile";
+
+
+    }
+
     public static abstract class RNConfirm
     {
         public static final String RN_MAIN = RN_MAIN_API + "/confirm";
