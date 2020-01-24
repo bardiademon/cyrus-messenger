@@ -10,11 +10,12 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProf
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class CheckUserAccessLevel
 {
@@ -42,6 +43,8 @@ public class CheckUserAccessLevel
     private ShowProfileFor showProfileFor;
 
     private SecurityUserChat securityUserChat;
+
+    private UserContactsService userContactsService;
 
     public CheckUserAccessLevel (String UserWhoRequested , String UserToCheck , MainAccountService _MainAccountService)
     {
@@ -95,6 +98,11 @@ public class CheckUserAccessLevel
     public void setCheckChat (CheckChat checkChat)
     {
         this.checkChat = checkChat;
+    }
+
+    public void setUserContactsService (UserContactsService userContactsService)
+    {
+        this.userContactsService = userContactsService;
     }
 
     public boolean check (int checkProfileOrChat)
@@ -194,7 +202,13 @@ public class CheckUserAccessLevel
     {
         String result;
         boolean has = true;
-        if (accessLevel.equals (AccessLevel.all_except))
+        if (accessLevel.equals (AccessLevel.just_contacts) || accessLevel.equals (AccessLevel.all_except_contacts))
+        {
+            UserContacts contact = userContactsService.findContact (mainAccountToCheck.getId () , mainAccountWhoRequested.getId ());
+            if (accessLevel.equals (AccessLevel.just_contacts)) return contact != null;
+            else return contact == null;
+        }
+        else if (accessLevel.equals (AccessLevel.all_except))
         {
             result = showProfileFor.getShowAllExcept ();
             has = false;
