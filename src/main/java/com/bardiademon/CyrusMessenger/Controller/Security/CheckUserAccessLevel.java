@@ -31,20 +31,16 @@ public class CheckUserAccessLevel
 
     private MainAccountService mainAccountService;
     private SecurityUserChatService securityUserChatService;
-    private SecurityUserProfileService securityUserProfileService;
 
     private ShowChatForService showChatForService;
-    private ShowProfileForService showProfileForService;
-
-    private SecurityUserProfile securityUserProfile;
-
-    private UserFriendsService userFriendsService;
 
     private ShowProfileFor showProfileFor;
 
     private SecurityUserChat securityUserChat;
 
-    private UserContactsService userContactsService;
+    private ServiceProfile serviceProfile;
+
+    private SecurityUserProfile securityUserProfile;
 
     public CheckUserAccessLevel (String UserWhoRequested , String UserToCheck , MainAccountService _MainAccountService)
     {
@@ -70,24 +66,14 @@ public class CheckUserAccessLevel
         securityUserChatService = service;
     }
 
-    public void setServiceSecurityUserProfile (SecurityUserProfileService service)
-    {
-        securityUserProfileService = service;
-    }
-
-    public void setUserFriendsService (UserFriendsService userFriendsService)
-    {
-        this.userFriendsService = userFriendsService;
-    }
-
     public void setServiceShowChatFor (ShowChatForService service)
     {
         showChatForService = service;
     }
 
-    public void setServiceShowProfileFor (ShowProfileForService service)
+    public void setServiceProfile (ServiceProfile serviceProfile)
     {
-        showProfileForService = service;
+        this.serviceProfile = serviceProfile;
     }
 
     public void setCheckProfile (CheckProfile checkProfile)
@@ -98,11 +84,6 @@ public class CheckUserAccessLevel
     public void setCheckChat (CheckChat checkChat)
     {
         this.checkChat = checkChat;
-    }
-
-    public void setUserContactsService (UserContactsService userContactsService)
-    {
-        this.userContactsService = userContactsService;
     }
 
     public boolean check (int checkProfileOrChat)
@@ -126,11 +107,11 @@ public class CheckUserAccessLevel
 
     private boolean checkProfile ()
     {
-        if (securityUserProfileService == null) return false;
+        if (serviceProfile._SecurityUserProfileService == null) return false;
         else
         {
             securityUserProfile =
-                    securityUserProfileService.Repository.findByMainAccount (mainAccountToCheck);
+                    serviceProfile._SecurityUserProfileService.Repository.findByMainAccount (mainAccountToCheck);
 
             if (securityUserProfile == null) return false;
             return checkSecurityProfile ();
@@ -179,17 +160,18 @@ public class CheckUserAccessLevel
     private boolean checkAccessLevelProfile (AccessLevel accessLevel)
     {
         if (accessLevel.equals (AccessLevel.all)) return true;
+        else if (accessLevel.equals (AccessLevel.not)) return false;
         else
         {
             SecurityUserProfile byMainAccount
-                    = securityUserProfileService.Repository.findByMainAccount (mainAccountToCheck);
+                    = serviceProfile._SecurityUserProfileService.Repository.findByMainAccount (mainAccountToCheck);
 
             if (byMainAccount == null) return false;
             else
             {
-                if (showProfileForService == null) return false;
+                if (serviceProfile._ShowProfileForService == null) return false;
                 showProfileFor
-                        = showProfileForService.Repository.findBySecurityUserProfile (byMainAccount);
+                        = serviceProfile._ShowProfileForService.Repository.findBySecurityUserProfile (byMainAccount);
                 if (showProfileFor == null) return false;
 
                 return checkFinal (accessLevel);
@@ -204,7 +186,7 @@ public class CheckUserAccessLevel
         boolean has = true;
         if (accessLevel.equals (AccessLevel.just_contacts) || accessLevel.equals (AccessLevel.all_except_contacts))
         {
-            UserContacts contact = userContactsService.findContact (mainAccountToCheck.getId () , mainAccountWhoRequested.getId ());
+            UserContacts contact = serviceProfile._UserContactsService.findContact (mainAccountToCheck.getId () , mainAccountWhoRequested.getId ());
             if (accessLevel.equals (AccessLevel.just_contacts)) return contact != null;
             else return contact == null;
         }
@@ -216,8 +198,7 @@ public class CheckUserAccessLevel
         else if (accessLevel.equals (AccessLevel.just_my_list))
             result = showProfileFor.getShowJust ();
         else if (accessLevel.equals (AccessLevel.just_list_friends))
-            return ((userFriendsService.findFriend (mainAccountWhoRequested , mainAccountToCheck , StatusFriends.friend)) != null);
-        else if (accessLevel.equals (AccessLevel.not)) return false;
+            return ((serviceProfile._UserFriendsService.findFriend (mainAccountWhoRequested , mainAccountToCheck , StatusFriends.friend)) != null);
         else return false;
 
         boolean resultIsNull = (result == null || result.equals (""));
@@ -317,6 +298,32 @@ public class CheckUserAccessLevel
     {
         send_emoji, send_file, send_gif, send_image, send_invitation,
         send_link, send_message, send_sticker, send_voice
+    }
+
+    public static class Service
+    {
+        public final UserContactsService _UserContactsService;
+        public final UserFriendsService _UserFriendsService;
+
+        public Service (UserContactsService _UserContactsService , UserFriendsService _UserFriendsService)
+        {
+            this._UserContactsService = _UserContactsService;
+            this._UserFriendsService = _UserFriendsService;
+        }
+    }
+
+    public static class ServiceProfile extends Service
+    {
+        public final ShowProfileForService _ShowProfileForService;
+        public final SecurityUserProfileService _SecurityUserProfileService;
+
+        public ServiceProfile (ShowProfileForService _ShowProfileForService , UserContactsService _UserContactsService , UserFriendsService _UserFriendsService , SecurityUserProfileService _SecurityUserProfileService)
+        {
+            super (_UserContactsService , _UserFriendsService);
+            this._ShowProfileForService = _ShowProfileForService;
+            this._SecurityUserProfileService = _SecurityUserProfileService;
+        }
+
     }
 
 }

@@ -14,7 +14,12 @@ import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -28,10 +33,8 @@ public class GetCover
 {
     private MainAccountService mainAccountService;
     private UserLoginService userLoginService;
-    private SecurityUserProfileService securityUserProfileService;
-    private ShowProfileForService showProfileForService;
-    private UserContactsService userContactsService;
-    private UserFriendsService userFriendsService;
+
+    private CheckUserAccessLevel.ServiceProfile serviceProfile;
 
     @Autowired
     public GetCover
@@ -45,10 +48,8 @@ public class GetCover
     {
         this.mainAccountService = _MainAccountService;
         this.userLoginService = _UserLoginService;
-        this.securityUserProfileService = _SecurityUserProfileService;
-        this.showProfileForService = _ShowProfileForService;
-        this.userContactsService = _UserContactsService;
-        this.userFriendsService = _UserFriendsService;
+        serviceProfile = new CheckUserAccessLevel.ServiceProfile
+                (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService);
     }
 
     @RequestMapping (value = {"/{username}" , "/" , ""}, produces = MediaType.IMAGE_JPEG_VALUE, method = RequestMethod.GET)
@@ -81,10 +82,7 @@ public class GetCover
             CheckUserAccessLevel accessLevel =
                     new CheckUserAccessLevel (vCodeLogin.getMainAccount () , mainAccount , mainAccountService);
 
-            accessLevel.setServiceSecurityUserProfile (securityUserProfileService);
-            accessLevel.setServiceShowProfileFor (showProfileForService);
-            accessLevel.setUserFriendsService (userFriendsService);
-            accessLevel.setUserContactsService (userContactsService);
+            accessLevel.setServiceProfile (serviceProfile);
             accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);
             boolean isAccessLevel = accessLevel.check (accessLevel.CHK_PROFILE);
 
