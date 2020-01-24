@@ -31,7 +31,7 @@ public class AnswerToClient
         return new AnswerToClient (400 , false);
     }
 
-    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , String Answer)
+    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , Object Answer)
     {
         _AnswerToClient.put (CUK.answer.name () , Answer);
         return _AnswerToClient;
