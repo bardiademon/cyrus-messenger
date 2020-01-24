@@ -31,31 +31,48 @@ public class AnswerToClient
         return new AnswerToClient (400 , false);
     }
 
+    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , String Answer)
+    {
+        _AnswerToClient.put (CUK.answer.name () , Answer);
+        return _AnswerToClient;
+    }
+
+    /**
+     * KeyAnswer => Key => KeyAnswer[0] , Answer => KeyAnswer[1] | Key => KeyAnswer[2] , Answer => KeyAnswer[3] ,....
+     */
+    public static AnswerToClient KeyAnswer (AnswerToClient _AnswerToClient , Object... KeyAnswer)
+    {
+        for (int i = 0, len = ((KeyAnswer.length) - 1); i < len; i += 2)
+            _AnswerToClient.put (String.valueOf (KeyAnswer[i]) , KeyAnswer[(i + 1)]);
+
+        return _AnswerToClient;
+    }
+
     public static AnswerToClient RequestIsNull ()
     {
         AnswerToClient answerToClient = error400 ();
-        answerToClient.put ("answer" , "request_is_null");
+        answerToClient.put (CUK.answer.name () , "request_is_null");
         return answerToClient;
     }
 
     public static AnswerToClient AccountDeactive ()
     {
         AnswerToClient answerToClient = New (HttpServletResponse.SC_FORBIDDEN);
-        answerToClient.put ("answer" , "account_deactive");
+        answerToClient.put (CUK.answer.name () , "account_deactive");
         return answerToClient;
     }
 
     public static AnswerToClient ServerError ()
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);
-        answerToClient.put ("answer" , "Please Try again");
+        answerToClient.put (CUK.answer.name () , "please_try_again");
         return answerToClient;
     }
 
     public static AnswerToClient NotLoggedIn ()
     {
         AnswerToClient answerToClient = new AnswerToClient (400 , false);
-        answerToClient.put ("answer" , "not logged in");
+        answerToClient.put (CUK.answer.name () , "not_logged_in");
         return answerToClient;
     }
 
@@ -99,5 +116,11 @@ public class AnswerToClient
     public boolean isOk ()
     {
         return ok;
+    }
+
+    // CUK => Commonly used keys
+    public enum CUK
+    {
+        answer
     }
 }
