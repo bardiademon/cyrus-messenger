@@ -70,7 +70,7 @@ public class RestRegister
                         else
                         {
                             MainAccount mainAccount = confirmedPhone.getConfirmCode ().getMainAccount ();
-                            if (mainAccount == null || mainAccount.isDeleted ())
+                            if (mainAccount == null || mainAccount.isDeleted () || !checkExistsPhone (confirmedPhone.getPhone ()))
                             {
                                 if (mainAccountService.newAccount (registerRequest , confirmedPhone , confirmCodeService))
                                 {
@@ -97,6 +97,11 @@ public class RestRegister
         }
         answerToClient.setResponse (res);
         return answerToClient;
+    }
+
+    private boolean checkExistsPhone (String phone)
+    {
+        return mainAccountService.findPhone (phone) != null;
     }
 
     private ConfirmedPhone checkCodeConfirmedPhone (String code)

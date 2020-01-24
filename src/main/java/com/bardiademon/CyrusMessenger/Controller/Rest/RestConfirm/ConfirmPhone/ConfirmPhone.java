@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.RestConfirm.ConfirmPhone;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
@@ -9,6 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.Con
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.SMS.SendSMS.SendSMSConfirmPhone;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +33,16 @@ public class ConfirmPhone
 
     private ConfirmCodeService confirmCodeService;
     private ConfirmedPhoneService confirmedPhoneService;
+    private MainAccountService mainAccountService;
 
     private AnswerToClient answerToClient;
 
     @Autowired
-    public ConfirmPhone (ConfirmCodeService _ConfirmCodeService , ConfirmedPhoneService _ConfirmedPhoneService)
+    public ConfirmPhone (ConfirmCodeService _ConfirmCodeService , ConfirmedPhoneService _ConfirmedPhoneService , MainAccountService _MainAccountService)
     {
         this.confirmCodeService = _ConfirmCodeService;
         this.confirmedPhoneService = _ConfirmedPhoneService;
+        this.mainAccountService = _MainAccountService;
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -61,79 +65,87 @@ public class ConfirmPhone
 
                 if (findCode == null)
                 {
-                    new Thread (() -> Code.CreateCodeIsNotExists (Code.GetCodeNumber () , 10 , (code , last) ->
+                    if (isExistsPhone (this.phone))
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_phone_has_account.name ());
+                    else
                     {
-                        if (confirmCodeService.isExistsCode (code))
+                        new Thread (() -> Code.CreateCodeIsNotExists (Code.GetCodeNumber () , 10 , (code , last) ->
                         {
-                            if (last)
+                            if (confirmCodeService.isExistsCode (code))
                             {
-                                answerToClient = AnswerToClient.ServerError ();
+                                if (last)
+                                {
+                                    answerToClient = AnswerToClient.ServerError ();
+                                    synchronized (Wait)
+                                    {
+                                        Wait.notify ();
+                                    }
+                                }
+                                return last;
+                            }
+                            else
+                            {
+                                ConfirmCode confirmCode = new ConfirmCode ();
+                                confirmCode.setSendCodeTo (ConfirmPhone.this.phone);
+                                confirmCode.setCode (code);
+                                confirmCode.setConfirmCodeFor (ConfirmCodeFor.phone);
+                                confirmCode.setTimeToSendCode (LocalDateTime.now ());
+                                confirmCode.setTimeToBeOutdated (LocalDateTime.now ().plusMinutes (15));
+
+                                confirmCode = confirmCodeService.Repository.save (confirmCode);
+                                if (confirmCode.getId () > 0)
+                                {
+                                    new SendSMSConfirmPhone ("Quest" , ConfirmPhone.this.phone);
+                                    answerToClient = AnswerToClient.OK ();
+                                    answerToClient.put (CUK.answer.name () , ValAnswer.code_send.name ());
+                                    answerToClient.put (KeyAnswer.to.name () , ConfirmPhone.this.phone);
+                                    answerToClient.put (KeyAnswer.id.name () , confirmCode.getId ());
+                                    answerToClient.put (KeyAnswer.waiting_time.name () , Time.getTime (confirmCode.getTimeToBeOutdated ()));
+                                }
+                                else
+                                {
+                                    answerToClient = AnswerToClient.ServerError ();
+                                }
                                 synchronized (Wait)
                                 {
                                     Wait.notify ();
                                 }
                             }
-                            return last;
-                        }
-                        else
+                            return true;
+                        })).start ();
+                        synchronized (Wait)
                         {
-                            ConfirmCode confirmCode = new ConfirmCode ();
-                            confirmCode.setSendCodeTo (ConfirmPhone.this.phone);
-                            confirmCode.setCode (code);
-                            confirmCode.setConfirmCodeFor (ConfirmCodeFor.phone);
-                            confirmCode.setTimeToSendCode (LocalDateTime.now ());
-                            confirmCode.setTimeToBeOutdated (LocalDateTime.now ().plusMinutes (15));
-
-                            confirmCode = confirmCodeService.Repository.save (confirmCode);
-                            if (confirmCode.getId () > 0)
+                            try
                             {
-                                new SendSMSConfirmPhone ("Quest" , ConfirmPhone.this.phone);
-                                answerToClient = AnswerToClient.OK ();
-                                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.code_send.name ());
-                                answerToClient.put (KeyAnswer.to.name () , ConfirmPhone.this.phone);
-                                answerToClient.put (KeyAnswer.id.name () , confirmCode.getId ());
-                                answerToClient.put (KeyAnswer.waiting_time.name () , Time.getTime (confirmCode.getTimeToBeOutdated ()));
+                                Wait.wait ();
                             }
-                            else
+                            catch (InterruptedException e)
                             {
                                 answerToClient = AnswerToClient.ServerError ();
                             }
-                            synchronized (Wait)
-                            {
-                                Wait.notify ();
-                            }
-                        }
-                        return true;
-                    })).start ();
-                    synchronized (Wait)
-                    {
-                        try
-                        {
-                            Wait.wait ();
-                        }
-                        catch (InterruptedException e)
-                        {
-                            answerToClient = AnswerToClient.ServerError ();
                         }
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.error400 ();
-                    answerToClient.put (KeyAnswer.answer.name () , ValAnswer.the_code_has_been_sent.name ());
-                    answerToClient.put (KeyAnswer.to.name () , findCode.getSendCodeTo ());
-                    answerToClient.put (KeyAnswer.id.name () , findCode.getId ());
-                    answerToClient.put (KeyAnswer.waiting_time.name () , Time.getTime (findCode.getTimeToBeOutdated ()));
+                    answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.error400 () ,
+                            CUK.answer.name () , ValAnswer.the_code_has_been_sent.name () ,
+                            KeyAnswer.to.name () , findCode.getSendCodeTo () ,
+                            KeyAnswer.id.name () , findCode.getId () ,
+                            KeyAnswer.waiting_time.name () , Time.getTime (findCode.getTimeToBeOutdated ())
+                    );
                 }
             }
             else
-            {
-                answerToClient = AnswerToClient.error400 ();
-                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.phone_in_valid.name ());
-            }
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_invalid.name ());
         }
         answerToClient.setResponse (res);
         return answerToClient;
+    }
+
+    private boolean isExistsPhone (String phone)
+    {
+        return mainAccountService.findPhone (phone) != null;
     }
 
     @RequestMapping (value = "/confirm")
@@ -163,7 +175,7 @@ public class ConfirmPhone
                     if (this.code != null)
                     {
                         answerToClient = AnswerToClient.error400 ();
-                        answerToClient.put (KeyAnswer.answer.name () , ValAnswer.confirmed.name ());
+                        answerToClient.put (CUK.answer.name () , ValAnswer.confirmed.name ());
                         answerToClient.put (KeyAnswer.phone.name () , this.phone);
                         answerToClient.put (KeyAnswer.code_confirmed_phone.name () , this.code);
                     }
@@ -173,13 +185,13 @@ public class ConfirmPhone
                 else
                 {
                     answerToClient = AnswerToClient.error400 ();
-                    answerToClient.put (KeyAnswer.answer.name () , ValAnswer.code_invalid.name ());
+                    answerToClient.put (CUK.answer.name () , ValAnswer.code_invalid.name ());
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.error400 ();
-                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.phone_in_valid.name ());
+                answerToClient.put (CUK.answer.name () , ValAnswer.phone_invalid.name ());
             }
         }
         answerToClient.setResponse (res);
@@ -249,12 +261,12 @@ public class ConfirmPhone
 
     private enum KeyAnswer
     {
-        answer, to, waiting_time, id, code_confirmed_phone, phone
+        to, waiting_time, id, code_confirmed_phone, phone
     }
 
     private enum ValAnswer
     {
-        phone_in_valid, code_send, the_code_has_been_sent, confirmed, code_invalid
+        phone_invalid, code_send, the_code_has_been_sent, confirmed, code_invalid, this_phone_has_account
     }
 
 }
