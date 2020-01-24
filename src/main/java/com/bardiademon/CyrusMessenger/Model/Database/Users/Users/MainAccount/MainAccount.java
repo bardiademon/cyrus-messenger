@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,8 +38,12 @@ public class MainAccount
     private String phone;
 
     @OneToMany
-    @JoinTable (name = "id_user_friend", joinColumns = @JoinColumn (name = "id"))
+    @JoinTable (joinColumns = @JoinColumn (referencedColumnName = "id"))
     private List<UserFriends> userFriends;
+
+    @OneToMany
+    @JoinTable (joinColumns = @JoinColumn (referencedColumnName = "id"))
+    private List<UserContacts> userContacts;
 
     @Column (nullable = false, unique = true)
     private String username;
@@ -127,6 +132,16 @@ public class MainAccount
     public void setUserFriends (List<UserFriends> userFriends)
     {
         this.userFriends = userFriends;
+    }
+
+    public List<UserContacts> getUserContacts ()
+    {
+        return userContacts;
+    }
+
+    public void setUserContacts (List<UserContacts> userContacts)
+    {
+        this.userContacts = userContacts;
     }
 
     public String getUsername ()

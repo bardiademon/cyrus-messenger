@@ -6,6 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
@@ -29,6 +30,7 @@ public class GetCover
     private UserLoginService userLoginService;
     private SecurityUserProfileService securityUserProfileService;
     private ShowProfileForService showProfileForService;
+    private UserContactsService userContactsService;
     private UserFriendsService userFriendsService;
 
     @Autowired
@@ -37,6 +39,7 @@ public class GetCover
              UserLoginService _UserLoginService ,
              SecurityUserProfileService _SecurityUserProfileService ,
              ShowProfileForService _ShowProfileForService ,
+             UserContactsService _UserContactsService ,
              UserFriendsService _UserFriendsService
             )
     {
@@ -44,6 +47,7 @@ public class GetCover
         this.userLoginService = _UserLoginService;
         this.securityUserProfileService = _SecurityUserProfileService;
         this.showProfileForService = _ShowProfileForService;
+        this.userContactsService = _UserContactsService;
         this.userFriendsService = _UserFriendsService;
     }
 
@@ -80,6 +84,7 @@ public class GetCover
             accessLevel.setServiceSecurityUserProfile (securityUserProfileService);
             accessLevel.setServiceShowProfileFor (showProfileForService);
             accessLevel.setUserFriendsService (userFriendsService);
+            accessLevel.setUserContactsService (userContactsService);
             accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);
             boolean isAccessLevel = accessLevel.check (accessLevel.CHK_PROFILE);
 
