@@ -86,6 +86,12 @@ public class CheckUserAccessLevel
         this.checkChat = checkChat;
     }
 
+    public boolean hasAccessProfile (CheckProfile checkProfile)
+    {
+        setCheckProfile (checkProfile);
+        return check (CHK_PROFILE);
+    }
+
     public boolean check (int checkProfileOrChat)
     {
         if (mainAccountWhoRequested == null)
@@ -143,6 +149,10 @@ public class CheckUserAccessLevel
                     return checkAccessLevelProfile (securityUserProfile.getShowMyLink ());
                 case show_name:
                     return checkAccessLevelProfile (securityUserProfile.getShowName ());
+                case show_family:
+                    return checkAccessLevelProfile (securityUserProfile.getShowFamily ());
+                case show_email:
+                    return checkAccessLevelProfile (securityUserProfile.getShowEmail ());
                 case show_personal_information:
                     return checkAccessLevelProfile (securityUserProfile.getShowPersonalInformation ());
                 case show_phone:
@@ -290,7 +300,7 @@ public class CheckUserAccessLevel
     public enum CheckProfile
     {
         bio, cover, show_in_channel, show_in_group, show_profile,
-        show_in_search, show_last_seen, show_mylink, show_name, show_personal_information,
+        show_in_search, show_last_seen, show_mylink, show_name, show_family, show_email, show_personal_information,
         show_phone, show_seen_message, show_username
     }
 

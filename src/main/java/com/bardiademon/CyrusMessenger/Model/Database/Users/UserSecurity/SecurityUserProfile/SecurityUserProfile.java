@@ -45,6 +45,10 @@ public class SecurityUserProfile
     private AccessLevel showPhone = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
+    @Column (name = "show_email", nullable = false)
+    private AccessLevel showEmail = AccessLevel.all;
+
+    @Enumerated (value = EnumType.STRING)
     @Column (name = "show_username", nullable = false)
     private AccessLevel showUsername = AccessLevel.all;
 
@@ -63,6 +67,10 @@ public class SecurityUserProfile
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_name", nullable = false)
     private AccessLevel showName = AccessLevel.all;
+
+    @Enumerated (value = EnumType.STRING)
+    @Column (name = "show_family", nullable = false)
+    private AccessLevel showFamily = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
     @Column (name = "show_in_search", nullable = false)
@@ -152,6 +160,16 @@ public class SecurityUserProfile
         this.showPhone = showPhone;
     }
 
+    public AccessLevel getShowEmail ()
+    {
+        return showEmail;
+    }
+
+    public void setShowEmail (AccessLevel showEmail)
+    {
+        this.showEmail = showEmail;
+    }
+
     public AccessLevel getShowUsername ()
     {
         return showUsername;
@@ -200,6 +218,16 @@ public class SecurityUserProfile
     public void setShowName (AccessLevel showName)
     {
         this.showName = showName;
+    }
+
+    public AccessLevel getShowFamily ()
+    {
+        return showFamily;
+    }
+
+    public void setShowFamily (AccessLevel showFamily)
+    {
+        this.showFamily = showFamily;
     }
 
     public AccessLevel getShowInSearch ()
