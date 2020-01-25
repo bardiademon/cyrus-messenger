@@ -107,7 +107,7 @@ public class GetGeneral
         return userFriendsService.Repository.findUsernameUser (id , status);
     }
 
-    private enum KeyAnswer
+    public enum KeyAnswer
     {
         name, family, username, email, phone,
         bio, mylink, list_friends, list_friends_reject, list_friends_awaiting_approval, list_friends_deleted

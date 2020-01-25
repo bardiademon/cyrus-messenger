@@ -52,6 +52,8 @@ public abstract class RouterName
 
             public static final String RN_SHOW_PROFILE = RN_GENERAL + "/show_profile";
 
+            public static final String RN_GET_INFO_PROFILE = RN_GENERAL + "/info_profile";
+
 
         }
 

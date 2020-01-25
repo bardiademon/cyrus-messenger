@@ -23,13 +23,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping (value = RouterName.RNChat.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
-public class ShowProfile
+public final class ShowProfile
 {
 
     private final UserLoginService userLoginService;
-    private MainAccountService mainAccountService;
+    private final MainAccountService mainAccountService;
 
-    private CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+
+    private CheckLogin checkLogin;
+    private MainAccount mainAccountGetProfile;
+
 
     @Autowired
     public ShowProfile
@@ -54,12 +58,12 @@ public class ShowProfile
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
         if (checkLogin.isValid ())
         {
             if (idUser > 0)
             {
-                MainAccount mainAccountGetProfile = mainAccountService.findValidById (idUser);
+                mainAccountGetProfile = mainAccountService.findValidById (idUser);
                 if (mainAccountGetProfile != null)
                 {
                     CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
@@ -94,4 +98,28 @@ public class ShowProfile
         id_invalid, id_not_found
     }
 
+    public CheckLogin getCheckLogin ()
+    {
+        return checkLogin;
+    }
+
+    public MainAccount getMainAccountGetProfile ()
+    {
+        return mainAccountGetProfile;
+    }
+
+    public CheckUserAccessLevel.ServiceProfile getServiceProfile ()
+    {
+        return serviceProfile;
+    }
+
+    public MainAccountService getMainAccountService ()
+    {
+        return mainAccountService;
+    }
+
+    public UserLoginService getUserLoginService ()
+    {
+        return userLoginService;
+    }
 }

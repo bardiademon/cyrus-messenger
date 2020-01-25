@@ -5,25 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RequestGeneral
 {
     @JsonProperty ("get_name")
-    private boolean getName;
+    protected boolean getName;
 
     @JsonProperty ("get_family")
-    private boolean getFamily;
+    protected boolean getFamily;
 
     @JsonProperty ("get_username")
-    private boolean getUsername;
+    protected boolean getUsername;
 
     @JsonProperty ("get_email")
-    private boolean getEmail;
+    protected boolean getEmail;
 
     @JsonProperty ("get_phone")
-    private boolean getPhone;
+    protected boolean getPhone;
 
     @JsonProperty ("get_mylink")
-    private boolean getMyLink;
+    protected boolean getMyLink;
 
     @JsonProperty ("get_bio")
-    private boolean getBio;
+    protected boolean getBio;
 
     @JsonProperty ("get_list_friends")
     private boolean getListFriends;
