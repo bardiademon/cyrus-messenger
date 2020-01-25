@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping (value = "/api/login/is_valid_uep", method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNLogin.RN_IS_VALID_UEP, method = RequestMethod.POST)
 public class RestIsValidUEP
 {
 

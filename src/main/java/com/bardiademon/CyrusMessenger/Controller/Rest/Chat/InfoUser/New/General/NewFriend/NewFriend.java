@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import static com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK.answer;
 
 @RestController
-@RequestMapping (value = RouterName.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
 public final class NewFriend
 {
 

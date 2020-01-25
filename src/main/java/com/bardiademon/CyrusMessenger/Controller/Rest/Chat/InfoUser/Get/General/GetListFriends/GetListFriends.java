@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping (value = RouterName.RNInfoUser.RNGetListFriends.RN_GET_LIST_FRIENDS, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNGetListFriends.RN_GET_LIST_FRIENDS, method = RequestMethod.POST)
 public class GetListFriends
 {
 

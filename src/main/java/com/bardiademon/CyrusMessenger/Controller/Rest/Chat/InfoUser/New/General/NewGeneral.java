@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = RouterName.RNNewInfoUser.RN_GENERAL, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNNewInfoUser.RN_GENERAL, method = RequestMethod.POST)
 public final class NewGeneral
 {
 

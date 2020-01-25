@@ -20,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping (value = RouterName.RNInfoUser.RN_GENERAL, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNInfoUser.RN_GENERAL, method = RequestMethod.POST)
 public class GetGeneral
 {
 

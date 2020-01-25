@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = "/api/register", method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNRegister.RN_MAIN, method = RequestMethod.POST)
 public class RestRegister
 {
 

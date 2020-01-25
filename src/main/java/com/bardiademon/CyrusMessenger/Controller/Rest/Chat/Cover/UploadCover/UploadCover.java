@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.UploadCover;
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -22,7 +23,7 @@ import java.nio.file.Files;
 
 
 @RestController
-@RequestMapping (value = "/api/chat/upload_cover", method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNCover.RN_UPLOAD_USER_COVER, method = RequestMethod.POST)
 public class UploadCover
 {
 

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = RouterName.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
 public class ShowProfile
 {
 

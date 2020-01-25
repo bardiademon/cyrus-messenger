@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RouterName.RNNewInfoUser.RN_NEW_EMAIL, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNNewInfoUser.RN_NEW_EMAIL, method = RequestMethod.POST)
 public class NewEmail
 {
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CookieValue;
 
 @RestController
-@RequestMapping (value = RouterName.RNInfoUser.RNSecurity.RN_PROFILE, method = RequestMethod.POST)
+@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNSecurity.RN_PROFILE, method = RequestMethod.POST)
 public class Profile
 {
 

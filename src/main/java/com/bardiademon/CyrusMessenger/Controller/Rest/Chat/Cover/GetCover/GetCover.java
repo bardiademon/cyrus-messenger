@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.GetCover;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
+import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
@@ -28,7 +29,7 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping (value = "/api/cover", method = RequestMethod.GET)
+@RequestMapping (value = RouterName.RNChat.RNCover.RN_GET_USER_COVER, method = RequestMethod.GET)
 public class GetCover
 {
     private MainAccountService mainAccountService;
