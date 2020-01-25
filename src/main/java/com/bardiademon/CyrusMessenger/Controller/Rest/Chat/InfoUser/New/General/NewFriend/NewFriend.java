@@ -14,9 +14,15 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.FindInTheDatabase.FITD_Username;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK.answer;
 
 @RestController
 @RequestMapping (value = RouterName.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
@@ -70,21 +76,21 @@ public final class NewFriend
                         else
                         {
                             answerToClient = AnswerToClient.error400 ();
-                            answerToClient.put ("answer" , "is_found");
-                            answerToClient.put ("status" , validFriend.getStatus ().name ());
+                            answerToClient.put (answer.name () ,  ValAnswer.is_found.name ());
+                            answerToClient.put ( KeyAnswer.status.name () , validFriend.getStatus ().name ());
                         }
                     }
                 }
                 else
                 {
                     answerToClient = AnswerToClient.error400 ();
-                    answerToClient.put ("answer" , "username_not_found");
+                    answerToClient.put (answer.name () ,  ValAnswer.username_not_found.name ());
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.error400 ();
-                answerToClient.put ("answer" , "username_invalid");
+                answerToClient.put (answer.name () ,  ValAnswer.username_invalid.name ());
             }
         }
         else answerToClient = checkLogin.getAnswerToClient ();
@@ -103,7 +109,7 @@ public final class NewFriend
         {
             addFriend (StatusFriends.rejected);
             answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED , false);
-            answerToClient.put ("answer" , "friend_request_is_locked");
+            answerToClient.put (answer.name () ,  ValAnswer.friend_request_is_locked.name ());
         }
         else if (friendConfirmationMethod.equals (StatusFriends.ApprovalMethod.approve_all))
         {
@@ -144,7 +150,7 @@ public final class NewFriend
         {
             addFriend (StatusFriends.awaiting_approval);
             answerToClient = AnswerToClient.OK ();
-            answerToClient.put ("answer" , "waiting_for_approval");
+            answerToClient.put (answer.name () , ValAnswer.waiting_for_approval.name ());
         }
 
         return answerToClient;
@@ -155,6 +161,16 @@ public final class NewFriend
         UserFriends userFriends = new UserFriends (user , friend);
         userFriends.setStatus (statusFriends);
         userFriendsService.Repository.save (userFriends);
+    }
+
+    public enum KeyAnswer
+    {
+        status
+    }
+
+    public enum ValAnswer
+    {
+        waiting_for_approval, friend_request_is_locked, username_invalid, username_not_found, is_found
     }
 
 }
