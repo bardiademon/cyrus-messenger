@@ -39,6 +39,12 @@ public class RequestProfile
     @JsonProperty ("sec_phone")
     private boolean secPhone;
 
+    @JsonProperty ("sec_family")
+    private boolean secFamily;
+
+    @JsonProperty ("sec_email")
+    private boolean secEmail;
+
     @JsonProperty ("sec_seen_message")
     private boolean secSeenMessage;
 
@@ -182,6 +188,26 @@ public class RequestProfile
         this.secShowInSearch = secShowInSearch;
     }
 
+    public boolean isSecFamily ()
+    {
+        return secFamily;
+    }
+
+    public void setSecFamily (boolean secFamily)
+    {
+        this.secFamily = secFamily;
+    }
+
+    public boolean isSecEmail ()
+    {
+        return secEmail;
+    }
+
+    public void setSecEmail (boolean secEmail)
+    {
+        this.secEmail = secEmail;
+    }
+
     public boolean thereIsAtLeastOneTrue ()
     {
         return (
@@ -197,6 +223,8 @@ public class RequestProfile
                         isSecShowInGroup () ||
                         isSecShowProfile () ||
                         isSecUsername () ||
+                        isSecFamily () ||
+                        isSecEmail () ||
                         isSecShowInSearch () || isSecListFriends ()
         );
     }

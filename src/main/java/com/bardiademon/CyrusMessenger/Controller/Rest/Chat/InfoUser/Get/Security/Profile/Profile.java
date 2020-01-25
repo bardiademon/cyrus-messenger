@@ -78,6 +78,14 @@ public class Profile
                         answerToClient.put (KeyAnswer.sec_name.name () ,
                                 securityUserProfile.getShowName ().name ());
 
+                    if (requestProfile.isSecFamily ())
+                        answerToClient.put (KeyAnswer.sec_family.name () ,
+                                securityUserProfile.getShowFamily ().name ());
+
+                    if (requestProfile.isSecEmail ())
+                        answerToClient.put (KeyAnswer.sec_email.name () ,
+                                securityUserProfile.getShowEmail ().name ());
+
                     if (requestProfile.isSecPersonalInformation ())
                         answerToClient.put (KeyAnswer.sec_personal_information.name () ,
                                 securityUserProfile.getShowPersonalInformation ().name ());
@@ -110,7 +118,7 @@ public class Profile
     private enum KeyAnswer
     {
         sec_cover, sec_bio, sec_show_in_channel, sec_show_in_group,
-        sec_show_profile, show_in_search, sec_last_seen, sec_mylink, sec_name,
+        sec_show_profile, show_in_search, sec_last_seen, sec_mylink, sec_name, sec_family, sec_email,
         sec_personal_information, sec_phone, sec_seen_message, sec_username, sec_list_friends
     }
 
