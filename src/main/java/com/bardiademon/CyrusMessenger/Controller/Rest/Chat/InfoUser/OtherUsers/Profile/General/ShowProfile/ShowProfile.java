@@ -3,12 +3,13 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.OtherUsers.
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -42,12 +43,13 @@ public final class ShowProfile
              ShowProfileForService _ShowProfileForService ,
              UserContactsService _UserContactsService ,
              UserFriendsService _UserFriendsService ,
-             SecurityUserProfileService _SecurityUserProfileService
+             SecurityUserProfileService _SecurityUserProfileService ,
+             UserBlockedService _UserBlockedService
             )
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService);
+        serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
     }
 
     @RequestMapping (value = {"" , "/"})

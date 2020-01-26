@@ -5,10 +5,11 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General.
 import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.OtherUsers.Profile.General.ShowProfile.ShowProfile;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -31,9 +32,9 @@ public final class GetInfoProfile
     private ShowProfile showProfile;
 
     @Autowired
-    public GetInfoProfile (UserLoginService _UserLoginService , MainAccountService _MainAccountService , ShowProfileForService _ShowProfileForService , UserContactsService _UserContactsService , UserFriendsService _UserFriendsService , SecurityUserProfileService _SecurityUserProfileService)
+    public GetInfoProfile (UserLoginService _UserLoginService , MainAccountService _MainAccountService , ShowProfileForService _ShowProfileForService , UserContactsService _UserContactsService , UserFriendsService _UserFriendsService , SecurityUserProfileService _SecurityUserProfileService , UserBlockedService _UserBlockedService)
     {
-        showProfile = new ShowProfile (_UserLoginService , _MainAccountService , _ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService);
+        showProfile = new ShowProfile (_UserLoginService , _MainAccountService , _ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
     }
 
     @RequestMapping (value = {"" , "/"})

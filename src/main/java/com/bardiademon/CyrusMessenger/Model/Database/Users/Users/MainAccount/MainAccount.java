@@ -1,11 +1,10 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
@@ -47,6 +44,10 @@ public class MainAccount
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     private List<UserContacts> userContacts;
+
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
+    private List<UserBlocked> userBlocked;
 
     @Column (nullable = false, unique = true)
     @JsonIgnore
@@ -148,6 +149,16 @@ public class MainAccount
     public void setUserContacts (List<UserContacts> userContacts)
     {
         this.userContacts = userContacts;
+    }
+
+    public List<UserBlocked> getUserBlocked ()
+    {
+        return userBlocked;
+    }
+
+    public void setUserBlocked (List<UserBlocked> userBlocked)
+    {
+        this.userBlocked = userBlocked;
     }
 
     public String getUsername ()

@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Security;
+package com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
@@ -10,6 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProf
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
@@ -105,8 +106,14 @@ public class CheckUserAccessLevel
         if (mainAccountWhoRequested.getId () == mainAccountToCheck.getId ()) return true;
         else
         {
-            if (checkProfileOrChat == CHK_PROFILE) return checkProfile ();
-            else if (checkProfileOrChat == CHK_CHAT) return checkChat ();
+            CheckUserAccessLevelBlock accessLevelBlock = new CheckUserAccessLevelBlock (mainAccountWhoRequested , mainAccountToCheck , serviceProfile._UserBlockedService , checkProfile , checkChat);
+
+            if (accessLevelBlock.hasAccess ())
+            {
+                if (checkProfileOrChat == CHK_PROFILE) return checkProfile ();
+                else if (checkProfileOrChat == CHK_CHAT) return checkChat ();
+                else return false;
+            }
             else return false;
         }
     }
@@ -314,11 +321,13 @@ public class CheckUserAccessLevel
     {
         public final UserContactsService _UserContactsService;
         public final UserFriendsService _UserFriendsService;
+        public final UserBlockedService _UserBlockedService;
 
-        public Service (UserContactsService _UserContactsService , UserFriendsService _UserFriendsService)
+        public Service (UserContactsService _UserContactsService , UserFriendsService _UserFriendsService , UserBlockedService userBlockedService)
         {
             this._UserContactsService = _UserContactsService;
             this._UserFriendsService = _UserFriendsService;
+            _UserBlockedService = userBlockedService;
         }
     }
 
@@ -327,9 +336,13 @@ public class CheckUserAccessLevel
         public final ShowProfileForService _ShowProfileForService;
         public final SecurityUserProfileService _SecurityUserProfileService;
 
-        public ServiceProfile (ShowProfileForService _ShowProfileForService , UserContactsService _UserContactsService , UserFriendsService _UserFriendsService , SecurityUserProfileService _SecurityUserProfileService)
+        public ServiceProfile
+                (ShowProfileForService _ShowProfileForService ,
+                 UserContactsService _UserContactsService ,
+                 UserFriendsService _UserFriendsService ,
+                 SecurityUserProfileService _SecurityUserProfileService , UserBlockedService _UserBlockedService)
         {
-            super (_UserContactsService , _UserFriendsService);
+            super (_UserContactsService , _UserFriendsService , _UserBlockedService);
             this._ShowProfileForService = _ShowProfileForService;
             this._SecurityUserProfileService = _SecurityUserProfileService;
         }
