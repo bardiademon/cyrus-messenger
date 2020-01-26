@@ -50,7 +50,8 @@ public final class GetBlock
                     blocked = userBlocked.get (i);
                     blocked.setIdBlocked (blocked.getMainAccountBlocked ().getId ());
                     blocked.setValidityTimeToJson (Time.toString (blocked.getValidityTime ()));
-                    userBlocked.add (i , blocked);
+                    userBlocked.remove (i);
+                    userBlocked.add (blocked);
                 }
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , userBlocked);
             }
