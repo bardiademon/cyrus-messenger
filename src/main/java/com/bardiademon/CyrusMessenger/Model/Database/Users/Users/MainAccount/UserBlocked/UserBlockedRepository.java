@@ -3,9 +3,13 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Us
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserBlockedRepository extends JpaRepository<UserBlocked, Long>
 {
     UserBlocked findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalse (long idUser , long idUserBlock);
+
+    List<UserBlocked> findByMainAccountIdAndUnblockedFalse (long idUser);
 
 }

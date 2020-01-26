@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import java.time.LocalDateTime;
@@ -23,31 +25,48 @@ public final class UserBlocked
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     @Column (nullable = false, unique = true)
     private long id;
 
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
+    @JsonIgnore
     private MainAccount mainAccount;
 
     @OneToOne
     @JoinColumn (name = "id_user_blocked", referencedColumnName = "id")
+    @JsonIgnore
     private MainAccount mainAccountBlocked;
+
+    @Transient
+    @JsonProperty ("id")
+    @JsonInclude (JsonInclude.Include.NON_NULL)
+    private Long idBlocked = null;
 
     @Column (name = "blocked_at", updatable = false)
     @CreationTimestamp
+    @JsonIgnore
     private LocalDateTime blockedAt;
 
     @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Column (name = "validity_time")
+    @JsonIgnore
     private LocalDateTime validityTime;
 
+    @Transient
+    @JsonProperty ("validity_time")
+    private String validityTimeToJson;
+
     @Column (name = "unblocked_at", insertable = false)
+    @JsonIgnore
     private LocalDateTime unblockedAt;
 
+    @JsonIgnore
     private boolean unblocked;
 
     @Enumerated (EnumType.STRING)
@@ -123,10 +142,7 @@ public final class UserBlocked
         return unblockedAt;
     }
 
-    public void setUnblockedAt (LocalDateTime unblockedAt)
-    {
-        this.unblockedAt = unblockedAt;
-    }
+
 
     public boolean isUnblocked ()
     {
@@ -148,6 +164,31 @@ public final class UserBlocked
         this.type = type;
     }
 
+    public String getValidityTimeToJson ()
+    {
+        return validityTimeToJson;
+    }
+
+    public void setValidityTimeToJson (String validityTimeToJson)
+    {
+        this.validityTimeToJson = validityTimeToJson;
+    }
+
+    public void setUnblockedAt (LocalDateTime unblockedAt)
+    {
+        this.unblockedAt = unblockedAt;
+    }
+
+    public Long getIdBlocked ()
+    {
+        return idBlocked;
+    }
+
+    public void setIdBlocked (Long idBlocked)
+    {
+        this.idBlocked = idBlocked;
+    }
+
     public enum Type
     {
 //        cns => Can Not Show
@@ -155,5 +196,6 @@ public final class UserBlocked
         cns_cover, cns_send_message, cns_profile,
         cns_bio, cns_email, cns_phone, cns_name, cns_family, cns_username, cns_mylink, all
     }
+
 
 }

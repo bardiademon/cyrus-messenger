@@ -56,9 +56,15 @@ public abstract class RouterName
                 public static final String RN_NEW_CONTACT = RN_MAIN + "/new";
 
                 public static final String RN_GET_CONTACT = RN_MAIN + "/get";
+            }
 
-                public static final String RN_UPDATE_CONTACT = RN_MAIN + "/update";
+            public static abstract class RNBlock
+            {
+                public static final String RN_MAIN = RN_MAIN_INFO_USER + "/block";
 
+                public static final String RN_NEW_BLOCK = RN_MAIN + "/new";
+
+                public static final String RN_GET_BLOCK = RN_MAIN + "/get";
             }
         }
 

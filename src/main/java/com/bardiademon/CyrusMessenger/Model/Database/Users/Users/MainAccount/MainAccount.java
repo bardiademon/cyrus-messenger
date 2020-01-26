@@ -4,7 +4,10 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -22,6 +25,7 @@ import java.util.List;
 
 @Entity
 @Table (name = "main_account")
+@JsonIdentityInfo (generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class MainAccount
 {
     @Id
@@ -39,14 +43,17 @@ public class MainAccount
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
+    @JsonBackReference
     private List<UserFriends> userFriends;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
+    @JsonBackReference
     private List<UserContacts> userContacts;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
+    @JsonBackReference
     private List<UserBlocked> userBlocked;
 
     @Column (nullable = false, unique = true)
