@@ -3,6 +3,9 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -37,21 +40,24 @@ public class MainAccount
     @Column (nullable = false)
     private String phone;
 
-    @OneToMany
-    @JoinTable (joinColumns = @JoinColumn (referencedColumnName = "id"))
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
     private List<UserFriends> userFriends;
 
-    @OneToMany
-    @JoinTable (joinColumns = @JoinColumn (referencedColumnName = "id"))
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
     private List<UserContacts> userContacts;
 
     @Column (nullable = false, unique = true)
+    @JsonIgnore
     private String username;
 
     @Column (nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column (unique = true)
+    @JsonIgnore
     private String email;
 
     @Column (name = "created_at", updatable = false, nullable = false)

@@ -23,5 +23,6 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 
     MainAccount findByIdAndDeletedFalse (long id);
 
+    MainAccount findByPhoneLike (String phone);
 
 }

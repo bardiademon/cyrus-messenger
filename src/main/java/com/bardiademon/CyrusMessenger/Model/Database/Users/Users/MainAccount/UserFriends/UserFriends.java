@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
@@ -28,7 +29,7 @@ public class UserFriends
     @JoinColumn (name = "id_user", referencedColumnName = "id")
     private MainAccount mainAccount;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn (name = "id_user_friend", referencedColumnName = "id")
     private MainAccount mainAccountFriend;
 

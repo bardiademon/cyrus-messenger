@@ -48,6 +48,18 @@ public abstract class RouterName
 
                 }
             }
+
+            public static abstract class RNContacts
+            {
+                public static final String RN_MAIN = RN_MAIN_INFO_USER + "/contacts";
+
+                public static final String RN_NEW_CONTACT = RN_MAIN + "/new";
+
+                public static final String RN_GET_CONTACT = RN_MAIN + "/get";
+
+                public static final String RN_UPDATE_CONTACT = RN_MAIN + "/update";
+
+            }
         }
 
         public static abstract class RNNewInfoUser

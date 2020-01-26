@@ -172,4 +172,9 @@ public class MainAccountService
         return Repository.findByIdAndDeletedFalse (id);
     }
 
+    public MainAccount findPhoneLike (String phone)
+    {
+        return Repository.findByPhoneLike ("%" + phone);
+    }
+
 }
