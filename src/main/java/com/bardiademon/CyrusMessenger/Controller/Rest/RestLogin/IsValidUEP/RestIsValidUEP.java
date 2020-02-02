@@ -5,16 +5,18 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
+import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
+import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.Status;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -27,65 +29,79 @@ public class RestIsValidUEP
 
     private final MainAccountService mainAccountService;
     private UsersStatusService usersStatusService;
+    private SubmitRequestService submitRequestService;
+    private HttpServletRequest servletRequest;
+    private boolean loginReq;
 
     @Autowired
-    public RestIsValidUEP (MainAccountService _MainAccountService , UsersStatusService _UsersStatusService)
+    public RestIsValidUEP (MainAccountService _MainAccountService ,
+                           UsersStatusService _UsersStatusService , SubmitRequestService _SubmitRequestService)
     {
         this.mainAccountService = _MainAccountService;
         this.usersStatusService = _UsersStatusService;
+        this.submitRequestService = _SubmitRequestService;
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletResponse res)
+    public AnswerToClient isValid (@RequestBody IsValidUEPRequest request , HttpServletResponse res , HttpServletRequest servletRequest , boolean loginReq)
     {
+        this.servletRequest = servletRequest;
+        this.loginReq = loginReq;
         AnswerToClient answerToClient;
-        this.request = request;
-        if (!validation ()) answerToClient = valid (false);
+
+        CheckBlockSystem checkBlockSystem;
+        if (!loginReq && (checkBlockSystem = new CheckBlockSystem (servletRequest , submitRequestService.blockedByTheSystemService , BlockedFor.submit_request , SubmitRequestType.login.name ())).isBlocked ())
+            answerToClient = checkBlockSystem.getAnswerToClient ();
         else
         {
-            MainAccount mainAccount;
-            switch (request.getValueUEP ())
+            this.request = request;
+            if (!validation ()) answerToClient = valid (false);
+            else
             {
-                case IsValidUEPRequest.PHONE:
+                MainAccount mainAccount;
+                switch (request.getValueUEP ())
                 {
-                    mainAccount = mainAccountService.findPhone (request.getUep ());
-                    if (mainAccount != null)
+                    case IsValidUEPRequest.PHONE:
                     {
-                        if ((answerToClient = isActive (mainAccount)) == null)
-                            answerToClient = valid (true);
-                    }
-                    else answerToClient = valid (false);
-                }
-                break;
-                case IsValidUEPRequest.EMAIL:
-                {
-                    mainAccount = mainAccountService.findEmail (request.getUep ());
-                    if (mainAccount != null)
-                    {
-                        if ((answerToClient = isActive (mainAccount)) == null)
+                        mainAccount = mainAccountService.findPhone (request.getUep ());
+                        if (mainAccount != null)
                         {
-                            if (!emailIsActive (mainAccount.getId ()))
-                                answerToClient = error401 ();
-                            else answerToClient = valid (true);
+                            if ((answerToClient = isActive (mainAccount)) == null)
+                                answerToClient = valid (true);
                         }
+                        else answerToClient = valid (false);
                     }
-                    else answerToClient = valid (false);
-                }
-                break;
-                case IsValidUEPRequest.USERNAME:
-                    mainAccount = mainAccountService.findUsername (request.getUep ());
-                    if (mainAccount != null)
-                    {
-                        if ((answerToClient = isActive (mainAccount)) == null)
-                            answerToClient = valid (true);
-                    }
-                    else answerToClient = valid (false);
                     break;
-                default:
-                    request.setValueUEP (String.format ("%s,%s,%s" , IsValidUEPRequest.USERNAME , IsValidUEPRequest.EMAIL , IsValidUEPRequest.PHONE));
-                    answerToClient = valid (false);
-            }
+                    case IsValidUEPRequest.EMAIL:
+                    {
+                        mainAccount = mainAccountService.findEmail (request.getUep ());
+                        if (mainAccount != null)
+                        {
+                            if ((answerToClient = isActive (mainAccount)) == null)
+                            {
+                                if (!emailIsActive (mainAccount.getId ()))
+                                    answerToClient = error401 ();
+                                else answerToClient = valid (true);
+                            }
+                        }
+                        else answerToClient = valid (false);
+                    }
+                    break;
+                    case IsValidUEPRequest.USERNAME:
+                        mainAccount = mainAccountService.findUsername (request.getUep ());
+                        if (mainAccount != null)
+                        {
+                            if ((answerToClient = isActive (mainAccount)) == null)
+                                answerToClient = valid (true);
+                        }
+                        else answerToClient = valid (false);
+                        break;
+                    default:
+                        request.setValueUEP (String.format ("%s,%s,%s" , IsValidUEPRequest.USERNAME , IsValidUEPRequest.EMAIL , IsValidUEPRequest.PHONE));
+                        answerToClient = valid (false);
+                }
 
+            }
         }
         answerToClient.setResponse (res);
         return answerToClient;
@@ -98,6 +114,7 @@ public class RestIsValidUEP
         {
             AnswerToClient answerToClient = AnswerToClient.AccountDeactive ();
             answerToClient.put (KeyAnswer.is_valid.name () , true);
+            submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , true);
             return answerToClient;
         }
     }
@@ -108,6 +125,9 @@ public class RestIsValidUEP
         answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
         answerToClient.put (KeyAnswer.is_valid.name () , true);
         answerToClient.put (KeyAnswer.email_is_confirmed.name () , false);
+
+        submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , true);
+
         return answerToClient;
     }
 
@@ -118,6 +138,10 @@ public class RestIsValidUEP
 
         answerToClient.put (KeyAnswer.uep.name () , this.request.getValueUEP ());
         answerToClient.put (KeyAnswer.is_valid.name () , valid);
+
+        if (!loginReq)
+            submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , !valid);
+
         return answerToClient;
     }
 
