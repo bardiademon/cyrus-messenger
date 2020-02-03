@@ -52,7 +52,7 @@ public class UserContacts
 
     @Transient
     @JsonInclude (JsonInclude.Include.NON_NULL)
-    @JsonProperty("new_phone")
+    @JsonProperty ("new_phone")
     private String newPhone;
 
     @JsonIgnore

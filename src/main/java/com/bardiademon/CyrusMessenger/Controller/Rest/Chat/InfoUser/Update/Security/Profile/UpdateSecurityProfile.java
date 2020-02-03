@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Update.Security.Profile;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNUpdate.RNUpdateSecurity.RN_UPDATE_SECURITY_PROFILE,
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNUpdate.RNUpdateSecurity.RN_UPDATE_SECURITY_PROFILE,
         method = RequestMethod.POST)
 public final class UpdateSecurityProfile
 {
@@ -35,7 +35,7 @@ public final class UpdateSecurityProfile
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient update
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody RequestUpdateSecurityProfile request)
     {
         AnswerToClient answerToClient;

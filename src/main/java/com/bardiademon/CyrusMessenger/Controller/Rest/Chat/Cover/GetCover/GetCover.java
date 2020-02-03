@@ -1,8 +1,9 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.GetCover;
 
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
@@ -16,7 +17,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNCover.RN_GET_USER_COVER, method = RequestMethod.GET)
+@RequestMapping (value = Domain.RNChat.RNCover.RN_GET_USER_COVER, method = RequestMethod.GET)
 public class GetCover
 {
     private MainAccountService mainAccountService;
@@ -75,32 +75,26 @@ public class GetCover
                     required = false) String username ,
             HttpServletResponse response ,
             HttpServletRequest request ,
-            @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin
+            @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin
     )
     {
+        this.request = request;
         response.setContentType ("image/jpeg");
 
-        if ((new CheckBlockSystem (request , blockedByTheSystemService , BlockedFor.submit_request , SubmitRequestType.get_cover.name ())).isBlocked ())
+        if ((new CheckBlockSystem (this.request , blockedByTheSystemService , BlockedFor.submit_request , SubmitRequestType.get_cover.name ())).isBlocked ())
             return error (Path.IMAGE_NOT_FOUND);
 
         if (username == null || username.equals ("")) return error (Path.IMAGE_NOT_FOUND);
 
-        VCodeLogin vCodeLogin;
-        if (codeLogin.equals (""))
-            return error (Path.IC_NOT_LOGIN);
-        else
-        {
-            vCodeLogin = new VCodeLogin ();
-            if (!vCodeLogin.IsValid (userLoginService.Repository , codeLogin))
-                return error (Path.IC_NOT_LOGIN);
-        }
+        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        if (!checkLogin.isValid ()) return error (Path.IC_NOT_LOGIN);
 
         MainAccount mainAccount = findUsername (username);
         if (mainAccount != null)
         {
 
             CheckUserAccessLevel accessLevel =
-                    new CheckUserAccessLevel (vCodeLogin.getMainAccount () , mainAccount , mainAccountService);
+                    new CheckUserAccessLevel (checkLogin.getVCodeLogin ().getMainAccount () , mainAccount , mainAccountService);
 
             accessLevel.setServiceProfile (serviceProfile);
             accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.cover);

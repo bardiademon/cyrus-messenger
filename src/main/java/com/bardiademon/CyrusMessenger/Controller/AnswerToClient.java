@@ -33,7 +33,12 @@ public class AnswerToClient
 
     public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , Object Answer)
     {
-        _AnswerToClient.put (CUK.answer.name () , Answer);
+        return OneAnswer (_AnswerToClient , CUK.answer.name () , Answer);
+    }
+
+    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , String Key , Object Answer)
+    {
+        _AnswerToClient.put (Key , Answer);
         return _AnswerToClient;
     }
 

@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.OtherUsers.Profile.General.ShowProfile;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
 public final class ShowProfile
 {
 
@@ -55,7 +55,7 @@ public final class ShowProfile
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient showProfile
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestParam ("id_user") long idUser)
     {
         AnswerToClient answerToClient;
@@ -73,7 +73,7 @@ public final class ShowProfile
 
                     accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.show_profile);
                     accessLevel.setServiceProfile (serviceProfile);
-                    accessLevel.check (accessLevel.CHK_PROFILE);
+                    System.out.println (accessLevel.check (accessLevel.CHK_PROFILE));
 
                     answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
                             KeyAnswer.i_can.name () , accessLevel.check (accessLevel.CHK_PROFILE));

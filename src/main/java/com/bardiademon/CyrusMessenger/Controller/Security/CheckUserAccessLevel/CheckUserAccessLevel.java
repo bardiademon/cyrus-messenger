@@ -106,7 +106,8 @@ public class CheckUserAccessLevel
         if (mainAccountWhoRequested.getId () == mainAccountToCheck.getId ()) return true;
         else
         {
-            CheckUserAccessLevelBlock accessLevelBlock = new CheckUserAccessLevelBlock (mainAccountWhoRequested , mainAccountToCheck , serviceProfile._UserBlockedService , checkProfile , checkChat);
+            CheckUserAccessLevelBlock accessLevelBlock =
+                    new CheckUserAccessLevelBlock (mainAccountWhoRequested , mainAccountToCheck , serviceProfile._UserBlockedService , checkProfile , checkChat);
 
             if (accessLevelBlock.hasAccess ())
             {

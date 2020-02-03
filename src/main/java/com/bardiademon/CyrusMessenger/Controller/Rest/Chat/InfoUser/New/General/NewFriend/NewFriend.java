@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General.NewFriend;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.LUFU_Service;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.UserFor;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import static com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK.answer;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNNewInfoUser.RN_NEW_FRIEND, method = RequestMethod.POST)
 public final class NewFriend
 {
 
@@ -51,7 +51,7 @@ public final class NewFriend
 
     @RequestMapping (value = {"" , ""})
     public AnswerToClient newFriend (HttpServletResponse res , @RequestParam ("username") String username ,
-                                     @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+                                     @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
 
@@ -76,21 +76,21 @@ public final class NewFriend
                         else
                         {
                             answerToClient = AnswerToClient.error400 ();
-                            answerToClient.put (answer.name () ,  ValAnswer.is_found.name ());
-                            answerToClient.put ( KeyAnswer.status.name () , validFriend.getStatus ().name ());
+                            answerToClient.put (answer.name () , ValAnswer.is_found.name ());
+                            answerToClient.put (KeyAnswer.status.name () , validFriend.getStatus ().name ());
                         }
                     }
                 }
                 else
                 {
                     answerToClient = AnswerToClient.error400 ();
-                    answerToClient.put (answer.name () ,  ValAnswer.username_not_found.name ());
+                    answerToClient.put (answer.name () , ValAnswer.username_not_found.name ());
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.error400 ();
-                answerToClient.put (answer.name () ,  ValAnswer.username_invalid.name ());
+                answerToClient.put (answer.name () , ValAnswer.username_invalid.name ());
             }
         }
         else answerToClient = checkLogin.getAnswerToClient ();
@@ -109,7 +109,7 @@ public final class NewFriend
         {
             addFriend (StatusFriends.rejected);
             answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED , false);
-            answerToClient.put (answer.name () ,  ValAnswer.friend_request_is_locked.name ());
+            answerToClient.put (answer.name () , ValAnswer.friend_request_is_locked.name ());
         }
         else if (friendConfirmationMethod.equals (StatusFriends.ApprovalMethod.approve_all))
         {

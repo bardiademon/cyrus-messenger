@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Security.Profile;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CookieValue;
 
+
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNSecurity.RN_PROFILE, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNSecurity.RN_PROFILE, method = RequestMethod.POST)
 public class Profile
 {
 
@@ -31,7 +32,7 @@ public class Profile
 
     @RequestMapping (value = {"/" , ""})
     public AnswerToClient getInfoSecurityProfile (@RequestBody RequestProfile requestProfile ,
-                                                  @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+                                                  @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
         CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);

@@ -2,8 +2,9 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Cover.UploadCover;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -23,7 +24,7 @@ import java.nio.file.Files;
 
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNCover.RN_UPLOAD_USER_COVER, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNCover.RN_UPLOAD_USER_COVER, method = RequestMethod.POST)
 public class UploadCover
 {
 
@@ -37,13 +38,16 @@ public class UploadCover
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient upload (HttpServletResponse res , @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-                                  @ModelAttribute RequestUploadCover requestUploadCover)
+    public AnswerToClient upload
+            (HttpServletResponse res ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @ModelAttribute RequestUploadCover requestUploadCover)
     {
         AnswerToClient answerToClient;
 
         VCodeLogin vCodeLogin = new VCodeLogin ();
-        if (vCodeLogin.IsValid (userLoginService.Repository , codeLogin))
+        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        if (checkLogin.isValid ())
         {
             MultipartFile cover = requestUploadCover.getCover ();
             if (cover != null)
@@ -98,7 +102,7 @@ public class UploadCover
                                     {
                                         mainAccount.setCover (name);
                                         MainAccount save = mainAccountService.Repository.save (mainAccount);
-                                        if (save != null)
+                                        if (save.getId () > 0)
                                         {
                                             if (hasOldCover)
                                                 (new File (Path.StickTogether (file.getParent () , nameOldCover))).delete ();

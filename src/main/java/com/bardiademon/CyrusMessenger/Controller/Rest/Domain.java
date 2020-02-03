@@ -1,12 +1,18 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest;
 
-public abstract class RouterName
+public abstract class Domain
 {
+    public static final String DOMAIN = "localhost";
+    public static final int PORT = 8080;
+    public static final String MAIN_DOMAIN = "http://" + DOMAIN + ":" + PORT;
+
     public static final String RN_MAIN_API = "/api";
+
+    public static final String DOMAIN_API = MAIN_DOMAIN + RN_MAIN_API;
 
     public static abstract class RNChat
     {
-        public static final String RN_MAIN_CHAT = RouterName.RN_MAIN_API + "/chat";
+        public static final String RN_MAIN_CHAT = Domain.RN_MAIN_API + "/chat";
 
         public static abstract class RNCover
         {
@@ -104,9 +110,11 @@ public abstract class RouterName
 
     public abstract static class RNLogin
     {
-        public static final String RN_MAIN = RN_MAIN_API + "/login";
+        public static final String RN_LOGIN = RN_MAIN_API + "/login";
 
-        public static final String RN_IS_VALID_UEP = RN_MAIN + "/is_valid_uep";
+        public static final String RN_LOGOUT = RN_LOGIN + "/logout";
+
+        public static final String RN_IS_VALID_UEP = RN_LOGIN + "/is_valid_uep";
     }
 
     public abstract static class RNRegister

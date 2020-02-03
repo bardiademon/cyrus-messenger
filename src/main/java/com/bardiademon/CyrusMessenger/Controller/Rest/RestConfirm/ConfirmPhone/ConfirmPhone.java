@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.RestConfirm.ConfirmPhone;
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RouterName.RNConfirm.RN_CONFIRM_PHONE, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNConfirm.RN_CONFIRM_PHONE, method = RequestMethod.POST)
 public class ConfirmPhone
 {
 

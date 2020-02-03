@@ -52,7 +52,6 @@ public class JoinGroup
     }
 
 
-
     public long getId ()
     {
         return id;

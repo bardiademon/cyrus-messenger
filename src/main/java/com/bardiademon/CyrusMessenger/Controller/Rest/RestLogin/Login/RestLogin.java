@@ -2,9 +2,11 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsValidUEPRequest;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.RestIsValidUEP;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -15,22 +17,16 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.S
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
-@RequestMapping (value = RouterName.RNLogin.RN_MAIN, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNLogin.RN_LOGIN, method = RequestMethod.POST)
 public class RestLogin
 {
-
-    public static final String KEY_CODE_LOGIN_COOKIE = "code_login";
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
@@ -52,7 +48,9 @@ public class RestLogin
     }
 
     @RequestMapping ({"/" , ""})
-    public AnswerToClient login (@RequestBody LoginRequest request , HttpServletRequest req , HttpServletResponse res)
+    public AnswerToClient login
+            (@RequestBody LoginRequest request ,
+             HttpServletRequest req , HttpServletResponse res , @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
         CheckBlockSystem checkBlockSystem;
@@ -72,6 +70,11 @@ public class RestLogin
             boolean is200 = answerToClient.getStatusCode () == 200;
             if (isOk && is200 && valid)
             {
+                if ((new CheckLogin (codeLogin , userLoginService.Repository)).isValid ())
+                {
+                    userLoginService.logout (codeLogin);
+                }
+
                 MainAccount mainAccount;
                 if ((request.getPassword () != null && !request.getPassword ().equals ("")) && (mainAccount = checkPassword (request.getValueUEP () , request.getUep () , request.getPassword ())) != null)
                 {
@@ -98,7 +101,7 @@ public class RestLogin
                             answerToClient.put (KeyAnswer.is_login.name () , true);
                             answerToClient.put (KeyAnswer.code_login.name () , code);
                             answerToClient.put (KeyAnswer.credit_up.name () , userLoginService.getCreditUp ());
-                            res.addCookie (new Cookie (KEY_CODE_LOGIN_COOKIE , code));
+                            res.addCookie (MCookie.CookieApi (code));
                             submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , false);
                         }
                         else answerToClient = AnswerToClient.ServerError ();

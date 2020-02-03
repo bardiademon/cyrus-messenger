@@ -74,7 +74,6 @@ public class ListUsersForUser
     }
 
 
-
     public MainAccount getMainAccountList ()
     {
         return mainAccountList;

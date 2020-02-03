@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General.GetListFriends;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
@@ -12,13 +12,14 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNGetListFriends.RN_GET_LIST_FRIENDS, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNGetListFriends.RN_GET_LIST_FRIENDS, method = RequestMethod.POST)
 public class GetListFriends
 {
 
@@ -30,15 +31,17 @@ public class GetListFriends
     private UserLoginService userLoginService;
 
     @Autowired
-    public GetListFriends ( UserFriendsService _UserFriendsService , UserLoginService _UserLoginService)
+    public GetListFriends (UserFriendsService _UserFriendsService , UserLoginService _UserLoginService)
     {
         this.userFriendsService = _UserFriendsService;
         this.userLoginService = _UserLoginService;
     }
 
     @RequestMapping (value = {"" , "/"})
-    public AnswerToClient getList (HttpServletResponse res ,
-                                   @RequestParam ("status") String status , @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+    public AnswerToClient getList
+            (HttpServletResponse res ,
+             @RequestParam ("status") String status ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
 

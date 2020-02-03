@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.GetContacts;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNContacts.RN_GET_CONTACT, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNContacts.RN_GET_CONTACT, method = RequestMethod.POST)
 public final class GetContacts
 {
 
@@ -34,7 +34,7 @@ public final class GetContacts
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient getContact
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody List<UserContacts> contacts)
     {
         AnswerToClient answerToClient;
@@ -53,7 +53,7 @@ public final class GetContacts
             }
 
             getContacts = new ArrayList<> ();
-            UserContacts userContacts = null;
+            UserContacts userContacts;
             long idContact;
             for (UserContacts contact : contacts)
             {

@@ -34,7 +34,7 @@ public final class BlockedByTheSystem
     @Enumerated (EnumType.STRING)
     private BlockedFor blockedFor;
 
-    @Column(name = "blocked_description")
+    @Column (name = "blocked_description")
     private String description;
 
     @Column (name = "blocked_at", nullable = false, updatable = false)

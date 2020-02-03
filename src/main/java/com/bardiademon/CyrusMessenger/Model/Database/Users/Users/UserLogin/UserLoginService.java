@@ -42,7 +42,15 @@ public class UserLoginService
         userLogin.setCreditUp (creditUp);
         userLogin.setSuccessful (true);
 
-        return ((Repository.save (userLogin)) != null);
+        return ((Repository.save (userLogin)).getId () > 0);
+    }
+
+    public boolean logout (String codeLogin)
+    {
+        UserLogin byCodeLogin = Repository.findByCodeLogin (codeLogin);
+        byCodeLogin.setTimeLogout (LocalDateTime.now ());
+        UserLogin userLogin = Repository.saveAndFlush (byCodeLogin);
+        return ((Repository.getOne (userLogin.getId ()).getTimeLogout ()) != null);
     }
 
     /**

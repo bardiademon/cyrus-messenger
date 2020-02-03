@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Block.NewBlock;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNBlock.RN_NEW_BLOCK, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNBlock.RN_NEW_BLOCK, method = RequestMethod.POST)
 public final class NewBlock
 {
 
@@ -36,7 +36,7 @@ public final class NewBlock
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient newBlock
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody RequestNewBlock request)
     {
         AnswerToClient answerToClient;

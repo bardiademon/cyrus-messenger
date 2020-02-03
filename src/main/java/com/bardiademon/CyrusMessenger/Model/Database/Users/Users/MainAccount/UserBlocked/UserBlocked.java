@@ -143,7 +143,6 @@ public final class UserBlocked
     }
 
 
-
     public boolean isUnblocked ()
     {
         return unblocked;

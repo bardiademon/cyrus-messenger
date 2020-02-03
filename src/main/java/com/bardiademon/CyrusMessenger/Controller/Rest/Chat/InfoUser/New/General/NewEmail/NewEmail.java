@@ -2,8 +2,8 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNNewInfoUser.RN_NEW_EMAIL, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNNewInfoUser.RN_NEW_EMAIL, method = RequestMethod.POST)
 public class NewEmail
 {
 
@@ -48,7 +48,7 @@ public class NewEmail
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient newEmail
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestParam ("email") String email , @RequestParam (value = "replace", required = false) boolean replace)
     {
         AnswerToClient answerToClient;
@@ -152,7 +152,7 @@ public class NewEmail
     @RequestMapping (value = "/confirm_code")
     public AnswerToClient confirmCode
             (HttpServletResponse res ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestParam ("id") int id , @RequestParam ("email") String email , @RequestParam (value = "code") String code)
     {
         AnswerToClient answerToClient = AnswerToClient.error400 ();

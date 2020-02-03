@@ -1,16 +1,32 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest;
 
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
+import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequest;
+import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping (value = "/test", method = RequestMethod.POST)
+@RequestMapping (value = "/test")
 public class Test
 {
 
@@ -18,6 +34,11 @@ public class Test
     private ShowProfileForService showProfileForService;
     private SecurityUserProfileService securityUserProfileService;
     private ShowChatForService showChatForService;
+    private UserContactsService userContactsService;
+    private UserBlockedService userBlockedService;
+    private SubmitRequestService submitRequestService;
+    private BlockedByTheSystemService blockedByTheSystemService;
+    private NumberOfSubmitRequestService numberOfSubmitRequestService;
     private SecurityUserChatService securityUserChatService;
 
     @Autowired
@@ -26,6 +47,11 @@ public class Test
              ShowProfileForService showProfileForService ,
              SecurityUserProfileService securityUserProfileService ,
              ShowChatForService showChatForService ,
+             UserContactsService userContactsService ,
+             UserBlockedService userBlockedService ,
+             SubmitRequestService submitRequestService ,
+             BlockedByTheSystemService blockedByTheSystemService ,
+             NumberOfSubmitRequestService numberOfSubmitRequestService ,
              SecurityUserChatService securityUserChatService
             )
     {
@@ -34,39 +60,43 @@ public class Test
         this.showProfileForService = showProfileForService;
         this.securityUserProfileService = securityUserProfileService;
         this.showChatForService = showChatForService;
+        this.userContactsService = userContactsService;
+        this.userBlockedService = userBlockedService;
+        this.submitRequestService = submitRequestService;
+        this.blockedByTheSystemService = blockedByTheSystemService;
+        this.numberOfSubmitRequestService = numberOfSubmitRequestService;
         this.securityUserChatService = securityUserChatService;
     }
 
-    public static class Request
+
+    @RequestMapping (value = {"/" , ""})
+    public boolean test ()
     {
-        TestEnum testEnum;
 
-        public TestEnum getTestEnum ()
-        {
-            return testEnum;
-        }
+        List<NumberOfSubmitRequest> list = new ArrayList<> ();
 
-        public void setTestEnum (TestEnum testEnum)
-        {
-            this.testEnum = testEnum;
-        }
 
-        public Request (TestEnum testEnum)
-        {
-            this.testEnum = testEnum;
-        }
+        list.add (create (10 , 3 , SubmitRequestType.register));
+        list.add (create (10 , 3 , SubmitRequestType.login));
+        list.add (create (15 , 3 , SubmitRequestType.new_email));
+        list.add (create (15 , 3 , SubmitRequestType.confirmed_phone));
+        list.add (create (10 , 3 , SubmitRequestType.is_valid_uep));
 
-        public Request ()
-        {
-        }
+        numberOfSubmitRequestService.Repository.saveAll (list);
+
+        return false;
+
+
     }
 
-    @RequestMapping (value = {"/" , ""}, method = RequestMethod.POST)
-    public String test (@RequestBody Request re)
+    public NumberOfSubmitRequest create (int block , int request , SubmitRequestType type)
     {
-        return re.testEnum.name ();
+        NumberOfSubmitRequest numberOfSubmitRequest = new NumberOfSubmitRequest ();
+        numberOfSubmitRequest.setNumberOfMinToBeBlocked (block);
+        numberOfSubmitRequest.setNumberOfRequest (request);
+        numberOfSubmitRequest.setType (type);
+        return numberOfSubmitRequest;
     }
-
 
     public enum TestEnum
     {

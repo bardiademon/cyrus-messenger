@@ -1,8 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Security.Chat;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login.RestLogin;
-import com.bardiademon.CyrusMessenger.Controller.Rest.RouterName;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping (value = RouterName.RNChat.RNInfoUser.RNSecurity.RN_CHAT, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNSecurity.RN_CHAT, method = RequestMethod.POST)
 public class Chat
 {
     private final UserLoginService userLoginService;
@@ -27,7 +27,7 @@ public class Chat
     @RequestMapping ({"/" , ""})
     public AnswerToClient getInfoSecurityUserChar
             (@RequestBody RequestChat requestChat ,
-             @CookieValue (value = RestLogin.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
         CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);

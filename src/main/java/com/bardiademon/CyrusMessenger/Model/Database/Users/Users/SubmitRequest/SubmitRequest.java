@@ -40,12 +40,12 @@ public final class SubmitRequest
     @CreationTimestamp
     private LocalDateTime requestedAt;
 
-    @Enumerated ( EnumType.STRING)
-    @Column(name = "submit_request_type")
+    @Enumerated (EnumType.STRING)
+    @Column (name = "submit_request_type")
     private SubmitRequestType type;
 
     // sr => submit_request
-    @Column(name = "sr_is_active")
+    @Column (name = "sr_is_active")
     private boolean active;
 
     public SubmitRequest ()
