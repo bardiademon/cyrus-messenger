@@ -16,12 +16,18 @@ public class UserBlockedService
         this.Repository = Repository;
     }
 
-
-    public UserBlocked isBlocked (long idUser , long idToCheck)
+    public List<UserBlocked> isBlocked (long idUser , long idToCheck)
     {
         if (idUser == idToCheck) return null;
 
         return Repository.findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalse (idUser , idToCheck);
+    }
+
+    public UserBlocked isBlocked (long idUser , long idToCheck , UserBlocked.Type type)
+    {
+        if (idUser == idToCheck) return null;
+
+        return Repository.findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalseAndType (idUser , idToCheck , type);
     }
 
     public List<UserBlocked> listBlocked (long idUser)

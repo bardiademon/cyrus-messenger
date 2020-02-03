@@ -11,6 +11,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -71,10 +72,18 @@ public final class NewBlock
                             else
                             {
                                 UserBlocked blocked
-                                        = userBlockedService.isBlocked (mainAccount.getId () , username.getId ());
+                                        = userBlockedService.isBlocked (mainAccount.getId () , username.getId () , type);
 
                                 if (request.isBlock ())
                                 {
+                                    if (blocked != null && Time.BiggerNow (blocked.getValidityTime ()))
+                                    {
+                                        blocked.setUnblocked (true);
+                                        blocked.setUnblockedAt (LocalDateTime.now ());
+                                        userBlockedService.Repository.save (blocked);
+                                        blocked = null;
+                                    }
+
                                     if (blocked == null)
                                     {
                                         blocked = new UserBlocked ();

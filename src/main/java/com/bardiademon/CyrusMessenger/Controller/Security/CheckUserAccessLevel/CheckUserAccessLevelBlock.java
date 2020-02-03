@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 
 public final class CheckUserAccessLevelBlock
 {
@@ -31,84 +32,58 @@ public final class CheckUserAccessLevelBlock
 
     private void check ()
     {
-        UserBlocked blocked = userBlockedService.isBlocked (mainAccountToCheck.getId () , mainAccountRequest.getId ());
-        if (blocked == null)
-            hasAccess = true;
+        UserBlocked.Type type = toType ();
+        if (type == null) hasAccess = true;
         else
         {
-            if (blocked.getType ().equals (UserBlocked.Type.all)) hasAccess = false;
+            UserBlocked blocked = userBlockedService.isBlocked (mainAccountToCheck.getId () , mainAccountRequest.getId () , type);
+
+            if (blocked == null)
+                hasAccess = true;
             else
             {
-                UserBlocked.Type type = blocked.getType ();
-                switch (type)
+                System.out.println (blocked.getValidityTime ().toString ());
+                System.out.println (Time.BiggerNow (blocked.getValidityTime ()));
+                if (Time.BiggerNow (blocked.getValidityTime ()))
                 {
-                    case cns_bio:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.bio))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_cover:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.cover))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_phone:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_phone))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_profile:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_profile))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_send_message:
-                    {
-                        if (checkChat == null) hasAccess = true;
-                        else if (checkChat.equals (CheckUserAccessLevel.CheckChat.send_message))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_username:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_username))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_email:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_email))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_family:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_family))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_mylink:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_mylink))
-                            hasAccess = false;
-                        break;
-                    }
-                    case cns_name:
-                    {
-                        if (checkProfile != null && checkProfile.equals (CheckUserAccessLevel.CheckProfile.show_name))
-                            hasAccess = false;
-                        break;
-                    }
-                    default:
-                    {
-                        hasAccess = true;
-                        break;
-                    }
+                    blocked.setUnblocked (true);
+                    blocked.setUnblocked (true);
+                    userBlockedService.Repository.save (blocked);
+                    hasAccess = true;
                 }
+                else hasAccess = false;
+            }
+        }
+    }
+
+    public UserBlocked.Type toType ()
+    {
+        if (checkChat != null && checkChat.equals (CheckUserAccessLevel.CheckChat.send_message))
+            return UserBlocked.Type.cns_send_message;
+        else
+        {
+            switch (checkProfile)
+            {
+                case bio:
+                    return UserBlocked.Type.cns_bio;
+                case show_phone:
+                    return UserBlocked.Type.cns_phone;
+                case show_name:
+                    return UserBlocked.Type.cns_name;
+                case show_username:
+                    return UserBlocked.Type.cns_username;
+                case show_profile:
+                    return UserBlocked.Type.cns_profile;
+                case show_email:
+                    return UserBlocked.Type.cns_email;
+                case show_mylink:
+                    return UserBlocked.Type.cns_mylink;
+                case show_family:
+                    return UserBlocked.Type.cns_family;
+                case cover:
+                    return UserBlocked.Type.cns_cover;
+                default:
+                    return UserBlocked.Type.all;
             }
         }
     }

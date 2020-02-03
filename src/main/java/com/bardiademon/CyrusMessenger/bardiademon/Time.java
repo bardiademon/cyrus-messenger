@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,5 +16,10 @@ public abstract class Time
     {
         if (time == null) return null;
         return time.format (DateTimeFormatter.ofPattern ("HH:mm:ss"));
+    }
+
+    public static boolean BiggerNow (LocalDateTime dateTime)
+    {
+        return ((Timestamp.valueOf (LocalDateTime.now ())).getTime () > (Timestamp.valueOf (dateTime)).getTime ());
     }
 }
