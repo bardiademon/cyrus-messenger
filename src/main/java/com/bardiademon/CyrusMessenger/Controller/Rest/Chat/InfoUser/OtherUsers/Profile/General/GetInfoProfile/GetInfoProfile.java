@@ -47,7 +47,7 @@ public final class GetInfoProfile
             answerToClient = AnswerToClient.RequestIsNull ();
         else
         {
-            answerToClient = showProfile.showProfile (res , codeLogin , request.getIdUser ());
+            answerToClient = showProfile.showProfile (res , codeLogin , request.getIdUser () , request.getUsername ());
 
             if (answerToClient.isOk () && answerToClient.getMessage ().containsKey (ShowProfile.KeyAnswer.i_can.name ()) && ((boolean) answerToClient.getMessage ().get (ShowProfile.KeyAnswer.i_can.name ())))
             {

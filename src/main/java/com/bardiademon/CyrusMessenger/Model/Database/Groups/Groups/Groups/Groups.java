@@ -32,7 +32,14 @@ public class Groups
     @Column (unique = true)
     private String username;
 
-    private String cover;
+    @Column (name = "link_join_group", unique = true)
+    private String linkJoinGroup;
+
+    private String bio;
+
+    private String link;
+
+    private String description;
 
     @Column (name = "created_at", updatable = false)
     @CreationTimestamp
@@ -46,12 +53,11 @@ public class Groups
     {
     }
 
-    public Groups (MainAccount mainAccount , String name , String username , String cover , LocalDateTime createdAt , LocalDateTime updatedAt)
+    public Groups (MainAccount mainAccount , String name , String username , LocalDateTime createdAt , LocalDateTime updatedAt)
     {
         this.mainAccount = mainAccount;
         this.name = name;
         this.username = username;
-        this.cover = cover;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -94,16 +100,6 @@ public class Groups
     public void setUsername (String username)
     {
         this.username = username;
-    }
-
-    public String getCover ()
-    {
-        return cover;
-    }
-
-    public void setCover (String cover)
-    {
-        this.cover = cover;
     }
 
     public LocalDateTime getCreatedAt ()

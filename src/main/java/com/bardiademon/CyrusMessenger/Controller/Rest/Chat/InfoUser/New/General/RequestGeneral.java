@@ -5,7 +5,6 @@ public final class RequestGeneral
     private String bio;
     private String name;
     private String family;
-    private String username;
     private String mylink;
 
 
@@ -18,16 +17,6 @@ public final class RequestGeneral
     public RequestGeneral ()
     {
     }
-
-    public RequestGeneral (String bio , String name , String family , String username , String mylink)
-    {
-        this.bio = bio;
-        this.name = name;
-        this.family = family;
-        this.username = username;
-        this.mylink = mylink;
-    }
-
     public String getBio ()
     {
         return bio;
@@ -58,16 +47,6 @@ public final class RequestGeneral
         this.family = family;
     }
 
-    public String getUsername ()
-    {
-        return username;
-    }
-
-    public void setUsername (String username)
-    {
-        this.username = username;
-    }
-
     public String getMylink ()
     {
         return mylink;
@@ -80,7 +59,7 @@ public final class RequestGeneral
 
     public boolean thereIsAtLeastOneTrue ()
     {
-        return (isNull (getBio ()) || isNull (getName ()) || isNull (getFamily ()) || isNull (getUsername ()) || isNull (getMylink ()));
+        return (isNull (getBio ()) || isNull (getName ()) || isNull (getFamily ()) || isNull (getMylink ()));
     }
 
     public boolean isNull (String str)

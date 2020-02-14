@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

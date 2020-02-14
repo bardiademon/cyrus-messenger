@@ -13,7 +13,6 @@ import com.bardiademon.CyrusMessenger.bardiademon.Default.DSize;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.GetSize;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,7 +53,7 @@ public class UploadCover
             {
 
                 CheckImage checkImage = new CheckImage ();
-                if (checkImage.check (cover , FilenameUtils.getExtension (cover.getOriginalFilename ())))
+                if (checkImage.valid (cover))
                 {
                     if (cover.getSize () > DSize.SIZE_COVER)
                     {

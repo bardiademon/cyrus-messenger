@@ -1,29 +1,31 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest;
 
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequestService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsername;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
+import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
 
 @RestController
 @RequestMapping (value = "/test")
@@ -68,24 +70,37 @@ public class Test
         this.securityUserChatService = securityUserChatService;
     }
 
-
-    @RequestMapping (value = {"/" , ""})
-    public boolean test ()
+    @RequestMapping (value = {"" , "/" , "/{username}" , "/{idUser}" , "/{idUser}/{username}"})
+    public AnswerToClient test (HttpServletRequest req , HttpServletResponse res , @PathVariable (value = "idUser", required = false) long idUser , @PathVariable (value = "username", required = false) String username)
     {
+        IdUsername idUsername = new IdUsername (mainAccountService , idUser , username);
 
-        List<NumberOfSubmitRequest> list = new ArrayList<> ();
+        AnswerToClient answerToClient = idUsername.getAnswerToClient ();
+
+        if (answerToClient == null) answerToClient = AnswerToClient.OK ();
+        answerToClient.setResponse (res);
+        answerToClient.setRequest (req);
+
+        System.out.println (idUsername.isValid ());
+
+        String request = ToJson.To (new ToJson.CreateClass ().put ("idUser" , idUser).put ("username" , username));
+
+        l.n (request , "/test" , null , idUsername.getAnswerToClient () , Thread.currentThread ().getStackTrace () , null , null);
+
+        List<ProfilePictures> profilePictures = idUsername.getMainAccount ().getProfilePictures ();
+
+        ProfilePictures profilePicture = profilePictures.get (0);
+
+        String picture = Path.StickTogether (Path.PROFILE_PICTURES_USERS , idUsername.getMainAccount ().getUsername () , profilePicture.getName () + "." + profilePicture.getType ());
 
 
-        list.add (create (10 , 3 , SubmitRequestType.register));
-        list.add (create (10 , 3 , SubmitRequestType.login));
-        list.add (create (15 , 3 , SubmitRequestType.new_email));
-        list.add (create (15 , 3 , SubmitRequestType.confirmed_phone));
-        list.add (create (10 , 3 , SubmitRequestType.is_valid_uep));
+        answerToClient.put ("pic" , picture);
 
-        numberOfSubmitRequestService.Repository.saveAll (list);
+        SortProfilePictures sort = new SortProfilePictures (profilePictures);
 
-        return false;
 
+
+        return answerToClient;
 
     }
 

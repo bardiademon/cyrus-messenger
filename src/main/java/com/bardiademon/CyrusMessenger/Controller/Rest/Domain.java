@@ -14,6 +14,14 @@ public abstract class Domain
     {
         public static final String RN_MAIN_CHAT = Domain.RN_MAIN_API + "/chat";
 
+        public static abstract class RNProfilePicture
+        {
+            private static final String RN_PROFILE_PICTURE = RN_MAIN_CHAT + "/profile_picture";
+            public static final String RN_PROFILE_PICTURE_UPLOAD = RN_PROFILE_PICTURE + "/upload";
+            public static final String RN_PROFILE_PICTURE_GET_ALL = RN_PROFILE_PICTURE + "/get_all";
+            public static final String RN_PROFILE_PICTURE_GET_ONE = RN_PROFILE_PICTURE + "/get_one";
+        }
+
         public static abstract class RNCover
         {
             public static final String RN_GET_USER_COVER = RN_MAIN_CHAT + "/cover";

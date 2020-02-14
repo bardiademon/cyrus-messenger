@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Model.FindInTheDatabase;
+package com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;

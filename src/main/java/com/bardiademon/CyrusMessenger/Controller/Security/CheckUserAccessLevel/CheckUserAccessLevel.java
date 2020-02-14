@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel;
 
+import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
@@ -15,6 +16,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Arrays;
 
@@ -111,12 +113,28 @@ public class CheckUserAccessLevel
 
             if (accessLevelBlock.hasAccess ())
             {
-                if (checkProfileOrChat == CHK_PROFILE) return checkProfile ();
+                if (checkProfileOrChat == CHK_PROFILE)
+                {
+                    if (serviceProfile == null) setServiceProfile ();
+                    return checkProfile ();
+                }
                 else if (checkProfileOrChat == CHK_CHAT) return checkChat ();
                 else return false;
             }
             else return false;
         }
+    }
+
+    private void setServiceProfile ()
+    {
+        ConfigurableApplicationContext context = CyrusMessengerApplication.Context ();
+        setServiceProfile (new ServiceProfile (
+                context.getBean (ShowProfileForService.class) ,
+                context.getBean (UserContactsService.class) ,
+                context.getBean (UserFriendsService.class) ,
+                context.getBean (SecurityUserProfileService.class) ,
+                context.getBean (UserBlockedService.class)
+        ));
     }
 
     private boolean checkProfile ()
@@ -347,7 +365,6 @@ public class CheckUserAccessLevel
             this._ShowProfileForService = _ShowProfileForService;
             this._SecurityUserProfileService = _SecurityUserProfileService;
         }
-
     }
 
 }

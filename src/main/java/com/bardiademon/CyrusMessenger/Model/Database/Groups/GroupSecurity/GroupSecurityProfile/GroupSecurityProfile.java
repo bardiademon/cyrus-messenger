@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 public class GroupSecurityProfile
 {
 
+    private final static int MAX_MEMBER_GROUP = 100000;
+
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
@@ -24,25 +26,25 @@ public class GroupSecurityProfile
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
 
-    @Column (nullable = false, name = "amily_group")
-    private boolean familyGroup;
+    @Column (nullable = false, name = "family_group")
+    private boolean familyGroup = false;
 
     @Column (nullable = false, name = "show_in_search")
-    private boolean showInSearch;
+    private boolean showInSearch = true;
 
     @Column (nullable = false, name = "show_list_member")
-    private boolean showListMember;
+    private boolean showListMember = true;
 
     private String password;
 
     @Column (nullable = false, name = "show_admin")
-    private boolean showAdmin;
+    private boolean showAdmin = true;
 
     @Column (nullable = false, name = "add_member")
-    private boolean addMember;
+    private boolean addMember = false;
 
     @Column (name = "max_member")
-    private Integer maxMember;
+    private Integer maxMember = MAX_MEMBER_GROUP;
 
     public GroupSecurityProfile ()
     {

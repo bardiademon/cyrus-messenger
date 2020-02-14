@@ -4,11 +4,16 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -24,7 +29,8 @@ public final class RestLogout
     }
 
     @RequestMapping (value = {"" , "/"})
-    public AnswerToClient logout (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin , HttpServletResponse res)
+    public AnswerToClient logout (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+                                  HttpServletResponse res , HttpServletRequest req)
     {
         AnswerToClient answerToClient;
 
@@ -35,11 +41,33 @@ public final class RestLogout
             logout = userLoginService.logout (codeLogin);
             answerToClient = AnswerToClient.OneAnswer ((logout ? AnswerToClient.OK () : AnswerToClient.ServerError ()) , KeyAnswer.logout.name () , logout);
 
-            if (logout) res.addCookie (MCookie.CookieApi (null));
-        }
-        else answerToClient = checkLogin.getAnswerToClient ();
+            MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
 
-        answerToClient.setResponse (res);
+            answerToClient.setReqRes (req , res);
+
+            if (logout)
+            {
+                res.addCookie (MCookie.CookieApi (null));
+                l.n (null , Domain.RNLogin.RN_LOGOUT , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () ,
+                        null ,
+                        ((new ToJson.CreateClass ()).put (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin)).toJson ());
+            }
+            else
+            {
+                l.n (null , Domain.RNLogin.RN_LOGOUT , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () ,
+                        new Exception ("Can not logout") ,
+                        ((new ToJson.CreateClass ()).put (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin)).toJson ());
+            }
+        }
+        else
+        {
+            answerToClient = checkLogin.getAnswerToClient ();
+            answerToClient.setReqRes (req , res);
+
+            l.n (null , Domain.RNLogin.RN_LOGOUT , null , answerToClient , Thread.currentThread ().getStackTrace () ,
+                    new Exception ("Error from CheckLogin") ,
+                    ((new ToJson.CreateClass ()).put (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin)).toJson ());
+        }
         return answerToClient;
     }
 

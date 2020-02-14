@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Table (name = "log")
 public class Log
 {
-
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false, length = 1000)
@@ -33,34 +32,30 @@ public class Log
     @Column (nullable = false)
     private boolean error;
 
-    @Column (name = "message_error")
-    private String messageError;
+    @Column (name = "info_line", length = 100000)
+    private String infoLine;
 
-    @Column (name = "answer_to_client", nullable = false)
+    @Column (name = "answer_to_client", length = 100000)
     private String answerToClient;
 
-    @Column (nullable = false)
+    @Column (length = 100000)
     private String request;
 
+    @Column (length = 100000)
     private String description;
 
-    @Column (nullable = false)
     private String ip;
+
+    private String route;
+
+    @Column (name = "http_servlet_request", length = 100000)
+    private String httpServletRequest;
+
+    @Column (name = "http_servlet_response", length = 100000)
+    private String httpServletResponse;
 
     public Log ()
     {
-    }
-
-    public Log (MainAccount mainAccount , LocalDateTime time , boolean error , String messageError , String answerToClient , String request , String description , String ip)
-    {
-        this.mainAccount = mainAccount;
-        this.time = time;
-        this.error = error;
-        this.messageError = messageError;
-        this.answerToClient = answerToClient;
-        this.request = request;
-        this.description = description;
-        this.ip = ip;
     }
 
     public long getId ()
@@ -103,14 +98,14 @@ public class Log
         this.error = error;
     }
 
-    public String getMessageError ()
+    public String getInfoLine ()
     {
-        return messageError;
+        return infoLine;
     }
 
-    public void setMessageError (String messageError)
+    public void setInfoLine (String infoLine)
     {
-        this.messageError = messageError;
+        this.infoLine = infoLine;
     }
 
     public String getAnswerToClient ()
@@ -151,5 +146,35 @@ public class Log
     public void setIp (String ip)
     {
         this.ip = ip;
+    }
+
+    public String getRoute ()
+    {
+        return route;
+    }
+
+    public void setRoute (String route)
+    {
+        this.route = route;
+    }
+
+    public String getHttpServletRequest ()
+    {
+        return httpServletRequest;
+    }
+
+    public void setHttpServletRequest (String httpServletRequest)
+    {
+        this.httpServletRequest = httpServletRequest;
+    }
+
+    public String getHttpServletResponse ()
+    {
+        return httpServletResponse;
+    }
+
+    public void setHttpServletResponse (String httpServletResponse)
+    {
+        this.httpServletResponse = httpServletResponse;
     }
 }

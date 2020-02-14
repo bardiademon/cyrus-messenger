@@ -13,6 +13,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsername;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,32 +57,29 @@ public final class ShowProfile
     public AnswerToClient showProfile
             (HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             @RequestParam ("id_user") long idUser)
+             @RequestParam (value = "id_user", defaultValue = "0", required = false) long idUser ,
+             @RequestParam (value = "username", defaultValue = "", required = false) String username)
     {
         AnswerToClient answerToClient;
 
         checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
         if (checkLogin.isValid ())
         {
-            if (idUser > 0)
+            IdUsername idUsername = new IdUsername (mainAccountService , idUser , username);
+            if (idUsername.isValid ())
             {
-                mainAccountGetProfile = mainAccountService.findValidById (idUser);
-                if (mainAccountGetProfile != null)
-                {
-                    CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
-                            (checkLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
+                mainAccountGetProfile = idUsername.getMainAccount ();
 
-                    accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.show_profile);
-                    accessLevel.setServiceProfile (serviceProfile);
-                    System.out.println (accessLevel.check (accessLevel.CHK_PROFILE));
+                CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
+                        (checkLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
 
-                    answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
-                            KeyAnswer.i_can.name () , accessLevel.check (accessLevel.CHK_PROFILE));
-                }
-                else
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_not_found.name ());
+                accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.show_profile);
+                accessLevel.setServiceProfile (serviceProfile);
+                answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
+                        KeyAnswer.i_can.name () , accessLevel.check (accessLevel.CHK_PROFILE));
+
             }
-            else answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_invalid.name ());
+            else answerToClient = idUsername.getAnswerToClient ();
         }
         else answerToClient = checkLogin.getAnswerToClient ();
 
@@ -97,7 +95,7 @@ public final class ShowProfile
 
     public enum ValAnswer
     {
-        id_invalid, id_not_found
+        id_invalid, id_not_found, username_invalid
     }
 
     public CheckLogin getCheckLogin ()

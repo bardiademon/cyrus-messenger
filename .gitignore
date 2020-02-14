@@ -33,3 +33,4 @@ build/
 ### Me ###
 .gitignore
 files/
+.src/main/java/com/bardiademon/CyrusMessenger/Controller/Rest/Test.java

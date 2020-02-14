@@ -33,6 +33,8 @@ public final class SubmitRequestService
 
     public void newRequest (MainAccount mainAccount , SubmitRequestType type , boolean active)
     {
+        deactiveAllRequestIfTime15 (mainAccount.getId () , type);
+
         SubmitRequest submitRequest = new SubmitRequest ();
         submitRequest.setMainAccount (mainAccount);
         submitRequest.setType (type);
@@ -57,7 +59,7 @@ public final class SubmitRequestService
 
     public void newRequest (String ip , SubmitRequestType type , boolean active)
     {
-        System.out.println (active);
+        deactiveAllRequestIfTime15 (ip , type);
         if (!active) deactiveAllRequest (ip , type);
 
         SubmitRequest submitRequest = new SubmitRequest ();
@@ -85,9 +87,19 @@ public final class SubmitRequestService
         Repository.deactiveAllRequest (idUser , type);
     }
 
+    public void deactiveAllRequestIfTime15 (long idUser , SubmitRequestType type)
+    {
+        Repository.deactiveAllRequest (idUser , type , LocalDateTime.now ().plusMinutes (15));
+    }
+
     public void deactiveAllRequest (String ip , SubmitRequestType type)
     {
         Repository.deactiveAllRequest (ip , type);
+    }
+
+    public void deactiveAllRequestIfTime15 (String ip , SubmitRequestType type)
+    {
+        Repository.deactiveAllRequest (ip , type , LocalDateTime.now ().plusMinutes (15));
     }
 
     public boolean exceedingTheLimit (MainAccount mainAccount , SubmitRequestType type)

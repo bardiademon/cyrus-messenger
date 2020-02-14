@@ -8,7 +8,9 @@ import java.util.List;
 @Repository
 public interface UserBlockedRepository extends JpaRepository<UserBlocked, Long>
 {
-    UserBlocked findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalse (long idUser , long idUserBlock);
+    List<UserBlocked> findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalse (long idUser , long idUserBlock);
+
+    UserBlocked findByMainAccountIdAndMainAccountBlockedIdAndUnblockedFalseAndType (long idUser , long idUserBlock , UserBlocked.Type type);
 
     List<UserBlocked> findByMainAccountIdAndUnblockedFalse (long idUser);
 

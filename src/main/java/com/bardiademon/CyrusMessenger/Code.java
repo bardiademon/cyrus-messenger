@@ -95,7 +95,7 @@ public class Code
 
     public static String Name ()
     {
-        Code code = new Code (50 , true , true , true , false);
+        Code code = new Code (150 , true , true , true , false);
         code.createCode ();
         return code.getCode ();
     }

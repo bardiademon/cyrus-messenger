@@ -15,11 +15,6 @@ public class IsValidUEPRequest
 
     public final String region;
 
-    public IsValidUEPRequest ()
-    {
-        this (null , null);
-    }
-
     public IsValidUEPRequest (String uep , String region)
     {
         this.uep = uep;

@@ -96,6 +96,9 @@ public class SecurityUserProfile
     @Column (name = "list_friends", nullable = false)
     private AccessLevel listFriends = AccessLevel.all;
 
+    @Column (name = "max_upload_profile_pictures", nullable = false)
+    private int maxUploadProfilePictures = 20;
+
     public SecurityUserProfile ()
     {
     }
@@ -288,5 +291,15 @@ public class SecurityUserProfile
     public void setListFriends (AccessLevel listFriends)
     {
         this.listFriends = listFriends;
+    }
+
+    public int getMaxUploadProfilePictures ()
+    {
+        return maxUploadProfilePictures;
+    }
+
+    public void setMaxUploadProfilePictures (int maxUploadProfilePictures)
+    {
+        this.maxUploadProfilePictures = maxUploadProfilePictures;
     }
 }

@@ -9,15 +9,21 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +44,7 @@ public class RestLogin
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
              UsersStatusService _UsersStatusService ,
-             SubmitRequestService _SubmitRequestService
-            )
+             SubmitRequestService _SubmitRequestService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
@@ -55,7 +60,15 @@ public class RestLogin
         AnswerToClient answerToClient;
         CheckBlockSystem checkBlockSystem;
         if ((checkBlockSystem = new CheckBlockSystem (req , submitRequestService.blockedByTheSystemService , BlockedFor.submit_request , SubmitRequestType.login.name ())).isBlocked ())
+        {
             answerToClient = checkBlockSystem.getAnswerToClient ();
+
+            answerToClient.setReqRes (req , res);
+
+            ToJson.CreateClass createClass = new ToJson.CreateClass ();
+            createClass.put ("blocked_for" , BlockedFor.submit_request.name ()).put ("submit_request_type" , SubmitRequestType.login.name ());
+            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("is_block") , createClass.toJson ());
+        }
         else
         {
             RestIsValidUEP restIsValidUEP = new RestIsValidUEP (mainAccountService , usersStatusService , submitRequestService);
@@ -70,8 +83,10 @@ public class RestLogin
             boolean is200 = answerToClient.getStatusCode () == 200;
             if (isOk && is200 && valid)
             {
-                if ((new CheckLogin (codeLogin , userLoginService.Repository)).isValid ())
+                CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+                if (checkLogin.isValid ())
                 {
+                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , checkLogin.getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , "is login");
                     userLoginService.logout (codeLogin);
                 }
 
@@ -103,21 +118,48 @@ public class RestLogin
                             answerToClient.put (KeyAnswer.credit_up.name () , userLoginService.getCreditUp ());
                             res.addCookie (MCookie.CookieApi (code));
                             submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , false);
+
+                            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , "login");
                         }
-                        else answerToClient = AnswerToClient.ServerError ();
+                        else
+                        {
+                            answerToClient = AnswerToClient.ServerError ();
+                            answerToClient.setReqRes (req , res);
+
+                            ToJson.CreateClass createClass = new ToJson.CreateClass ();
+                            createClass.put ("code" , code).put ("account" , ToJson.To (mainAccount)).put ("ip" , req.getRemoteAddr ());
+                            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("can not save new login") , createClass.toJson ());
+                        }
                     }
-                    else answerToClient = AnswerToClient.ServerError ();
+                    else
+                    {
+                        answerToClient = AnswerToClient.ServerError ();
+                        ToJson.CreateClass createClass = new ToJson.CreateClass ();
+                        createClass.put ("code" , code).put ("account" , ToJson.To (mainAccount)).put ("ip" , req.getRemoteAddr ());
+                        l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("can not create code") , createClass.toJson ());
+                    }
                 }
                 else
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , KeyAnswer.password_is_valid.name () , false);
+
+                    answerToClient.setReqRes (req , res);
+
+                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (KeyAnswer.password_is_valid.name ()) , KeyAnswer.password_is_valid.name ());
                     submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , true);
                 }
             }
+            else
+            {
+                answerToClient.setReqRes (req , res);
+                System.out.println (ToJson.To (request));
+                l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not valid info") , null);
+            }
         }
-        answerToClient.setResponse (res);
+        answerToClient.setReqRes (req , res);
         return answerToClient;
     }
+
 
     private MainAccount checkPassword (String uep , String valueEup , String password)
     {

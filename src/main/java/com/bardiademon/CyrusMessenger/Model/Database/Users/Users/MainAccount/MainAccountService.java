@@ -104,12 +104,6 @@ public class MainAccountService
             req.setUpdatedFamily ();
         }
 
-        if (!req.isNull (req.getUsername ()) && findUsername (req.getUsername ()) == null)
-        {
-            mainAccount.setUsername (req.getUsername ());
-            req.setUpdatedUsername ();
-        }
-
         if (!req.isNull (req.getMylink ()) && ((new UrlValidator ()).isValid (req.getMylink ())))
         {
             mainAccount.setMyLink (req.getMylink ());
@@ -130,6 +124,11 @@ public class MainAccountService
         MainAccount byUsername = Repository.findByUsernameAndDeletedFalse (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
+    }
+
+    public MainAccount findId (long idUser)
+    {
+        return Repository.findById (idUser);
     }
 
     public MainAccount findPhone (String phone)

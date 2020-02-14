@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.Login;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsValidUEPRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class LoginRequest extends IsValidUEPRequest
 {
@@ -10,16 +11,6 @@ public final class LoginRequest extends IsValidUEPRequest
     {
         super (uep , region);
         this.password = password;
-    }
-
-    public LoginRequest (String uep , String region)
-    {
-        super (uep , region);
-    }
-
-    public LoginRequest ()
-    {
-        super ();
     }
 
     public String getPassword ()
@@ -32,6 +23,7 @@ public final class LoginRequest extends IsValidUEPRequest
         this.password = password;
     }
 
+    @JsonIgnore
     public IsValidUEPRequest getIsValidUEPRequest ()
     {
         return this;

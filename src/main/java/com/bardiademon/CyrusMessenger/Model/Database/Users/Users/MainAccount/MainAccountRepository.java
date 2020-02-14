@@ -25,4 +25,6 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 
     MainAccount findByPhoneLike (String phone);
 
+    MainAccount findById (long id);
+
 }

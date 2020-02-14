@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.bardiademon.IO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -18,12 +19,12 @@ public final class CheckImage
     private final List<String> lstExtensions = Arrays.asList ("jpg" , "png");
     private String extension;
 
-    public boolean check (MultipartFile File , String Extension)
+    public boolean valid (MultipartFile File)
     {
         try
         {
             this.stream = File.getInputStream ();
-            this.extension = Extension;
+            this.extension = FilenameUtils.getExtension (File.getOriginalFilename ());
             isImage = checkExtensions () && check ();
         }
         catch (IOException e)

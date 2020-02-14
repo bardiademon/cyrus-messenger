@@ -54,9 +54,6 @@ public final class NewGeneral
                 if (requestGeneral.isUpdatedFamily () || !requestGeneral.isNull (requestGeneral.getFamily ()))
                     answerToClient.put (KeyAnswer.family.name () , requestGeneral.isUpdatedFamily ());
 
-                if (requestGeneral.isUpdatedUsername () || !requestGeneral.isNull (requestGeneral.getUsername ()))
-                    answerToClient.put (KeyAnswer.username.name () , requestGeneral.isUpdatedUsername ());
-
                 if (requestGeneral.isUpdatedMylink () || !requestGeneral.isNull (requestGeneral.getMylink ()))
                     answerToClient.put (KeyAnswer.mylink.name () , requestGeneral.isUpdatedMylink ());
             }

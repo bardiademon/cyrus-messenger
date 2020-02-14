@@ -69,8 +69,7 @@ public class GetCover
     }
 
     @RequestMapping (value = {"/{username}" , "/" , ""}, produces = MediaType.IMAGE_JPEG_VALUE, method = RequestMethod.GET)
-    public @ResponseBody
-    byte[] get (
+    public @ResponseBody byte[] get (
             @PathVariable (value = "username",
                     required = false) String username ,
             HttpServletResponse response ,
@@ -87,7 +86,7 @@ public class GetCover
         if (username == null || username.equals ("")) return error (Path.IMAGE_NOT_FOUND);
 
         CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (!checkLogin.isValid ()) return error (Path.IC_NOT_LOGIN);
+        if (!checkLogin.isValid ()) return error (Path.IC_NOT_LOGGED);
 
         MainAccount mainAccount = findUsername (username);
         if (mainAccount != null)

@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -44,17 +46,25 @@ public class MainAccount
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
+    @Where (clause = "deleted_at != null")
     private List<UserFriends> userFriends;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
+    @Where (clause = "deleted = false")
     private List<UserContacts> userContacts;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
     private List<UserBlocked> userBlocked;
+
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
+    @JsonBackReference
+    @Where (clause = "`deleted` = false and `this_pic_for` = 'user'")
+    private List<ProfilePictures> profilePictures;
 
     @Column (nullable = false, unique = true)
     @JsonIgnore
@@ -293,5 +303,15 @@ public class MainAccount
     public void setDeletedAt (LocalDateTime deletedAt)
     {
         this.deletedAt = deletedAt;
+    }
+
+    public List<ProfilePictures> getProfilePictures ()
+    {
+        return profilePictures;
+    }
+
+    public void setProfilePictures (List<ProfilePictures> profilePictures)
+    {
+        this.profilePictures = profilePictures;
     }
 }
