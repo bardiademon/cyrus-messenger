@@ -42,8 +42,6 @@ public final class CheckUserAccessLevelBlock
                 hasAccess = true;
             else
             {
-                System.out.println (blocked.getValidityTime ().toString ());
-                System.out.println (Time.BiggerNow (blocked.getValidityTime ()));
                 if (Time.BiggerNow (blocked.getValidityTime ()))
                 {
                     blocked.setUnblocked (true);

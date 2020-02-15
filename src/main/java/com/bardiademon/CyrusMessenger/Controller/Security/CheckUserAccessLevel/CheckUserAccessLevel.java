@@ -108,6 +108,8 @@ public class CheckUserAccessLevel
         if (mainAccountWhoRequested.getId () == mainAccountToCheck.getId ()) return true;
         else
         {
+            if (serviceProfile == null) setServiceProfile ();
+
             CheckUserAccessLevelBlock accessLevelBlock =
                     new CheckUserAccessLevelBlock (mainAccountWhoRequested , mainAccountToCheck , serviceProfile._UserBlockedService , checkProfile , checkChat);
 
@@ -115,7 +117,6 @@ public class CheckUserAccessLevel
             {
                 if (checkProfileOrChat == CHK_PROFILE)
                 {
-                    if (serviceProfile == null) setServiceProfile ();
                     return checkProfile ();
                 }
                 else if (checkProfileOrChat == CHK_CHAT) return checkChat ();
