@@ -16,10 +16,10 @@ public final class l extends Thread implements Runnable
     private String Request;
     private String Route;
     private MainAccount _MainAccount;
-    private final AnswerToClient _AnswerToClient;
-    private final InfoLine _InfoLine;
-    private final Exception E;
-    private final String Description;
+    private AnswerToClient _AnswerToClient;
+    private InfoLine _InfoLine;
+    private Exception E;
+    private String Description;
 
     private l (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)
     {
@@ -102,7 +102,7 @@ public final class l extends Thread implements Runnable
 
         if (Request != null) log.setRequest (Request);
         if (Description != null) log.setDescription (Description);
-
         _LogService.Repository.save (log);
+
     }
 }

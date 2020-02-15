@@ -1,10 +1,12 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
@@ -14,17 +16,38 @@ import java.util.LinkedHashMap;
 
 public final class ToJson
 {
-    private ToJson ()
+    private Object obj;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
+
+    private ToJson (Object obj)
     {
+        this.obj = obj;
     }
 
-    public static String To (Object o)
+    private ToJson (HttpServletRequest request)
+    {
+        this.request = request;
+    }
+
+    private ToJson (HttpServletResponse response)
+    {
+        this.response = response;
+    }
+
+    public ToJson setObj (Object obj)
+    {
+        this.obj = obj;
+        return this;
+    }
+
+    private String to ()
     {
         try
         {
             ObjectMapper objectMapper = new ObjectMapper ();
-            String result = objectMapper.writeValueAsString (o);
-            if (o instanceof CreateClass)
+            String result = objectMapper.writeValueAsString (obj);
+            if (obj instanceof CreateClass)
             {
                 JSONObject jsonObject = new JSONObject (result);
                 return jsonObject.getJSONObject ("create_class").toString ();
@@ -37,7 +60,12 @@ public final class ToJson
         }
     }
 
-    public static String RequestToJson (HttpServletRequest request)
+    public static String To (Object o)
+    {
+        return new ToJson (o).to ();
+    }
+
+    private String requestToJson ()
     {
         JSONObject jsonObject = new JSONObject ();
         jsonObject
@@ -61,14 +89,14 @@ public final class ToJson
             jsonObject.put ("session" , "");
         }
 
-        try
-        {
-            jsonObject.put ("cookies" , To (request.getCookies ()));
-        }
-        catch (Exception ignored)
-        {
-            jsonObject.put ("cookies" , "");
-        }
+//        try
+//        {
+//            jsonObject.put ("cookies" , setObj (request.getCookies ()).to ());
+//        }
+//        catch (Exception ignored)
+//        {
+//            jsonObject.put ("cookies" , "");
+//        }
 
         Enumeration<String> headerNames = request.getHeaderNames ();
         CreateClass header = new CreateClass ();
@@ -84,11 +112,20 @@ public final class ToJson
 
             jsonObject.put ("headers" , To (header));
         }
-
         return jsonObject.toString ();
     }
 
+    public static String RequestToJson (HttpServletRequest request)
+    {
+        return new ToJson (request).requestToJson ();
+    }
+
     public static String ResponseToJson (HttpServletResponse response)
+    {
+        return new ToJson (response).responseToJson ();
+    }
+
+    private String responseToJson ()
     {
         JSONObject jsonObject = new JSONObject ();
         jsonObject.put ("status" , response.getStatus ());
@@ -107,7 +144,7 @@ public final class ToJson
                         header.put (nameHeader , response.getHeader (nameHeader));
                     }
 
-                    jsonObject.put ("headers" , To (header));
+                    jsonObject.put ("headers" , setObj (header).to ());
                 }
             }
         }
@@ -138,6 +175,24 @@ public final class ToJson
         public String toJson ()
         {
             return To (this);
+        }
+
+        public static CreateClass OCLogin (String CLogin)
+        {
+            CreateClass createClass = new CreateClass ();
+            createClass.put (MCookie.KEY_CODE_LOGIN_COOKIE , CLogin);
+            return createClass;
+        }
+
+        // n => New
+        public static CreateClass n (String key , Object value)
+        {
+            return ((new CreateClass ()).put (key , value));
+        }
+
+        public static String SCLogin (String CLogin)
+        {
+            return OCLogin (CLogin).toJson ();
         }
     }
 }

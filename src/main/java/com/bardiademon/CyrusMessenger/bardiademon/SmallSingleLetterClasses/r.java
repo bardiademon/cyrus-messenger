@@ -32,11 +32,13 @@ public final class r extends Thread implements Runnable
 
     public static void n (String ip , SubmitRequestType type , boolean active)
     {
+        if (ip == null && type == null) return;
         new r (ip , type , active);
     }
 
     public static void n (MainAccount mainAccount , SubmitRequestType type , boolean active)
     {
+        if (mainAccount == null && type == null) return;
         new r (mainAccount , type , active);
     }
 

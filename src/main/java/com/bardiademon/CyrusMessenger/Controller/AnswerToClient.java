@@ -179,7 +179,7 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer
+        answer, id
     }
 
     @JsonIgnore

@@ -24,4 +24,24 @@ public final class ProfilePicturesService
         Repository.disableMainPhoto (id);
     }
 
+    public ProfilePictures getOneForUser (long idProfilePicture , long idUser)
+    {
+        return Repository.findByIdAndMainAccountIdAndDeletedFalse (idProfilePicture , idUser);
+    }
+
+    public int deletePlacementNumberZero (long idUser , boolean deleteMainPic)
+    {
+        return Repository.deletePlacementNumberZero (idUser , deleteMainPic);
+    }
+
+    public int deletePlacementNumberNotZero (long idUser , boolean deleteMainPic)
+    {
+        return Repository.deletePlacementNumberNotZero (idUser , deleteMainPic);
+    }
+
+    public int deleteMainPic (long idUser)
+    {
+        return Repository.deleteMainPic (idUser);
+    }
+
 }

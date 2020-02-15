@@ -1,8 +1,13 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.Login;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
+import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginRepository;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 
 
 public class CheckLogin
@@ -15,6 +20,11 @@ public class CheckLogin
     private String codeLogin;
     private UserLoginRepository userLoginRepository;
 
+    public CheckLogin (String CodeLogin)
+    {
+        this (CodeLogin , (CyrusMessengerApplication.Context ().getBean (UserLoginService.class)).Repository);
+    }
+
     public CheckLogin (String CodeLogin , UserLoginRepository _UserLoginRepository)
     {
         this.codeLogin = CodeLogin;
@@ -24,17 +34,26 @@ public class CheckLogin
 
     private void check ()
     {
+        ToJson.CreateClass createClass = new ToJson.CreateClass ();
+        createClass.put ("class_log" , CheckLogin.class.getName ());
+
         if (codeLogin.equals (""))
         {
             valid = false;
             answerToClient = AnswerToClient.NotLoggedIn ();
+            l.n (codeLogin , null , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , createClass.toJson ());
             return;
         }
 
         vCodeLogin = new VCodeLogin ();
         valid = (vCodeLogin.IsValid (userLoginRepository , codeLogin));
 
-        if (!valid) answerToClient = AnswerToClient.NotLoggedIn ();
+        if (!valid)
+        {
+            answerToClient = AnswerToClient.NotLoggedIn ();
+            l.n (codeLogin , null , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("invalid code login") , createClass.toJson ());
+        }
+        else l.n (codeLogin , null , getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
     }
 
     public boolean isValid ()

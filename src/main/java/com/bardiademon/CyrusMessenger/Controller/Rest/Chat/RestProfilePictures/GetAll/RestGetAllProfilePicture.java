@@ -60,7 +60,7 @@ public final class RestGetAllProfilePicture
                 {
                     List<ProfilePictures> profilePictures = (new SortProfilePictures (idUsername.getMainAccount ().getProfilePictures ())).getNewProfilePictures ();
                     List<Long> linkProfilePicture = null;
-                    if (profilePictures.size () > 0)
+                    if (profilePictures != null && profilePictures.size () > 0)
                     {
                         linkProfilePicture = new ArrayList<> ();
                         for (ProfilePictures profilePicture : profilePictures)

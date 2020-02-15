@@ -45,6 +45,7 @@ public final class AccessUploadProfilePicture
             {
                 case user:
                     if (checkMaxUpload) return checkMaxUploadUser ();
+                    else return true;
                 case group:
                 case channel:
                 default:
@@ -58,6 +59,9 @@ public final class AccessUploadProfilePicture
     {
         int maxUploadProfilePictures = service.securityUserProfileService.Repository.getMaxUploadProfilePictures (checkLogin.getVCodeLogin ().getMainAccount ().getId ());
         int countUploaded = service.profilePicturesService.countUploadPic (profilePicFor);
+
+        System.out.println (countUploaded);
+        System.out.println (maxUploadProfilePictures);
         if ((countUploaded != 0 && maxUploadProfilePictures != 0) && countUploaded >= maxUploadProfilePictures)
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_NOT_ACCEPTABLE) , ValAnswer.photo_upload_limit_is_filled.name ());

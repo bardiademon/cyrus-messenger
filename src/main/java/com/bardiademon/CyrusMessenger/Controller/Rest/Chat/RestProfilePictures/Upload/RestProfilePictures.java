@@ -112,7 +112,7 @@ public final class RestProfilePictures
                 profilePicFor = ProfilePicFor.to (request.getThisPicFor ());
                 if (profilePicFor != null)
                 {
-                    AccessUploadProfilePicture accessUpload = new AccessUploadProfilePicture (service , codeLogin , profilePicFor , (profilePictures != null));
+                    AccessUploadProfilePicture accessUpload = new AccessUploadProfilePicture (service , codeLogin , profilePicFor , (profilePictures == null));
                     if (accessUpload.hasAccess ())
                     {
                         mainAccount = accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ();
@@ -131,6 +131,7 @@ public final class RestProfilePictures
                                         if (profilePictures == null)
                                         {
                                             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
+                                            answerToClient.put (AnswerToClient.CUK.id.name () , this.newProfilePicture.getId ());
                                             answerToClient.setReqRes (this.request , this.response);
                                             r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , false);
                                         }

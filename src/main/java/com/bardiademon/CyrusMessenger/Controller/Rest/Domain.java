@@ -20,6 +20,7 @@ public abstract class Domain
             public static final String RN_PROFILE_PICTURE_UPLOAD = RN_PROFILE_PICTURE + "/upload";
             public static final String RN_PROFILE_PICTURE_GET_ALL = RN_PROFILE_PICTURE + "/get_all";
             public static final String RN_PROFILE_PICTURE_GET_ONE = RN_PROFILE_PICTURE + "/get_one";
+            public static final String RN_PROFILE_PICTURE_DELETE = RN_PROFILE_PICTURE + "/delete";
         }
 
         public static abstract class RNCover
