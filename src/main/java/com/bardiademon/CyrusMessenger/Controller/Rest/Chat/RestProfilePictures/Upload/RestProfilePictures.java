@@ -55,12 +55,27 @@ public final class RestProfilePictures
 
     private MainAccount mainAccount;
 
-    private ProfilePictures newProfilePicture;
+    private ProfilePictures newProfilePicture = null;
+
+    private ProfilePictures profilePictures = null;
 
     @Autowired
     public RestProfilePictures (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService , ProfilePicturesService _ProfilePicturesService)
     {
         service = new Service (_UserLoginService , _SecurityUserProfileService , _ProfilePicturesService);
+    }
+
+    private void setNull ()
+    {
+        newProfilePicture = null;
+        profilePictures = null;
+        request = null;
+        response = null;
+        profilePicFor = null;
+        name = null;
+        type = null;
+        size = 0;
+        System.gc ();
     }
 
     @RequestMapping (value = {"" , "/"}, method = RequestMethod.POST)
@@ -69,11 +84,13 @@ public final class RestProfilePictures
              HttpServletResponse res , HttpServletRequest req ,
              @ModelAttribute RequestProfilePictures request)
     {
+        setNull ();
+        answerToClient = null;
         this.request = req;
         this.response = res;
+
         if (request != null)
         {
-            ProfilePictures profilePictures = null;
             boolean okProfilePicture = true;
             if (request.getId () > 0)
             {
@@ -87,14 +104,18 @@ public final class RestProfilePictures
                 }
                 else
                 {
-                    profilePictures.setDeleted (true);
-                    profilePictures.setDeletedAt (LocalDateTime.now ());
-                    service.getProfilePicturesService ().Repository.save (profilePictures);
+                    if (request.getPic () != null)
+                    {
+                        profilePictures.setDeleted (true);
+                        profilePictures.setDeletedAt (LocalDateTime.now ());
+                        service.getProfilePicturesService ().Repository.save (profilePictures);
 
-                    ToJson.CreateClass createClass = new ToJson.CreateClass ();
-                    createClass.put ("id" , profilePictures.getId ());
-                    createClass.put ("the_operation" , "delete_profile_picture");
-                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
+                        ToJson.CreateClass createClass = new ToJson.CreateClass ();
+                        createClass.put ("id" , profilePictures.getId ());
+                        createClass.put ("the_operation" , "delete_profile_picture");
+                        l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
+
+                    }
                 }
             }
 
@@ -102,11 +123,14 @@ public final class RestProfilePictures
             {
                 if (profilePictures != null)
                 {
-                    if (request.getPlacementNumber () < 0)
-                        request.setPlacementNumber (profilePictures.getPlacementNumber ());
+                    if (request.getPic () != null)
+                    {
+                        if (request.getPlacementNumber () < 0)
+                            request.setPlacementNumber (profilePictures.getPlacementNumber ());
 
-                    if (!request.isUpdateMainPic ())
-                        request.setMainPic (profilePictures.isMainPic ());
+                        if (!request.isUpdateMainPic ())
+                            request.setMainPic (profilePictures.isMainPic ());
+                    }
                 }
 
                 profilePicFor = ProfilePicFor.to (request.getThisPicFor ());
@@ -120,7 +144,7 @@ public final class RestProfilePictures
                                 (mainAccount.getUsername ())
                                 : (request.getUsername ()));
 
-                        if (upload (request , username))
+                        if ((profilePictures != null && request.getPic () == null) || upload (request , username))
                         {
                             switch (profilePicFor)
                             {
@@ -188,6 +212,7 @@ public final class RestProfilePictures
         }
 
         answerToClient.setResponse (res);
+        setNull ();
         return answerToClient;
     }
 
@@ -293,19 +318,36 @@ public final class RestProfilePictures
     {
         try
         {
-            newProfilePicture = new ProfilePictures ();
-            newProfilePicture.setMainAccount (mainAccount);
-            newProfilePicture.setName (name);
-            newProfilePicture.setType (type);
-            newProfilePicture.setSize (size);
+            if (request.getPic () == null)
+            {
+                if (request.isUpdateMainPic ()) profilePictures.setMainPic (request.isMainPic ());
+                if (request.getPlacementNumber () >= 0)
+                    profilePictures.setPlacementNumber (request.getPlacementNumber ());
 
-            if (request.isMainPic ()) service.getProfilePicturesService ().disableMainPhoto (mainAccount.getId ());
+                newProfilePicture = service.getProfilePicturesService ().Repository.save (profilePictures);
 
-            newProfilePicture.setMainPic (request.isMainPic ());
-            newProfilePicture.setPlacementNumber (request.getPlacementNumber ());
-            newProfilePicture.setThisPicFor (profilePicFor);
-            newProfilePicture = service.getProfilePicturesService ().Repository.save (newProfilePicture);
-            return (newProfilePicture.getId () > 0);
+                return true;
+            }
+            else
+            {
+                newProfilePicture = new ProfilePictures ();
+                newProfilePicture.setMainAccount (mainAccount);
+                newProfilePicture.setName (name);
+                newProfilePicture.setType (type);
+                newProfilePicture.setSize (size);
+
+                if (request.isMainPic ()) service.getProfilePicturesService ().disableMainPhoto (mainAccount.getId ());
+
+                newProfilePicture.setMainPic (request.isMainPic ());
+
+                if (profilePictures == null && request.getPlacementNumber () < 0) request.setPlacementNumber (0);
+                if (request.getPlacementNumber () >= 0)
+                    newProfilePicture.setPlacementNumber (request.getPlacementNumber ());
+
+                newProfilePicture.setThisPicFor (profilePicFor);
+                newProfilePicture = service.getProfilePicturesService ().Repository.save (newProfilePicture);
+                return (newProfilePicture.getId () > 0);
+            }
         }
         catch (Exception e)
         {

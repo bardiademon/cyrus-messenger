@@ -33,6 +33,8 @@ public final class SubmitRequestService
 
     public void newRequest (MainAccount mainAccount , SubmitRequestType type , boolean active)
     {
+        if (mainAccount == null || type == null) return;
+
         deactiveAllRequestIfTime15 (mainAccount.getId () , type);
 
         SubmitRequest submitRequest = new SubmitRequest ();

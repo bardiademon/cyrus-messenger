@@ -14,7 +14,7 @@ public final class RequestProfilePictures
 
     private boolean mainPic;
 
-    private int placementNumber = 0;
+    private int placementNumber = -1;
 
     private MultipartFile pic;
 

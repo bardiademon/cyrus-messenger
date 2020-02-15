@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
 
 // r => Request , in baraye sabt request jadid , bazi request ha dar baze zamani kotah nabayad ziyad darkhast esral beshe
 public final class r extends Thread implements Runnable
@@ -32,14 +33,12 @@ public final class r extends Thread implements Runnable
 
     public static void n (String ip , SubmitRequestType type , boolean active)
     {
-        if (ip == null && type == null) return;
-        new r (ip , type , active);
+        if (!Str.IsEmpty (ip) && type != null) new r (ip , type , active);
     }
 
     public static void n (MainAccount mainAccount , SubmitRequestType type , boolean active)
     {
-        if (mainAccount == null && type == null) return;
-        new r (mainAccount , type , active);
+        if (mainAccount != null && type != null) new r (mainAccount , type , active);
     }
 
     @Override
@@ -49,6 +48,5 @@ public final class r extends Thread implements Runnable
 
         if (ip == null || ip.isEmpty ()) service.newRequest (ip , type , active);
         else service.newRequest (mainAccount , type , active);
-
     }
 }

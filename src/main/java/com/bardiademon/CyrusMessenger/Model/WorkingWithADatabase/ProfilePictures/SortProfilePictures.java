@@ -28,45 +28,45 @@ public final class SortProfilePictures
 
     private void sort ()
     {
-        List<ProfilePictures> zeroPlacementNumber = new ArrayList<> ();
-        List<ProfilePictures> newProfilePictures = new ArrayList<> ();
+        List<ProfilePictures> zeroProfilePictures = new ArrayList<> ();
+        List<ProfilePictures> notZeroProfilePictures = new ArrayList<> ();
         for (ProfilePictures profilePicture : profilePictures)
         {
             if (profilePicture.getId () <= 0) continue;
             if (profilePicture.isMainPic ()) mainProfilePicture = profilePicture;
-            else if (profilePicture.getPlacementNumber () == 0) zeroPlacementNumber.add (profilePicture);
-            else newProfilePictures.add (profilePicture);
+            else if (profilePicture.getPlacementNumber () == 0) zeroProfilePictures.add (profilePicture);
+            else notZeroProfilePictures.add (profilePicture);
         }
 
         ProfilePictures iProfilePicture, jProfilePicture;
-        for (int i = 0; i < newProfilePictures.size () - 1; i++)
+        for (int i = 0, len = notZeroProfilePictures.size (); i < len; i++)
         {
-            iProfilePicture = newProfilePictures.get (i);
-            for (int j = (i + 1); j < newProfilePictures.size (); j++)
+            iProfilePicture = notZeroProfilePictures.get (i);
+            for (int j = i; j < len; j++)
             {
-                jProfilePicture = newProfilePictures.get (j);
-
+                jProfilePicture = notZeroProfilePictures.get (j);
                 if (iProfilePicture.getPlacementNumber () > jProfilePicture.getPlacementNumber ())
                 {
-                    newProfilePictures.set (i , jProfilePicture);
-                    newProfilePictures.set (j , iProfilePicture);
+                    notZeroProfilePictures.set (i , jProfilePicture);
+                    notZeroProfilePictures.set (j , iProfilePicture);
+                    break;
                 }
             }
         }
 
         ProfilePictures profilePictures;
-        for (int i = 0; i < newProfilePictures.size () - 1; i++)
+        for (int i = 0; i < notZeroProfilePictures.size () - 1; i++)
         {
-            profilePictures = newProfilePictures.get (i);
+            profilePictures = notZeroProfilePictures.get (i);
             profilePictures.setPlacementNumber ((i + 1));
-            newProfilePictures.set (i , profilePictures);
+            notZeroProfilePictures.set (i , profilePictures);
         }
 
-        this.newProfilePictures = new ArrayList<> ();
+        newProfilePictures = new ArrayList<> ();
 
-        if (mainProfilePicture != null) this.newProfilePictures.add (mainProfilePicture);
-        this.newProfilePictures.addAll (newProfilePictures);
-        if (zeroPlacementNumber.size () > 0) this.newProfilePictures.addAll (zeroPlacementNumber);
+        if (mainProfilePicture != null) newProfilePictures.add (mainProfilePicture);
+        if (notZeroProfilePictures.size () > 0) newProfilePictures.addAll (notZeroProfilePictures);
+        if (zeroProfilePictures.size () > 0) newProfilePictures.addAll (zeroProfilePictures);
 
         if (service != null) service.Repository.saveAll (this.newProfilePictures);
     }
