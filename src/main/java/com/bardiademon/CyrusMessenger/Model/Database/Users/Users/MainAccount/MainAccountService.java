@@ -18,6 +18,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class MainAccountService
 {
@@ -116,64 +117,64 @@ public class MainAccountService
 
     public boolean hasEmail (long id)
     {
-        return (Repository.findByIdAndEmailNotNullAndDeletedFalse (id) != null);
+        return (Repository.findByIdAndEmailNotNullAndDeletedFalseAndSystemBlockFalse (id) != null);
     }
 
     public long toId (String username)
     {
-        MainAccount byUsername = Repository.findByUsernameAndDeletedFalse (username);
+        MainAccount byUsername = Repository.findByUsernameAndDeletedFalseAndSystemBlockFalse (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
     }
 
     public MainAccount findId (long idUser)
     {
-        return Repository.findById (idUser);
+        return Repository.findByIdAndSystemBlockFalse (idUser);
     }
 
     public MainAccount findPhone (String phone)
     {
-        return Repository.findByPhoneAndDeletedFalse (phone);
+        return Repository.findByPhoneAndDeletedFalseAndSystemBlockFalse (phone);
     }
 
     public MainAccount findUsername (String username)
     {
-        return Repository.findByUsernameAndDeletedFalse (username);
+        return Repository.findByUsernameAndDeletedFalseAndSystemBlockFalse (username);
     }
 
     public MainAccount findUsername2 (String username)
     {
-        return Repository.findByUsernameAndDeletedFalse (username);
+        return Repository.findByUsernameAndDeletedFalseAndSystemBlockFalse (username);
     }
 
     public MainAccount findEmail (String email)
     {
-        return Repository.findByEmailAndDeletedFalse (email);
+        return Repository.findByEmailAndDeletedFalseAndSystemBlockFalse (email);
     }
 
     public MainAccount findPhone (String phone , String password)
     {
-        return Repository.findByPhoneAndPasswordAndDeletedFalse (phone , password);
+        return Repository.findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalse (phone , password);
     }
 
     public MainAccount findUsername (String username , String password)
     {
-        return Repository.findByUsernameAndPasswordAndDeletedFalse (username , password);
+        return Repository.findByUsernameAndPasswordAndDeletedFalseAndSystemBlockFalse (username , password);
     }
 
     public MainAccount findEmail (String email , String password)
     {
-        return Repository.findByEmailAndPasswordAndDeletedFalse (email , password);
+        return Repository.findByEmailAndPasswordAndDeletedFalseAndSystemBlockFalse (email , password);
     }
 
     public MainAccount findValidById (long id)
     {
-        return Repository.findByIdAndDeletedFalse (id);
+        return Repository.findByIdAndDeletedFalseAndSystemBlockFalse (id);
     }
 
     public MainAccount findPhoneLike (String phone)
     {
-        return Repository.findByPhoneLike ("%" + phone);
+        return Repository.findByPhoneLikeAndSystemBlockFalse ("%" + phone);
     }
 
 }

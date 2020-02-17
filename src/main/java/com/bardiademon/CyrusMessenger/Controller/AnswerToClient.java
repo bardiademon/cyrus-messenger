@@ -179,7 +179,13 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id
+        answer, id, system
+    }
+
+    // CUK => Commonly used value
+    public enum CUV
+    {
+        sorry_for_this_error
     }
 
     @JsonIgnore

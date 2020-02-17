@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger;
 
-import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Interface.bardiademon;
 
 import java.util.ArrayList;
@@ -90,7 +89,12 @@ public class Code
 
     public static Code CreateCodeLong ()
     {
-        return new Code (100 , true , true , true , false);
+        return CreateCodeLong (100);
+    }
+
+    public static Code CreateCodeLong (int NumberOfChar)
+    {
+        return new Code (NumberOfChar , true , true , true , false);
     }
 
     public static String Name ()

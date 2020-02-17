@@ -4,9 +4,9 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
@@ -175,6 +175,18 @@ public final class ToJson
         public String toJson ()
         {
             return To (this);
+        }
+
+        public JSONObject toJsonObject ()
+        {
+            try
+            {
+                return new JSONObject (To (this));
+            }
+            catch (JSONException e)
+            {
+                return null;
+            }
         }
 
         public static CreateClass OCLogin (String CLogin)

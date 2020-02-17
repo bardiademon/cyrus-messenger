@@ -46,20 +46,11 @@ public class GroupSecurityProfile
     @Column (name = "max_member")
     private Integer maxMember = MAX_MEMBER_GROUP;
 
+    @Column (name = "can_join_group", nullable = false)
+    private boolean canJoinGroup = true;
+
     public GroupSecurityProfile ()
     {
-    }
-
-    public GroupSecurityProfile (Groups groups , boolean familyGroup , boolean showInSearch , boolean showListMember , String password , boolean showAdmin , boolean addMember , Integer maxMember)
-    {
-        this.groups = groups;
-        this.familyGroup = familyGroup;
-        this.showInSearch = showInSearch;
-        this.showListMember = showListMember;
-        this.password = password;
-        this.showAdmin = showAdmin;
-        this.addMember = addMember;
-        this.maxMember = maxMember;
     }
 
     public long getId ()
@@ -150,5 +141,15 @@ public class GroupSecurityProfile
     public void setMaxMember (Integer maxMember)
     {
         this.maxMember = maxMember;
+    }
+
+    public boolean isCanJoinGroup ()
+    {
+        return canJoinGroup;
+    }
+
+    public void setCanJoinGroup (boolean canJoinGroup)
+    {
+        this.canJoinGroup = canJoinGroup;
     }
 }

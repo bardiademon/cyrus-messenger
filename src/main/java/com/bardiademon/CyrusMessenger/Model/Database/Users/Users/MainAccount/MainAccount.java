@@ -104,6 +104,12 @@ public class MainAccount
     @Enumerated (EnumType.STRING)
     private StatusFriends.ApprovalMethod friendConfirmationMethod = StatusFriends.ApprovalMethod.wait;
 
+    @Column (name = "system_block")
+    private boolean systemBlock = false;
+
+    @Column (name = "system_block_at", insertable = false)
+    private LocalDateTime systemBlockAt;
+
     public MainAccount ()
     {
     }
@@ -313,5 +319,25 @@ public class MainAccount
     public void setProfilePictures (List<ProfilePictures> profilePictures)
     {
         this.profilePictures = profilePictures;
+    }
+
+    public boolean isSystemBlock ()
+    {
+        return systemBlock;
+    }
+
+    public void setSystemBlock (boolean systemBlock)
+    {
+        this.systemBlock = systemBlock;
+    }
+
+    public LocalDateTime getSystemBlockAt ()
+    {
+        return systemBlockAt;
+    }
+
+    public void setSystemBlockAt (LocalDateTime systemBlockAt)
+    {
+        this.systemBlockAt = systemBlockAt;
     }
 }

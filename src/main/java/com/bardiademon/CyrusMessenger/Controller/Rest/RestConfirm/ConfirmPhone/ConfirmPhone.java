@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping (value = Domain.RNConfirm.RN_CONFIRM_PHONE, method = RequestMethod.POST)
@@ -60,10 +61,25 @@ public class ConfirmPhone
             {
                 this.phone = vPhone.getPhone ();
 
-                ConfirmCode findCode
+                List<ConfirmCode> lstFindCode
                         = confirmCodeService.Repository.findCode (ConfirmCodeFor.phone , this.phone , LocalDateTime.now ());
 
-                if (findCode == null)
+                if (lstFindCode != null && lstFindCode.size () > 1)
+                {
+                    for (int i = 0; i < lstFindCode.size (); i++)
+                    {
+                        ConfirmCode confirmCode = lstFindCode.get (i);
+                        confirmCode.setDeleted (true);
+                        lstFindCode.set (i , confirmCode);
+                    }
+                    confirmCodeService.Repository.saveAll (lstFindCode);
+                    answerToClient = AnswerToClient.ServerError ();
+                    answerToClient.put (CUK.system.name () , AnswerToClient.CUV.sorry_for_this_error.name ());
+                    return answerToClient;
+                }
+
+                ConfirmCode findCode;
+                if (lstFindCode == null || lstFindCode.size () == 0 || (findCode = lstFindCode.get (0)) == null)
                 {
                     if (isExistsPhone (this.phone))
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_phone_has_account.name ());
@@ -145,7 +161,7 @@ public class ConfirmPhone
 
     private boolean isExistsPhone (String phone)
     {
-        return mainAccountService.findPhone (phone) != null;
+        return (mainAccountService.findPhone (phone)) != null;
     }
 
     @RequestMapping (value = "/confirm")

@@ -51,6 +51,8 @@ public class ConfirmCode
     @Column (name = "is_using")
     private boolean using = false;
 
+    private boolean deleted;
+
     private boolean confirmed;
 
     public ConfirmCode ()
@@ -155,5 +157,15 @@ public class ConfirmCode
     public void setConfirmed (boolean confirmed)
     {
         this.confirmed = confirmed;
+    }
+
+    public boolean isDeleted ()
+    {
+        return deleted;
+    }
+
+    public void setDeleted (boolean deleted)
+    {
+        this.deleted = deleted;
     }
 }

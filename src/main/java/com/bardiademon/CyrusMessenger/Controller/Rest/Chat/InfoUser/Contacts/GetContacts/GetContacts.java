@@ -68,7 +68,7 @@ public final class GetContacts
                         idContact = userContacts.getMainAccountContact ().getId ();
                         if (idContact > 0)
                         {
-                            userContacts.setPhone (mainAccountService.Repository.findByIdAndDeletedFalse (idContact).getPhone ());
+                            userContacts.setPhone (mainAccountService.Repository.findByIdAndDeletedFalseAndSystemBlockFalse (idContact).getPhone ());
                             getContacts.add (setFound (userContacts));
                         }
                         else getContacts.add (setNotFound (contact));

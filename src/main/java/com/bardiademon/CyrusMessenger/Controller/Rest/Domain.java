@@ -23,12 +23,6 @@ public abstract class Domain
             public static final String RN_PROFILE_PICTURE_DELETE = RN_PROFILE_PICTURE + "/delete";
         }
 
-        public static abstract class RNCover
-        {
-            public static final String RN_GET_USER_COVER = RN_MAIN_CHAT + "/cover";
-            public static final String RN_UPLOAD_USER_COVER = RN_MAIN_CHAT + "/upload_cover";
-        }
-
         public static abstract class RNInfoUser
         {
             public static final String RN_MAIN_INFO_USER = RN_MAIN_CHAT + "/info_user";
@@ -107,6 +101,15 @@ public abstract class Domain
 
         }
 
+        public static abstract class RNGroups
+        {
+            public static final String RN_JUST_GROUPS = "/groups";
+
+            public static final String RN_GROUPS = RN_MAIN_CHAT + RN_JUST_GROUPS;
+
+            public static final String RN_CREATE_GROUPS = RN_GROUPS + "/create_group";
+
+        }
 
     }
 

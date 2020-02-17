@@ -1,14 +1,12 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.Login;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-
 
 public class CheckLogin
 {

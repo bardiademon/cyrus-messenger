@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 
@@ -19,10 +20,20 @@ public final class CheckBlockSystem
     private BlockedByTheSystem blockedByTheSystem;
     private BlockedFor blockedFor;
 
-    public CheckBlockSystem (long IdUser , BlockedByTheSystemService Service , BlockedFor _BlockedFor , String des)
+    public CheckBlockSystem (long IdUser , BlockedFor _BlockedFor , String Des)
     {
-        this (null , Service , _BlockedFor , des);
+        this (IdUser , CyrusMessengerApplication.Context ().getBean (BlockedByTheSystemService.class) , _BlockedFor , Des);
+    }
+
+    public CheckBlockSystem (long IdUser , BlockedByTheSystemService Service , BlockedFor _BlockedFor , String Des)
+    {
+        this (null , Service , _BlockedFor , Des);
         this.idUser = IdUser;
+    }
+
+    public CheckBlockSystem (HttpServletRequest Request , BlockedFor _BlockedFor , String Des)
+    {
+        this (Request , CyrusMessengerApplication.Context ().getBean (BlockedByTheSystemService.class) , _BlockedFor , Des);
     }
 
     public CheckBlockSystem (HttpServletRequest Request , BlockedByTheSystemService Service , BlockedFor _BlockedFor , String Des)
