@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Channel.Channel.Channel.Channel;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +29,14 @@ public final class BlockedByTheSystem
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
     private MainAccount mainAccount;
+
+    @ManyToOne
+    @JoinColumn (name = "id_group", referencedColumnName = "id")
+    private Groups group;
+
+    @ManyToOne
+    @JoinColumn (name = "id_channel", referencedColumnName = "id")
+    private Channel channel;
 
     private String ip;
 
@@ -142,5 +152,25 @@ public final class BlockedByTheSystem
     public void setActive (boolean active)
     {
         this.active = active;
+    }
+
+    public Groups getGroup ()
+    {
+        return group;
+    }
+
+    public void setGroup (Groups group)
+    {
+        this.group = group;
+    }
+
+    public Channel getChannel ()
+    {
+        return channel;
+    }
+
+    public void setChannel (Channel channel)
+    {
+        this.channel = channel;
     }
 }

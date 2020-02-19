@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table (name = "list_join_group")
-public class JoinGroup
+public final class JoinGroup
 {
     @Id
     @GeneratedValue
@@ -34,13 +34,9 @@ public class JoinGroup
     @JoinColumn (name = "id_user", referencedColumnName = "id")
     private MainAccount mainAccount;
 
-    @Column (name = "join_for", nullable = false)
+    @Column (name = "join_by", nullable = false)
     @Enumerated (EnumType.STRING)
-    private JoinFor joinFor;
-
-    // LU => Link or username
-    @Column (name = "join_for_lu", updatable = false)
-    private String joinForLU;
+    private JoinBy joinBy;
 
     // If JoinFor == user
     @ManyToOne
@@ -51,12 +47,15 @@ public class JoinGroup
     @CreationTimestamp
     private LocalDateTime timeJoin;
 
-    @Column (name = "time_leave", nullable = false, insertable = false)
+    @Column (name = "time_leave", insertable = false)
     @UpdateTimestamp
     private LocalDateTime timeLeave;
 
-    @Column (name = "fired", insertable = false)
+    @Column (name = "fired")
     private boolean fired = false;
+
+    @Column (name = "leave_group")
+    private boolean leaveGroup = false;
 
     @ManyToOne
     @JoinColumn (name = "fired_by", referencedColumnName = "id", insertable = false)
@@ -65,15 +64,6 @@ public class JoinGroup
     public JoinGroup ()
     {
     }
-
-    public JoinGroup (Groups groups , MainAccount mainAccount , LocalDateTime timeJoin , LocalDateTime timeLeave)
-    {
-        this.groups = groups;
-        this.mainAccount = mainAccount;
-        this.timeJoin = timeJoin;
-        this.timeLeave = timeLeave;
-    }
-
 
     public long getId ()
     {
@@ -125,6 +115,26 @@ public class JoinGroup
         this.timeLeave = timeLeave;
     }
 
+    public MainAccount getAddedBy ()
+    {
+        return addedBy;
+    }
+
+    public void setAddedBy (MainAccount addedBy)
+    {
+        this.addedBy = addedBy;
+    }
+
+    public GroupManagement getFiredBy ()
+    {
+        return firedBy;
+    }
+
+    public void setFiredBy (GroupManagement firedBy)
+    {
+        this.firedBy = firedBy;
+    }
+
     public boolean isFired ()
     {
         return fired;
@@ -135,28 +145,28 @@ public class JoinGroup
         this.fired = fired;
     }
 
-    public JoinFor getJoinFor ()
+    public JoinBy getJoinBy ()
     {
-        return joinFor;
+        return joinBy;
     }
 
-    public void setJoinFor (JoinFor joinFor)
+    public void setJoinBy (JoinBy joinFor)
     {
-        this.joinFor = joinFor;
+        this.joinBy = joinFor;
     }
 
-    public String getJoinForLU ()
+    public boolean isLeaveGroup ()
     {
-        return joinForLU;
+        return leaveGroup;
     }
 
-    public void setJoinForLU (String joinForLU)
+    public void setLeaveGroup (boolean leaveGroup)
     {
-        this.joinForLU = joinForLU;
+        this.leaveGroup = leaveGroup;
     }
 
-    private enum JoinFor
+    public enum JoinBy
     {
-        username, link, user
+        user, the_user_himself
     }
 }

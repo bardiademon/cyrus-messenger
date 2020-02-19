@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface BlockedByTheSystemRepository extends JpaRepository<BlockedByTheSystem, Long>
@@ -48,4 +49,6 @@ public interface BlockedByTheSystemRepository extends JpaRepository<BlockedByThe
     int countByMainAccountIdAndBlockedForAndUnBlockedAtIsNullAndActiveTrue (long id , BlockedFor blockedFor);
 
     int countByIpAndBlockedForAndUnBlockedAtIsNullAndActiveTrue (String ip , BlockedFor blockedFor);
+
+    List<BlockedByTheSystem> findByActiveTrueAndMainAccountNotNull ();
 }

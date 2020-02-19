@@ -33,10 +33,6 @@ public final class GroupManagement
     private MainAccount managedBy;
 
     @ManyToOne
-    @JoinColumn (name = "deleted_by", referencedColumnName = "id")
-    private MainAccount deletedBy;
-
-    @ManyToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
 
@@ -48,15 +44,18 @@ public final class GroupManagement
     @CreationTimestamp
     private LocalDateTime managementAt;
 
-    @Column (nullable = false)
-    private boolean deleted = false;
-
-    @Column (name = "deleted_at", insertable = false)
-    private LocalDateTime deletedAt;
-
     private String crown;
 
     private String name;
+
+    @ManyToOne
+    @JoinColumn (name = "id_suspended_by", referencedColumnName = "id", insertable = false)
+    private MainAccount suspendedBy;
+
+    @Column (name = "suspended_at", insertable = false)
+    private LocalDateTime suspendedAt;
+
+    private boolean suspended;
 
     public GroupManagement ()
     {
@@ -122,25 +121,6 @@ public final class GroupManagement
         this.managementAt = managementAt;
     }
 
-    public boolean isDeleted ()
-    {
-        return deleted;
-    }
-
-    public void setDeleted (boolean deleted)
-    {
-        this.deleted = deleted;
-    }
-
-    public LocalDateTime getDeletedAt ()
-    {
-        return deletedAt;
-    }
-
-    public void setDeletedAt (LocalDateTime deletedAt)
-    {
-        this.deletedAt = deletedAt;
-    }
 
     public String getCrown ()
     {
@@ -162,13 +142,33 @@ public final class GroupManagement
         this.name = name;
     }
 
-    public MainAccount getDeletedBy ()
+    public MainAccount getSuspendedBy ()
     {
-        return deletedBy;
+        return suspendedBy;
     }
 
-    public void setDeletedBy (MainAccount deletedBy)
+    public void setSuspendedBy (MainAccount suspendedBy)
     {
-        this.deletedBy = deletedBy;
+        this.suspendedBy = suspendedBy;
+    }
+
+    public LocalDateTime getSuspendedAt ()
+    {
+        return suspendedAt;
+    }
+
+    public void setSuspendedAt (LocalDateTime suspendedAt)
+    {
+        this.suspendedAt = suspendedAt;
+    }
+
+    public boolean isSuspended ()
+    {
+        return suspended;
+    }
+
+    public void setSuspended (boolean suspended)
+    {
+        this.suspended = suspended;
     }
 }

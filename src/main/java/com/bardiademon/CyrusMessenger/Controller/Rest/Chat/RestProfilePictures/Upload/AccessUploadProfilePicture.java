@@ -9,30 +9,23 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 
 import javax.servlet.http.HttpServletResponse;
 
-public final class AccessUploadProfilePicture
+public class AccessUploadProfilePicture
 {
-    private Service service;
-    private String codeLogin;
-    private ProfilePicFor profilePicFor;
+    protected Service service;
+    protected String codeLogin;
 
-    private CheckLogin checkLogin;
-    private boolean hasAccess;
-    private AnswerToClient answerToClient;
+    protected CheckLogin checkLogin;
+    protected boolean hasAccess;
+    protected AnswerToClient answerToClient;
 
-    private boolean checkMaxUpload;
-
-    public AccessUploadProfilePicture
-            (Service _Service , String CodeLogin , ProfilePicFor _ProfilePicFor)
-    {
-        this (_Service , CodeLogin , _ProfilePicFor , true);
-    }
+    protected long id;
+    protected boolean checkMaxUpload;
 
     public AccessUploadProfilePicture
-            (Service _Service , String CodeLogin , ProfilePicFor _ProfilePicFor , boolean CheckMaxUpload)
+            (Service _Service , String CodeLogin , boolean CheckMaxUpload)
     {
         this.service = _Service;
         this.codeLogin = CodeLogin;
-        this.profilePicFor = _ProfilePicFor;
         this.checkMaxUpload = CheckMaxUpload;
         hasAccess = check ();
     }
@@ -41,16 +34,8 @@ public final class AccessUploadProfilePicture
     {
         if (checkLogin ())
         {
-            switch (profilePicFor)
-            {
-                case user:
-                    if (checkMaxUpload) return checkMaxUploadUser ();
-                    else return true;
-                case group:
-                case channel:
-                default:
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.ServerError () , "Just user");
-            }
+            if (checkMaxUpload) return checkMaxUploadUser ();
+            else return true;
         }
         return false;
     }
@@ -58,10 +43,8 @@ public final class AccessUploadProfilePicture
     private boolean checkMaxUploadUser ()
     {
         int maxUploadProfilePictures = service.securityUserProfileService.Repository.getMaxUploadProfilePictures (checkLogin.getVCodeLogin ().getMainAccount ().getId ());
-        int countUploaded = service.profilePicturesService.countUploadPic (profilePicFor);
+        int countUploaded = service.profilePicturesService.countUploadPic (ProfilePicFor.user);
 
-        System.out.println (countUploaded);
-        System.out.println (maxUploadProfilePictures);
         if ((countUploaded != 0 && maxUploadProfilePictures != 0) && countUploaded >= maxUploadProfilePictures)
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_NOT_ACCEPTABLE) , ValAnswer.photo_upload_limit_is_filled.name ());
@@ -87,10 +70,10 @@ public final class AccessUploadProfilePicture
         private final SecurityUserProfileService securityUserProfileService;
         private final ProfilePicturesService profilePicturesService;
 
-        public Service (UserLoginService _UserLoginService , SecurityUserProfileService securityUserProfileService , ProfilePicturesService _ProfilePicturesService)
+        public Service (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService , ProfilePicturesService _ProfilePicturesService )
         {
             this.userLoginService = _UserLoginService;
-            this.securityUserProfileService = securityUserProfileService;
+            this.securityUserProfileService = _SecurityUserProfileService;
             this.profilePicturesService = _ProfilePicturesService;
         }
 
@@ -99,15 +82,12 @@ public final class AccessUploadProfilePicture
             return userLoginService;
         }
 
-        public SecurityUserProfileService getSecurityUserProfileService ()
-        {
-            return securityUserProfileService;
-        }
 
         public ProfilePicturesService getProfilePicturesService ()
         {
             return profilePicturesService;
         }
+
     }
 
     public boolean hasAccess ()
@@ -125,7 +105,8 @@ public final class AccessUploadProfilePicture
         return answerToClient;
     }
 
-    private enum ValAnswer
+
+    protected enum ValAnswer
     {
         photo_upload_limit_is_filled
     }

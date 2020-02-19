@@ -152,7 +152,6 @@ public class RestLogin
             else
             {
                 answerToClient.setReqRes (req , res);
-                System.out.println (ToJson.To (request));
                 l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not valid info") , null);
             }
         }

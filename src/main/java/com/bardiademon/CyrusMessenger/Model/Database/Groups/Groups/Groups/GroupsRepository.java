@@ -11,4 +11,6 @@ public interface GroupsRepository extends JpaRepository<Groups, Long>
     Groups findByUsernameAndDeletedFalse (String username);
 
     Groups findByLinkForJoinIdAndDeletedFalse (long id);
+
+    Groups findById (long id);
 }

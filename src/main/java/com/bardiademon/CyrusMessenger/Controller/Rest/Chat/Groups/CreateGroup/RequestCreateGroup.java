@@ -66,7 +66,6 @@ public final class RequestCreateGroup
         this.createLinkJoin = createLinkJoin;
     }
 
-
     public boolean isFamilyGroup ()
     {
         return familyGroup;

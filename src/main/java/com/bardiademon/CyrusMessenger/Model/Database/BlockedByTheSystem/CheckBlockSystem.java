@@ -7,6 +7,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public final class CheckBlockSystem
 {
@@ -19,6 +20,10 @@ public final class CheckBlockSystem
 
     private BlockedByTheSystem blockedByTheSystem;
     private BlockedFor blockedFor;
+
+    public CheckBlockSystem ()
+    {
+    }
 
     public CheckBlockSystem (long IdUser , BlockedFor _BlockedFor , String Des)
     {
@@ -92,5 +97,10 @@ public final class CheckBlockSystem
     private enum KeyAnswer
     {
         time_to_free
+    }
+
+    public List<BlockedByTheSystem> getListBlocksMainAccount ()
+    {
+        return (CyrusMessengerApplication.Context ().getBean (BlockedByTheSystemService.class)).getListBlocksMainAccount ();
     }
 }

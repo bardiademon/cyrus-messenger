@@ -49,6 +49,9 @@ public class GroupSecurityProfile
     @Column (name = "can_join_group", nullable = false)
     private boolean canJoinGroup = true;
 
+    @Column (name = "show_owner")
+    private boolean showOwner = true;
+
     public GroupSecurityProfile ()
     {
     }
@@ -151,5 +154,15 @@ public class GroupSecurityProfile
     public void setCanJoinGroup (boolean canJoinGroup)
     {
         this.canJoinGroup = canJoinGroup;
+    }
+
+    public boolean isShowOwner ()
+    {
+        return showOwner;
+    }
+
+    public void setShowOwner (boolean showOwner)
+    {
+        this.showOwner = showOwner;
     }
 }

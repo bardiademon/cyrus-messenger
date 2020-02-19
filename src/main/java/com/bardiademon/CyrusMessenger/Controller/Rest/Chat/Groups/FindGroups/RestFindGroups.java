@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNGroups.RN_JUST_GROUPS, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNGroups.RN_FIND_GROUPS, method = RequestMethod.POST)
 public final class RestFindGroups
 {
 
@@ -60,7 +60,7 @@ public final class RestFindGroups
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                    l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
                     r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
                 }
             }
@@ -68,7 +68,7 @@ public final class RestFindGroups
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_empty.name ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
+                l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
                 r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
             }
         }
@@ -76,7 +76,7 @@ public final class RestFindGroups
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
+            l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
         }
         return answerToClient;
     }
@@ -96,7 +96,7 @@ public final class RestFindGroups
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
+                    l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
                     r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
                 }
             }
@@ -104,14 +104,14 @@ public final class RestFindGroups
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_is_empty.name ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
+                l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
             }
         }
         else
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+            l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
         }
         return answerToClient;
     }
@@ -125,7 +125,7 @@ public final class RestFindGroups
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_found.name ());
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found.name ()) , null);
+            l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found.name ()) , null);
             r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
         }
         else
@@ -151,11 +151,14 @@ public final class RestFindGroups
 
             if (getOneProfilePicture.wasGet ())
                 infoGroup.put (ValAnswer.id_profile_picture.name () , getOneProfilePicture.getProfilePicture ().getId ());
-            infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ());
+
+            if (securityProfile.isShowOwner ())
+                infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ());
 
             List<JoinGroup> joinGroups = group.getJoinGroups ();
             long numberOfMembers = 0;
             if (joinGroups != null) numberOfMembers = joinGroups.size ();
+
             if (!Str.IsEmpty (bio)) infoGroup.put (ValAnswer.members.name () , numberOfMembers);
 
             infoGroup.put (ValAnswer.created_at.name () , Time.toString (group.getCreatedAt ()));
@@ -163,7 +166,7 @@ public final class RestFindGroups
             answerToClient.put (ValAnswer.info_group.name () , infoGroup);
             answerToClient.setReqRes (req , res);
 
-            l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.found.name ()) , null);
+            l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.found.name ()) , null);
             r.n (req.getRemoteAddr () , SubmitRequestType.create_group , false);
         }
 

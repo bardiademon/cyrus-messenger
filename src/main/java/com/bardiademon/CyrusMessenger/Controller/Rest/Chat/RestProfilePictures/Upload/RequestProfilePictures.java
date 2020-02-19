@@ -10,29 +10,14 @@ public final class RequestProfilePictures
 
     private boolean updateMainPic;
 
-    private String thisPicFor;
-
     private boolean mainPic;
 
     private int placementNumber = -1;
 
     private MultipartFile pic;
 
-    // channel or group
-    private String username;
-
     public RequestProfilePictures ()
     {
-    }
-
-    public String getThisPicFor ()
-    {
-        return thisPicFor;
-    }
-
-    public void setThisPicFor (String thisPicFor)
-    {
-        this.thisPicFor = thisPicFor;
     }
 
     public boolean isMainPic ()
@@ -64,16 +49,6 @@ public final class RequestProfilePictures
     public void setPic (MultipartFile pic)
     {
         this.pic = pic;
-    }
-
-    public String getUsername ()
-    {
-        return username;
-    }
-
-    public void setUsername (String username)
-    {
-        this.username = username;
     }
 
     public long getId ()

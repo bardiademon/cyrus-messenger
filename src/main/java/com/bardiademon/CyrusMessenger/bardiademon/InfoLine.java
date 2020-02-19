@@ -47,8 +47,6 @@ public final class InfoLine
 
             if (e != null)
             {
-                System.out.println (e.getStackTrace ()[0].getLineNumber ());
-
                 exception = new LinkedHashMap<> ();
                 exception.put ("message" , e.getMessage ());
                 try

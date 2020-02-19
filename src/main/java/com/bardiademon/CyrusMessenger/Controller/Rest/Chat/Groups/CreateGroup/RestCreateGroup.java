@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNGroups.RN_CREATE_GROUPS, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNGroups.RN_CREATE_GROUP, method = RequestMethod.POST)
 public final class RestCreateGroup
 {
 
@@ -73,7 +73,7 @@ public final class RestCreateGroup
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_have_made_too_many_groups.name ());
                         answerToClient.put (KeyAnswer.construction_limit.name () , Groups.MAX_CREATE_GROUP);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("limit create group") , null);
+                        l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("limit create group") , null);
                         r.n (mainAccount , SubmitRequestType.create_group , true);
                     }
                 }
@@ -81,21 +81,21 @@ public final class RestCreateGroup
                 {
                     answerToClient = checkBlockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
+                    l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
                 }
             }
             else
             {
                 answerToClient = checkLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
+                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
             }
         }
         else
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
         }
 
         return answerToClient;
@@ -109,14 +109,14 @@ public final class RestCreateGroup
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_empty.name ());
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
             r.n (mainAccount , SubmitRequestType.create_group , true);
         }
         if (answerToClient == null && Str.IsEmpty (request.getUsername ()) && Str.IsEmpty (request.getCreateLinkJoin ()))
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_and_link_join_empty.name ());
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_and_link_join_empty.name ()) , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_and_link_join_empty.name ()) , null);
             r.n (mainAccount , SubmitRequestType.create_group , true);
         }
         if (answerToClient == null && !Str.IsEmpty (request.getUsername ()))
@@ -125,7 +125,7 @@ public final class RestCreateGroup
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_exists.name ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_is_exists.name ()) , null);
+                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_is_exists.name ()) , null);
                 r.n (mainAccount , SubmitRequestType.create_group , true);
             }
             else
@@ -135,7 +135,7 @@ public final class RestCreateGroup
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
                     r.n (mainAccount , SubmitRequestType.create_group , true);
                 }
             }
@@ -152,7 +152,7 @@ public final class RestCreateGroup
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , e.getMessage ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
                 r.n (mainAccount , SubmitRequestType.create_group , true);
             }
         }
@@ -180,7 +180,7 @@ public final class RestCreateGroup
             {
                 answerToClient = AnswerToClient.ServerError ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("server error") , "error for class LinkForJoin");
+                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("server error") , "error for class LinkForJoin");
             }
             else createCode = true;
         }
@@ -212,7 +212,7 @@ public final class RestCreateGroup
 
             groupSecurityProfileService.Repository.save (groupSecurityProfile);
 
-            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUPS , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.created.name ());
+            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.created.name ());
             r.n (mainAccount , SubmitRequestType.create_group , false);
         }
         return answerToClient;

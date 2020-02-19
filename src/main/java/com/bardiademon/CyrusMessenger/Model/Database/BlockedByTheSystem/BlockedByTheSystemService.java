@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public final class BlockedByTheSystemService
@@ -111,7 +112,7 @@ public final class BlockedByTheSystemService
         {
             blockedByTheSystem.setUnBlockedAt (LocalDateTime.now ());
             blockedByTheSystem.setActive (false);
-            BlockedByTheSystem save = Repository.save (blockedByTheSystem);
+            Repository.save (blockedByTheSystem);
             try
             {
                 SubmitRequestType submitRequestType = SubmitRequestType.valueOf (blockedByTheSystem.getDescription ());
@@ -127,5 +128,10 @@ public final class BlockedByTheSystemService
             {
             }
         }
+    }
+
+    public List<BlockedByTheSystem> getListBlocksMainAccount ()
+    {
+        return Repository.findByActiveTrueAndMainAccountNotNull ();
     }
 }

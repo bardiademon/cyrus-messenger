@@ -16,11 +16,11 @@ public abstract class Domain
 
         public static abstract class RNProfilePicture
         {
-            private static final String RN_PROFILE_PICTURE = RN_MAIN_CHAT + "/profile_picture";
-            public static final String RN_PROFILE_PICTURE_UPLOAD = RN_PROFILE_PICTURE + "/upload";
-            public static final String RN_PROFILE_PICTURE_GET_ALL = RN_PROFILE_PICTURE + "/get_all";
-            public static final String RN_PROFILE_PICTURE_GET_ONE = RN_PROFILE_PICTURE + "/get_one";
-            public static final String RN_PROFILE_PICTURE_DELETE = RN_PROFILE_PICTURE + "/delete";
+            private static final String RN_PROFILE_PICTURES = RN_MAIN_CHAT + "/profile_pictures";
+            public static final String RN_PROFILE_PICTURES_UPLOAD = RN_PROFILE_PICTURES + "/upload";
+            public static final String RN_PROFILE_PICTURES_GET_ALL = RN_PROFILE_PICTURES + "/get_all";
+            public static final String RN_PROFILE_PICTURES_GET_ONE = RN_PROFILE_PICTURES + "/get_one";
+            public static final String RN_PROFILE_PICTURES_DELETE = RN_PROFILE_PICTURES + "/delete";
         }
 
         public static abstract class RNInfoUser
@@ -103,11 +103,12 @@ public abstract class Domain
 
         public static abstract class RNGroups
         {
-            public static final String RN_JUST_GROUPS = "/groups";
 
-            public static final String RN_GROUPS = RN_MAIN_CHAT + RN_JUST_GROUPS;
-
-            public static final String RN_CREATE_GROUPS = RN_GROUPS + "/create_group";
+            public static final String RN_GROUPS = RN_MAIN_CHAT + "/groups";
+            public static final String RN_CREATE_GROUP = RN_GROUPS + "/create_group";
+            public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
+            public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";
+            public static final String RN_LEAVE_GROUP = RN_GROUPS + "/leave";
 
         }
 

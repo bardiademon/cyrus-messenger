@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE, method = RequestMethod.POST)
 public final class RestGetOneProfilePicture
 {
 
@@ -79,29 +79,29 @@ public final class RestGetOneProfilePicture
                         if (answer == null)
                         {
                             answer = toByte (Path.IMAGE_ERROR_500);
-                            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , exceptionToByte , createClass.toJson ());
+                            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , exceptionToByte , createClass.toJson ());
                         }
                         else
-                            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
+                            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
                     }
                     else
-                        l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("Error from CheckUserAccessLevel") , createClass.toJson ());
+                        l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("Error from CheckUserAccessLevel") , createClass.toJson ());
                 }
                 else
                 {
-                    l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("image_not_found") , createClass.toJson ());
+                    l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("image_not_found") , createClass.toJson ());
                     answer = toByte (Path.IMAGE_NOT_FOUND);
                 }
             }
             else
             {
-                l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("id_invalid") , createClass.toJson ());
+                l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , mainAccountRequest , null , Thread.currentThread ().getStackTrace () , new Exception ("id_invalid") , createClass.toJson ());
                 answer = toByte (Path.IMAGE_NOT_FOUND);
             }
         }
         else
         {
-            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_GET_ONE , null , null , Thread.currentThread ().getStackTrace () , new Exception ("not login") , Path.IC_NOT_LOGGED);
+            l.n (createClass.toJson () , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE , null , null , Thread.currentThread ().getStackTrace () , new Exception ("not login") , Path.IC_NOT_LOGGED);
             answer = toByte (Path.IC_NOT_LOGGED);
         }
         return answer;

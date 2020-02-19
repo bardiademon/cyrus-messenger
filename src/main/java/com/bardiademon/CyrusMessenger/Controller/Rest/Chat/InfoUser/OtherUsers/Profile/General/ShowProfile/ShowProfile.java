@@ -13,7 +13,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsername;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,10 +65,10 @@ public final class ShowProfile
         checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
         if (checkLogin.isValid ())
         {
-            IdUsername idUsername = new IdUsername (mainAccountService , idUser , username);
-            if (idUsername.isValid ())
+            IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , idUser , username);
+            if (idUsernameMainAccount.isValid ())
             {
-                mainAccountGetProfile = idUsername.getMainAccount ();
+                mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
 
                 CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
                         (checkLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
@@ -79,7 +79,7 @@ public final class ShowProfile
                         KeyAnswer.i_can.name () , accessLevel.check (accessLevel.CHK_PROFILE));
 
             }
-            else answerToClient = idUsername.getAnswerToClient ();
+            else answerToClient = idUsernameMainAccount.getAnswerToClient ();
         }
         else answerToClient = checkLogin.getAnswerToClient ();
 

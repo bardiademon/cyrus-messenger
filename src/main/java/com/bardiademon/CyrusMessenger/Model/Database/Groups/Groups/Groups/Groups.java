@@ -44,7 +44,7 @@ public class Groups
     private List<GroupManagement> groupManagements;
 
     @OneToMany (mappedBy = "groups")
-    @Where (clause = "time_leave != null")
+    @Where (clause = "leave_group = false")
     private List<JoinGroup> joinGroups;
 
     @OneToMany (mappedBy = "groups")
@@ -83,6 +83,7 @@ public class Groups
     @Where (clause = "deleted = false")
     @JoinColumn (name = "id_link_for_join", referencedColumnName = "id")
     private LinkForJoin linkForJoin;
+
 
     public long getId ()
     {

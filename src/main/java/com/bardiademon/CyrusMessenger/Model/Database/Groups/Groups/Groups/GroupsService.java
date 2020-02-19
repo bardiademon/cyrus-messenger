@@ -35,4 +35,9 @@ public final class GroupsService
 
         return linkForJoin.getGroups ();
     }
+
+    public Groups hasGroup (long idGroup)
+    {
+        return Repository.findById (idGroup);
+    }
 }

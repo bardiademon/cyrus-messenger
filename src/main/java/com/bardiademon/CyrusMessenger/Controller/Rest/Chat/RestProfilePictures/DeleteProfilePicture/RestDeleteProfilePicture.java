@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE, method = RequestMethod.POST)
 public final class RestDeleteProfilePicture
 {
 
@@ -69,39 +69,39 @@ public final class RestDeleteProfilePicture
                             {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.all_pic_deleted.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.all_pic_deleted.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.all_pic_deleted.name ());
                             }
                             else
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.all_pic_deleted.name ()) , ValAnswer.failed_delete.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.all_pic_deleted.name ()) , ValAnswer.failed_delete.name ());
                             break;
                         case del_placement_number_zero:
                             if (deletePlacementNumberZero (mainAccountRequested))
                             {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted_placement_number_zero.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_placement_number_zero.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_placement_number_zero.name ());
                             }
                             else
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_placement_number_zero.name ()) , ValAnswer.failed_delete.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_placement_number_zero.name ()) , ValAnswer.failed_delete.name ());
                             break;
                         case del_main:
                             if (deleteMainPic (mainAccountRequested))
                             {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted_main_pic.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_main_pic.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_main_pic.name ());
                             }
                             else
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_main_pic.name ()) , ValAnswer.failed_delete.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_main_pic.name ()) , ValAnswer.failed_delete.name ());
                         case del_placement_number_not_zero:
                             if (deletePlacementNumberNotZero (mainAccountRequested))
                             {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted_placement_number_not_zero.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_placement_number_not_zero.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted_placement_number_not_zero.name ());
                             }
                             else
-                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_main_pic.name ()) , ValAnswer.failed_delete.name ());
+                                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted_main_pic.name ()) , ValAnswer.failed_delete.name ());
 
 
                             break;
@@ -111,21 +111,21 @@ public final class RestDeleteProfilePicture
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.which_invalid.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (null , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.which_invalid.name ()) , null);
+                    l.n (null , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.which_invalid.name ()) , null);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("request id null") , null);
+                l.n (null , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("request id null") , null);
             }
         }
         else
         {
             answerToClient = checkLogin.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , ToJson.CreateClass.SCLogin (codeLogin));
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , ToJson.CreateClass.SCLogin (codeLogin));
         }
 
         return answerToClient;
@@ -144,7 +144,7 @@ public final class RestDeleteProfilePicture
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_profile_picture_is_main_pic.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_profile_picture_is_main_pic.name ()) , null);
+                    l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_profile_picture_is_main_pic.name ()) , null);
                     return answerToClient;
                 }
 
@@ -155,20 +155,20 @@ public final class RestDeleteProfilePicture
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.one_was_deleted.name ());
                 answerToClient.put (AnswerToClient.CUK.id.name () , request.getIdProfilePicture ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
+                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
             }
             else
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_not_found.name ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_not_found.name ()) , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
+                l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_not_found.name ()) , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
             }
         }
         else
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_invalid.name ());
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_invalid.name ()) , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_invalid.name ()) , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
         }
         return answerToClient;
     }
@@ -193,7 +193,7 @@ public final class RestDeleteProfilePicture
         }
         catch (Exception e)
         {
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.n ("id" , request.getIdProfilePicture ()).toJson ());
             return false;
         }
 
@@ -207,7 +207,7 @@ public final class RestDeleteProfilePicture
         }
         catch (Exception e)
         {
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
             return false;
         }
     }
@@ -220,7 +220,7 @@ public final class RestDeleteProfilePicture
         }
         catch (Exception e)
         {
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
             return false;
         }
     }
@@ -233,7 +233,7 @@ public final class RestDeleteProfilePicture
         }
         catch (Exception e)
         {
-            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURE_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , mainAccountRequested , null , Thread.currentThread ().getStackTrace () , e , null);
             return false;
         }
     }

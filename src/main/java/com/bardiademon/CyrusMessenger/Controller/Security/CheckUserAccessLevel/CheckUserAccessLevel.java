@@ -253,8 +253,6 @@ public class CheckUserAccessLevel
 
         boolean resultSearch = Arrays.asList (listExcept).contains (String.valueOf (mainAccountWhoRequested.getId ()));
 
-        System.out.println (resultSearch);
-
         if (has && resultSearch) return true;
         else return (!has && !resultSearch);
     }

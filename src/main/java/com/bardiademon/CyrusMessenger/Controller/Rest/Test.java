@@ -15,7 +15,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
-import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsername;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -73,25 +73,23 @@ public class Test
     @RequestMapping (value = {"" , "/" , "/{username}" , "/{idUser}" , "/{idUser}/{username}"})
     public AnswerToClient test (HttpServletRequest req , HttpServletResponse res , @PathVariable (value = "idUser", required = false) long idUser , @PathVariable (value = "username", required = false) String username)
     {
-        IdUsername idUsername = new IdUsername (mainAccountService , idUser , username);
+        IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , idUser , username);
 
-        AnswerToClient answerToClient = idUsername.getAnswerToClient ();
+        AnswerToClient answerToClient = idUsernameMainAccount.getAnswerToClient ();
 
         if (answerToClient == null) answerToClient = AnswerToClient.OK ();
         answerToClient.setResponse (res);
         answerToClient.setRequest (req);
 
-        System.out.println (idUsername.isValid ());
-
         String request = ToJson.To (new ToJson.CreateClass ().put ("idUser" , idUser).put ("username" , username));
 
-        l.n (request , "/test" , null , idUsername.getAnswerToClient () , Thread.currentThread ().getStackTrace () , null , null);
+        l.n (request , "/test" , null , idUsernameMainAccount.getAnswerToClient () , Thread.currentThread ().getStackTrace () , null , null);
 
-        List<ProfilePictures> profilePictures = idUsername.getMainAccount ().getProfilePictures ();
+        List<ProfilePictures> profilePictures = idUsernameMainAccount.getMainAccount ().getProfilePictures ();
 
         ProfilePictures profilePicture = profilePictures.get (0);
 
-        String picture = Path.StickTogether (Path.PROFILE_PICTURES_USERS , idUsername.getMainAccount ().getUsername () , profilePicture.getName () + "." + profilePicture.getType ());
+        String picture = Path.StickTogether (Path.PROFILE_PICTURES_USERS , idUsernameMainAccount.getMainAccount ().getUsername () , profilePicture.getName () + "." + profilePicture.getType ());
 
 
         answerToClient.put ("pic" , picture);

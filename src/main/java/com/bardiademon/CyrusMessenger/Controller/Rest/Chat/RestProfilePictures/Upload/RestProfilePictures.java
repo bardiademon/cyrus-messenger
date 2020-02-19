@@ -38,13 +38,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping (value = RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD, method = RequestMethod.POST)
+@RequestMapping (value = RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD, method = RequestMethod.POST)
 public final class RestProfilePictures
 {
 
     private String name, type;
     private long size;
-    private ProfilePicFor profilePicFor;
 
     private AnswerToClient answerToClient;
 
@@ -60,7 +59,8 @@ public final class RestProfilePictures
     private ProfilePictures profilePictures = null;
 
     @Autowired
-    public RestProfilePictures (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService , ProfilePicturesService _ProfilePicturesService)
+    public RestProfilePictures (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService ,
+                                ProfilePicturesService _ProfilePicturesService)
     {
         service = new Service (_UserLoginService , _SecurityUserProfileService , _ProfilePicturesService);
     }
@@ -71,7 +71,6 @@ public final class RestProfilePictures
         profilePictures = null;
         request = null;
         response = null;
-        profilePicFor = null;
         name = null;
         type = null;
         size = 0;
@@ -100,7 +99,7 @@ public final class RestProfilePictures
                 if (!okProfilePicture)
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_not_found.name ());
-                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_not_found.name ()) , null);
+                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_not_found.name ()) , null);
                 }
                 else
                 {
@@ -113,7 +112,7 @@ public final class RestProfilePictures
                         ToJson.CreateClass createClass = new ToJson.CreateClass ();
                         createClass.put ("id" , profilePictures.getId ());
                         createClass.put ("the_operation" , "delete_profile_picture");
-                        l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
+                        l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
 
                     }
                 }
@@ -133,74 +132,45 @@ public final class RestProfilePictures
                     }
                 }
 
-                profilePicFor = ProfilePicFor.to (request.getThisPicFor ());
-                if (profilePicFor != null)
+                AccessUploadProfilePicture accessUpload = new AccessUploadProfilePicture (service , codeLogin , (profilePictures == null));
+                if (accessUpload.hasAccess ())
                 {
-                    AccessUploadProfilePicture accessUpload = new AccessUploadProfilePicture (service , codeLogin , profilePicFor , (profilePictures == null));
-                    if (accessUpload.hasAccess ())
-                    {
-                        mainAccount = accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ();
-                        String username = ((profilePicFor.equals (ProfilePicFor.user)) ?
-                                (mainAccount.getUsername ())
-                                : (request.getUsername ()));
+                    mainAccount = accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ();
+                    Object dirName = mainAccount.getUsername ();
 
-                        if ((profilePictures != null && request.getPic () == null) || upload (request , username))
-                        {
-                            switch (profilePicFor)
-                            {
-                                case user:
-                                {
-                                    if (setInDb (request , accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ()))
-                                    {
-                                        if (profilePictures == null)
-                                        {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
-                                            answerToClient.put (AnswerToClient.CUK.id.name () , this.newProfilePicture.getId ());
-                                            answerToClient.setReqRes (this.request , this.response);
-                                            r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , false);
-                                        }
-                                        else
-                                        {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.replaced.name ());
-                                            answerToClient.put (KeyAnswer.id.name () , this.newProfilePicture.getId ());
-                                            answerToClient.setReqRes (this.request , this.response);
-                                            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.replaced.name ());
-                                        }
-                                        r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , false);
-                                    }
-                                    else
-                                    {
-                                        answerToClient = AnswerToClient.ServerError ();
-                                        answerToClient.setReqRes (this.request , this.response);
-                                        l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Server error") , null);
-                                    }
-                                }
-                                break;
-                                case group:
-                                case channel:
-                                default:
-                                {
-                                    answerToClient = AnswerToClient.ServerError ();
-                                    answerToClient.setReqRes (this.request , this.response);
-                                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Server error") , null);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
+                    if ((profilePictures != null && request.getPic () == null) || upload (request , dirName))
                     {
-                        answerToClient = accessUpload.getAnswerToClient ();
-                        answerToClient.setReqRes (this.request , this.response);
-                        l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error AccessUpload") , null);
-                        r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , true);
+                        if (setInDb (request , accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ()))
+                        {
+                            if (profilePictures == null)
+                            {
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
+                                answerToClient.put (AnswerToClient.CUK.id.name () , this.newProfilePicture.getId ());
+                                answerToClient.setReqRes (this.request , this.response);
+                                r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , false);
+                            }
+                            else
+                            {
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.replaced.name ());
+                                answerToClient.put (KeyAnswer.id.name () , this.newProfilePicture.getId ());
+                                answerToClient.setReqRes (this.request , this.response);
+                                l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.replaced.name ());
+                            }
+                            r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , false);
+                        }
+                        else
+                        {
+                            answerToClient = AnswerToClient.ServerError ();
+                            answerToClient.setReqRes (this.request , this.response);
+                            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Server error") , null);
+                        }
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_pic_for_invalid.name ());
+                    answerToClient = accessUpload.getAnswerToClient ();
                     answerToClient.setReqRes (this.request , this.response);
-                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_pic_for_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error AccessUpload") , null);
                     r.n (req.getRemoteAddr () , SubmitRequestType.upload_cover , true);
                 }
             }
@@ -216,7 +186,7 @@ public final class RestProfilePictures
         return answerToClient;
     }
 
-    private boolean upload (RequestProfilePictures request , String username)
+    private boolean upload (RequestProfilePictures request , Object dirName)
     {
         MultipartFile pic = request.getPic ();
         try
@@ -225,7 +195,7 @@ public final class RestProfilePictures
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.pic_is_empty.name ());
                 answerToClient.setReqRes (this.request , this.response);
-                l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.pic_is_empty.name ()) , null);
+                l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.pic_is_empty.name ()) , null);
                 return false;
             }
         }
@@ -233,7 +203,7 @@ public final class RestProfilePictures
         {
             answerToClient = AnswerToClient.ServerError ();
             answerToClient.setReqRes (this.request , this.response);
-            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
             return false;
         }
 
@@ -249,27 +219,15 @@ public final class RestProfilePictures
                 answerToClient.put (KeyAnswer.extra_size.name () , GetSize.Get ((size - DSize.SIZE_COVER)));
                 answerToClient.setReqRes (this.request , this.response);
 
-                l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.size_is_large.name ()) , null);
+                l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.size_is_large.name ()) , null);
 
                 return false;
             }
             else
             {
-                String pathUpload = null;
-                switch (profilePicFor)
-                {
-                    case user:
-                        pathUpload = Path.PROFILE_PICTURES_USERS;
-                        break;
-                    case group:
-                        pathUpload = Path.PROFILE_PICTURES_GROUPS;
-                        break;
-                    case channel:
-                        pathUpload = Path.PROFILE_PICTURES_CHANNELS;
-                        break;
-                }
+                String pathUpload = Path.PROFILE_PICTURES_USERS;
 
-                pathUpload = Path.StickTogether (pathUpload , username);
+                pathUpload = Path.StickTogether (pathUpload , String.valueOf (dirName));
 
                 try
                 {
@@ -291,7 +249,7 @@ public final class RestProfilePictures
                     outputStream.write (picBytes);
 
                     l.n (ToJson.To (request) ,
-                            RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD ,
+                            RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD ,
                             mainAccount , null , Thread.currentThread ().getStackTrace () , null , (new ToJson.CreateClass ()).put ("uploaded" , (newFile.exists ())).toJson ());
 
                     return (newFile.exists ());
@@ -300,7 +258,7 @@ public final class RestProfilePictures
                 {
                     answerToClient = AnswerToClient.ServerError ();
                     answerToClient.setReqRes (this.request , this.response);
-                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+                    l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
                     return false;
                 }
 
@@ -309,7 +267,7 @@ public final class RestProfilePictures
         else
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.pic_invalid.name ());
-            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.pic_invalid.name ()) , null);
+            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.pic_invalid.name ()) , null);
             return false;
         }
     }
@@ -344,21 +302,21 @@ public final class RestProfilePictures
                 if (request.getPlacementNumber () >= 0)
                     newProfilePicture.setPlacementNumber (request.getPlacementNumber ());
 
-                newProfilePicture.setThisPicFor (profilePicFor);
+                newProfilePicture.setThisPicFor (ProfilePicFor.user);
                 newProfilePicture = service.getProfilePicturesService ().Repository.save (newProfilePicture);
                 return (newProfilePicture.getId () > 0);
             }
         }
         catch (Exception e)
         {
-            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURE_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
             return false;
         }
     }
 
     private enum ValAnswer
     {
-        this_pic_for_invalid, size_is_large, uploaded, pic_is_empty, pic_invalid, id_not_found, replaced
+        size_is_large, uploaded, pic_is_empty, pic_invalid, id_not_found, replaced
     }
 
     private enum KeyAnswer

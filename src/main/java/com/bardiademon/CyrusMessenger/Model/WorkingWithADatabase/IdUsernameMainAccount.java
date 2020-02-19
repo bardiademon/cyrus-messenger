@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 
-public class IdUsername
+public class IdUsernameMainAccount
 {
     private AnswerToClient answerToClient;
     private boolean valid;
@@ -16,7 +16,7 @@ public class IdUsername
 
     private MainAccount mainAccount;
 
-    public IdUsername (MainAccountService Service , long IdUser , String Username)
+    public IdUsernameMainAccount (MainAccountService Service , long IdUser , String Username)
     {
         this.service = Service;
         this.idUser = IdUser;
