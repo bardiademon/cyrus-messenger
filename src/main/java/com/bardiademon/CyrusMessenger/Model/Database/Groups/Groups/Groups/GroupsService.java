@@ -5,6 +5,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoinServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public final class GroupsService
 {
@@ -39,5 +41,10 @@ public final class GroupsService
     public Groups hasGroup (long idGroup)
     {
         return Repository.findById (idGroup);
+    }
+
+    public List<Groups> fromOwner (long idUser)
+    {
+        return Repository.findByOwnerId (idUser);
     }
 }

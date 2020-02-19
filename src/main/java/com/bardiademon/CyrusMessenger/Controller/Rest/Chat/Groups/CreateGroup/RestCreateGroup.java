@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupSecurityProfile.GroupSecurityProfile;
@@ -56,10 +56,10 @@ public final class RestCreateGroup
         CheckBlockSystem checkBlockSystem = new CheckBlockSystem (req , BlockedFor.submit_request , SubmitRequestType.create_group.name ());
         if (!checkBlockSystem.isBlocked ())
         {
-            CheckLogin checkLogin = new CheckLogin (codeLogin);
-            if (checkLogin.isValid ())
+            IsLogin isLogin = new IsLogin (codeLogin);
+            if (isLogin.isValid ())
             {
-                MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
                 checkBlockSystem = new CheckBlockSystem (mainAccount.getId () , BlockedFor.submit_request , SubmitRequestType.create_group.name ());
                 if (!checkBlockSystem.isBlocked ())
                 {
@@ -86,7 +86,7 @@ public final class RestCreateGroup
             }
             else
             {
-                answerToClient = checkLogin.getAnswerToClient ();
+                answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
             }
@@ -189,11 +189,11 @@ public final class RestCreateGroup
         {
             if (createCode) groups.setLinkForJoin (linkForJoin);
 
-            Groups save = groupsService.Repository.save (groups);
+            Groups groupSave = groupsService.Repository.save (groups);
 
             if (createCode)
             {
-                linkForJoin.setGroups (save);
+                linkForJoin.setGroups (groupSave);
                 linkForJoinService.Repository.save (linkForJoin);
             }
 
@@ -204,13 +204,18 @@ public final class RestCreateGroup
 
             if (createCode) answerToClient.put (KeyAnswer.link.name () , linkForJoin.getLink ());
 
-            answerToClient.put (AnswerToClient.CUK.id.name () , save.getId ());
+            answerToClient.put (AnswerToClient.CUK.id.name () , groupSave.getId ());
 
             GroupSecurityProfile groupSecurityProfile = new GroupSecurityProfile ();
             groupSecurityProfile.setFamilyGroup (request.isFamilyGroup ());
-            groupSecurityProfile.setGroups (save);
+            groupSecurityProfile.setGroups (groupSave);
 
-            groupSecurityProfileService.Repository.save (groupSecurityProfile);
+            groupSecurityProfile = groupSecurityProfileService.Repository.save (groupSecurityProfile);
+
+            groupSave.setGroupSecurityProfile (groupSecurityProfile);
+
+            groupsService.Repository.save (groupSave);
+
 
             l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.created.name ());
             r.n (mainAccount , SubmitRequestType.create_group , false);

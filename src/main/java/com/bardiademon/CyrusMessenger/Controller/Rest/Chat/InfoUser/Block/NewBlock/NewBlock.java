@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
@@ -42,8 +42,8 @@ public final class NewBlock
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             if (request == null || request.getExtent () <= 0 || Str.IsEmpty (request.getUsername ()) || Str.IsEmpty (request.getPlusUpTo ()))
                 answerToClient = AnswerToClient.RequestIsNull ();
@@ -57,7 +57,7 @@ public final class NewBlock
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
                     else
                     {
-                        MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+                        MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 
                         if (mainAccount.getId () == username.getId ())
                             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_cannot_block_yourself.name ());
@@ -120,7 +120,7 @@ public final class NewBlock
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
             }
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
         return answerToClient;

@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.DeleteProfilePicture.RequestDeleteProfilePicture.Which;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -47,10 +47,10 @@ public final class RestDeleteProfilePicture
         this.req = req;
         this.request = request;
         AnswerToClient answerToClient;
-        CheckLogin checkLogin = new CheckLogin (codeLogin);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin);
+        if (isLogin.isValid ())
         {
-            MainAccount mainAccountRequested = checkLogin.getVCodeLogin ().getMainAccount ();
+            MainAccount mainAccountRequested = isLogin.getVCodeLogin ().getMainAccount ();
             if (request != null)
             {
                 Which which = Which.to (request.getWhich ());
@@ -123,7 +123,7 @@ public final class RestDeleteProfilePicture
         }
         else
         {
-            answerToClient = checkLogin.getAnswerToClient ();
+            answerToClient = isLogin.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
             l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_DELETE , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , ToJson.CreateClass.SCLogin (codeLogin));
         }

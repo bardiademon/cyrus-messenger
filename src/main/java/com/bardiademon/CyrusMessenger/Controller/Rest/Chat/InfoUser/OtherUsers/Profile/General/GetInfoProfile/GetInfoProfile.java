@@ -53,7 +53,7 @@ public final class GetInfoProfile
             {
                 answerToClient = AnswerToClient.OK ();
                 accessLevel = new CheckUserAccessLevel
-                        (showProfile.getCheckLogin ().getVCodeLogin ().getMainAccount () , showProfile.getMainAccountGetProfile () , showProfile.getMainAccountService ());
+                        (showProfile.getIsLogin ().getVCodeLogin ().getMainAccount () , showProfile.getMainAccountGetProfile () , showProfile.getMainAccountService ());
 
                 accessLevel.setServiceProfile (showProfile.getServiceProfile ());
                 checkGet (request);

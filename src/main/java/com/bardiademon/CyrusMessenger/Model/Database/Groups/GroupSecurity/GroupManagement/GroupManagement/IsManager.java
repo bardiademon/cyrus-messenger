@@ -18,10 +18,7 @@ public final class IsManager
 
     private GroupManagement groupManagement;
 
-    public IsManager (MainAccount _MainAccount)
-    {
-        this (_MainAccount , CyrusMessengerApplication.Context ().getBean (GroupManagementService.class));
-    }
+    private boolean isOwner;
 
     public IsManager (MainAccount _MainAccount , GroupManagementService _GroupManagementService)
     {
@@ -40,7 +37,11 @@ public final class IsManager
         else
         {
             group = iluGroup.getGroup ();
-            if (group != null && group.getOwner ().getId () == mainAccount.getId ()) return true;
+            if (group != null && group.getOwner ().getId () == mainAccount.getId ())
+            {
+                isOwner = true;
+                return true;
+            }
             else
             {
                 groupManagement = groupManagementService.getGroupManagement (mainAccount.getId () , group.getId ());
@@ -54,7 +55,7 @@ public final class IsManager
         if (groupManagement == null) return false;
         else
         {
-             thisManagerHaveAccess = new ThisManagerHaveAccess (groupManagement , _AccessLevel);
+            thisManagerHaveAccess = new ThisManagerHaveAccess (groupManagement , _AccessLevel);
             return thisManagerHaveAccess.hasAccess ();
         }
     }
@@ -72,5 +73,15 @@ public final class IsManager
     public ThisManagerHaveAccess getThisManagerHaveAccess ()
     {
         return thisManagerHaveAccess;
+    }
+
+    public boolean isOwner ()
+    {
+        return isOwner;
+    }
+
+    public MainAccount getMainAccount ()
+    {
+        return mainAccount;
     }
 }

@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Securit
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -35,13 +35,13 @@ public class Profile
                                                   @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             if (requestProfile.thereIsAtLeastOneTrue ())
             {
                 SecurityUserProfile securityUserProfile
-                        = securityUserProfileService.Repository.findByMainAccount (checkLogin.getVCodeLogin ().getMainAccount ());
+                        = securityUserProfileService.Repository.findByMainAccount (isLogin.getVCodeLogin ().getMainAccount ());
                 if (securityUserProfile != null)
                 {
                     answerToClient = AnswerToClient.OK ();
@@ -111,7 +111,7 @@ public class Profile
             }
             else answerToClient = AnswerToClient.error400 ();
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         return answerToClient;
     }

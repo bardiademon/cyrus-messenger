@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.Ge
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
@@ -39,8 +39,8 @@ public final class GetContacts
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             List<UserContacts> getContacts;
 
@@ -48,7 +48,7 @@ public final class GetContacts
 
             if (contacts == null || contacts.size () == 0)
             {
-                contacts = checkLogin.getVCodeLogin ().getMainAccount ().getUserContacts ();
+                contacts = isLogin.getVCodeLogin ().getMainAccount ().getUserContacts ();
                 valid = true;
             }
 
@@ -68,7 +68,7 @@ public final class GetContacts
                         idContact = userContacts.getMainAccountContact ().getId ();
                         if (idContact > 0)
                         {
-                            userContacts.setPhone (mainAccountService.Repository.findByIdAndDeletedFalseAndSystemBlockFalse (idContact).getPhone ());
+                            userContacts.setPhone (mainAccountService.Repository.findByIdAndDeletedFalseAndSystemBlockFalseAndActiveTrue (idContact).getPhone ());
                             getContacts.add (setFound (userContacts));
                         }
                         else getContacts.add (setNotFound (contact));
@@ -83,7 +83,7 @@ public final class GetContacts
             else answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , getContacts);
 
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
         return answerToClient;

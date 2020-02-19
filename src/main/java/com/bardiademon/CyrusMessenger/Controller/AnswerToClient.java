@@ -179,7 +179,7 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id, system , time
+        answer, id, system, time, limit
     }
 
     // CUK => Commonly used value

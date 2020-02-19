@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.IsValidUEPRequest;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.IsValidUEP.RestIsValidUEP;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -83,10 +83,10 @@ public class RestLogin
             boolean is200 = answerToClient.getStatusCode () == 200;
             if (isOk && is200 && valid)
             {
-                CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-                if (checkLogin.isValid ())
+                IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+                if (isLogin.isValid ())
                 {
-                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , checkLogin.getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , "is login");
+                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , isLogin.getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , "is login");
                     userLoginService.logout (codeLogin);
                 }
 

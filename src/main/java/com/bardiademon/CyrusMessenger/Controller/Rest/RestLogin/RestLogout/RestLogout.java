@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.RestLogin.RestLogout;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -34,14 +34,14 @@ public final class RestLogout
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             boolean logout;
             logout = userLoginService.logout (codeLogin);
             answerToClient = AnswerToClient.OneAnswer ((logout ? AnswerToClient.OK () : AnswerToClient.ServerError ()) , KeyAnswer.logout.name () , logout);
 
-            MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+            MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 
             answerToClient.setReqRes (req , res);
 
@@ -61,7 +61,7 @@ public final class RestLogout
         }
         else
         {
-            answerToClient = checkLogin.getAnswerToClient ();
+            answerToClient = isLogin.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
 
             l.n (null , Domain.RNLogin.RN_LOGOUT , null , answerToClient , Thread.currentThread ().getStackTrace () ,

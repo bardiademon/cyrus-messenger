@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.CreationTimestamp;
@@ -51,15 +50,8 @@ public final class JoinGroup
     @UpdateTimestamp
     private LocalDateTime timeLeave;
 
-    @Column (name = "fired")
-    private boolean fired = false;
-
     @Column (name = "leave_group")
     private boolean leaveGroup = false;
-
-    @ManyToOne
-    @JoinColumn (name = "fired_by", referencedColumnName = "id", insertable = false)
-    private GroupManagement firedBy;
 
     public JoinGroup ()
     {
@@ -123,26 +115,6 @@ public final class JoinGroup
     public void setAddedBy (MainAccount addedBy)
     {
         this.addedBy = addedBy;
-    }
-
-    public GroupManagement getFiredBy ()
-    {
-        return firedBy;
-    }
-
-    public void setFiredBy (GroupManagement firedBy)
-    {
-        this.firedBy = firedBy;
-    }
-
-    public boolean isFired ()
-    {
-        return fired;
-    }
-
-    public void setFired (boolean fired)
-    {
-        this.fired = fired;
     }
 
     public JoinBy getJoinBy ()

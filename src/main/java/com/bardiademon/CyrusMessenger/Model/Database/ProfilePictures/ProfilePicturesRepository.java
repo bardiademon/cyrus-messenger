@@ -27,17 +27,22 @@ public interface ProfilePicturesRepository extends JpaRepository<ProfilePictures
     @Modifying
     @Transactional
     @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and ((profilePictures.placementNumber = 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber = 0 and profilePictures.mainPic = :MAIN_PIC))")
-    int deletePlacementNumberZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
+    Integer deletePlacementNumberZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
 
     @Modifying
     @Transactional
     @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and profilePictures.mainPic = true")
-    int deleteMainPic (@Param ("ID_USER") long idUser);
-
+    Integer deleteMainPic (@Param ("ID_USER") long idUser);
 
     @Modifying
     @Transactional
     @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and (profilePictures.placementNumber != 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber != 0 and profilePictures.mainPic = :MAIN_PIC)")
-    int deletePlacementNumberNotZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
+    Integer deletePlacementNumberNotZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
+
+    @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.groups.id = :ID_GROUP and profilePictures.thisPicFor = 'group'")
+    Integer countUploadGroup (@Param ("ID_GROUP") long idGroup);
+
+    @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.mainAccount.id = :ID_USER and profilePictures.thisPicFor = 'user'")
+    Integer countUploadUser (@Param ("ID_USER") long idUser);
 
 }

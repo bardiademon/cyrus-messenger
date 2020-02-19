@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
-public final class RequestProfilePictures
+public final class RequestUploadProfilePictures
 {
 
     private long id;
@@ -16,7 +16,9 @@ public final class RequestProfilePictures
 
     private MultipartFile pic;
 
-    public RequestProfilePictures ()
+    private long idGroup;
+
+    public RequestUploadProfilePictures ()
     {
     }
 
@@ -69,5 +71,15 @@ public final class RequestProfilePictures
     public void setUpdateMainPic (boolean updateMainPic)
     {
         this.updateMainPic = updateMainPic;
+    }
+
+    public long getIdGroup ()
+    {
+        return idGroup;
+    }
+
+    public void setIdGroup (long idGroup)
+    {
+        this.idGroup = idGroup;
     }
 }

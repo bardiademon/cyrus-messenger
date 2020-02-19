@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.LUFU_Service;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.UserFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -55,15 +55,15 @@ public final class NewFriend
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             FITD_Username fitd_username = new FITD_Username (username , mainAccountService);
             if (fitd_username.isValid ())
             {
                 if (fitd_username.isFound ())
                 {
-                    user = checkLogin.getVCodeLogin ().getMainAccount ();
+                    user = isLogin.getVCodeLogin ().getMainAccount ();
                     friend = fitd_username.getMainAccount ();
 
                     if (user.getId () == friend.getId ())
@@ -93,7 +93,7 @@ public final class NewFriend
                 answerToClient.put (answer.name () , ValAnswer.username_invalid.name ());
             }
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
 

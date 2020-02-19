@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -43,14 +43,14 @@ public final class RestGetAllProfilePicture
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req , @RequestBody RequestGetAllProfilePicture request)
     {
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
         AnswerToClient answerToClient;
-        if (checkLogin.isValid ())
+        if (isLogin.isValid ())
         {
             IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , request.getId () , request.getUsername ());
             if (idUsernameMainAccount.isValid ())
             {
-                MainAccount mainAccountRequested = checkLogin.getVCodeLogin ().getMainAccount ();
+                MainAccount mainAccountRequested = isLogin.getVCodeLogin ().getMainAccount ();
                 CheckUserAccessLevel checkUserAccessLevel = new CheckUserAccessLevel (mainAccountRequested , idUsernameMainAccount.getMainAccount () , mainAccountService);
 
                 ToJson.CreateClass createClass = new ToJson.CreateClass ();
@@ -97,7 +97,7 @@ public final class RestGetAllProfilePicture
         }
         else
         {
-            answerToClient = checkLogin.getAnswerToClient ();
+            answerToClient = isLogin.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
             l.n (ToJson.To (request) , Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ALL , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
         }

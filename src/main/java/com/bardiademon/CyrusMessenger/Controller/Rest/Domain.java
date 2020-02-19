@@ -21,6 +21,9 @@ public abstract class Domain
             public static final String RN_PROFILE_PICTURES_GET_ALL = RN_PROFILE_PICTURES + "/get_all";
             public static final String RN_PROFILE_PICTURES_GET_ONE = RN_PROFILE_PICTURES + "/get_one";
             public static final String RN_PROFILE_PICTURES_DELETE = RN_PROFILE_PICTURES + "/delete";
+
+            public static final String RN_PROFILE_PICTURES_UPLOAD_GROUP = RN_PROFILE_PICTURES_UPLOAD + "/group";
+
         }
 
         public static abstract class RNInfoUser
@@ -108,7 +111,6 @@ public abstract class Domain
             public static final String RN_CREATE_GROUP = RN_GROUPS + "/create_group";
             public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
             public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";
-            public static final String RN_LEAVE_GROUP = RN_GROUPS + "/leave";
 
         }
 

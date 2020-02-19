@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupSecurityProfile.GroupSecurityProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
@@ -45,11 +46,15 @@ public class Groups
 
     @OneToMany (mappedBy = "groups")
     @Where (clause = "leave_group = false")
-    private List<JoinGroup> joinGroups;
+    private List<JoinGroup> members;
 
     @OneToMany (mappedBy = "groups")
     @Where (clause = "deleted = false")
     private List<ProfilePictures> profilePictures;
+
+    @OneToOne
+    @JoinColumn (name = "id_group_security_profile", referencedColumnName = "id")
+    private GroupSecurityProfile groupSecurityProfile;
 
     @Column (nullable = false)
     private String name;
@@ -83,7 +88,6 @@ public class Groups
     @Where (clause = "deleted = false")
     @JoinColumn (name = "id_link_for_join", referencedColumnName = "id")
     private LinkForJoin linkForJoin;
-
 
     public long getId ()
     {
@@ -225,14 +229,14 @@ public class Groups
         this.linkForJoin = linkForJoin;
     }
 
-    public List<JoinGroup> getJoinGroups ()
+    public List<JoinGroup> getMembers ()
     {
-        return joinGroups;
+        return members;
     }
 
-    public void setJoinGroups (List<JoinGroup> joinGroups)
+    public void setMembers (List<JoinGroup> members)
     {
-        this.joinGroups = joinGroups;
+        this.members = members;
     }
 
     public List<ProfilePictures> getProfilePictures ()
@@ -243,5 +247,15 @@ public class Groups
     public void setProfilePictures (List<ProfilePictures> profilePictures)
     {
         this.profilePictures = profilePictures;
+    }
+
+    public GroupSecurityProfile getGroupSecurityProfile ()
+    {
+        return groupSecurityProfile;
+    }
+
+    public void setGroupSecurityProfile (GroupSecurityProfile groupSecurityProfile)
+    {
+        this.groupSecurityProfile = groupSecurityProfile;
     }
 }

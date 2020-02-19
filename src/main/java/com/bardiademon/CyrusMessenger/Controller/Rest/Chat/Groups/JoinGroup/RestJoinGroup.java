@@ -3,9 +3,11 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.JoinGroup;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroupService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupSecurityProfile.GroupSecurityProfile;
@@ -40,13 +42,17 @@ public final class RestJoinGroup
     private final GroupSecurityProfileService groupSecurityProfileService;
     private final JoinGroupService joinGroupService;
     private GroupManagementService groupManagementService;
+    private FiredFromGroupService firedFromGroupService;
 
-    public RestJoinGroup (GroupsService _GroupsService , GroupSecurityProfileService _GroupSecurityProfileService , JoinGroupService _JoinGroupService , GroupManagementService _GroupManagementService)
+    public RestJoinGroup (GroupsService _GroupsService ,
+                          GroupSecurityProfileService _GroupSecurityProfileService , JoinGroupService _JoinGroupService ,
+                          GroupManagementService _GroupManagementService , FiredFromGroupService _FiredFromGroupService)
     {
         this.groupsService = _GroupsService;
         this.groupSecurityProfileService = _GroupSecurityProfileService;
         this.joinGroupService = _JoinGroupService;
         this.groupManagementService = _GroupManagementService;
+        this.firedFromGroupService = _FiredFromGroupService;
     }
 
     @RequestMapping (value = {"" , "/" , "/{id}" , "/{id}/leave"})
@@ -60,10 +66,10 @@ public final class RestJoinGroup
         CheckBlockSystem checkBlockSystem = new CheckBlockSystem (req , BlockedFor.submit_request , SubmitRequestType.join_group.name ());
         if (!checkBlockSystem.isBlocked ())
         {
-            CheckLogin checkLogin = new CheckLogin (codeLogin);
-            if (checkLogin.isValid ())
+            IsLogin isLogin = new IsLogin (codeLogin);
+            if (isLogin.isValid ())
             {
-                MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 
                 checkBlockSystem = new CheckBlockSystem (mainAccount.getId () , BlockedFor.submit_request , SubmitRequestType.join_group.name ());
                 if (!checkBlockSystem.isBlocked ())
@@ -88,17 +94,38 @@ public final class RestJoinGroup
                                                 GroupSecurityProfile securityProfile = groupSecurityProfileService.getSec (group);
                                                 if (securityProfile.isShowInSearch () && !securityProfile.isFamilyGroup () && securityProfile.isCanJoinGroup ())
                                                 {
-                                                    JoinGroup joinGroup = new JoinGroup ();
-                                                    joinGroup.setGroups (group);
-                                                    joinGroup.setMainAccount (mainAccount);
-                                                    joinGroup.setJoinBy (JoinGroup.JoinBy.the_user_himself);
-                                                    joinGroupService.Repository.save (joinGroup);
+                                                    FiredFromGroup fired = firedFromGroupService.isFired (group.getId () , mainAccount.getId ());
+                                                    if (fired == null)
+                                                    {
+                                                        Integer maxMember = group.getGroupSecurityProfile ().getMaxMember ();
+                                                        if (group.getMembers ().size () >= maxMember)
+                                                        {
+                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.group_members_have_been_completed.name ());
+                                                            answerToClient.setReqRes (req , res);
+                                                            l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_members_have_been_completed.name ()) , null);
+                                                            r.n (mainAccount , SubmitRequestType.join_group , true);
+                                                        }
+                                                        else
+                                                        {
+                                                            JoinGroup joinGroup = new JoinGroup ();
+                                                            joinGroup.setGroups (group);
+                                                            joinGroup.setMainAccount (mainAccount);
+                                                            joinGroup.setJoinBy (JoinGroup.JoinBy.the_user_himself);
+                                                            joinGroupService.Repository.save (joinGroup);
 
-                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined.name ());
-                                                    answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joinGroup.getTimeJoin ()));
-                                                    answerToClient.setReqRes (req , res);
-                                                    l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.joined.name ());
-                                                    r.n (mainAccount , SubmitRequestType.join_group , false);
+                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined.name ());
+                                                            answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joinGroup.getTimeJoin ()));
+                                                            answerToClient.setReqRes (req , res);
+                                                            l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.joined.name ());
+                                                            r.n (mainAccount , SubmitRequestType.join_group , false);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        answerToClient = firedFromGroupService.createAnswerToClient (fired);
+                                                        l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_members_have_been_completed.name ()) , null);
+                                                        r.n (mainAccount , SubmitRequestType.join_group , true);
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -213,7 +240,7 @@ public final class RestJoinGroup
             }
             else
             {
-                answerToClient = checkLogin.getAnswerToClient ();
+                answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
                 l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
                 r.n (req.getRemoteAddr () , SubmitRequestType.join_group , true);
@@ -231,7 +258,7 @@ public final class RestJoinGroup
 
     public enum ValAnswer
     {
-        group_not_found, you_own_the_group, joining_has_been_disabled, joined, you_already_joined, you_not_already_joined, leaved
+        group_not_found, you_own_the_group, joining_has_been_disabled, joined, you_already_joined, you_not_already_joined, leaved, group_members_have_been_completed
     }
 
 }

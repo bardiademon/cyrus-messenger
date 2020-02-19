@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.Securit
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -30,13 +30,13 @@ public class Chat
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             if (requestChat.thereIsAtLeastOneTrue ())
             {
                 SecurityUserChat securityUserChat
-                        = securityUserChatService.Repository.findByMainAccount (checkLogin.getVCodeLogin ().getMainAccount ());
+                        = securityUserChatService.Repository.findByMainAccount (isLogin.getVCodeLogin ().getMainAccount ());
 
                 answerToClient = AnswerToClient.OK ();
                 if (requestChat.secSendEmoji)
@@ -72,7 +72,7 @@ public class Chat
             }
             else answerToClient = AnswerToClient.error400 ();
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         return answerToClient;
     }

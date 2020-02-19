@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Update.Secu
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
@@ -40,10 +40,10 @@ public final class UpdateSecurityProfile
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
-            answerToClient = afterUpdate (update (checkLogin.getVCodeLogin ().getMainAccount () , request));
-        else answerToClient = checkLogin.getAnswerToClient ();
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
+            answerToClient = afterUpdate (update (isLogin.getVCodeLogin ().getMainAccount () , request));
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
 

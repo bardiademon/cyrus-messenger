@@ -52,6 +52,9 @@ public class GroupSecurityProfile
     @Column (name = "show_owner")
     private boolean showOwner = true;
 
+    @Column (name = "max_upload_profile_picture")
+    private int maxUploadProfilePicture = 20;
+
     public GroupSecurityProfile ()
     {
     }
@@ -164,5 +167,15 @@ public class GroupSecurityProfile
     public void setShowOwner (boolean showOwner)
     {
         this.showOwner = showOwner;
+    }
+
+    public int getMaxUploadProfilePicture ()
+    {
+        return maxUploadProfilePicture;
+    }
+
+    public void setMaxUploadProfilePicture (int maxUploadProfilePicture)
+    {
+        this.maxUploadProfilePicture = maxUploadProfilePicture;
     }
 }

@@ -1,8 +1,9 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload.Users;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload.AccessUploadProfilePicture.Service;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload.RequestUploadProfilePictures;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload.Users.AccessUploadProfilePicture.Service;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain.RNChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -81,7 +82,7 @@ public final class RestProfilePictures
     public AnswerToClient upload
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
-             @ModelAttribute RequestProfilePictures request)
+             @ModelAttribute RequestUploadProfilePictures request)
     {
         setNull ();
         answerToClient = null;
@@ -135,12 +136,12 @@ public final class RestProfilePictures
                 AccessUploadProfilePicture accessUpload = new AccessUploadProfilePicture (service , codeLogin , (profilePictures == null));
                 if (accessUpload.hasAccess ())
                 {
-                    mainAccount = accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ();
+                    mainAccount = accessUpload.getIsLogin ().getVCodeLogin ().getMainAccount ();
                     Object dirName = mainAccount.getUsername ();
 
                     if ((profilePictures != null && request.getPic () == null) || upload (request , dirName))
                     {
-                        if (setInDb (request , accessUpload.getCheckLogin ().getVCodeLogin ().getMainAccount ()))
+                        if (setInDb (request , accessUpload.getIsLogin ().getVCodeLogin ().getMainAccount ()))
                         {
                             if (profilePictures == null)
                             {
@@ -186,7 +187,7 @@ public final class RestProfilePictures
         return answerToClient;
     }
 
-    private boolean upload (RequestProfilePictures request , Object dirName)
+    private boolean upload (RequestUploadProfilePictures request , Object dirName)
     {
         MultipartFile pic = request.getPic ();
         try
@@ -272,7 +273,7 @@ public final class RestProfilePictures
         }
     }
 
-    private boolean setInDb (RequestProfilePictures request , MainAccount mainAccount)
+    private boolean setInDb (RequestUploadProfilePictures request , MainAccount mainAccount)
     {
         try
         {

@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,10 @@ public final class NewGeneral
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
-            requestGeneral = mainAccountService.updateGeneral (checkLogin.getVCodeLogin ().getMainAccount () , requestGeneral);
+            requestGeneral = mainAccountService.updateGeneral (isLogin.getVCodeLogin ().getMainAccount () , requestGeneral);
 
             if (requestGeneral != null)
             {
@@ -60,7 +60,7 @@ public final class NewGeneral
             else
                 answerToClient = AnswerToClient.error400 ();
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
         return answerToClient;

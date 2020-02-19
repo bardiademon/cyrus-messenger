@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
@@ -23,9 +23,9 @@ import java.util.Map;
 public class GetListFriends
 {
 
-    private boolean isLogin = false;
+    private boolean login = false;
 
-    private CheckLogin checkLogin;
+    private IsLogin isLogin;
 
     private UserFriendsService userFriendsService;
     private UserLoginService userLoginService;
@@ -45,10 +45,10 @@ public class GetListFriends
     {
         AnswerToClient answerToClient;
 
-        if (!isLogin)
-            checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
+        if (!login)
+            isLogin = new IsLogin (codeLogin , userLoginService.Repository);
 
-        if (isLogin || checkLogin.isValid ())
+        if (login || isLogin.isValid ())
         {
             if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.error400 ();
             else
@@ -59,7 +59,7 @@ public class GetListFriends
                     List<UserFriends> userFriendsList;
                     if (status.equals (KeyRequest.all.name ()))
                     {
-                        isLogin = true;
+                        login = true;
 
                         answerToClient = AnswerToClient.OK ();
                         answerToClient.put (StatusFriends.deleted.name () ,
@@ -79,7 +79,7 @@ public class GetListFriends
                         StatusFriends statusFriends = StatusFriends.valueOf (status);
                         userFriendsList =
                                 userFriendsService.Repository.findAllByMainAccountAndStatus
-                                        (checkLogin.getVCodeLogin ().getMainAccount () , statusFriends);
+                                        (isLogin.getVCodeLogin ().getMainAccount () , statusFriends);
 
 
                         if (userFriendsList.size () > 0)
@@ -107,7 +107,7 @@ public class GetListFriends
             }
 
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
         return answerToClient;

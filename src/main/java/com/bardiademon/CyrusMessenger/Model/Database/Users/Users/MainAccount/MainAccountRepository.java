@@ -7,24 +7,24 @@ import org.springframework.stereotype.Repository;
 public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 {
 
-    MainAccount findByPhoneAndDeletedFalseAndSystemBlockFalse (String phone);
+    MainAccount findByPhoneAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone);
 
-    MainAccount findByUsernameAndDeletedFalseAndSystemBlockFalse (String username);
+    MainAccount findByUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username);
 
-    MainAccount findByEmailAndDeletedFalseAndSystemBlockFalse (String email);
+    MainAccount findByEmailAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String email);
 
-    MainAccount findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalse (String phone , String password);
+    MainAccount findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone , String password);
 
-    MainAccount findByUsernameAndPasswordAndDeletedFalseAndSystemBlockFalse (String username , String password);
+    MainAccount findByUsernameAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username , String password);
 
-    MainAccount findByEmailAndPasswordAndDeletedFalseAndSystemBlockFalse (String email , String password);
+    MainAccount findByEmailAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String email , String password);
 
-    MainAccount findByIdAndEmailNotNullAndDeletedFalseAndSystemBlockFalse (long id);
+    MainAccount findByIdAndEmailNotNullAndDeletedFalseAndSystemBlockFalseAndActiveTrue (long id);
 
-    MainAccount findByIdAndDeletedFalseAndSystemBlockFalse (long id);
+    MainAccount findByIdAndDeletedFalseAndSystemBlockFalseAndActiveTrue (long id);
 
-    MainAccount findByPhoneLikeAndSystemBlockFalse (String phone);
+    MainAccount findByPhoneLikeAndSystemBlockFalseAndActiveTrue (String phone);
 
-    MainAccount findByIdAndSystemBlockFalse (long id);
+    MainAccount findByIdAndSystemBlockFalseAndActiveTrue (long id);
 
 }

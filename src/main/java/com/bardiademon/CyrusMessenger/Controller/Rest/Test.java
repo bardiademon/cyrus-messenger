@@ -2,6 +2,11 @@ package com.bardiademon.CyrusMessenger.Controller.Rest;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroupService;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequestService;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -42,6 +48,9 @@ public class Test
     private BlockedByTheSystemService blockedByTheSystemService;
     private NumberOfSubmitRequestService numberOfSubmitRequestService;
     private SecurityUserChatService securityUserChatService;
+    private FiredFromGroupService firedFromGroupService;
+    private GroupManagementService groupManagementService;
+    private GroupsService groupsService;
 
     @Autowired
     public Test
@@ -54,7 +63,10 @@ public class Test
              SubmitRequestService submitRequestService ,
              BlockedByTheSystemService blockedByTheSystemService ,
              NumberOfSubmitRequestService numberOfSubmitRequestService ,
-             SecurityUserChatService securityUserChatService
+             SecurityUserChatService securityUserChatService ,
+             FiredFromGroupService firedFromGroupService ,
+             GroupManagementService groupManagementService ,
+             GroupsService groupsService
             )
     {
 
@@ -68,35 +80,51 @@ public class Test
         this.blockedByTheSystemService = blockedByTheSystemService;
         this.numberOfSubmitRequestService = numberOfSubmitRequestService;
         this.securityUserChatService = securityUserChatService;
+        this.firedFromGroupService = firedFromGroupService;
+        this.groupManagementService = groupManagementService;
+        this.groupsService = groupsService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{username}" , "/{idUser}" , "/{idUser}/{username}"})
-    public AnswerToClient test (HttpServletRequest req , HttpServletResponse res , @PathVariable (value = "idUser", required = false) long idUser , @PathVariable (value = "username", required = false) String username)
+    @RequestMapping (value = {"" , "/" , "/{username}/{username2}"})
+    public AnswerToClient test (HttpServletRequest req , HttpServletResponse res , @PathVariable (value = "username", required = false) String username , @PathVariable (value = "username2", required = false) String username2)
     {
-        IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , idUser , username);
+        AnswerToClient answerToClient;
+        IdUsernameMainAccount account = new IdUsernameMainAccount (mainAccountService , 0 , username);
+        if (account.isValid ())
+        {
 
-        AnswerToClient answerToClient = idUsernameMainAccount.getAnswerToClient ();
+            Groups groups = groupsService.hasLink ("FN1bOSNzfu3Qd13O9II8");
 
-        if (answerToClient == null) answerToClient = AnswerToClient.OK ();
-        answerToClient.setResponse (res);
-        answerToClient.setRequest (req);
+            if (groups != null)
+            {
+                IdUsernameMainAccount account2 = new IdUsernameMainAccount (mainAccountService , 0 , username2);
+                if (account2.isValid ())
+                {
+                    if (account2.getMainAccount ().getId () == account.getMainAccount ().getId ())
+                    {
+                        answerToClient = AnswerToClient.ServerError ();
+                    }
+                    else
+                    {
+                        FiredFromGroup firedFromGroup = new FiredFromGroup ();
+                        firedFromGroup.setFiredAt (LocalDateTime.now ());
+                        firedFromGroup.setGroup (groups);
+                        firedFromGroup.setValidityTime (LocalDateTime.now ().plusMinutes (50));
+                        firedFromGroup.setMainAccount (account2.getMainAccount ());
+                        firedFromGroup.setWhy ("this is a test");
 
-        String request = ToJson.To (new ToJson.CreateClass ().put ("idUser" , idUser).put ("username" , username));
+                        firedFromGroupService.Repository.save (firedFromGroup);
 
-        l.n (request , "/test" , null , idUsernameMainAccount.getAnswerToClient () , Thread.currentThread ().getStackTrace () , null , null);
+                        answerToClient = AnswerToClient.OK ();
+                    }
+                }
+                else answerToClient = account.getAnswerToClient ();
 
-        List<ProfilePictures> profilePictures = idUsernameMainAccount.getMainAccount ().getProfilePictures ();
+            }
+            else answerToClient = AnswerToClient.ServerError ();
 
-        ProfilePictures profilePicture = profilePictures.get (0);
-
-        String picture = Path.StickTogether (Path.PROFILE_PICTURES_USERS , idUsernameMainAccount.getMainAccount ().getUsername () , profilePicture.getName () + "." + profilePicture.getType ());
-
-
-        answerToClient.put ("pic" , picture);
-
-        SortProfilePictures sort = new SortProfilePictures (profilePictures);
-
-
+        }
+        else answerToClient = account.getAnswerToClient ();
 
         return answerToClient;
 

@@ -8,7 +8,7 @@ import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 
-public class CheckLogin
+public final class IsLogin
 {
     private AnswerToClient answerToClient;
 
@@ -18,12 +18,12 @@ public class CheckLogin
     private String codeLogin;
     private UserLoginRepository userLoginRepository;
 
-    public CheckLogin (String CodeLogin)
+    public IsLogin (String CodeLogin)
     {
         this (CodeLogin , (CyrusMessengerApplication.Context ().getBean (UserLoginService.class)).Repository);
     }
 
-    public CheckLogin (String CodeLogin , UserLoginRepository _UserLoginRepository)
+    public IsLogin (String CodeLogin , UserLoginRepository _UserLoginRepository)
     {
         this.codeLogin = CodeLogin;
         this.userLoginRepository = _UserLoginRepository;
@@ -33,7 +33,7 @@ public class CheckLogin
     private void check ()
     {
         ToJson.CreateClass createClass = new ToJson.CreateClass ();
-        createClass.put ("class_log" , CheckLogin.class.getName ());
+        createClass.put ("class_log" , IsLogin.class.getName ());
 
         if (codeLogin.equals (""))
         {

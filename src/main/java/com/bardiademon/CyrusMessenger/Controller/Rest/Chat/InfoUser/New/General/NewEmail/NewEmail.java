@@ -5,7 +5,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VEmail;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
@@ -53,8 +53,8 @@ public class NewEmail
     {
         AnswerToClient answerToClient;
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             VEmail vEmail = new VEmail (email);
             if (!vEmail.check ())
@@ -64,7 +64,7 @@ public class NewEmail
             }
             else
             {
-                MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
                 ConfirmCode confirmCode = sendCode (email , mainAccount);
                 if (confirmCode != null)
                 {
@@ -126,7 +126,7 @@ public class NewEmail
                 }
             }
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
 
@@ -157,13 +157,13 @@ public class NewEmail
     {
         AnswerToClient answerToClient = AnswerToClient.error400 ();
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             VEmail vEmail = new VEmail (email);
             if (vEmail.check ())
             {
-                MainAccount mainAccount = checkLogin.getVCodeLogin ().getMainAccount ();
+                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
                 if (id > 0)
                 {
                     ConfirmCode confirmCode =
@@ -184,7 +184,7 @@ public class NewEmail
             else
                 answerToClient.put (KeyAnswer.answer.name () , ValAnswer.email_invalid.name ());
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
 

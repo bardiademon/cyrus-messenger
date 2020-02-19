@@ -1,7 +1,7 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Upload.Users;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
@@ -14,7 +14,7 @@ public class AccessUploadProfilePicture
     protected Service service;
     protected String codeLogin;
 
-    protected CheckLogin checkLogin;
+    protected IsLogin isLogin;
     protected boolean hasAccess;
     protected AnswerToClient answerToClient;
 
@@ -42,8 +42,8 @@ public class AccessUploadProfilePicture
 
     private boolean checkMaxUploadUser ()
     {
-        int maxUploadProfilePictures = service.securityUserProfileService.Repository.getMaxUploadProfilePictures (checkLogin.getVCodeLogin ().getMainAccount ().getId ());
-        int countUploaded = service.profilePicturesService.countUploadPic (ProfilePicFor.user);
+        int maxUploadProfilePictures = service.securityUserProfileService.Repository.getMaxUploadProfilePictures (isLogin.getVCodeLogin ().getMainAccount ().getId ());
+        int countUploaded = service.profilePicturesService.Repository.countUploadUser (isLogin.getVCodeLogin ().getMainAccount ().getId ());
 
         if ((countUploaded != 0 && maxUploadProfilePictures != 0) && countUploaded >= maxUploadProfilePictures)
         {
@@ -55,10 +55,10 @@ public class AccessUploadProfilePicture
 
     private boolean checkLogin ()
     {
-        checkLogin = new CheckLogin (codeLogin , service.userLoginService.Repository);
-        if (!checkLogin.isValid ())
+        isLogin = new IsLogin (codeLogin , service.userLoginService.Repository);
+        if (!isLogin.isValid ())
         {
-            answerToClient = checkLogin.getAnswerToClient ();
+            answerToClient = isLogin.getAnswerToClient ();
             return false;
         }
         else return true;
@@ -70,7 +70,7 @@ public class AccessUploadProfilePicture
         private final SecurityUserProfileService securityUserProfileService;
         private final ProfilePicturesService profilePicturesService;
 
-        public Service (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService , ProfilePicturesService _ProfilePicturesService )
+        public Service (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService , ProfilePicturesService _ProfilePicturesService)
         {
             this.userLoginService = _UserLoginService;
             this.securityUserProfileService = _SecurityUserProfileService;
@@ -95,9 +95,9 @@ public class AccessUploadProfilePicture
         return hasAccess;
     }
 
-    public CheckLogin getCheckLogin ()
+    public IsLogin getIsLogin ()
     {
-        return checkLogin;
+        return isLogin;
     }
 
     public AnswerToClient getAnswerToClient ()

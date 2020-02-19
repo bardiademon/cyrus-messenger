@@ -3,7 +3,8 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -55,10 +56,10 @@ public final class RestGetOneProfilePicture
 
         byte[] answer = toByte (Path.IC_NO_COVER);
 
-        CheckLogin checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
-            MainAccount mainAccountRequest = checkLogin.getVCodeLogin ().getMainAccount ();
+            MainAccount mainAccountRequest = isLogin.getVCodeLogin ().getMainAccount ();
 
             if (idProfilePicture > 0)
             {
@@ -69,10 +70,31 @@ public final class RestGetOneProfilePicture
 
                     createClass.put ("id_user_get_cover" , mainAccount.getId ());
 
-                    CheckUserAccessLevel checkUserAccessLevel = new CheckUserAccessLevel (checkLogin.getVCodeLogin ().getMainAccount () , mainAccount , mainAccountService);
-                    if (checkUserAccessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.cover))
+                    ProfilePicFor thisPicFor = profilePictures.getThisPicFor ();
+                    if (!thisPicFor.equals (ProfilePicFor.user) || (new CheckUserAccessLevel (isLogin.getVCodeLogin ().getMainAccount () , mainAccount , mainAccountService)).hasAccessProfile (CheckUserAccessLevel.CheckProfile.cover))
                     {
-                        String pathFile = Path.StickTogether (Path.PROFILE_PICTURES_USERS , mainAccount.getUsername () , String.format ("%s.%s" , profilePictures.getName () , profilePictures.getType ()));
+                        String pathDir = null;
+                        Object nameDir = null;
+                        switch (thisPicFor)
+                        {
+                            case user:
+                            {
+                                pathDir = Path.PROFILE_PICTURES_USERS;
+                                nameDir = mainAccount.getUsername ();
+                                break;
+                            }
+                            case group:
+                            {
+                                pathDir = Path.PROFILE_PICTURES_GROUPS;
+                                nameDir = profilePictures.getGroups ().getId ();
+                                break;
+                            }
+                            case channel:
+                            default:
+                                break;
+                        }
+
+                        String pathFile = Path.StickTogether (pathDir , String.valueOf (nameDir) , String.format ("%s.%s" , profilePictures.getName () , profilePictures.getType ()));
 
                         answer = toByte (pathFile);
 

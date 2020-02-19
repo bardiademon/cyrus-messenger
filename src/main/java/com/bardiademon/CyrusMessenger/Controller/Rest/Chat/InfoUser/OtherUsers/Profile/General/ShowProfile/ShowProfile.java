@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.CheckLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -33,7 +33,7 @@ public final class ShowProfile
 
     private final CheckUserAccessLevel.ServiceProfile serviceProfile;
 
-    private CheckLogin checkLogin;
+    private IsLogin isLogin;
     private MainAccount mainAccountGetProfile;
 
 
@@ -62,8 +62,8 @@ public final class ShowProfile
     {
         AnswerToClient answerToClient;
 
-        checkLogin = new CheckLogin (codeLogin , userLoginService.Repository);
-        if (checkLogin.isValid ())
+        isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        if (isLogin.isValid ())
         {
             IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , idUser , username);
             if (idUsernameMainAccount.isValid ())
@@ -71,7 +71,7 @@ public final class ShowProfile
                 mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
 
                 CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
-                        (checkLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
+                        (isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
 
                 accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.show_profile);
                 accessLevel.setServiceProfile (serviceProfile);
@@ -81,7 +81,7 @@ public final class ShowProfile
             }
             else answerToClient = idUsernameMainAccount.getAnswerToClient ();
         }
-        else answerToClient = checkLogin.getAnswerToClient ();
+        else answerToClient = isLogin.getAnswerToClient ();
 
         answerToClient.setResponse (res);
 
@@ -93,14 +93,9 @@ public final class ShowProfile
         i_can
     }
 
-    public enum ValAnswer
+    public IsLogin getIsLogin ()
     {
-        id_invalid, id_not_found, username_invalid
-    }
-
-    public CheckLogin getCheckLogin ()
-    {
-        return checkLogin;
+        return isLogin;
     }
 
     public MainAccount getMainAccountGetProfile ()

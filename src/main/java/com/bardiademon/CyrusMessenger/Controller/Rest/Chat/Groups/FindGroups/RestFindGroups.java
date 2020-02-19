@@ -61,7 +61,7 @@ public final class RestFindGroups
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
-                    r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
+                    r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
                 }
             }
             else
@@ -69,7 +69,7 @@ public final class RestFindGroups
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_empty.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
-                r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
+                r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
             }
         }
         else
@@ -97,7 +97,7 @@ public final class RestFindGroups
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
-                    r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
+                    r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
                 }
             }
             else
@@ -126,7 +126,7 @@ public final class RestFindGroups
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_found.name ());
             answerToClient.setReqRes (req , res);
             l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found.name ()) , null);
-            r.n (req.getRemoteAddr () , SubmitRequestType.create_group , true);
+            r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
         }
         else
         {
@@ -155,7 +155,7 @@ public final class RestFindGroups
             if (securityProfile.isShowOwner ())
                 infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ());
 
-            List<JoinGroup> joinGroups = group.getJoinGroups ();
+            List<JoinGroup> joinGroups = group.getMembers ();
             long numberOfMembers = 0;
             if (joinGroups != null) numberOfMembers = joinGroups.size ();
 
@@ -167,7 +167,7 @@ public final class RestFindGroups
             answerToClient.setReqRes (req , res);
 
             l.n (ToJson.CreateClass.n (linkUsername , valLinkUsername).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.found.name ()) , null);
-            r.n (req.getRemoteAddr () , SubmitRequestType.create_group , false);
+            r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , false);
         }
 
         return answerToClient;
