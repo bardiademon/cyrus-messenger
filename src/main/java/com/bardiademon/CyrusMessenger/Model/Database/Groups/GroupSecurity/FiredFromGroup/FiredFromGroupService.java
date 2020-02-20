@@ -26,7 +26,6 @@ public final class FiredFromGroupService
             LocalDateTime validityTime = firedFromGroup.getValidityTime ();
             if (Time.BiggerNow (validityTime))
             {
-                firedFromGroup.setFreedAt (LocalDateTime.now ());
                 firedFromGroup.setFreed (true);
                 firedFromGroup.setFreedAt (LocalDateTime.now ());
                 Repository.save (firedFromGroup);
