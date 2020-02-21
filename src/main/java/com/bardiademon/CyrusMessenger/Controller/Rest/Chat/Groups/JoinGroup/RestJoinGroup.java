@@ -86,7 +86,7 @@ public final class RestJoinGroup
                                 {
                                     if (group.getOwner ().getId () != mainAccount.getId ())
                                     {
-                                        JoinGroup joined = joinGroupService.isJoined (mainAccount.getId ());
+                                        JoinGroup joined = joinGroupService.isJoined (group.getId () , mainAccount.getId ());
                                         if (joined == null)
                                         {
                                             if (!path.contains ("leave"))

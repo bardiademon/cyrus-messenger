@@ -111,6 +111,7 @@ public abstract class Domain
             public static final String RN_CREATE_GROUP = RN_GROUPS + "/create_group";
             public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
             public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";
+            public static final String RN_OWNER_GROUPS = RN_GROUPS + "/owner_groups";
 
         }
 

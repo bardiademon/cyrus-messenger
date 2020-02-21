@@ -18,6 +18,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,7 +117,8 @@ public final class RestFindGroups
         return answerToClient;
     }
 
-    private AnswerToClient getInfoGroup (HttpServletRequest req , HttpServletResponse res , @Nullable Groups group , String linkUsername , String valLinkUsername)
+    @NotNull
+    public final AnswerToClient getInfoGroup (HttpServletRequest req , HttpServletResponse res , @Nullable Groups group , String linkUsername , String valLinkUsername)
     {
         AnswerToClient answerToClient;
 
@@ -173,7 +175,7 @@ public final class RestFindGroups
         return answerToClient;
     }
 
-    private enum ValAnswer
+    public enum ValAnswer
     {
         link_is_empty, username_is_empty, username_invalid, link_invalid, not_found, found,
 

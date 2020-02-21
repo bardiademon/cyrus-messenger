@@ -6,5 +6,5 @@ public enum SubmitRequestType
     get_contact, new_contact, update_contact, get_general, get_list_friends,
     get_security_profile, get_security_chat, new_email, new_friend,
     new_general, get_info_other_profile, req_i_can_show_profile,
-    update_security_profile, confirmed_phone, is_valid_uep, login, register, create_group, find_groups, join_group
+    update_security_profile, confirmed_phone, is_valid_uep, login, register, create_group, find_groups, join_group, owner_groups
 }
