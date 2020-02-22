@@ -188,6 +188,8 @@ public class CheckUserAccessLevel
                     return checkAccessLevelProfile (securityUserProfile.getShowSeenMessage ());
                 case show_username:
                     return checkAccessLevelProfile (securityUserProfile.getShowUsername ());
+                case show_id:
+                    return checkAccessLevelProfile (securityUserProfile.getShowId ());
                 default:
                     return false;
             }
@@ -324,7 +326,7 @@ public class CheckUserAccessLevel
 
     public enum CheckProfile
     {
-        bio, cover, show_in_channel, show_in_group, show_profile,
+        bio, cover, show_in_channel, show_in_group, show_profile, show_id,
         show_in_search, show_last_seen, show_mylink, show_name, show_family, show_email, show_personal_information,
         show_phone, show_seen_message, show_username
     }

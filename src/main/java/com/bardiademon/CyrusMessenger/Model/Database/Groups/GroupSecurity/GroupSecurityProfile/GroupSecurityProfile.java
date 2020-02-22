@@ -35,6 +35,9 @@ public class GroupSecurityProfile
     @Column (nullable = false, name = "show_list_member")
     private boolean showListMember = true;
 
+    @Column (nullable = false, name = "show_number_of_member")
+    private boolean showNumberOfMember = true;
+
     private String password;
 
     @Column (nullable = false, name = "show_admin")
@@ -177,5 +180,15 @@ public class GroupSecurityProfile
     public void setMaxUploadProfilePicture (int maxUploadProfilePicture)
     {
         this.maxUploadProfilePicture = maxUploadProfilePicture;
+    }
+
+    public boolean isShowNumberOfMember ()
+    {
+        return showNumberOfMember;
+    }
+
+    public void setShowNumberOfMember (boolean showNumberOfMember)
+    {
+        this.showNumberOfMember = showNumberOfMember;
     }
 }

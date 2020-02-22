@@ -111,8 +111,12 @@ public abstract class Domain
             public static final String RN_CREATE_GROUP = RN_GROUPS + "/create_group";
             public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
             public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";
-            public static final String RN_OWNER_GROUPS = RN_GROUPS + "/owner_groups";
 
+            public static abstract class Security
+            {
+                private static final String RN_GROUPS_SECURITY = RN_GROUPS + "/security";
+                public static final String RN_SECURITY_GROUP_MEMBERS = RN_GROUPS_SECURITY + "/group_members";
+            }
         }
 
     }

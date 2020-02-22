@@ -107,17 +107,26 @@ public final class RestJoinGroup
                                                         }
                                                         else
                                                         {
-                                                            JoinGroup joinGroup = new JoinGroup ();
-                                                            joinGroup.setGroups (group);
-                                                            joinGroup.setMainAccount (mainAccount);
-                                                            joinGroup.setJoinBy (JoinGroup.JoinBy.the_user_himself);
-                                                            joinGroupService.Repository.save (joinGroup);
+                                                            if (group.getGroupSecurityProfile ().isCanJoinGroup ())
+                                                            {
+                                                                JoinGroup joinGroup = new JoinGroup ();
+                                                                joinGroup.setGroups (group);
+                                                                joinGroup.setMainAccount (mainAccount);
+                                                                joinGroup.setJoinBy (JoinGroup.JoinBy.the_user_himself);
+                                                                joinGroupService.Repository.save (joinGroup);
 
-                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined.name ());
-                                                            answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joinGroup.getTimeJoin ()));
-                                                            answerToClient.setReqRes (req , res);
-                                                            l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.joined.name ());
-                                                            r.n (mainAccount , SubmitRequestType.join_group , false);
+                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined.name ());
+                                                                answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joinGroup.getTimeJoin ()));
+                                                                answerToClient.setReqRes (req , res);
+                                                                l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.joined.name ());
+                                                                r.n (mainAccount , SubmitRequestType.join_group , false);
+                                                            }
+                                                            else
+                                                            {
+                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.joining_is_disabled.name ());
+                                                                l.n (reqJson , Domain.RNChat.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.joining_is_disabled.name ()) , null);
+                                                                r.n (mainAccount , SubmitRequestType.join_group , true);
+                                                            }
                                                         }
                                                     }
                                                     else
@@ -258,7 +267,8 @@ public final class RestJoinGroup
 
     public enum ValAnswer
     {
-        group_not_found, you_own_the_group, joining_has_been_disabled, joined, you_already_joined, you_not_already_joined, leaved, group_members_have_been_completed
+        group_not_found, you_own_the_group, joining_has_been_disabled, joined, you_already_joined,
+        you_not_already_joined, leaved, group_members_have_been_completed, joining_is_disabled
     }
 
 }

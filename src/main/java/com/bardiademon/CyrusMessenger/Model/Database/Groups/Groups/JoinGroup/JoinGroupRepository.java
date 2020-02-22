@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface JoinGroupRepository extends JpaRepository<JoinGroup, Long>
 {
-    JoinGroup findByMainAccountIdAndGroupsIdAndLeaveGroupFalse (long idGroup , long id);
+    JoinGroup findByGroupsIdAndMainAccountIdAndLeaveGroupFalse (long idGroup , long idUser);
 
     List<JoinGroup> findByMainAccountIdAndLeaveGroupFalse (long id);
 }

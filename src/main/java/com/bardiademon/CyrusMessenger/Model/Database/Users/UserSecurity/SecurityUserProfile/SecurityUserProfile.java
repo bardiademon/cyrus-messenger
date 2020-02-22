@@ -57,6 +57,10 @@ public class SecurityUserProfile
     private AccessLevel showBio = AccessLevel.all;
 
     @Enumerated (value = EnumType.STRING)
+    @Column (name = "show_id", nullable = false)
+    private AccessLevel showId = AccessLevel.all;
+
+    @Enumerated (value = EnumType.STRING)
     @Column (name = "show_mylink", nullable = false)
     private AccessLevel showMyLink = AccessLevel.all;
 
@@ -301,5 +305,15 @@ public class SecurityUserProfile
     public void setMaxUploadProfilePictures (int maxUploadProfilePictures)
     {
         this.maxUploadProfilePictures = maxUploadProfilePictures;
+    }
+
+    public AccessLevel getShowId ()
+    {
+        return showId;
+    }
+
+    public void setShowId (AccessLevel showId)
+    {
+        this.showId = showId;
     }
 }

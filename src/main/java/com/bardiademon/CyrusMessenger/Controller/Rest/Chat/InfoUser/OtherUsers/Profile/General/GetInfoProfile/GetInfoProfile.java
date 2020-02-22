@@ -65,6 +65,9 @@ public final class GetInfoProfile
 
     private void checkGet (RequestGetInfoProfile request)
     {
+        if (request.isGetId () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_id))
+            answerToClient.put (GetGeneral.KeyAnswer.id.name () , showProfile.getMainAccountGetProfile ().getId ());
+
         if (request.isGetName () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_name))
             answerToClient.put (GetGeneral.KeyAnswer.name.name () , showProfile.getMainAccountGetProfile ().getName ());
 

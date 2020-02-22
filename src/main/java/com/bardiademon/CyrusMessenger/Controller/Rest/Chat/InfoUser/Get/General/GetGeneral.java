@@ -106,7 +106,7 @@ public class GetGeneral
 
     public enum KeyAnswer
     {
-        name, family, username, email, phone,
+        name, family, username, email, phone, id,
         bio, mylink, list_friends, list_friends_reject, list_friends_awaiting_approval, list_friends_deleted
     }
 }

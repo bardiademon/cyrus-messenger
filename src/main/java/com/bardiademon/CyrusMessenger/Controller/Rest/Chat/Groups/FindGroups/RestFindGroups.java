@@ -157,11 +157,14 @@ public final class RestFindGroups
             if (securityProfile.isShowOwner ())
                 infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ());
 
-            List<JoinGroup> joinGroups = group.getMembers ();
-            long numberOfMembers = 0;
-            if (joinGroups != null) numberOfMembers = joinGroups.size ();
+            if (group.getGroupSecurityProfile ().isShowNumberOfMember ())
+            {
+                List<JoinGroup> joinGroups = group.getMembers ();
+                long numberOfMembers = 0;
+                if (joinGroups != null) numberOfMembers = joinGroups.size ();
 
-            if (!Str.IsEmpty (bio)) infoGroup.put (ValAnswer.members.name () , numberOfMembers);
+                if (!Str.IsEmpty (bio)) infoGroup.put (ValAnswer.members.name () , numberOfMembers);
+            }
 
             infoGroup.put (ValAnswer.created_at.name () , Time.toString (group.getCreatedAt ()));
 

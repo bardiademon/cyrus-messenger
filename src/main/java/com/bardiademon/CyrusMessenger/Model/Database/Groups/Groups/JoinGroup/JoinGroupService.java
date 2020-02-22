@@ -20,7 +20,7 @@ public final class JoinGroupService
 
     public JoinGroup isJoined (long idGroup , long idUser)
     {
-        return Repository.findByMainAccountIdAndGroupsIdAndLeaveGroupFalse (idGroup , idUser);
+        return Repository.findByGroupsIdAndMainAccountIdAndLeaveGroupFalse (idGroup , idUser);
     }
 
 

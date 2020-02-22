@@ -7,6 +7,9 @@ public class RequestGeneral
     @JsonProperty ("get_name")
     protected boolean getName;
 
+    @JsonProperty ("get_id")
+    protected boolean getId;
+
     @JsonProperty ("get_family")
     protected boolean getFamily;
 
@@ -54,6 +57,16 @@ public class RequestGeneral
     public void setGetName (boolean getName)
     {
         this.getName = getName;
+    }
+
+    public boolean isGetId ()
+    {
+        return getId;
+    }
+
+    public void setGetId (boolean getId)
+    {
+        this.getId = getId;
     }
 
     public boolean isGetFamily ()

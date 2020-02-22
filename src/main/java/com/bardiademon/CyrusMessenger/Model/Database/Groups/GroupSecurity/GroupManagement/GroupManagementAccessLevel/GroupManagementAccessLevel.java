@@ -68,6 +68,16 @@ public final class GroupManagementAccessLevel
     @Column (name = "del_main_pic")
     private boolean delMainPic;
 
+    @Column (name = "show_list_member")
+    private boolean showListMember;
+
+    /**
+     * karbarani ke ghesmat security (show_in_group) ra false gozashtand
+     */
+    @Column (name = "show_member_hidden")
+    private boolean showMemberHidden;
+
+
     public GroupManagementAccessLevel ()
     {
     }
@@ -240,5 +250,25 @@ public final class GroupManagementAccessLevel
     public void setDelMainPic (boolean delMainPic)
     {
         this.delMainPic = delMainPic;
+    }
+
+    public boolean isShowListMember ()
+    {
+        return showListMember;
+    }
+
+    public void setShowListMember (boolean showListMember)
+    {
+        this.showListMember = showListMember;
+    }
+
+    public boolean isShowMemberHidden ()
+    {
+        return showMemberHidden;
+    }
+
+    public void setShowMemberHidden (boolean showMemberHidden)
+    {
+        this.showMemberHidden = showMemberHidden;
     }
 }

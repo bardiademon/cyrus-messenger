@@ -92,25 +92,27 @@ public final class RestGroups
                                         if (message.get (AnswerToClient.CUK.answer.name ()).equals (RestFindGroups.ValAnswer.found.name ()))
                                         {
                                             infoGroup = (Map<?, ?>) message.get (RestFindGroups.ValAnswer.info_group.name ());
-                                            if (ownerUser.equals (OwnerUser.owner)) infoGroup.remove ("owner");
+                                            if (ownerUser.equals (OwnerUser.owner) || !((group.getGroupSecurityProfile ()).isShowOwner ()))
+                                                infoGroup.remove ("owner");
+
                                             infoGroups.add (infoGroup);
                                         }
                                     }
                                     catch (Exception e)
                                     {
                                         System.out.println (e.getMessage ());
-                                        l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , e , ToJson.To (group));
+                                        l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , e , ToJson.To (group));
                                     }
                                 }
                                 answerToClient.put (KeyAnswer.info_groups.name () , infoGroups);
-                                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , RestFindGroups.ValAnswer.found.name ());
+                                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , RestFindGroups.ValAnswer.found.name ());
                                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , false);
                             }
                             else
                             {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
                                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                             }
                         }
@@ -118,7 +120,7 @@ public final class RestGroups
                         {
                             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.owner_or_user_invalid.name ());
                             answerToClient.setReqRes (req , res);
-                            l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.owner_or_user_invalid.name ());
+                            l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.owner_or_user_invalid.name ());
                             r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                         }
                     }
@@ -126,7 +128,7 @@ public final class RestGroups
                     {
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_set_owner_or_user.name ());
                         answerToClient.setReqRes (req , res);
-                        l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_set_owner_or_user.name ()) , null);
+                        l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_set_owner_or_user.name ()) , null);
                         r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                     }
                 }
@@ -134,14 +136,14 @@ public final class RestGroups
                 {
                     answerToClient = checkBlockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+                    l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
                 }
             }
             else
             {
                 answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
-                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+                l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
             }
         }
@@ -149,7 +151,7 @@ public final class RestGroups
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_OWNER_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+            l.n (strOwnerUser , Domain.RNChat.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
         }
         return answerToClient;
     }
