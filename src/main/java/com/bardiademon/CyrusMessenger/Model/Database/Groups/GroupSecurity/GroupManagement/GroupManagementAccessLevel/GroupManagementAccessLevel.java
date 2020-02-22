@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @Table (name = "group_management_access_level")
 public final class GroupManagementAccessLevel
 {
+    @JsonIgnore
     @Id
     @GeneratedValue
     @Column (unique = true)
@@ -70,6 +72,9 @@ public final class GroupManagementAccessLevel
 
     @Column (name = "show_list_member")
     private boolean showListMember;
+
+    @Column (name = "add_member")
+    private boolean addMember;
 
     /**
      * karbarani ke ghesmat security (show_in_group) ra false gozashtand
@@ -270,5 +275,15 @@ public final class GroupManagementAccessLevel
     public void setShowMemberHidden (boolean showMemberHidden)
     {
         this.showMemberHidden = showMemberHidden;
+    }
+
+    public boolean isAddMember ()
+    {
+        return addMember;
+    }
+
+    public void setAddMember (boolean addMember)
+    {
+        this.addMember = addMember;
     }
 }

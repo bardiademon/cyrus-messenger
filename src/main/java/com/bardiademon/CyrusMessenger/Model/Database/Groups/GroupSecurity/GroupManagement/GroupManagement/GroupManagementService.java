@@ -16,6 +16,6 @@ public final class GroupManagementService
 
     public GroupManagement getGroupManagement (long idUser , long idGroup)
     {
-        return Repository.findByMainAccountIdAndGroupsId (idUser , idGroup);
+        return Repository.findByMainAccountIdAndGroupsIdAndSuspendedFalse (idUser , idGroup);
     }
 }

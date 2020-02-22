@@ -116,6 +116,9 @@ public abstract class Domain
             {
                 private static final String RN_GROUPS_SECURITY = RN_GROUPS + "/security";
                 public static final String RN_SECURITY_GROUP_MEMBERS = RN_GROUPS_SECURITY + "/group_members";
+
+                public static final String RN_SECURITY_MANAGEMENT = RN_GROUPS_SECURITY + "/management";
+                public static final String RN_SECURITY_NEW_MANAGER = RN_SECURITY_MANAGEMENT + "/new_manager";
             }
         }
 

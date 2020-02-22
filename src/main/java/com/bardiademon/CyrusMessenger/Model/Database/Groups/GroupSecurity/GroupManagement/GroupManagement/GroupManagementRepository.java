@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupManagementRepository extends JpaRepository<GroupManagement, Long>
 {
-    GroupManagement findByMainAccountIdAndGroupsId (long idUser , long idGroup);
+    GroupManagement findByMainAccountIdAndGroupsIdAndSuspendedFalse (long idUser , long idGroup);
 }

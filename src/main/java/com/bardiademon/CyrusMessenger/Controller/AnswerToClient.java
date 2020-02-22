@@ -92,6 +92,18 @@ public class AnswerToClient
     }
 
     @JsonIgnore
+    public static AnswerToClient IdInvalid ()
+    {
+        return IdInvalid (CUV.id_invalid.name ());
+    }
+
+    @JsonIgnore
+    public static AnswerToClient IdInvalid (String ValAnswer)
+    {
+        return AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer);
+    }
+
+    @JsonIgnore
     public static AnswerToClient NotLoggedIn ()
     {
         AnswerToClient answerToClient = AnswerToClient.error400 ();
@@ -179,7 +191,7 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id, system, time, limit
+        answer, id, system, time, limit, which
     }
 
     // CUK => Commonly used value
