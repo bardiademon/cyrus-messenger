@@ -119,6 +119,7 @@ public abstract class Domain
 
                 public static final String RN_SECURITY_MANAGEMENT = RN_GROUPS_SECURITY + "/management";
                 public static final String RN_SECURITY_NEW_MANAGER = RN_SECURITY_MANAGEMENT + "/new_manager";
+                public static final String RN_SECURITY_SUSPEND_MANAGER = RN_SECURITY_MANAGEMENT + "/suspend_manager";
             }
         }
 

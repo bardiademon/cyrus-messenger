@@ -55,19 +55,24 @@ public final class CBSIL
         return new IsLogin (CodeLogin , _UserLoginService.Repository);
     }
 
-    public static CBSIL Both (Object request , HttpServletRequest Req , HttpServletResponse Res , String CodeLogin , UserLoginService _UserLoginService , String Router)
+    public static CBSIL Both
+            (Object request ,
+             HttpServletRequest Req , HttpServletResponse Res ,
+             String CodeLogin ,
+             UserLoginService _UserLoginService ,
+             String Router,SubmitRequestType type)
     {
         boolean OK = false;
         IsLogin _IsLogin = null;
         AnswerToClient _AnswerToClient = null;
-        CheckBlockSystem BlockSystem = CBSIL.BSubmitRequest (Req , SubmitRequestType.group_members);
+        CheckBlockSystem BlockSystem = CBSIL.BSubmitRequest (Req , type);
         if (!BlockSystem.isBlocked ())
         {
             _IsLogin = CBSIL.isLogin (CodeLogin , _UserLoginService);
             if (_IsLogin.isValid ())
             {
                 MainAccount mainAccount = _IsLogin.getVCodeLogin ().getMainAccount ();
-                BlockSystem = CBSIL.BSubmitRequest (mainAccount.getId () , SubmitRequestType.group_members);
+                BlockSystem = CBSIL.BSubmitRequest (mainAccount.getId () , type);
                 if (!BlockSystem.isBlocked ()) OK = true;
                 else
                 {

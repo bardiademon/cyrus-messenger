@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.IsManager;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.ThisManagerHaveAccess;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
@@ -26,7 +26,6 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,9 +94,9 @@ public final class RestUploadProfilePictureGroup
                                     isManager.setILUGroup (iluGroup);
                                     if (isManager.isManager ())
                                     {
-                                        if (isManager.isOwner () || isManager.hasAccess (ThisManagerHaveAccess.AccessLevel.upload_picture))
+                                        if (isManager.isOwner () || isManager.hasAccess (AccessLevel.upload_picture))
                                         {
-                                            if (request.isMainPic () && !isManager.isOwner () && !isManager.hasAccess (ThisManagerHaveAccess.AccessLevel.set_main_picture))
+                                            if (request.isMainPic () && !isManager.isOwner () && !isManager.hasAccess (AccessLevel.set_main_picture))
                                             {
                                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_do_not_have_access.name ());
                                                 answerToClient.setReqRes (req , res);

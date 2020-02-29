@@ -62,7 +62,6 @@ public final class RestJoinGroup
         String path = req.getServletPath ();
         AnswerToClient answerToClient;
         String reqJson = ToJson.CreateClass.n ("id" , idStr).toJson ();
-
         CheckBlockSystem checkBlockSystem = new CheckBlockSystem (req , BlockedFor.submit_request , SubmitRequestType.join_group.name ());
         if (!checkBlockSystem.isBlocked ())
         {
@@ -70,7 +69,6 @@ public final class RestJoinGroup
             if (isLogin.isValid ())
             {
                 MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-
                 checkBlockSystem = new CheckBlockSystem (mainAccount.getId () , BlockedFor.submit_request , SubmitRequestType.join_group.name ());
                 if (!checkBlockSystem.isBlocked ())
                 {

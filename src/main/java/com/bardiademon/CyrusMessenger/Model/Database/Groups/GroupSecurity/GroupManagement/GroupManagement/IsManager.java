@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement;
 
-import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.ThisManagerHaveAccess;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ThisManagerHaveAccess;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -50,7 +50,7 @@ public final class IsManager
         }
     }
 
-    public boolean hasAccess (ThisManagerHaveAccess.AccessLevel _AccessLevel)
+    public boolean hasAccess (AccessLevel _AccessLevel)
     {
         if (groupManagement == null) return false;
         else
@@ -83,5 +83,10 @@ public final class IsManager
     public MainAccount getMainAccount ()
     {
         return mainAccount;
+    }
+
+    public ILUGroup getIluGroup ()
+    {
+        return iluGroup;
     }
 }

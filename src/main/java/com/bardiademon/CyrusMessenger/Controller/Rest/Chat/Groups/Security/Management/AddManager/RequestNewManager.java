@@ -1,13 +1,20 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.NewManager;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.AddManager;
 
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class RequestNewManager
 {
     @JsonProperty ("id_group")
     private String idGroup;
 
-    private String name;
+    /**
+     * not set => DO_NOT_SET
+     */
+    private String name = "DO_NOT_SET";
 
     @JsonProperty ("id_user")
     private String idUser;
@@ -281,4 +288,42 @@ public final class RequestNewManager
     {
         this.addMember = addMember;
     }
+
+    @Nullable
+    public AnswerToClient checkRequest ()
+    {
+        if (checkBool (getAddAdmin ())) return notBool ("add_admin");
+        else if (checkBool (getChangeBio ())) return notBool ("change_bio");
+        else if (checkBool (getChangeDescription ())) return notBool ("change_description");
+        else if (checkBool (getChangeLink ())) return notBool ("change_link");
+        else if (checkBool (getChangeManagementAccessLevel ()))
+            return notBool ("change_management_access_level");
+        else if (checkBool (getChangeNameGroup ())) return notBool ("change_name_group");
+        else if (checkBool (getChangePicture ())) return notBool ("change_picture");
+        else if (checkBool (getDelMainPic ())) return notBool ("del_main_pic");
+        else if (checkBool (getDismissUser ())) return notBool ("dismiss_user");
+        else if (checkBool (getDelMessageUser ())) return notBool ("del_message_user");
+        else if (checkBool (getDelPicture ())) return notBool ("del_picture");
+        else if (checkBool (getSetMainPicture ())) return notBool ("set_main_pic");
+        else if (checkBool (getShowListMember ())) return notBool ("show_list_member");
+        else if (checkBool (getTemporarilyClosed ())) return notBool ("temporarily_closed");
+        else if (checkBool (getShowMemberHidden ())) return notBool ("show_member_hidden");
+        else if (checkBool (getUploadPicture ())) return notBool ("upload_picture");
+        else if (checkBool (getAddMember ())) return notBool ("add_member");
+        else return null;
+    }
+
+    private boolean checkBool (String str)
+    {
+        return !Str.IsEmpty (str) && !Str.HasBool (str);
+    }
+
+    @NotNull
+    private AnswerToClient notBool (String which)
+    {
+        AnswerToClient answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , RestNewManager.ValAnswer.invalid_request);
+        answerToClient.put (AnswerToClient.CUK.which.name () , which);
+        return answerToClient;
+    }
+
 }

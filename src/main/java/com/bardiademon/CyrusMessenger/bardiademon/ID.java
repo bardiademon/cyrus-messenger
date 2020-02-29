@@ -1,19 +1,26 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public final class ID
 {
     private final Object idObj;
 
+    @JsonIgnore
     private long id;
 
+    @JsonIgnore
     private boolean valid;
 
+    @JsonCreator
     public ID (Object ID)
     {
         this.idObj = ID;
         validation ();
     }
 
+    @JsonIgnore
     private void validation ()
     {
         if (idObj == null) valid = false;
@@ -25,19 +32,23 @@ public final class ID
         }
     }
 
+    @JsonIgnore
     private void toLong ()
     {
         id = Long.parseLong (idObj.toString ());
         valid = (id > 0);
     }
 
+    @JsonIgnore
     public long getId ()
     {
         return id;
     }
 
+    @JsonIgnore
     public boolean isValid ()
     {
         return valid;
     }
+
 }

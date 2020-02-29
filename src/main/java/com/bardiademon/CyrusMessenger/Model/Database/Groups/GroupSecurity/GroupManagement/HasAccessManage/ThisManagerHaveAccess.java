@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement;
+package com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevel;
@@ -33,7 +33,8 @@ public final class ThisManagerHaveAccess
             case delete_message_user:
                 return accessLevel.isDelMessageUser ();
             case add_admin:
-                return accessLevel.isAddAdmin ();
+                if (accessLevel.isAddAdmin ()) return hasAccess (AccessLevel.change_management_access_level);
+                else return false;
             case del_admin:
                 return accessLevel.isDelAdmin ();
             case change_management_access_level:
@@ -63,12 +64,4 @@ public final class ThisManagerHaveAccess
         }
     }
 
-    public enum AccessLevel
-    {
-        dismiss_user, delete_message_user, add_admin, del_admin,
-        change_management_access_level, change_name_group,
-        change_bio, change_link, change_description,
-        temporarily_closed, upload_picture, del_picture, del_main_pic,
-        set_main_picture, change_picture
-    }
 }
