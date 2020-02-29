@@ -13,9 +13,9 @@ import com.bardiademon.CyrusMessenger.bardiademon.ID;
 public final class CanManageGroup
 {
     private final Service service;
-    private ID idGroup;
-    private MainAccount mainAccount;
-    private AccessLevel accessLevel;
+    private final ID idGroup;
+    private final MainAccount mainAccount;
+    private final AccessLevel accessLevel;
 
     private AnswerToClient answerToClient;
 
