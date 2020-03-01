@@ -74,10 +74,10 @@ public final class RestNewManager
             {
                 if ((answerToClient = request.checkRequest ()) == null)
                 {
-                    CanManageGroup canManageGroup = new CanManageGroup (service , new ID (request.getIdGroup ()) , mainAccount , AccessLevel.add_admin);
+                    CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.add_admin);
                     if (canManageGroup.canManage ())
                     {
-                        ID idUser = new ID (request.getIdUser ());
+                        ID idUser = request.getIdUser ();
                         if (idUser.isValid ())
                         {
                             MainAccount mainAccountUser = service.mainAccountService.findId (idUser.getId ());

@@ -1,23 +1,28 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.AddManager;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class RequestNewManager
 {
+    @JsonIgnore
+    public static final String DO_NOT_SET = "DO_NOT_SET";
+
     @JsonProperty ("id_group")
-    private String idGroup;
+    private ID idGroup;
 
     /**
      * not set => DO_NOT_SET
      */
-    private String name = "DO_NOT_SET";
+    private String name = DO_NOT_SET;
 
     @JsonProperty ("id_user")
-    private String idUser;
+    private ID idUser;
 
     @JsonProperty ("dismiss_user")
     private String dismissUser;
@@ -79,15 +84,6 @@ public final class RequestNewManager
     {
     }
 
-    public String getIdGroup ()
-    {
-        return idGroup;
-    }
-
-    public void setIdGroup (String idGroup)
-    {
-        this.idGroup = idGroup;
-    }
 
     public String getName ()
     {
@@ -99,12 +95,23 @@ public final class RequestNewManager
         this.name = name;
     }
 
-    public String getIdUser ()
+
+    public ID getIdGroup ()
+    {
+        return idGroup;
+    }
+
+    public void setIdGroup (ID idGroup)
+    {
+        this.idGroup = idGroup;
+    }
+
+    public ID getIdUser ()
     {
         return idUser;
     }
 
-    public void setIdUser (String idUser)
+    public void setIdUser (ID idUser)
     {
         this.idUser = idUser;
     }
@@ -296,8 +303,7 @@ public final class RequestNewManager
         else if (checkBool (getChangeBio ())) return notBool ("change_bio");
         else if (checkBool (getChangeDescription ())) return notBool ("change_description");
         else if (checkBool (getChangeLink ())) return notBool ("change_link");
-        else if (checkBool (getChangeManagementAccessLevel ()))
-            return notBool ("change_management_access_level");
+        else if (checkBool (getChangeManagementAccessLevel ())) return notBool ("change_management_access_level");
         else if (checkBool (getChangeNameGroup ())) return notBool ("change_name_group");
         else if (checkBool (getChangePicture ())) return notBool ("change_picture");
         else if (checkBool (getDelMainPic ())) return notBool ("del_main_pic");

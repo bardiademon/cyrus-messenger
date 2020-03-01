@@ -23,7 +23,8 @@ public final class CanManageGroup
 
     private boolean canManage = false;
 
-    public CanManageGroup (Service _Service , ID IdGroup , MainAccount _MainAccount , AccessLevel _AccessLevel)
+    public
+    CanManageGroup (Service _Service , ID IdGroup , MainAccount _MainAccount , AccessLevel _AccessLevel)
     {
         this.service = _Service;
         this.idGroup = IdGroup;

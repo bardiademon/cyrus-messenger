@@ -33,4 +33,11 @@ public final class Str
         }
     }
 
+    public static boolean RealBool (String str)
+    {
+        Boolean bool = ToBool (str);
+        if (bool != null) return bool;
+        else return false;
+    }
+
 }
