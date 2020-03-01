@@ -86,7 +86,7 @@ public final class CBSIL
                 _AnswerToClient = _IsLogin.getAnswerToClient ();
                 _AnswerToClient.setReqRes (Req , Res);
                 l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
-                r.n (Req.getRemoteAddr () , SubmitRequestType.group_members , true);
+                r.n (Req.getRemoteAddr () , type , true);
             }
         }
         else

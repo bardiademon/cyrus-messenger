@@ -60,11 +60,10 @@ public final class RestSuspendManager
             {
                 if (request.getIdGroup ().isValid ())
                 {
+                    assert both.getIsLogin () != null;
+                    MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
                     if (request.getIdUser ().isValid ())
                     {
-                        assert both.getIsLogin () != null;
-                        MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
-
                         CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.del_admin);
                         if (canManageGroup.canManage ())
                         {
@@ -77,11 +76,8 @@ public final class RestSuspendManager
                                 {
                                     if (!isManager.isOwner ())
                                     {
-                                        GroupManagement groupManagement = isManager.getGroupManagement ();
-                                        groupManagement.setSuspended (true);
-                                        groupManagement.setSuspendedAt (LocalDateTime.now ());
-                                        groupManagement.setSuspendedBy (mainAccount);
-                                        service.groupManagementService.Repository.save (groupManagement);
+                                        service.groupManagementService
+                                                .suspend (isManager.getGroupManagement () , mainAccount , mainAccount , this.getClass ());
 
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.suspended.name ());
                                         answerToClient.setReqRes (req , res);
@@ -114,7 +110,13 @@ public final class RestSuspendManager
                         }
                         else answerToClient = canManageGroup.getAnswerToClient ();
                     }
-                    else answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid.name ());
+                    else
+                    {
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                        r.n (mainAccount , SubmitRequestType.remove_admin , true);
+                    }
                 }
                 else answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid.name ());
             }

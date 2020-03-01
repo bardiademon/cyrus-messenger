@@ -8,5 +8,5 @@ public enum SubmitRequestType
     new_general, get_info_other_profile, req_i_can_show_profile,
     update_security_profile, confirmed_phone, is_valid_uep,
     login, register, create_group, find_groups, join_group, owner_groups, group_members,
-    new_manager, remove_admin, change_manager
+    new_manager, remove_admin, change_manager, remove_group_member
 }

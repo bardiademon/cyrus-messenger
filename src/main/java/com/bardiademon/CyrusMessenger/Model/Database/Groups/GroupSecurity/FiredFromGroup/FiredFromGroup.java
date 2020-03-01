@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @Table (name = "fired_from_group")
 public final class FiredFromGroup
 {
+    public static final long DEFAULT_VALIDITY_TIME = 525600;
+
     @Id
     @GeneratedValue
     @Column (nullable = false, unique = true)

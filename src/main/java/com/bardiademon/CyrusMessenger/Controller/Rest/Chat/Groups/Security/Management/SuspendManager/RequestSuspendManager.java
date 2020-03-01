@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Mana
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public final class RequestSuspendManager
+public class RequestSuspendManager
 {
     @JsonProperty ("id_group")
     private ID idGroup;
