@@ -22,7 +22,18 @@ public abstract class Domain
             public static final String RN_PROFILE_PICTURES_GET_ONE = RN_PROFILE_PICTURES + "/get_one";
             public static final String RN_PROFILE_PICTURES_DELETE = RN_PROFILE_PICTURES + "/delete";
 
-            public static final String RN_PROFILE_PICTURES_UPLOAD_GROUP = RN_PROFILE_PICTURES_UPLOAD + "/group";
+            private static final String RN_PROFILE_PICTURES_USER = RN_PROFILE_PICTURES + "/user";
+            public static final String RN_PROFILE_PICTURES_UPLOAD_USER = RN_PROFILE_PICTURES_USER + "/upload";
+            public static final String RN_PROFILE_PICTURES_GET_ALL_USER = RN_PROFILE_PICTURES_USER + "/get_all";
+            public static final String RN_PROFILE_PICTURES_GET_ONE_USER = RN_PROFILE_PICTURES_USER + "/get_one";
+            public static final String RN_PROFILE_PICTURES_DELETE_USER = RN_PROFILE_PICTURES_USER + "/delete";
+
+            private static final String RN_PROFILE_PICTURES_GROUP = RN_PROFILE_PICTURES + "/group";
+            public static final String RN_PROFILE_PICTURES_UPLOAD_GROUP = RN_PROFILE_PICTURES_GROUP + "/upload";
+            public static final String RN_PROFILE_PICTURES_GET_ALL_GROUP = RN_PROFILE_PICTURES_GROUP + "/get_all";
+            public static final String RN_PROFILE_PICTURES_GET_ONE_GROUP = RN_PROFILE_PICTURES_GROUP + "/get_one";
+            public static final String RN_PROFILE_PICTURES_DELETE_GROUP = RN_PROFILE_PICTURES_GROUP + "/delete";
+
 
         }
 

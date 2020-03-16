@@ -2,9 +2,12 @@ package com.bardiademon.CyrusMessenger.bardiademon;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class ID
 {
+
+    @JsonProperty ("id")
     private final Object idObj;
 
     @JsonIgnore

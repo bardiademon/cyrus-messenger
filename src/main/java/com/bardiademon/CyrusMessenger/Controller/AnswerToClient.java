@@ -191,13 +191,13 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id, system, time, limit, which
+        answer, id, ids, system, time, limit, which
     }
 
     // CUK => Commonly used value
     public enum CUV
     {
-        sorry_for_this_error, id_invalid, not_found, access_has_been_disabled, found
+        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found
     }
 
     @JsonIgnore

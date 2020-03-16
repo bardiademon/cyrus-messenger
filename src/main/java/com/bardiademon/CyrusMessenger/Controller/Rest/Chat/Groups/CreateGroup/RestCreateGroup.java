@@ -166,6 +166,7 @@ public final class RestCreateGroup
         groups.setBio (request.getBio ());
         groups.setName (request.getName ());
         groups.setOwner (mainAccount);
+        if (!Str.IsEmpty (request.getDescription ())) groups.setDescription (request.getDescription ());
         if (!Str.IsEmpty (request.getUsername ())) groups.setUsername (request.getUsername ());
 
         boolean createCode = false;

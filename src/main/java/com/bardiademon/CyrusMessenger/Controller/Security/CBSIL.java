@@ -57,10 +57,7 @@ public final class CBSIL
 
     public static CBSIL Both
             (Object request ,
-             HttpServletRequest Req , HttpServletResponse Res ,
-             String CodeLogin ,
-             UserLoginService _UserLoginService ,
-             String Router,SubmitRequestType type)
+             HttpServletRequest Req , HttpServletResponse Res , String CodeLogin , UserLoginService _UserLoginService , String Router , SubmitRequestType type)
     {
         boolean OK = false;
         IsLogin _IsLogin = null;

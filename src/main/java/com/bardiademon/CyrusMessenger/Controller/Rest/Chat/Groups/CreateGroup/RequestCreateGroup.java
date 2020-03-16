@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class RequestCreateGroup
 {
-    private String name, bio, link, username;
+    private String name, description, bio, link, username;
 
     @JsonProperty ("create_link_join")
     private String createLinkJoin;
@@ -74,5 +74,15 @@ public final class RequestCreateGroup
     public void setFamilyGroup (boolean familyGroup)
     {
         this.familyGroup = familyGroup;
+    }
+
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    public void setDescription (String description)
+    {
+        this.description = description;
     }
 }

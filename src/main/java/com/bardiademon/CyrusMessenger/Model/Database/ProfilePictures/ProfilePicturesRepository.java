@@ -13,16 +13,23 @@ import java.time.LocalDateTime;
 @Repository
 public interface ProfilePicturesRepository extends JpaRepository<ProfilePictures, Long>
 {
-    int countByDeletedFalseAndThisPicFor (ProfilePicFor picFor);
+    int countByDeletedFalseAndThisPicForAndMainAccountId (ProfilePicFor picFor , long idUser);
 
     @Modifying
     @Transactional
-    @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.mainAccount.id = :ID and profilePictures.deleted = false")
-    void disableMainPhoto (@Param ("ID") long id);
+    @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.mainAccount.id = :ID and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
+    void disableMainPhotoUser (@Param ("ID") long id , @Param ("THIS_PIC_FOR") ProfilePicFor profilePicFor);
+
+    @Modifying
+    @Transactional
+    @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.groups.id = :ID_GROUP and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
+    void disableMainPhotoGroup (@Param ("ID_GROUP") long idGroup , @Param ("THIS_PIC_FOR") ProfilePicFor profilePicFor);
 
     ProfilePictures findByIdAndDeletedFalse (long id);
 
-    ProfilePictures findByIdAndMainAccountIdAndDeletedFalse (long id , long idUser);
+    ProfilePictures findByIdAndMainAccountIdAndDeletedFalseAndThisPicFor (long id , long idUser , ProfilePicFor profilePicFor);
+
+    ProfilePictures findByIdAndGroupsIdAndDeletedFalseAndThisPicFor (long id , long idGroup , ProfilePicFor profilePicFor);
 
     @Modifying
     @Transactional
@@ -44,5 +51,7 @@ public interface ProfilePicturesRepository extends JpaRepository<ProfilePictures
 
     @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.mainAccount.id = :ID_USER and profilePictures.thisPicFor = 'user'")
     Integer countUploadUser (@Param ("ID_USER") long idUser);
+
+    ProfilePictures findByIdAndThisPicForAndDeletedFalse (long idProfilePicture , ProfilePicFor profilePicFor);
 
 }

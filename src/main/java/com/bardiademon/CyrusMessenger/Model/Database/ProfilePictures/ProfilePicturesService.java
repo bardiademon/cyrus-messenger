@@ -14,19 +14,39 @@ public final class ProfilePicturesService
         this.Repository = Repository;
     }
 
-    public int countUploadPic (ProfilePicFor picFor)
+    public int countUploadPicUser (long idUser)
     {
-        return Repository.countByDeletedFalseAndThisPicFor (picFor);
+        return Repository.countByDeletedFalseAndThisPicForAndMainAccountId (ProfilePicFor.user , idUser);
     }
 
-    public void disableMainPhoto (long id)
+    public void disableMainPhotoUser (long id)
     {
-        Repository.disableMainPhoto (id);
+        Repository.disableMainPhotoUser (id , ProfilePicFor.user);
+    }
+
+    public void disableMainPhotoGroup (long id)
+    {
+        Repository.disableMainPhotoGroup (id , ProfilePicFor.group);
     }
 
     public ProfilePictures getOneForUser (long idProfilePicture , long idUser)
     {
-        return Repository.findByIdAndMainAccountIdAndDeletedFalse (idProfilePicture , idUser);
+        return getOne (idProfilePicture , idUser , ProfilePicFor.user);
+    }
+
+    public ProfilePictures getOne (long idProfilePicture , long idUser , ProfilePicFor profilePicFor)
+    {
+        return Repository.findByIdAndMainAccountIdAndDeletedFalseAndThisPicFor (idProfilePicture , idUser , profilePicFor);
+    }
+
+    public ProfilePictures getOneGroup (long idProfilePicture , long idUser)
+    {
+        return Repository.findByIdAndGroupsIdAndDeletedFalseAndThisPicFor (idProfilePicture , idUser , ProfilePicFor.group);
+    }
+
+    public ProfilePictures getOneForUser (long idProfilePicture)
+    {
+        return Repository.findByIdAndThisPicForAndDeletedFalse (idProfilePicture , ProfilePicFor.user);
     }
 
     public int deletePlacementNumberZero (long idUser , boolean deleteMainPic)

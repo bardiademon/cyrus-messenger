@@ -357,10 +357,13 @@ public class CheckUserAccessLevel
         public final SecurityUserProfileService _SecurityUserProfileService;
 
         public ServiceProfile
-                (ShowProfileForService _ShowProfileForService ,
-                 UserContactsService _UserContactsService ,
-                 UserFriendsService _UserFriendsService ,
-                 SecurityUserProfileService _SecurityUserProfileService , UserBlockedService _UserBlockedService)
+                (
+                        ShowProfileForService _ShowProfileForService ,
+                        UserContactsService _UserContactsService ,
+                        UserFriendsService _UserFriendsService ,
+                        SecurityUserProfileService _SecurityUserProfileService ,
+                        UserBlockedService _UserBlockedService
+                )
         {
             super (_UserContactsService , _UserFriendsService , _UserBlockedService);
             this._ShowProfileForService = _ShowProfileForService;

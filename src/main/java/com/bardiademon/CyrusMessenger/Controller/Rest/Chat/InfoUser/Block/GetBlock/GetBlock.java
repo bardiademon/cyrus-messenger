@@ -23,8 +23,7 @@ public final class GetBlock
     private UserLoginService userLoginService;
     private UserBlockedService userBlockedService;
 
-    public GetBlock
-            (UserLoginService _UserLoginService , UserBlockedService UserBlockedService)
+    public GetBlock (UserLoginService _UserLoginService , UserBlockedService UserBlockedService)
     {
         this.userLoginService = _UserLoginService;
         this.userBlockedService = UserBlockedService;

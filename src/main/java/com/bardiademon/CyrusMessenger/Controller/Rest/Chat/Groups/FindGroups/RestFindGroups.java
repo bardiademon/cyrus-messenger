@@ -167,6 +167,7 @@ public final class RestFindGroups
             }
 
             infoGroup.put (ValAnswer.created_at.name () , Time.toString (group.getCreatedAt ()));
+            infoGroup.put (ValAnswer.description.name () , group.getDescription ());
 
             answerToClient.put (ValAnswer.info_group.name () , infoGroup);
             answerToClient.setReqRes (req , res);
@@ -182,7 +183,7 @@ public final class RestFindGroups
     {
         link_is_empty, username_is_empty, username_invalid, link_invalid, not_found, found,
 
-        username, link_join, bio, link, created_at, members, id_profile_picture, owner, info_group
+        username, link_join, bio, link, created_at, members, id_profile_picture, owner, info_group, description
     }
 
 }
