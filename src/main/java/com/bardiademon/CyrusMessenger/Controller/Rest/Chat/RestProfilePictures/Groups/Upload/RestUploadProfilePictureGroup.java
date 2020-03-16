@@ -80,8 +80,6 @@ public final class RestUploadProfilePictureGroup
             CheckRequestUploadProfilePicture checkRequest = new CheckRequestUploadProfilePicture (request , mainAccount , res , req , router , type);
             if ((answerToClient = checkRequest.getAnswerToClient ()) == null)
             {
-
-
                 ID idGroup;
                 if ((idGroup = request.getIdGroup ()).isValid ())
                 {

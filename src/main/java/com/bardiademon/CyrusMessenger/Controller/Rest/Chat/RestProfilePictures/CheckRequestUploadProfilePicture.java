@@ -21,7 +21,7 @@ public class CheckRequestUploadProfilePicture
     private final HttpServletResponse res;
     private final HttpServletRequest req;
     private final String router;
-    private SubmitRequestType submitRequestType;
+    private final SubmitRequestType submitRequestType;
 
     private AnswerToClient answerToClient = null;
 
