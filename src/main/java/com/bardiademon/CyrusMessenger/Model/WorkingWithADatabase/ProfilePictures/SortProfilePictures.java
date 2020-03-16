@@ -75,4 +75,15 @@ public final class SortProfilePictures
     {
         return newProfilePictures;
     }
+
+    public List<Long> getIds ()
+    {
+        if (newProfilePictures != null && newProfilePictures.size () > 0)
+        {
+            List<Long> profilePicturesIds = new ArrayList<> ();
+            for (ProfilePictures profilePicture : newProfilePictures) profilePicturesIds.add (profilePicture.getId ());
+            return profilePicturesIds;
+        }
+        else return null;
+    }
 }
