@@ -18,6 +18,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.S
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
+import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.apache.commons.io.IOUtils;
@@ -96,22 +97,6 @@ public final class RestGetOneProfilePictureUser
 
     private byte[] toByte (String path)
     {
-        try
-        {
-            return IOUtils.toByteArray (new FileInputStream (new File (path)));
-        }
-        catch (IOException e)
-        {
-            l.n (Thread.currentThread ().getStackTrace () , e , path);
-            try
-            {
-                return IOUtils.toByteArray (new FileInputStream (new File (Path.IMAGE_ERROR_500)));
-            }
-            catch (IOException e2)
-            {
-                l.n (Thread.currentThread ().getStackTrace () , e2 , path);
-            }
-        }
-        return null;
+        return ToByte.to (path);
     }
 }

@@ -17,10 +17,6 @@ public abstract class Domain
         public static abstract class RNProfilePicture
         {
             private static final String RN_PROFILE_PICTURES = RN_MAIN_CHAT + "/profile_pictures";
-            public static final String RN_PROFILE_PICTURES_UPLOAD = RN_PROFILE_PICTURES + "/upload";
-            public static final String RN_PROFILE_PICTURES_GET_ALL = RN_PROFILE_PICTURES + "/get_all";
-            public static final String RN_PROFILE_PICTURES_GET_ONE = RN_PROFILE_PICTURES + "/get_one";
-            public static final String RN_PROFILE_PICTURES_DELETE = RN_PROFILE_PICTURES + "/delete";
 
             private static final String RN_PROFILE_PICTURES_USER = RN_PROFILE_PICTURES + "/user";
             public static final String RN_PROFILE_PICTURES_UPLOAD_USER = RN_PROFILE_PICTURES_USER + "/upload";

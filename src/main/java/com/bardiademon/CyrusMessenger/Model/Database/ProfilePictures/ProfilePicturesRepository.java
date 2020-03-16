@@ -49,6 +49,9 @@ public interface ProfilePicturesRepository extends JpaRepository<ProfilePictures
     @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.groups.id = :ID_GROUP and profilePictures.thisPicFor = 'group'")
     Integer countUploadGroup (@Param ("ID_GROUP") long idGroup);
 
+    @Query ("select profilePictures from ProfilePictures profilePictures where  profilePictures.id = :ID_PROFILE_PICTURE and profilePictures.thisPicFor = 'group'")
+    ProfilePictures findProfilePictureGroup (@Param ("ID_PROFILE_PICTURE") long idProfilePicture);
+
     @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.mainAccount.id = :ID_USER and profilePictures.thisPicFor = 'user'")
     Integer countUploadUser (@Param ("ID_USER") long idUser);
 
