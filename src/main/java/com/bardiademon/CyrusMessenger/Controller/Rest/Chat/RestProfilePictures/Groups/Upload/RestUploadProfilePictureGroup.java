@@ -24,6 +24,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,6 +48,7 @@ public final class RestUploadProfilePictureGroup
     private final ProfilePicturesService profilePicturesService;
     private final CanManageGroup.Service service;
 
+    @Autowired
     public RestUploadProfilePictureGroup
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,

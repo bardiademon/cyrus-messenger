@@ -39,9 +39,9 @@ public final class ProfilePicturesService
         return Repository.findByIdAndMainAccountIdAndDeletedFalseAndThisPicFor (idProfilePicture , idUser , profilePicFor);
     }
 
-    public ProfilePictures getOneGroup (long idProfilePicture , long idUser)
+    public ProfilePictures getOneGroup (long idProfilePicture , long idGroup)
     {
-        return Repository.findByIdAndGroupsIdAndDeletedFalseAndThisPicFor (idProfilePicture , idUser , ProfilePicFor.group);
+        return Repository.findByIdAndGroupsIdAndDeletedFalseAndThisPicFor (idProfilePicture , idGroup , ProfilePicFor.group);
     }
 
     public ProfilePictures getOneForUser (long idProfilePicture)
