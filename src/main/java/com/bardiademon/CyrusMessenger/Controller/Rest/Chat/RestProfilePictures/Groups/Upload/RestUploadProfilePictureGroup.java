@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.CheckRequestUploadProfilePicture;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
@@ -52,7 +53,9 @@ public final class RestUploadProfilePictureGroup
     public RestUploadProfilePictureGroup
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
-             GroupsService _GroupsService , GroupManagementService _GroupManagementService , ProfilePicturesService _ProfilePicturesService)
+             GroupsService _GroupsService ,
+             GroupManagementService _GroupManagementService ,
+             ProfilePicturesService _ProfilePicturesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
@@ -65,7 +68,7 @@ public final class RestUploadProfilePictureGroup
              HttpServletResponse res , HttpServletRequest req ,
              @ModelAttribute RequestUploadProfilePictureGroup request)
     {
-        AnswerToClient answerToClient = null;
+        AnswerToClient answerToClient;
         String router = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_UPLOAD_GROUP;
         SubmitRequestType type = SubmitRequestType.upload_profile_picture_group;
 
@@ -74,88 +77,111 @@ public final class RestUploadProfilePictureGroup
         {
             assert both.getIsLogin () != null;
             MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
-
-            ID idGroup;
-            if ((idGroup = request.getIdGroup ()).isValid ())
+            CheckRequestUploadProfilePicture checkRequest = new CheckRequestUploadProfilePicture (request , mainAccount , res , req , router , type);
+            if ((answerToClient = checkRequest.getAnswerToClient ()) == null)
             {
-                CanManageGroup canManageGroup = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.upload_picture);
-                if (canManageGroup.canManage ())
+
+
+                ID idGroup;
+                if ((idGroup = request.getIdGroup ()).isValid ())
                 {
-                    boolean ok = false;
-
-                    if (request.isMain ())
+                    CanManageGroup canManageGroup = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.upload_picture);
+                    if (canManageGroup.canManage ())
                     {
-                        CanManageGroup canManageGroupSetMainPic = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.set_main_picture);
-                        if (canManageGroupSetMainPic.canManage ()) ok = true;
-                        else answerToClient = canManageGroupSetMainPic.getAnswerToClient ();
-                    }
-                    else ok = true;
+                        Groups group = canManageGroup.getManager ().getGroup ();
 
-                    if (ok)
-                    {
-                        ok = false;
+                        int maxUploadProfilePicture
+                                = group.getGroupSecurityProfile ().getMaxUploadProfilePicture ();
+                        int countUploadPicGroup = profilePicturesService.countUploadPicGroup (group.getId ());
 
-                        ID idProfilePicture = request.getIdProfilePicture ();
-
-                        ProfilePictures oldProfilePicture = null;
-
-                        if (request.isReplace ())
+                        if (countUploadPicGroup < maxUploadProfilePicture)
                         {
-                            if (idProfilePicture != null && idProfilePicture.isValid ())
+                            boolean ok = false;
+
+                            if (request.isMain ())
                             {
-                                CanManageGroup canManageGroupDelete = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
-                                if (canManageGroupDelete.canManage ())
+                                CanManageGroup canManageGroupSetMainPic = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.set_main_picture);
+                                if (canManageGroupSetMainPic.canManage ()) ok = true;
+                                else answerToClient = canManageGroupSetMainPic.getAnswerToClient ();
+                            }
+                            else ok = true;
+
+                            if (ok)
+                            {
+                                ok = false;
+
+                                ID idProfilePicture = request.getIdProfilePicture ();
+
+                                ProfilePictures oldProfilePicture = null;
+
+                                if (request.isReplace ())
                                 {
-                                    oldProfilePicture = profilePicturesService.getOneGroup (idProfilePicture.getId () , idGroup.getId ());
-                                    if (oldProfilePicture != null)
+                                    if (idProfilePicture != null && idProfilePicture.isValid ())
                                     {
-                                        oldProfilePicture.setDeleted (true);
-                                        oldProfilePicture.setDeletedAt (LocalDateTime.now ());
-                                        profilePicturesService.Repository.save (oldProfilePicture);
-                                        ok = true;
+                                        CanManageGroup canManageGroupDelete = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
+                                        if (canManageGroupDelete.canManage ())
+                                        {
+                                            oldProfilePicture = profilePicturesService.getOneGroup (idProfilePicture.getId () , idGroup.getId ());
+                                            if (oldProfilePicture != null)
+                                            {
+                                                oldProfilePicture.setDeleted (true);
+                                                oldProfilePicture.setDeletedAt (LocalDateTime.now ());
+                                                profilePicturesService.Repository.save (oldProfilePicture);
+                                                ok = true;
+                                            }
+                                            else
+                                            {
+                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_profile_picture_not_found.name ());
+                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
+                                                r.n (mainAccount , type , false);
+                                            }
+                                        }
+                                        else answerToClient = canManageGroupDelete.getAnswerToClient ();
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_profile_picture_not_found.name ());
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
+                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid.name ());
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_invalid.name ()) , null);
                                         r.n (mainAccount , type , false);
                                     }
+
                                 }
-                                else answerToClient = canManageGroupDelete.getAnswerToClient ();
-                            }
-                            else
-                            {
-                                answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid.name ());
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_invalid.name ()) , null);
-                                r.n (mainAccount , type , false);
-                            }
+                                else ok = true;
 
+                                if (ok)
+                                {
+                                    answerToClient = upload (res , req , request , router , mainAccount , group , oldProfilePicture);
+                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.uploaded.name ());
+                                    r.n (mainAccount , type , false);
+                                }
+                            }
                         }
-                        else ok = true;
-
-                        if (ok)
+                        else
                         {
-                            answerToClient = upload (res , req , request , router , mainAccount , canManageGroup.getManager ().getGroup () , oldProfilePicture);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.uploaded.name ());
-                            r.n (mainAccount , type , false);
+                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed.name ());
+                            answerToClient.put (KeyAnswer.limit.name () , maxUploadProfilePicture);
+                            answerToClient.setReqRes (req , res);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.upload_limit_completed.name ()) , null);
+                            r.n (mainAccount , type , true);
                         }
+                    }
+                    else
+                    {
+                        answerToClient = canManageGroup.getAnswerToClient ();
+                        answerToClient.setReqRes (req , res);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("error from class CanManageGroup") , null);
+                        r.n (mainAccount , type , true);
                     }
                 }
                 else
                 {
-                    answerToClient = canManageGroup.getAnswerToClient ();
+                    answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("error from class CanManageGroup") , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id group invalid") , null);
                     r.n (mainAccount , type , true);
                 }
             }
-            else
-            {
-                answerToClient = AnswerToClient.IdInvalid ();
-                answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id group invalid") , null);
-                r.n (mainAccount , type , true);
-            }
+
 
         }
         else answerToClient = both.getAnswerToClient ();
@@ -242,7 +268,11 @@ public final class RestUploadProfilePictureGroup
 
     public enum ValAnswer
     {
-        uploaded, updated, id_profile_picture_not_found, id_profile_picture_invalid
+        uploaded, updated, id_profile_picture_not_found, id_profile_picture_invalid, upload_limit_completed
     }
 
+    private enum KeyAnswer
+    {
+        limit
+    }
 }

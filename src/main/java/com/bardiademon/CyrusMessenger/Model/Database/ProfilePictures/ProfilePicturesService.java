@@ -19,6 +19,11 @@ public final class ProfilePicturesService
         return Repository.countByDeletedFalseAndThisPicForAndMainAccountId (ProfilePicFor.user , idUser);
     }
 
+    public int countUploadPicGroup (long idGroup)
+    {
+        return Repository.countByDeletedFalseAndThisPicForAndGroupsId (ProfilePicFor.group , idGroup);
+    }
+
     public void disableMainPhotoUser (long id)
     {
         Repository.disableMainPhotoUser (id , ProfilePicFor.user);

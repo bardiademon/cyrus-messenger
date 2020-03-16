@@ -95,7 +95,6 @@ public final class RestDeleteProfilePictureGroup
                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
                             r.n (mainAccount , type , true);
                         }
-
                     }
                     else
                     {
@@ -120,7 +119,6 @@ public final class RestDeleteProfilePictureGroup
                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_group_invalid.name ()) , null);
                 r.n (mainAccount , type , true);
             }
-
         }
         else answerToClient = both.getAnswerToClient ();
 

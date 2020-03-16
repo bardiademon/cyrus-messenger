@@ -15,6 +15,8 @@ public interface ProfilePicturesRepository extends JpaRepository<ProfilePictures
 {
     int countByDeletedFalseAndThisPicForAndMainAccountId (ProfilePicFor picFor , long idUser);
 
+    int countByDeletedFalseAndThisPicForAndGroupsId (ProfilePicFor picFor , long idGroup);
+
     @Modifying
     @Transactional
     @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.mainAccount.id = :ID and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
