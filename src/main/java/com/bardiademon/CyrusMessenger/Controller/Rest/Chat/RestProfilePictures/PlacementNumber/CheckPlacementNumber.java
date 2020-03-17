@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckPlacementNumber
+public final class CheckPlacementNumber
 {
     private final ProfilePicturesService profilePicturesService;
     private final MainAccount mainAccount;
