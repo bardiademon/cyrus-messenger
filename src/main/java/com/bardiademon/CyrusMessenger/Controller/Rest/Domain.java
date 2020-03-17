@@ -30,6 +30,10 @@ public abstract class Domain
             public static final String RN_PROFILE_PICTURES_GET_ONE_GROUP = RN_PROFILE_PICTURES_GROUP + "/get_one";
             public static final String RN_PROFILE_PICTURES_DELETE_GROUP = RN_PROFILE_PICTURES_GROUP + "/delete";
 
+            // PP => Profile Pictures
+            public static final String RN_PP_PLACEMENT_NUMBER_GROUP = RN_PROFILE_PICTURES_GROUP + "/placement_number";
+            public static final String RN_PP_PLACEMENT_NUMBER_USER = RN_PROFILE_PICTURES_USER + "/placement_number";
+
 
         }
 

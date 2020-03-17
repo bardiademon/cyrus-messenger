@@ -11,7 +11,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupM
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
@@ -39,7 +39,7 @@ public final class RestChangeManagerAccessLevel
     private final UserLoginService userLoginService;
     private GroupManagementAccessLevelService groupManagementAccessLevelService;
 
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestChangeManagerAccessLevel
@@ -48,7 +48,7 @@ public final class RestChangeManagerAccessLevel
     {
         this.userLoginService = _UserLoginService;
         this.groupManagementAccessLevelService = _GroupManagementAccessLevelService;
-        service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -74,11 +74,11 @@ public final class RestChangeManagerAccessLevel
                         MainAccount mainAccountUser = service.mainAccountService.findId (request.getIdUser ().getId ());
                         if (mainAccountUser != null)
                         {
-                            CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.change_management_access_level);
-                            if (canManageGroup.canManage ())
+                            ManageGroup manageGroup = new ManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.change_management_access_level);
+                            if (manageGroup.canManage ())
                             {
                                 IsManager isManagerUser = new IsManager (mainAccountUser , service.groupManagementService);
-                                isManagerUser.setILUGroup (canManageGroup.getManager ().getIluGroup ());
+                                isManagerUser.setILUGroup (manageGroup.getManager ().getIluGroup ());
                                 if (isManagerUser.isManager ())
                                 {
                                     if (mainAccount.getId () != mainAccountUser.getId ())
@@ -123,7 +123,7 @@ public final class RestChangeManagerAccessLevel
                                     r.n (mainAccount , SubmitRequestType.change_manager , true);
                                 }
                             }
-                            else answerToClient = canManageGroup.getAnswerToClient ();
+                            else answerToClient = manageGroup.getAnswerToClient ();
                         }
                         else
                         {

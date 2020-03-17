@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -36,7 +36,7 @@ public final class RestDeleteProfilePictureGroup
 
     private final ProfilePicturesService profilePicturesService;
     private final UserLoginService userLoginService;
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestDeleteProfilePictureGroup
@@ -46,7 +46,7 @@ public final class RestDeleteProfilePictureGroup
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
-        this.service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        this.service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -70,8 +70,8 @@ public final class RestDeleteProfilePictureGroup
             ID idGroup = request.getIdGroup ();
             if (idGroup.isValid ())
             {
-                CanManageGroup canManageGroup = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
-                if (canManageGroup.canManage ())
+                ManageGroup manageGroup = new ManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
+                if (manageGroup.canManage ())
                 {
                     ID idProfilePicture = request.getIdProfilePicture ();
                     if (idProfilePicture.isValid ())
@@ -106,9 +106,9 @@ public final class RestDeleteProfilePictureGroup
                 }
                 else
                 {
-                    answerToClient = canManageGroup.getAnswerToClient ();
+                    answerToClient = manageGroup.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (CanManageGroup.class.getName ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ManageGroup.class.getName ()) , null);
                     r.n (mainAccount , type , true);
                 }
             }

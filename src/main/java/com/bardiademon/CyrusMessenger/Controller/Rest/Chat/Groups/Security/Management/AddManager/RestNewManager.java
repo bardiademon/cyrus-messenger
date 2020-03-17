@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupM
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.IsJoined;
@@ -43,7 +43,7 @@ public final class RestNewManager
     private final JoinGroupService joinGroupService;
     private final GroupManagementAccessLevelService groupManagementAccessLevelService;
 
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestNewManager (UserLoginService _UserLoginService ,
@@ -54,7 +54,7 @@ public final class RestNewManager
         this.userLoginService = _UserLoginService;
         this.joinGroupService = _JoinGroupService;
         this.groupManagementAccessLevelService = _GroupManagementAccessLevelService;
-        service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -74,8 +74,8 @@ public final class RestNewManager
             {
                 if ((answerToClient = request.checkRequest ()) == null)
                 {
-                    CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.add_admin);
-                    if (canManageGroup.canManage ())
+                    ManageGroup manageGroup = new ManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.add_admin);
+                    if (manageGroup.canManage ())
                     {
                         ID idUser = request.getIdUser ();
                         if (idUser.isValid ())
@@ -85,13 +85,13 @@ public final class RestNewManager
                             {
                                 if (mainAccount.getId () != mainAccountUser.getId ())
                                 {
-                                    IsManager manager = canManageGroup.getManager ();
+                                    IsManager manager = manageGroup.getManager ();
 
                                     IsJoined isJoined = new IsJoined (joinGroupService , mainAccountUser , new ID (manager.getGroup ().getId ()));
                                     if (isJoined.is ())
                                     {
                                         IsManager isManagerUser = new IsManager (mainAccountUser , service.groupManagementService);
-                                        isManagerUser.setILUGroup (canManageGroup.getManager ().getIluGroup ());
+                                        isManagerUser.setILUGroup (manageGroup.getManager ().getIluGroup ());
                                         if (!isManagerUser.isManager ())
                                             answerToClient = addManagement (manager.getGroup () , manager.getMainAccount () , mainAccountUser , manager.getGroupManagement () , request);
                                         else
@@ -137,7 +137,7 @@ public final class RestNewManager
                     }
                     else
                     {
-                        answerToClient = canManageGroup.getAnswerToClient ();
+                        answerToClient = manageGroup.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
                         l.n (ToJson.To (request) , Domain.RNChat.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error from CanManageGroup") , cookieJson);
                         r.n (mainAccount , SubmitRequestType.group_members , true);

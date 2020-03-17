@@ -8,7 +8,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
@@ -47,7 +47,7 @@ public final class RestUploadProfilePictureGroup
 
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestUploadProfilePictureGroup
@@ -59,7 +59,7 @@ public final class RestUploadProfilePictureGroup
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
-        this.service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        this.service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -83,10 +83,10 @@ public final class RestUploadProfilePictureGroup
                 ID idGroup;
                 if ((idGroup = request.getIdGroup ()).isValid ())
                 {
-                    CanManageGroup canManageGroup = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.upload_picture);
-                    if (canManageGroup.canManage ())
+                    ManageGroup manageGroup = new ManageGroup (service , idGroup , mainAccount , AccessLevel.upload_picture);
+                    if (manageGroup.canManage ())
                     {
-                        Groups group = canManageGroup.getManager ().getGroup ();
+                        Groups group = manageGroup.getManager ().getGroup ();
 
                         int maxUploadProfilePicture
                                 = group.getGroupSecurityProfile ().getMaxUploadProfilePicture ();
@@ -98,9 +98,9 @@ public final class RestUploadProfilePictureGroup
 
                             if (request.isMain ())
                             {
-                                CanManageGroup canManageGroupSetMainPic = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.set_main_picture);
-                                if (canManageGroupSetMainPic.canManage ()) ok = true;
-                                else answerToClient = canManageGroupSetMainPic.getAnswerToClient ();
+                                ManageGroup manageGroupSetMainPic = new ManageGroup (service , idGroup , mainAccount , AccessLevel.set_main_picture);
+                                if (manageGroupSetMainPic.canManage ()) ok = true;
+                                else answerToClient = manageGroupSetMainPic.getAnswerToClient ();
                             }
                             else ok = true;
 
@@ -116,8 +116,8 @@ public final class RestUploadProfilePictureGroup
                                 {
                                     if (idProfilePicture != null && idProfilePicture.isValid ())
                                     {
-                                        CanManageGroup canManageGroupDelete = new CanManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
-                                        if (canManageGroupDelete.canManage ())
+                                        ManageGroup manageGroupDelete = new ManageGroup (service , idGroup , mainAccount , AccessLevel.del_picture);
+                                        if (manageGroupDelete.canManage ())
                                         {
                                             oldProfilePicture = profilePicturesService.getOneGroup (idProfilePicture.getId () , idGroup.getId ());
                                             if (oldProfilePicture != null)
@@ -134,7 +134,7 @@ public final class RestUploadProfilePictureGroup
                                                 r.n (mainAccount , type , false);
                                             }
                                         }
-                                        else answerToClient = canManageGroupDelete.getAnswerToClient ();
+                                        else answerToClient = manageGroupDelete.getAnswerToClient ();
                                     }
                                     else
                                     {
@@ -165,7 +165,7 @@ public final class RestUploadProfilePictureGroup
                     }
                     else
                     {
-                        answerToClient = canManageGroup.getAnswerToClient ();
+                        answerToClient = manageGroup.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
                         l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("error from class CanManageGroup") , null);
                         r.n (mainAccount , type , true);

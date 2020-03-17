@@ -197,7 +197,7 @@ public class AnswerToClient
     // CUK => Commonly used value
     public enum CUV
     {
-        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found
+        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error
     }
 
     @JsonIgnore

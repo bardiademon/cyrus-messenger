@@ -76,12 +76,14 @@ public final class GroupManagementAccessLevel
     @Column (name = "add_member")
     private boolean addMember;
 
+    @Column (name = "change_placement_number")
+    private boolean changePlacementNumber;
+
     /**
      * karbarani ke ghesmat security (show_in_group) ra false gozashtand
      */
     @Column (name = "show_member_hidden")
     private boolean showMemberHidden;
-
 
     public GroupManagementAccessLevel ()
     {
@@ -285,5 +287,15 @@ public final class GroupManagementAccessLevel
     public void setAddMember (boolean addMember)
     {
         this.addMember = addMember;
+    }
+
+    public boolean isChangePlacementNumber ()
+    {
+        return changePlacementNumber;
+    }
+
+    public void setChangePlacementNumber (boolean changePlacementNumber)
+    {
+        this.changePlacementNumber = changePlacementNumber;
     }
 }

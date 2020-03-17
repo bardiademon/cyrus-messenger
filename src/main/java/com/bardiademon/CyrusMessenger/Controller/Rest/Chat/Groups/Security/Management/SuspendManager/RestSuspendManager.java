@@ -4,11 +4,10 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.IsManager;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNGroups.Security.RN_SECURITY_SUSPEND_MANAGER, method = RequestMethod.POST)
@@ -35,7 +33,7 @@ public final class RestSuspendManager
 
     private final UserLoginService userLoginService;
 
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestSuspendManager (UserLoginService _UserLoginService ,
@@ -43,7 +41,7 @@ public final class RestSuspendManager
                                GroupManagementService _GroupManagementService , MainAccountService _MainAccountService)
     {
         this.userLoginService = _UserLoginService;
-        service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -64,14 +62,14 @@ public final class RestSuspendManager
                     MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
                     if (request.getIdUser ().isValid ())
                     {
-                        CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.del_admin);
-                        if (canManageGroup.canManage ())
+                        ManageGroup manageGroup = new ManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.del_admin);
+                        if (manageGroup.canManage ())
                         {
                             MainAccount mainAccountUser = service.mainAccountService.findId (request.getIdUser ().getId ());
                             if (mainAccountUser != null)
                             {
                                 IsManager isManager = new IsManager (mainAccountUser , service.groupManagementService);
-                                isManager.setILUGroup (canManageGroup.getManager ().getIluGroup ());
+                                isManager.setILUGroup (manageGroup.getManager ().getIluGroup ());
                                 if (isManager.isManager ())
                                 {
                                     if (!isManager.isOwner ())
@@ -108,7 +106,7 @@ public final class RestSuspendManager
                                 r.n (mainAccount , SubmitRequestType.remove_admin , true);
                             }
                         }
-                        else answerToClient = canManageGroup.getAnswerToClient ();
+                        else answerToClient = manageGroup.getAnswerToClient ();
                     }
                     else
                     {

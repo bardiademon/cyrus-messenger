@@ -55,6 +55,8 @@ public final class ThisManagerHaveAccess
                 return accessLevel.isDelPicture ();
             case set_main_picture:
                 return accessLevel.isSetMainPicture ();
+            case change_placement_number:
+                return accessLevel.isChangePlacementNumber ();
             case change_picture:
                 return accessLevel.isChangePicture ();
             case del_main_pic:

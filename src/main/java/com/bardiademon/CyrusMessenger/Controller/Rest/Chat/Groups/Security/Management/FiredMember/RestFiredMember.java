@@ -9,7 +9,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredF
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.IsManager;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.CanManageGroup;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.IsJoined;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
@@ -42,7 +42,7 @@ public final class RestFiredMember
     private JoinGroupService joinGroupService;
     private FiredFromGroupService firedFromGroupService;
 
-    private final CanManageGroup.Service service;
+    private final ManageGroup.Service service;
 
     @Autowired
     public RestFiredMember
@@ -54,7 +54,7 @@ public final class RestFiredMember
         this.userLoginService = _UserLoginService;
         this.joinGroupService = _JoinGroupService;
         this.firedFromGroupService = _FiredFromGroupService;
-        service = new CanManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
+        service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -79,20 +79,20 @@ public final class RestFiredMember
                         MainAccount mainAccountUser = service.mainAccountService.findId (request.getIdUser ().getId ());
                         if (mainAccountUser != null)
                         {
-                            CanManageGroup canManageGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.dismiss_user);
-                            if (canManageGroup.canManage ())
+                            ManageGroup manageGroup = new ManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.dismiss_user);
+                            if (manageGroup.canManage ())
                             {
                                 IsJoined isJoined = null;
 
                                 boolean dismiss = false;
                                 IsManager isManager = new IsManager (mainAccountUser , service.groupManagementService);
-                                isManager.setILUGroup (canManageGroup.getManager ().getIluGroup ());
+                                isManager.setILUGroup (manageGroup.getManager ().getIluGroup ());
                                 if (isManager.isManager ())
                                 {
                                     if (!isManager.isOwner ())
                                     {
-                                        CanManageGroup canManageAccessLevelGroup = new CanManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.del_admin);
-                                        if (canManageGroup.canManage ())
+                                        ManageGroup canManageAccessLevelGroup = new ManageGroup (service , request.getIdGroup () , mainAccount , AccessLevel.del_admin);
+                                        if (manageGroup.canManage ())
                                         {
                                             service.groupManagementService
                                                     .suspend (isManager.getGroupManagement () , mainAccount , mainAccount , this.getClass ());
@@ -133,7 +133,7 @@ public final class RestFiredMember
                                     FiredFromGroup firedFromGroup = new FiredFromGroup ();
                                     firedFromGroup.setFiredAt (LocalDateTime.now ());
                                     firedFromGroup.setFiredBy (mainAccount);
-                                    firedFromGroup.setGroup (canManageGroup.getManager ().getGroup ());
+                                    firedFromGroup.setGroup (manageGroup.getManager ().getGroup ());
                                     firedFromGroup.setMainAccount (mainAccountUser);
                                     firedFromGroup.setWhy (request.getWhy ());
 
@@ -150,7 +150,7 @@ public final class RestFiredMember
                                 }
 
                             }
-                            else answerToClient = canManageGroup.getAnswerToClient ();
+                            else answerToClient = manageGroup.getAnswerToClient ();
                         }
                         else
                         {

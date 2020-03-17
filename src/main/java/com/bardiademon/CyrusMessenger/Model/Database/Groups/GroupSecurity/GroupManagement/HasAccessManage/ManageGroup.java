@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 
 
-public final class CanManageGroup
+public final class ManageGroup
 {
     private final Service service;
     private final ID idGroup;
@@ -23,8 +23,7 @@ public final class CanManageGroup
 
     private boolean canManage = false;
 
-    public
-    CanManageGroup (Service _Service , ID IdGroup , MainAccount _MainAccount , AccessLevel _AccessLevel)
+    public ManageGroup (Service _Service , ID IdGroup , MainAccount _MainAccount , AccessLevel _AccessLevel)
     {
         this.service = _Service;
         this.idGroup = IdGroup;
