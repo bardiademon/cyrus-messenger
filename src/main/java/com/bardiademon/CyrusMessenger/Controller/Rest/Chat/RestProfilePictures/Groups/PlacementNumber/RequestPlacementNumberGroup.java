@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Groups.PlacementNumber;
 
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.PlacementNumber.PlacementNumber;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,20 +13,20 @@ public final class RequestPlacementNumberGroup
     private ID idGroup;
 
     @JsonProperty ("info")
-    private List<PlacementNumberGroup> placementNumberGroup;
+    private List<PlacementNumber> placementNumber;
 
     public RequestPlacementNumberGroup ()
     {
     }
 
-    public List<PlacementNumberGroup> getPlacementNumberGroup ()
+    public List<PlacementNumber> getPlacementNumber ()
     {
-        return placementNumberGroup;
+        return placementNumber;
     }
 
-    public void setPlacementNumberGroup (List<PlacementNumberGroup> placementNumberGroup)
+    public void setPlacementNumber (List<PlacementNumber> placementNumber)
     {
-        this.placementNumberGroup = placementNumberGroup;
+        this.placementNumber = placementNumber;
     }
 
     public ID getIdGroup ()

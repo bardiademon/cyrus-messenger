@@ -71,7 +71,7 @@ public class AnswerToClient
     public static AnswerToClient RequestIsNull ()
     {
         AnswerToClient answerToClient = error400 ();
-        answerToClient.put (CUK.answer.name () , "request_is_null");
+        answerToClient.put (CUK.answer.name () , CUV.request_is_null.name ());
         return answerToClient;
     }
 
@@ -79,7 +79,7 @@ public class AnswerToClient
     public static AnswerToClient AccountDeactive ()
     {
         AnswerToClient answerToClient = New (HttpServletResponse.SC_FORBIDDEN);
-        answerToClient.put (CUK.answer.name () , "account_deactive");
+        answerToClient.put (CUK.answer.name () , CUV.account_deactive.name ());
         return answerToClient;
     }
 
@@ -87,7 +87,7 @@ public class AnswerToClient
     public static AnswerToClient ServerError ()
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);
-        answerToClient.put (CUK.answer.name () , "please_try_again");
+        answerToClient.put (CUK.answer.name () , CUV.please_try_again.name ());
         return answerToClient;
     }
 
@@ -197,7 +197,8 @@ public class AnswerToClient
     // CUK => Commonly used value
     public enum CUV
     {
-        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error
+        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error,
+        request_is_null, account_deactive, please_try_again
     }
 
     @JsonIgnore

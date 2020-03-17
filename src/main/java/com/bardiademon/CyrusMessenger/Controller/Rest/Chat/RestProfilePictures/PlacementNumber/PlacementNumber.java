@@ -1,8 +1,8 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Groups.PlacementNumber;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.PlacementNumber;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PlacementNumberGroup
+public class PlacementNumber
 {
     @JsonProperty ("placement_number")
     private int placementNumber;
@@ -13,7 +13,7 @@ public class PlacementNumberGroup
     @JsonProperty("update_main")
     private boolean updateMain;
 
-    public PlacementNumberGroup ()
+    public PlacementNumber ()
     {
     }
 
@@ -27,14 +27,14 @@ public class PlacementNumberGroup
         this.placementNumber = placementNumber;
     }
 
-    public String getId ()
+    public long getId ()
     {
-        return id;
+        return Long.parseLong (id);
     }
 
-    public void setId (String id)
+    public void setId (long id)
     {
-        this.id = id;
+        this.id = String.valueOf (id);
     }
 
     public boolean isMain ()
