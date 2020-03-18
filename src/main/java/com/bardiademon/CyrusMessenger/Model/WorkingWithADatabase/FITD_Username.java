@@ -8,8 +8,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 // FITD => Find In The Database
 public final class FITD_Username
 {
-    private String username;
-    private UsernamesService usernamesService;
+    private final String username;
+    private final UsernamesService usernamesService;
 
     private MainAccount mainAccount;
     private boolean valid;
