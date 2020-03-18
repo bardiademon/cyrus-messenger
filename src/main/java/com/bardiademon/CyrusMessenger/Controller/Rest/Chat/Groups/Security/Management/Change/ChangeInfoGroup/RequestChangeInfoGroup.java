@@ -1,16 +1,16 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.UpdateInfoGroup;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.Change.ChangeInfoGroup;
 
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public final class RequestUpdateInfoGroup
+public final class RequestChangeInfoGroup
 {
     @JsonProperty ("id")
     private ID idGroup;
 
     private String name, description, link, bio;
 
-    public RequestUpdateInfoGroup ()
+    public RequestChangeInfoGroup ()
     {
     }
 

@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.UpdateInfoGroup;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.Change.ChangeInfoGroup;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -27,13 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNGroups.RN_UPDATE_INFO_GROUP, method = RequestMethod.POST)
-public final class RestUpdateInfoGroup
+public final class RestChangeInfoGroup
 {
     private final UserLoginService userLoginService;
     private final ManageGroup.Service service;
 
     @Autowired
-    public RestUpdateInfoGroup
+    public RestChangeInfoGroup
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
              GroupsService _GroupsService ,
@@ -44,10 +44,10 @@ public final class RestUpdateInfoGroup
     }
 
     @RequestMapping (value = {"" , "/"})
-    public AnswerToClient upload
+    public AnswerToClient change
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
-             @RequestBody RequestUpdateInfoGroup request)
+             @RequestBody RequestChangeInfoGroup request)
     {
         AnswerToClient answerToClient = null;
         String router = Domain.RNChat.RNGroups.RN_UPDATE_INFO_GROUP;
@@ -145,9 +145,9 @@ public final class RestUpdateInfoGroup
                         if (!error && updatedOne)
                         {
                             service.groupsService.Repository.save (group);
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.updated.name ());
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed.name ());
                             r.n (mainAccount , type , false);
                         }
 
@@ -189,6 +189,6 @@ public final class RestUpdateInfoGroup
 
     private enum ValAnswer
     {
-        group_not_found, updated
+        group_not_found, changed
     }
 }
