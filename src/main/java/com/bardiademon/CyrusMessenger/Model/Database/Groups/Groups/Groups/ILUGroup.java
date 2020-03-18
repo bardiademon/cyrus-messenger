@@ -2,6 +2,8 @@ package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import org.springframework.lang.Nullable;
 
@@ -12,18 +14,25 @@ public class ILUGroup
     private String link;
     private String username;
     private final GroupsService groupsService;
+    private UsernamesService usernamesService;
 
     @Nullable
     private Groups group;
 
     public ILUGroup ()
     {
-        this (CyrusMessengerApplication.Context ().getBean (GroupsService.class));
+        this (CyrusMessengerApplication.Context ().getBean (GroupsService.class) , CyrusMessengerApplication.Context ().getBean (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService)
     {
+        this (_GroupsService , CyrusMessengerApplication.Context ().getBean (UsernamesService.class));
+    }
+
+    public ILUGroup (GroupsService _GroupsService , UsernamesService _UsernamesService)
+    {
         this.groupsService = _GroupsService;
+        this.usernamesService = _UsernamesService;
     }
 
     public void setId (long id)
@@ -53,8 +62,9 @@ public class ILUGroup
         {
             if (new VUsername (username).check ())
             {
-                group = groupsService.hasUsername (username);
-                if (group != null) return true;
+                Usernames forGroup = usernamesService.findForGroup (username);
+                if (forGroup != null) group = forGroup.getGroups ();
+                else return false;
             }
         }
 
@@ -69,6 +79,7 @@ public class ILUGroup
         return false;
     }
 
+    @org.jetbrains.annotations.Nullable
     public Groups getGroup ()
     {
         return group;

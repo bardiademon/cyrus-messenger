@@ -128,7 +128,8 @@ public final class RestCreateGroup
         }
         if (answerToClient == null && !Str.IsEmpty (request.getUsername ()))
         {
-            if (groupsService.hasUsername (request.getUsername ()) != null)
+            Usernames forGroup = usernamesService.findForGroup (request.getUsername ());
+            if (forGroup != null)
             {
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_exists.name ());
                 answerToClient.setReqRes (req , res);
@@ -225,7 +226,7 @@ public final class RestCreateGroup
 
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.created.name ());
             if (!Str.IsEmpty (request.getUsername ()))
-                answerToClient.put (KeyAnswer.username.name () , groups.getUsername ());
+                answerToClient.put (KeyAnswer.username.name () , groups.getUsername ().getUsername ());
 
             if (createCode) answerToClient.put (KeyAnswer.link.name () , linkForJoin.getLink ());
 

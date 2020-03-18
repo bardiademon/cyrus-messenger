@@ -11,6 +11,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupS
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -18,6 +19,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,18 +37,24 @@ import java.util.Map;
 public final class RestGroups
 {
 
-    private UserLoginService userLoginService;
-    private GroupsService groupsService;
-    private GroupSecurityProfileService groupSecurityProfileService;
-    private JoinGroupService joinGroupService;
+    private final UserLoginService userLoginService;
+    private final GroupsService groupsService;
+    private final GroupSecurityProfileService groupSecurityProfileService;
+    private final JoinGroupService joinGroupService;
+    private final UsernamesService usernamesService;
 
-    private RestGroups (UserLoginService _UserLoginService ,
-                        GroupsService _GroupsService , GroupSecurityProfileService _GroupSecurityProfileService , JoinGroupService _JoinGroupService)
+    @Autowired
+    private RestGroups
+            (UserLoginService _UserLoginService ,
+             GroupsService _GroupsService ,
+             GroupSecurityProfileService _GroupSecurityProfileService ,
+             JoinGroupService _JoinGroupService , UsernamesService _UsernamesService)
     {
         this.userLoginService = _UserLoginService;
         this.groupsService = _GroupsService;
         this.groupSecurityProfileService = _GroupSecurityProfileService;
         this.joinGroupService = _JoinGroupService;
+        this.usernamesService = _UsernamesService;
     }
 
     @RequestMapping (value = {"" , "/" , "/{strOwnerUser}"})
@@ -77,7 +85,7 @@ public final class RestGroups
                             else groups = joinGroupService.listGroupJoin (mainAccount.getId ());
                             if (groups != null && groups.size () > 0)
                             {
-                                RestFindGroups restFindGroups = new RestFindGroups (groupsService , groupSecurityProfileService);
+                                RestFindGroups restFindGroups = new RestFindGroups (groupsService , groupSecurityProfileService , usernamesService);
                                 AnswerToClient byLink;
                                 Map<String, Object> message;
                                 Map<?, ?> infoGroup;

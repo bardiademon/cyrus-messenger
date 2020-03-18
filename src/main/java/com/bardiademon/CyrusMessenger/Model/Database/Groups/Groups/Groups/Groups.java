@@ -7,6 +7,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
@@ -50,7 +51,7 @@ public class Groups
     private List<JoinGroup> members;
 
     @OneToMany (mappedBy = "groups")
-    @Where (clause = "deleted = false")
+    @Where (clause = "`deleted` = false")
     private List<ProfilePictures> profilePictures;
 
     @OneToOne
@@ -62,6 +63,7 @@ public class Groups
 
     @OneToOne (mappedBy = "groups")
     @Where (clause = "`username_for` = 'group' and `deleted` = false")
+    @JsonBackReference
     private Usernames username;
 
     private String bio;

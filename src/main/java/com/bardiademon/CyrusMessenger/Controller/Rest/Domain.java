@@ -123,6 +123,8 @@ public abstract class Domain
             public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
             public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";
 
+            private static final String RN_CHANGE_GROUP = RN_GROUPS + "/change";
+            public static final String RN_CHANGE_USERNAME_GROUP = RN_CHANGE_GROUP + "/username";
 
             public static final String RN_UPDATE_INFO_GROUP = RN_GROUPS + "/update_info_group";
 

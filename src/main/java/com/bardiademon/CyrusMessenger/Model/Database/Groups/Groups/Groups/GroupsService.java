@@ -25,11 +25,6 @@ public final class GroupsService
         return (Repository.countByOwnerIdAndDeletedFalse (idUser) >= Groups.MAX_CREATE_GROUP);
     }
 
-    public Groups hasUsername (String username)
-    {
-        return Repository.findByUsernameAndDeletedFalse (username);
-    }
-
     public Groups hasLink (String link)
     {
         LinkForJoin linkForJoin = linkForJoinService.hasLinkGroup (link);

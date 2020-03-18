@@ -71,6 +71,7 @@ public class MainAccount
     @JsonIgnore
     @OneToOne (mappedBy = "mainAccount")
     @Where (clause = "`username_for` = 'user' and `deleted` = false")
+    @JsonBackReference
     private Usernames username;
 
     @Column (nullable = false)

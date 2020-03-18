@@ -16,11 +16,11 @@ public final class UsernamesService
 
     public Usernames findForUser (String username)
     {
-        return Repository.findByUsernameAndDeletedFalseAndUsernameForAndActiveTrue (username , UsernameFor.user);
+        return Repository.findByUsernameAndUsernameForAndDeletedFalseAndActiveTrueAndMainAccountActiveTrue (username , UsernameFor.user);
     }
 
     public Usernames findForGroup (String username)
     {
-        return Repository.findByUsernameAndDeletedFalseAndUsernameForAndActiveTrue (username , UsernameFor.group);
+        return Repository.findByUsernameAndUsernameForAndDeletedFalseAndActiveTrue (username , UsernameFor.group);
     }
 }

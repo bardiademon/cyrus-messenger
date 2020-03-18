@@ -13,6 +13,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.Joi
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.GetOneProfilePicture;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
@@ -38,12 +39,14 @@ public final class RestFindGroups
 {
 
     private final GroupsService groupsService;
-    private GroupSecurityProfileService groupSecurityProfileService;
+    private final GroupSecurityProfileService groupSecurityProfileService;
+    private final UsernamesService usernamesService;
 
-    public RestFindGroups (GroupsService _GroupsService , GroupSecurityProfileService _GroupSecurityProfileService)
+    public RestFindGroups (GroupsService _GroupsService , GroupSecurityProfileService _GroupSecurityProfileService , UsernamesService _UsernamesService)
     {
         this.groupsService = _GroupsService;
         this.groupSecurityProfileService = _GroupSecurityProfileService;
+        this.usernamesService = _UsernamesService;
     }
 
     @RequestMapping (value = {"/u" , "/u/{username}"})
@@ -57,7 +60,18 @@ public final class RestFindGroups
             {
                 VUsername vUsername = new VUsername (username);
                 if (vUsername.check ())
-                    answerToClient = getInfoGroup (req , res , groupsService.hasUsername (username) , ValAnswer.username.name () , username);
+                {
+                    Usernames forGroup = usernamesService.findForGroup (username);
+                    if (forGroup != null)
+                        answerToClient = getInfoGroup (req , res , forGroup.getGroups () , ValAnswer.username.name () , username);
+                    else
+                    {
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNChat.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found.name ()) , null);
+                        r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
+                    }
+                }
                 else
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
@@ -142,7 +156,8 @@ public final class RestFindGroups
             if (linkForJoin != null) infoGroup.put (ValAnswer.link_join.name () , linkForJoin.getLink ());
 
             Usernames username = group.getUsername ();
-            if (username != null && !Str.IsEmpty (username.getUsername ())) infoGroup.put (ValAnswer.username.name () , username.getUsername ());
+            if (username != null && !Str.IsEmpty (username.getUsername ()))
+                infoGroup.put (ValAnswer.username.name () , username.getUsername ());
 
             String link = group.getLink ();
             if (!Str.IsEmpty (link)) infoGroup.put (ValAnswer.link.name () , link);
@@ -156,7 +171,7 @@ public final class RestFindGroups
                 infoGroup.put (ValAnswer.id_profile_picture.name () , getOneProfilePicture.getProfilePicture ().getId ());
 
             if (securityProfile.isShowOwner ())
-                infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ());
+                infoGroup.put (ValAnswer.owner.name () , group.getOwner ().getUsername ().getUsername ());
 
             if (group.getGroupSecurityProfile ().isShowNumberOfMember ())
             {

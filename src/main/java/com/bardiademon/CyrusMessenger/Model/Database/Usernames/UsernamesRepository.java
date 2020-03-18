@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsernamesRepository extends JpaRepository<Usernames, Long>
 {
-    Usernames findByUsernameAndDeletedFalseAndUsernameForAndActiveTrue (String username , UsernameFor usernameFor);
+    Usernames findByUsernameAndUsernameForAndDeletedFalseAndActiveTrue (String username , UsernameFor usernameFor);
+
+    Usernames findByUsernameAndUsernameForAndDeletedFalseAndActiveTrueAndMainAccountActiveTrue (String username , UsernameFor usernameFor);
 }

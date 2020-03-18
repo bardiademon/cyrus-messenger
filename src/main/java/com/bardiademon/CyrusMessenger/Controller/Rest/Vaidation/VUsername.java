@@ -6,6 +6,7 @@ public class VUsername implements Validation
 {
     private String username;
 
+    private static final int MIN_LEN_USERNAME = 5;
 
     public VUsername (String Username)
     {
@@ -15,7 +16,7 @@ public class VUsername implements Validation
     @Override
     public boolean check ()
     {
-        if (username == null || username.equals ("")) return false;
+        if (username == null || username.equals ("") || username.length () < MIN_LEN_USERNAME) return false;
         else
         {
             String substring = username.substring (0 , 1);

@@ -2,6 +2,9 @@ package com.bardiademon.CyrusMessenger.Model.Database.Usernames;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -23,31 +26,44 @@ public final class Usernames
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
+    @JsonIgnore
     private long id;
+
+    /*
+     * baraye hazf
+     */
+    private long id2;
 
     private String username;
 
     @OneToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
+    @JsonIgnore
     private MainAccount mainAccount;
 
     @OneToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
+    @JsonIgnore
     private Groups groups;
 
     @Column (name = "username_for", nullable = false)
     @Enumerated (EnumType.STRING)
+    @JsonIgnore
     private UsernameFor usernameFor;
 
     @Column (name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @Column (name = "deleted_at", insertable = false)
+    @JsonIgnore
     private LocalDateTime deletedAt;
 
+    @JsonIgnore
     private boolean deleted;
 
+    @JsonIgnore
     private boolean active = true;
 
     public Usernames ()
@@ -62,6 +78,16 @@ public final class Usernames
     public void setId (long id)
     {
         this.id = id;
+    }
+
+    public long getId2 ()
+    {
+        return id2;
+    }
+
+    public void setId2 (long id2)
+    {
+        this.id2 = id2;
     }
 
     public String getUsername ()
