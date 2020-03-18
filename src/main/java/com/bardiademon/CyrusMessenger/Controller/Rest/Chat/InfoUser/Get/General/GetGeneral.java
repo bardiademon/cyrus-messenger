@@ -55,8 +55,8 @@ public class GetGeneral
                 if (requestInfoUser.isGetFamily ())
                     answerToClient.put (KeyAnswer.family.name () , mainAccount.getFamily ());
 
-                if (requestInfoUser.isGetUsername ())
-                    answerToClient.put (KeyAnswer.username.name () , mainAccount.getUsername ());
+                if (requestInfoUser.isGetUsername () && mainAccount.getUsername () != null)
+                    answerToClient.put (KeyAnswer.username.name () , mainAccount.getUsername ().getUsername ());
 
                 if (requestInfoUser.isGetEmail ())
                     answerToClient.put (KeyAnswer.email.name () , mainAccount.getEmail ());
