@@ -3,7 +3,6 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Mana
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Rest.UsedRequests.R_ChangeUsername;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
@@ -57,7 +56,7 @@ public final class RestChangeUsernameGroup
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient change
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             HttpServletResponse res , HttpServletRequest req , @RequestBody R_ChangeUsername request)
+             HttpServletResponse res , HttpServletRequest req , @RequestBody RequestChangeUsernameGroup request)
     {
         AnswerToClient answerToClient = null;
 
@@ -140,7 +139,7 @@ public final class RestChangeUsernameGroup
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed.name ());
-                                r.n (mainAccount , type , true);
+                                r.n (mainAccount , type , false);
                             }
                         }
                         else
@@ -161,9 +160,9 @@ public final class RestChangeUsernameGroup
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , null);
                     r.n (mainAccount , type , true);
                 }
             }
@@ -183,6 +182,6 @@ public final class RestChangeUsernameGroup
 
     private enum ValAnswer
     {
-        this_username_used, repetitive, changed, username_invalid
+        this_username_used, repetitive, changed
     }
 }

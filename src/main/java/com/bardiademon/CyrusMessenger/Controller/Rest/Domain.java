@@ -89,6 +89,12 @@ public abstract class Domain
 
                 public static final String RN_GET_BLOCK = RN_MAIN + "/get";
             }
+
+            public static abstract class RNChange
+            {
+                private static final String RN_CHANGE_USER = RN_MAIN_INFO_USER + "/change";
+                public static final String RN_CHANGE_USERNAME = RN_CHANGE_USER + "/username";
+            }
         }
 
         public static abstract class RNNewInfoUser

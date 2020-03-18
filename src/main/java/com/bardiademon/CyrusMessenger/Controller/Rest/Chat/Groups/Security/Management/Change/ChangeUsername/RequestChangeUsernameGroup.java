@@ -1,13 +1,13 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.UsedRequests;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.Groups.Security.Management.Change.ChangeUsername;
 
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 
-public final class R_ChangeUsername
+public final class RequestChangeUsernameGroup
 {
     private ID id;
     private String username;
 
-    public R_ChangeUsername ()
+    public RequestChangeUsernameGroup ()
     {
     }
 

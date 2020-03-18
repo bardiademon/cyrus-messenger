@@ -12,5 +12,5 @@ public enum SubmitRequestType
     login, register, create_group, find_groups, join_group, owner_groups, group_members,
     new_manager, remove_admin, change_manager, remove_group_member,
 
-    placement_number_user, placement_number_group, update_info_group, change_username_group
+    placement_number_user, placement_number_group, update_info_group, change_username_group,change_username_user
 }
