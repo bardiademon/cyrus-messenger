@@ -73,7 +73,7 @@ public class IdUsernameMainAccount
         }
 
         idUser = mainAccount.getId ();
-        username = mainAccount.getUsername ();
+        username = mainAccount.getUsername ().getUsername ();
 
         return true;
     }

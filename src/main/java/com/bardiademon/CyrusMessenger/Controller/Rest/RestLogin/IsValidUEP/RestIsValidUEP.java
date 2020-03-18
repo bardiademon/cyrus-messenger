@@ -7,12 +7,14 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.Status;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UsersStatus.UsersStatusService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,18 +30,23 @@ public class RestIsValidUEP
     private IsValidUEPRequest request;
 
     private final MainAccountService mainAccountService;
-    private UsersStatusService usersStatusService;
-    private SubmitRequestService submitRequestService;
+    private final UsersStatusService usersStatusService;
+    private final SubmitRequestService submitRequestService;
+    private final UsernamesService usernamesService;
     private HttpServletRequest servletRequest;
     private boolean loginReq;
 
     @Autowired
-    public RestIsValidUEP (MainAccountService _MainAccountService ,
-                           UsersStatusService _UsersStatusService , SubmitRequestService _SubmitRequestService)
+    public RestIsValidUEP
+            (MainAccountService _MainAccountService ,
+             UsersStatusService _UsersStatusService ,
+             SubmitRequestService _SubmitRequestService ,
+             UsernamesService _UsernamesService)
     {
         this.mainAccountService = _MainAccountService;
         this.usersStatusService = _UsersStatusService;
         this.submitRequestService = _SubmitRequestService;
+        this.usernamesService = _UsernamesService;
     }
 
     @RequestMapping ({"/" , ""})
@@ -88,7 +95,7 @@ public class RestIsValidUEP
                     }
                     break;
                     case IsValidUEPRequest.USERNAME:
-                        mainAccount = mainAccountService.findUsername (request.getUep ());
+                        mainAccount = new FITD_Username (request.getUep () , usernamesService).getMainAccount ();
                         if (mainAccount != null)
                         {
                             if ((answerToClient = isActive (mainAccount)) == null)

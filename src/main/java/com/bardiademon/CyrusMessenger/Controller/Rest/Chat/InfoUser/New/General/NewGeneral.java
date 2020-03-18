@@ -68,7 +68,7 @@ public final class NewGeneral
 
     private enum KeyAnswer
     {
-        bio, name, family, username, mylink
+        bio, name, family, mylink
     }
 
 

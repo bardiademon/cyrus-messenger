@@ -5,6 +5,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupS
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -59,8 +60,9 @@ public class Groups
     @Column (nullable = false)
     private String name;
 
-    @Column (unique = true)
-    private String username;
+    @OneToOne (mappedBy = "groups")
+    @Where (clause = "`username_for` = 'group' and `deleted` = false")
+    private Usernames username;
 
     private String bio;
 
@@ -119,12 +121,12 @@ public class Groups
         this.name = name;
     }
 
-    public String getUsername ()
+    public Usernames getUsername ()
     {
         return username;
     }
 
-    public void setUsername (String username)
+    public void setUsername (Usernames username)
     {
         this.username = username;
     }

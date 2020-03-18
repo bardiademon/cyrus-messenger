@@ -16,6 +16,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Arrays;
@@ -98,10 +99,18 @@ public class CheckUserAccessLevel
     public boolean check (int checkProfileOrChat)
     {
         if (mainAccountWhoRequested == null)
-            mainAccountWhoRequested = mainAccountService.findUsername (userWhoRequested);
+        {
+            FITD_Username fitd_username = new FITD_Username (userWhoRequested , mainAccountService.usernamesService);
+            if (fitd_username.isFound ())
+                mainAccountWhoRequested = fitd_username.getMainAccount ();
+        }
 
         if (mainAccountToCheck == null)
-            mainAccountToCheck = mainAccountService.findUsername (userToCheck);
+        {
+            FITD_Username fitd_username = new FITD_Username (userToCheck , mainAccountService.usernamesService);
+            if (fitd_username.isFound ())
+                mainAccountWhoRequested = fitd_username.getMainAccount ();
+        }
 
         if (mainAccountWhoRequested == null || mainAccountToCheck == null) return false;
 

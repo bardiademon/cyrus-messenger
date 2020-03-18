@@ -9,13 +9,13 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 
     MainAccount findByPhoneAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone);
 
-    MainAccount findByUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username);
+    MainAccount findByUsernameUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username);
 
     MainAccount findByEmailAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String email);
 
     MainAccount findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone , String password);
 
-    MainAccount findByUsernameAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username , String password);
+    MainAccount findByUsernameUsernameAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username , String password);
 
     MainAccount findByEmailAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String email , String password);
 

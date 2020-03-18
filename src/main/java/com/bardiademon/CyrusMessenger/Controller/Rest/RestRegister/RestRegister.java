@@ -6,6 +6,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
@@ -33,10 +34,11 @@ public class RestRegister
     private RegisterRequest registerRequest;
 
     private final MainAccountService mainAccountService;
-    private ConfirmedPhoneService confirmedPhoneService;
-    private ConfirmCodeService confirmCodeService;
-    private SubmitRequestService submitRequestService;
-    private BlockedByTheSystemService blockedByTheSystemService;
+    private final ConfirmedPhoneService confirmedPhoneService;
+    private final ConfirmCodeService confirmCodeService;
+    private final SubmitRequestService submitRequestService;
+    private final UsernamesService usernamesService;
+    private final BlockedByTheSystemService blockedByTheSystemService;
     private HttpServletRequest request;
 
     @Autowired
@@ -44,6 +46,7 @@ public class RestRegister
                          ConfirmedPhoneService _ConfirmedPhoneService ,
                          ConfirmCodeService _ConfirmCodeService ,
                          SubmitRequestService _SubmitRequestService ,
+                         UsernamesService _UsernamesService ,
                          BlockedByTheSystemService _BlockedByTheSystemService
     )
     {
@@ -51,6 +54,7 @@ public class RestRegister
         this.confirmedPhoneService = _ConfirmedPhoneService;
         this.confirmCodeService = _ConfirmCodeService;
         this.submitRequestService = _SubmitRequestService;
+        this.usernamesService = _UsernamesService;
         this.blockedByTheSystemService = _BlockedByTheSystemService;
     }
 
@@ -149,7 +153,7 @@ public class RestRegister
 
     private boolean checkExists ()
     {
-        FITD_Username fitd_username = new FITD_Username (registerRequest.getUsername () , mainAccountService);
+        FITD_Username fitd_username = new FITD_Username (registerRequest.getUsername () , usernamesService);
         if (fitd_username.isFound ())
         {
             setError400 (ValAnswer.username.name () , ValAnswer.exists.name ());

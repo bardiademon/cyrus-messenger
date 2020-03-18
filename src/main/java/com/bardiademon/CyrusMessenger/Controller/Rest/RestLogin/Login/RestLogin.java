@@ -9,6 +9,8 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
@@ -36,20 +38,23 @@ public class RestLogin
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
-    private UsersStatusService usersStatusService;
-    private SubmitRequestService submitRequestService;
+    private final UsersStatusService usersStatusService;
+    private final SubmitRequestService submitRequestService;
+    private final UsernamesService usernamesService;
 
     @Autowired
     public RestLogin
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
              UsersStatusService _UsersStatusService ,
-             SubmitRequestService _SubmitRequestService)
+             SubmitRequestService _SubmitRequestService ,
+             UsernamesService _UsernamesService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
         this.usersStatusService = _UsersStatusService;
         this.submitRequestService = _SubmitRequestService;
+        this.usernamesService = _UsernamesService;
     }
 
     @RequestMapping ({"/" , ""})
@@ -71,7 +76,7 @@ public class RestLogin
         }
         else
         {
-            RestIsValidUEP restIsValidUEP = new RestIsValidUEP (mainAccountService , usersStatusService , submitRequestService);
+            RestIsValidUEP restIsValidUEP = new RestIsValidUEP (mainAccountService , usersStatusService , submitRequestService , usernamesService);
             answerToClient = restIsValidUEP.isValid (request.getIsValidUEPRequest () , res , req , true);
 
             Map<String, Object> message = answerToClient.getMessage ();
@@ -176,7 +181,12 @@ public class RestLogin
                 mainAccount = mainAccountService.findEmail (valueEup , password);
                 break;
             case IsValidUEPRequest.USERNAME:
-                mainAccount = mainAccountService.findUsername (valueEup , password);
+                FITD_Username fitd_username = new FITD_Username (valueEup , usernamesService);
+                if (fitd_username.isFound ())
+                {
+                    if (fitd_username.getMainAccount ().getPassword ().equals (password))
+                        mainAccount = fitd_username.getMainAccount ();
+                }
                 break;
         }
         return mainAccount;

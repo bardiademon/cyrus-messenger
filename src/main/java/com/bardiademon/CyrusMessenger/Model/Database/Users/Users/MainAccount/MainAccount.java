@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
@@ -19,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
@@ -66,9 +68,10 @@ public class MainAccount
     @Where (clause = "`deleted` = false and `this_pic_for` = 'user'")
     private List<ProfilePictures> profilePictures;
 
-    @Column (nullable = false, unique = true)
     @JsonIgnore
-    private String username;
+    @OneToOne (mappedBy = "mainAccount")
+    @Where (clause = "`username_for` = 'user' and `deleted` = false")
+    private Usernames username;
 
     @Column (nullable = false)
     @JsonIgnore
@@ -184,12 +187,12 @@ public class MainAccount
         this.userBlocked = userBlocked;
     }
 
-    public String getUsername ()
+    public Usernames getUsername ()
     {
         return username;
     }
 
-    public void setUsername (String username)
+    public void setUsername (Usernames username)
     {
         this.username = username;
     }

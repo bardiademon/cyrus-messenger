@@ -90,7 +90,7 @@ public class GetListFriends
                             {
                                 userFriends = userFriendsList.get (i);
                                 friend = new LinkedHashMap<> ();
-                                friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ());
+                                friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
                                 friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
                                 friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
                                 friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));

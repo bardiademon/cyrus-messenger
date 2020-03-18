@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.LUFU_Service;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.UserFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -34,6 +35,7 @@ public final class NewFriend
     private UserLoginService userLoginService;
     private MainAccountService mainAccountService;
     private UserFriendsService userFriendsService;
+    private UsernamesService usernamesService;
     private LUFU_Service lufu_service;
 
     @Autowired
@@ -41,11 +43,13 @@ public final class NewFriend
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
              UserFriendsService _UserFriendsService ,
+             UsernamesService _UsernamesService,
              LUFU_Service LUFU_Service)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
         this.userFriendsService = _UserFriendsService;
+        this.usernamesService = _UsernamesService;
         this.lufu_service = LUFU_Service;
     }
 
@@ -58,7 +62,7 @@ public final class NewFriend
         IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
         if (isLogin.isValid ())
         {
-            FITD_Username fitd_username = new FITD_Username (username , mainAccountService);
+            FITD_Username fitd_username = new FITD_Username (username , usernamesService);
             if (fitd_username.isValid ())
             {
                 if (fitd_username.isFound ())

@@ -2,6 +2,9 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General.RequestGeneral;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister.RegisterRequest;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernameFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
@@ -24,24 +27,28 @@ public class MainAccountService
 {
 
     public final MainAccountRepository Repository;
-    private SecurityUserChatRepository repositorySecurityChat;
-    private SecurityUserProfileRepository repositorySecurityProfile;
-    private ShowProfileForService showProfileForService;
-    private ShowChatForService showChatForService;
+    private final SecurityUserChatRepository repositorySecurityChat;
+    private final SecurityUserProfileRepository repositorySecurityProfile;
+    private final ShowProfileForService showProfileForService;
+    private final ShowChatForService showChatForService;
+    public final UsernamesService usernamesService;
 
     @Autowired
-    public MainAccountService (MainAccountRepository Repository ,
-                               SecurityUserChatRepository RepositorySecurityChat ,
-                               SecurityUserProfileRepository RepositorySecurityProfile ,
-                               ShowProfileForService _ShowProfileForService ,
-                               ShowChatForService _ShowChatForService
-    )
+    public MainAccountService
+            (MainAccountRepository Repository ,
+             SecurityUserChatRepository RepositorySecurityChat ,
+             SecurityUserProfileRepository RepositorySecurityProfile ,
+             ShowProfileForService _ShowProfileForService ,
+             ShowChatForService _ShowChatForService ,
+             UsernamesService _UsernamesService
+            )
     {
         this.Repository = Repository;
         this.repositorySecurityChat = RepositorySecurityChat;
         this.repositorySecurityProfile = RepositorySecurityProfile;
         this.showProfileForService = _ShowProfileForService;
         this.showChatForService = _ShowChatForService;
+        this.usernamesService = _UsernamesService;
     }
 
 
@@ -51,10 +58,20 @@ public class MainAccountService
         mainAccount.setName (registerRequest.getName ());
         mainAccount.setFamily (registerRequest.getFamily ());
         mainAccount.setPhone (confirmedPhone.getPhone ());
-        mainAccount.setUsername (registerRequest.getUsername ());
+
+        Usernames usernames = new Usernames ();
+        usernames.setUsername (registerRequest.getUsername ());
+        usernames.setUsernameFor (UsernameFor.user);
+        usernames = usernamesService.Repository.save (usernames);
+
+        mainAccount.setUsername (usernames);
         mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.getPassword ()));
 
         MainAccount save = Repository.save (mainAccount);
+
+        usernames.setMainAccount (save);
+        usernamesService.Repository.save (usernames);
+
         SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
         securityUserProfile.setMainAccount (save);
 
@@ -122,7 +139,7 @@ public class MainAccountService
 
     public long toId (String username)
     {
-        MainAccount byUsername = Repository.findByUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
+        MainAccount byUsername = Repository.findByUsernameUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
     }
@@ -137,16 +154,6 @@ public class MainAccountService
         return Repository.findByPhoneAndDeletedFalseAndSystemBlockFalseAndActiveTrue (phone);
     }
 
-    public MainAccount findUsername (String username)
-    {
-        return Repository.findByUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
-    }
-
-    public MainAccount findUsername2 (String username)
-    {
-        return Repository.findByUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
-    }
-
     public MainAccount findEmail (String email)
     {
         return Repository.findByEmailAndDeletedFalseAndSystemBlockFalseAndActiveTrue (email);
@@ -155,11 +162,6 @@ public class MainAccountService
     public MainAccount findPhone (String phone , String password)
     {
         return Repository.findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (phone , password);
-    }
-
-    public MainAccount findUsername (String username , String password)
-    {
-        return Repository.findByUsernameAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username , password);
     }
 
     public MainAccount findEmail (String email , String password)

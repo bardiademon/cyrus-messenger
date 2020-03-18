@@ -10,6 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.web.bind.annotation.*;
@@ -52,8 +53,10 @@ public final class NewBlock
                 VUsername vUsername = new VUsername (request.getUsername ());
                 if (vUsername.check ())
                 {
-                    MainAccount username = mainAccountService.findUsername (request.getUsername ());
-                    if (username == null)
+                    FITD_Username fitd_username = new FITD_Username (request.getUsername () , mainAccountService.usernamesService);
+
+                    MainAccount username;
+                    if (!fitd_username.isFound () || (username = fitd_username.getMainAccount ()) == null)
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
                     else
                     {
@@ -115,6 +118,7 @@ public final class NewBlock
                             }
                         }
                     }
+
                 }
                 else
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());

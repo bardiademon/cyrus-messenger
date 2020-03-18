@@ -12,6 +12,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.GetOneProfilePicture;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
@@ -140,8 +141,8 @@ public final class RestFindGroups
             LinkForJoin linkForJoin = group.getLinkForJoin ();
             if (linkForJoin != null) infoGroup.put (ValAnswer.link_join.name () , linkForJoin.getLink ());
 
-            String username = group.getUsername ();
-            if (!Str.IsEmpty (username)) infoGroup.put (ValAnswer.username.name () , username);
+            Usernames username = group.getUsername ();
+            if (username != null && !Str.IsEmpty (username.getUsername ())) infoGroup.put (ValAnswer.username.name () , username.getUsername ());
 
             String link = group.getLink ();
             if (!Str.IsEmpty (link)) infoGroup.put (ValAnswer.link.name () , link);

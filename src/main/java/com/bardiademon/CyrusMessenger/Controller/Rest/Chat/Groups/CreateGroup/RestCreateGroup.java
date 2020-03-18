@@ -13,6 +13,9 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoinService;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernameFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -36,14 +39,18 @@ public final class RestCreateGroup
 
     private final GroupsService groupsService;
     private final LinkForJoinService linkForJoinService;
-    private GroupSecurityProfileService groupSecurityProfileService;
+    private final GroupSecurityProfileService groupSecurityProfileService;
+    private final UsernamesService usernamesService;
 
     @Autowired
-    public RestCreateGroup (GroupsService _GroupsService , LinkForJoinService _LinkForJoinService , GroupSecurityProfileService _GroupSecurityProfileService)
+    public RestCreateGroup
+            (GroupsService _GroupsService , LinkForJoinService _LinkForJoinService ,
+             GroupSecurityProfileService _GroupSecurityProfileService , UsernamesService _UsernamesService)
     {
         this.groupsService = _GroupsService;
         this.linkForJoinService = _LinkForJoinService;
         this.groupSecurityProfileService = _GroupSecurityProfileService;
+        this.usernamesService = _UsernamesService;
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -166,8 +173,19 @@ public final class RestCreateGroup
         groups.setBio (request.getBio ());
         groups.setName (request.getName ());
         groups.setOwner (mainAccount);
+
+        Usernames usernames = null;
+
         if (!Str.IsEmpty (request.getDescription ())) groups.setDescription (request.getDescription ());
-        if (!Str.IsEmpty (request.getUsername ())) groups.setUsername (request.getUsername ());
+        if (!Str.IsEmpty (request.getUsername ()))
+        {
+            usernames = new Usernames ();
+            usernames.setUsernameFor (UsernameFor.group);
+            usernames.setUsername (request.getUsername ());
+            usernames = usernamesService.Repository.save (usernames);
+
+            groups.setUsername (usernames);
+        }
 
         boolean createCode = false;
 
@@ -191,6 +209,12 @@ public final class RestCreateGroup
             if (createCode) groups.setLinkForJoin (linkForJoin);
 
             Groups groupSave = groupsService.Repository.save (groups);
+
+            if (usernames != null)
+            {
+                usernames.setGroups (groups);
+                usernamesService.Repository.save (usernames);
+            }
 
             if (createCode)
             {
