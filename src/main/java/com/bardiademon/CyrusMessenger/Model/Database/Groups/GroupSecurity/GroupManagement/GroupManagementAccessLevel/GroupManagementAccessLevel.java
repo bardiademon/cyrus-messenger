@@ -49,6 +49,9 @@ public final class GroupManagementAccessLevel
     @Column (name = "change_link")
     private boolean changeLink;
 
+    @Column (name = "change_username")
+    private boolean changeUsername = true;
+
     @Column (name = "change_description")
     private boolean changeDescription;
 
@@ -297,5 +300,15 @@ public final class GroupManagementAccessLevel
     public void setChangePlacementNumber (boolean changePlacementNumber)
     {
         this.changePlacementNumber = changePlacementNumber;
+    }
+
+    public boolean isChangeUsername ()
+    {
+        return changeUsername;
+    }
+
+    public void setChangeUsername (boolean changeUsername)
+    {
+        this.changeUsername = changeUsername;
     }
 }

@@ -45,6 +45,8 @@ public final class ThisManagerHaveAccess
                 return accessLevel.isChangeBio ();
             case change_link:
                 return accessLevel.isChangeLink ();
+            case change_username:
+                return accessLevel.isChangeUsername ();
             case change_description:
                 return accessLevel.isChangeDescription ();
             case temporarily_closed:
