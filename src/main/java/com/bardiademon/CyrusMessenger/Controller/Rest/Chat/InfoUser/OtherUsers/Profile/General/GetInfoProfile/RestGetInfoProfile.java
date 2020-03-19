@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNOtherUsers.RN_GET_INFO_PROFILE, method = RequestMethod.POST)
-public final class GetInfoProfile
+public final class RestGetInfoProfile
 {
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
@@ -39,7 +39,7 @@ public final class GetInfoProfile
     private final CheckUserAccessLevel.ServiceProfile serviceProfile;
 
     @Autowired
-    public GetInfoProfile
+    public RestGetInfoProfile
             (UserLoginService _UserLoginService ,
              MainAccountService _MainAccountService ,
              UserContactsService _UserContactsService ,
