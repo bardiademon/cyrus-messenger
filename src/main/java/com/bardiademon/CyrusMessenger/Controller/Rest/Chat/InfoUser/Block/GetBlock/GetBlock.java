@@ -15,6 +15,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,7 @@ public final class GetBlock
 
     private final CheckUserAccessLevel.ServiceProfile serviceProfile;
 
+    @Autowired
     public GetBlock
             (UserLoginService _UserLoginService , UserBlockedService _UserBlockedService , MainAccountService _MainAccountService ,
              ShowProfileForService _ShowProfileForService ,
@@ -43,7 +45,7 @@ public final class GetBlock
         this.userLoginService = _UserLoginService;
         this.userBlockedService = _UserBlockedService;
         this.mainAccountService = _MainAccountService;
-        serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -59,7 +61,7 @@ public final class GetBlock
 
             List<UserBlocked> userBlocked = userBlockedService.listBlocked (mainAccount.getId ());
             if (userBlocked == null || userBlocked.size () == 0)
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_found.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
             else
             {
                 UserBlocked blocked;
@@ -75,7 +77,7 @@ public final class GetBlock
 
                     blocked.setValidityTimeToJson (Time.toString (blocked.getValidityTime ()));
                     userBlocked.remove (i);
-                    userBlocked.add (blocked);
+                    userBlocked.add (i , blocked);
                 }
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , userBlocked);
             }
@@ -84,10 +86,5 @@ public final class GetBlock
 
         answerToClient.setResponse (res);
         return answerToClient;
-    }
-
-    private enum ValAnswer
-    {
-        not_found
     }
 }

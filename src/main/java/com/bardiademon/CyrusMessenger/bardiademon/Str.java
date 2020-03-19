@@ -2,9 +2,9 @@ package com.bardiademon.CyrusMessenger.bardiademon;
 
 public final class Str
 {
-    public static boolean IsEmpty (String str)
+    public static boolean IsEmpty (Object str)
     {
-        return (str == null || str.isEmpty ());
+        return (str == null || (String.valueOf (str)).isEmpty ());
     }
 
     public static boolean HasBool (String str)
@@ -31,6 +31,13 @@ public final class Str
         {
             return null;
         }
+    }
+
+    public static boolean isNumber (Object str)
+    {
+        if (str instanceof Integer || str instanceof Long || str instanceof Short || str instanceof Double || str instanceof Float)
+            return true;
+        else return (String.valueOf (str)).matches ("[0-9]*");
     }
 
     public static boolean RealBool (String str)

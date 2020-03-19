@@ -1,10 +1,14 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Block.NewBlock;
 
+import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class RequestNewBlock
 {
     private String username;
+
+    @JsonProperty ("id_user")
+    private ID idUser;
 
     @JsonProperty ("plus_up_to")
     private String plusUpTo;
@@ -67,6 +71,16 @@ public final class RequestNewBlock
     public void setType (String type)
     {
         this.type = type;
+    }
+
+    public ID getIdUser ()
+    {
+        return idUser;
+    }
+
+    public void setIdUser (ID idUser)
+    {
+        this.idUser = idUser;
     }
 
     public enum PlusUpTo

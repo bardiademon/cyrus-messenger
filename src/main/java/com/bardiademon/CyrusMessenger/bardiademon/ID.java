@@ -54,4 +54,9 @@ public final class ID
         return valid;
     }
 
+    @JsonIgnore
+    public Object getIdObj ()
+    {
+        return idObj;
+    }
 }

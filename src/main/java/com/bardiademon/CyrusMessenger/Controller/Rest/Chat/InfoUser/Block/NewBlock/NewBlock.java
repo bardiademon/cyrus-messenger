@@ -3,18 +3,27 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Block.NewBl
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
-import org.springframework.web.bind.annotation.*;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
@@ -27,6 +36,7 @@ public final class NewBlock
     private final MainAccountService mainAccountService;
     private final UserBlockedService userBlockedService;
 
+    @Autowired
     public NewBlock
             (UserLoginService _UserLoginService , MainAccountService _MainAccountService , UserBlockedService _UserBlockedService)
     {
@@ -37,48 +47,70 @@ public final class NewBlock
 
     @RequestMapping (value = {"" , "/"})
     public AnswerToClient newBlock
-            (HttpServletResponse res ,
+            (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody RequestNewBlock request)
     {
         AnswerToClient answerToClient;
 
-        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
-        if (isLogin.isValid ())
+        String router = Domain.RNChat.RNInfoUser.RNBlock.RN_NEW_BLOCK;
+        SubmitRequestType type = SubmitRequestType.new_block;
+
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , type);
+        if (both.isOk ())
         {
-            if (request == null || request.getExtent () <= 0 || Str.IsEmpty (request.getUsername ()) || Str.IsEmpty (request.getPlusUpTo ()))
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (request == null || (Str.IsEmpty (request.getUsername ()) && Str.IsEmpty (request.getIdUser ().getIdObj ()))
+                    || (request.isBlock () && (request.getExtent () <= 0 || Str.IsEmpty (request.getPlusUpTo ()))))
                 answerToClient = AnswerToClient.RequestIsNull ();
             else
             {
-                VUsername vUsername = new VUsername (request.getUsername ());
-                if (vUsername.check ())
+                if (Str.IsEmpty (request.getIdUser ().getIdObj ()) || request.getIdUser ().isValid ())
                 {
-                    FITD_Username fitd_username = new FITD_Username (request.getUsername () , mainAccountService.usernamesService);
-
-                    MainAccount username;
-                    if (!fitd_username.isFound () || (username = fitd_username.getMainAccount ()) == null)
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
-                    else
+                    IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , request.getIdUser ().getId () , request.getUsername ());
+                    if (idUsernameMainAccount.isValid ())
                     {
-                        MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-
+                        MainAccount username = idUsernameMainAccount.getMainAccount ();
                         if (mainAccount.getId () == username.getId ())
+                        {
                             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_cannot_block_yourself.name ());
+                            answerToClient.setReqRes (req , res);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_cannot_block_yourself.name ()) , null);
+                            r.n (mainAccount , type , true);
+                        }
                         else
                         {
-                            RequestNewBlock.PlusUpTo plusUpTo = request.checkPlusToUp (request.getPlusUpTo ());
-                            UserBlocked.Type type = checkType (request.getType ());
-                            if (plusUpTo == null)
+                            RequestNewBlock.PlusUpTo plusUpTo = null;
+
+                            if (request.isBlock ())
+                                plusUpTo = request.checkPlusToUp (request.getPlusUpTo ());
+
+                            UserBlocked.Type typeBlock = checkType (request.getType ());
+
+                            if (request.isBlock () && plusUpTo == null)
+                            {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.plus_up_to_invalid.name ());
-                            else if (type == null)
+                                answerToClient.setReqRes (req , res);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.plus_up_to_invalid.name ()) , null);
+                                r.n (mainAccount , type , true);
+                            }
+                            else if (typeBlock == null)
+                            {
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.type_invalid.name ());
+                                answerToClient.setReqRes (req , res);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.type_invalid.name ()) , null);
+                                r.n (mainAccount , type , true);
+                            }
                             else
                             {
                                 UserBlocked blocked
-                                        = userBlockedService.isBlocked (mainAccount.getId () , username.getId () , type);
+                                        = userBlockedService.isBlocked (mainAccount.getId () , username.getId () , typeBlock);
 
                                 if (request.isBlock ())
                                 {
+                                    assert plusUpTo != null;
+
                                     if (blocked != null && Time.BiggerNow (blocked.getValidityTime ()))
                                     {
                                         blocked.setUnblocked (true);
@@ -93,40 +125,74 @@ public final class NewBlock
                                         blocked.setMainAccount (mainAccount);
                                         blocked.setMainAccountBlocked (username);
                                         blocked.setValidityTime (getValidityTime (plusUpTo , request.getExtent ()));
-                                        blocked.setType (type);
+                                        blocked.setType (typeBlock);
                                         blocked = userBlockedService.Repository.save (blocked);
                                         if (blocked.getId () > 0)
+                                        {
                                             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.blocked.name ());
+                                            answerToClient.setReqRes (req , res);
+                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.blocked.name ());
+                                            r.n (mainAccount , type , false);
+                                        }
                                         else
+                                        {
                                             answerToClient = AnswerToClient.ServerError ();
+                                            answerToClient.setReqRes (req , res);
+                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("server error") , null);
+                                            r.n (mainAccount , type , true);
+                                        }
                                     }
                                     else
+                                    {
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.already_blocked.name ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.already_blocked.name ()) , null);
+                                        r.n (mainAccount , type , true);
+                                    }
                                 }
                                 else
                                 {
                                     if (blocked == null)
+                                    {
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_blocked.name ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_blocked.name ()) , null);
+                                    }
                                     else
                                     {
                                         blocked.setUnblocked (true);
                                         blocked.setUnblockedAt (LocalDateTime.now ());
                                         userBlockedService.Repository.save (blocked);
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.unblocked.name ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unblocked.name ()) , null);
                                     }
+                                    r.n (mainAccount , type , true);
                                 }
                             }
                         }
-                    }
 
+
+                    }
+                    else
+                    {
+                        answerToClient = idUsernameMainAccount.getAnswerToClient ();
+                        answerToClient.setReqRes (req , res);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                        r.n (mainAccount , type , true);
+                    }
                 }
                 else
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+                {
+                    answerToClient = AnswerToClient.IdInvalid ();
+                    answerToClient.setReqRes (req , res);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    r.n (mainAccount , type , true);
+                }
             }
         }
-        else answerToClient = isLogin.getAnswerToClient ();
+        else answerToClient = both.getAnswerToClient ();
 
-        answerToClient.setResponse (res);
         return answerToClient;
     }
 
@@ -162,7 +228,7 @@ public final class NewBlock
 
     private enum ValAnswer
     {
-        username_invalid, username_not_found, plus_up_to_invalid,
+        plus_up_to_invalid,
         you_cannot_block_yourself, blocked, already_blocked, not_blocked, unblocked, type_invalid
     }
 
