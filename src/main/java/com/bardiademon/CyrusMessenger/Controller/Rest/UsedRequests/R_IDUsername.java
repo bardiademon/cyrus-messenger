@@ -1,9 +1,13 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.UsedRequests;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class R_IDUsername
 {
+
     private long id;
 
+    @JsonInclude (value = JsonInclude.Include.NON_NULL)
     private String username;
 
     public R_IDUsername ()
@@ -29,4 +33,5 @@ public class R_IDUsername
     {
         this.username = username;
     }
+
 }

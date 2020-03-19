@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.UpdateTimestamp;
 

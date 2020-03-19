@@ -40,18 +40,19 @@ public abstract class Domain
         public static abstract class RNInfoUser
         {
             public static final String RN_MAIN_INFO_USER = RN_MAIN_CHAT + "/info_user";
-
-            public static final String RN_MAIN = RN_MAIN_CHAT + "/info_user/get/";
-
-
+            public static final String RN_MAIN = RN_MAIN_INFO_USER + "/get";
             public static final String RN_GENERAL = RN_MAIN + "/general";
 
             public static abstract class RNSecurity
             {
                 public static final String RN_MAIN = RNInfoUser.RN_MAIN + "/security";
-
                 public static final String RN_PROFILE = RN_MAIN + "/profile";
-                public static final String RN_CHAT = RN_MAIN + "/chat";
+                public static final String RN_CHAT = "/chat";
+
+                private static final String RN_SECURITY_USER = RN_MAIN_INFO_USER + "/security";
+                private static final String RN_SHOW_PROFILE_FOR = RN_SECURITY_USER + "/show_profile_for";
+                public static final String RN_SHOW_PROFILE_FOR_ADD = RN_SHOW_PROFILE_FOR + "/add";
+                public static final String RN_SHOW_PROFILE_FOR_REMOVE = RN_SHOW_PROFILE_FOR + "/remove";
             }
 
             public static abstract class RNGetListFriends
