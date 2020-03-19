@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public final class RequestGeneral
 {
     private String bio;
@@ -8,10 +10,19 @@ public final class RequestGeneral
     private String mylink;
 
 
+    @JsonIgnore
     private boolean updatedBio;
+
+    @JsonIgnore
     private boolean updatedName;
+
+    @JsonIgnore
     private boolean updatedFamily;
+
+    @JsonIgnore
     private boolean updatedUsername;
+
+    @JsonIgnore
     private boolean updatedMylink;
 
     public RequestGeneral ()
