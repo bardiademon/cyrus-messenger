@@ -27,10 +27,10 @@ public class MainAccountService
 {
 
     public final MainAccountRepository Repository;
-    private final SecurityUserChatRepository repositorySecurityChat;
-    private final SecurityUserProfileRepository repositorySecurityProfile;
-    private final ShowProfileForService showProfileForService;
-    private final ShowChatForService showChatForService;
+    public final SecurityUserChatRepository repositorySecurityChat;
+    public final SecurityUserProfileRepository repositorySecurityProfile;
+    public final ShowProfileForService showProfileForService;
+    public final ShowChatForService showChatForService;
     public final UsernamesService usernamesService;
 
     @Autowired

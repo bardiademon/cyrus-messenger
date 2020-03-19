@@ -23,6 +23,7 @@ public class AnswerToClient
     @JsonIgnore
     private HttpServletRequest request;
 
+    @Deprecated
     public AnswerToClient (int StatusCode , boolean Ok)
     {
         this.statusCode = StatusCode;

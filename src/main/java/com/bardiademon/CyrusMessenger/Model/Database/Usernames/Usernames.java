@@ -32,6 +32,7 @@ public final class Usernames
     /*
      * baraye hazf
      */
+    @JsonIgnore
     private long id2;
 
     private String username;

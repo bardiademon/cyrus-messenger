@@ -23,16 +23,16 @@ import java.time.LocalDateTime;
 public final class NewBlock
 {
 
-    private UserLoginService userLoginService;
-    private MainAccountService mainAccountService;
-    private UserBlockedService userBlockedService;
+    private final UserLoginService userLoginService;
+    private final MainAccountService mainAccountService;
+    private final UserBlockedService userBlockedService;
 
     public NewBlock
-            (UserLoginService _UserLoginService , MainAccountService _MainAccountService , UserBlockedService UserBlockedService)
+            (UserLoginService _UserLoginService , MainAccountService _MainAccountService , UserBlockedService _UserBlockedService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.userBlockedService = UserBlockedService;
+        this.userBlockedService = _UserBlockedService;
     }
 
     @RequestMapping (value = {"" , "/"})

@@ -33,9 +33,6 @@ public final class ShowProfile
 
     private final CheckUserAccessLevel.ServiceProfile serviceProfile;
 
-    private IsLogin isLogin;
-    private MainAccount mainAccountGetProfile;
-
 
     @Autowired
     public ShowProfile
@@ -50,7 +47,7 @@ public final class ShowProfile
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
     }
 
     @RequestMapping (value = {"" , "/"})
@@ -62,13 +59,13 @@ public final class ShowProfile
     {
         AnswerToClient answerToClient;
 
-        isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
         if (isLogin.isValid ())
         {
             IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , idUser , username);
             if (idUsernameMainAccount.isValid ())
             {
-                mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
+                MainAccount mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
 
                 CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
                         (isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
@@ -91,30 +88,5 @@ public final class ShowProfile
     public enum KeyAnswer
     {
         i_can
-    }
-
-    public IsLogin getIsLogin ()
-    {
-        return isLogin;
-    }
-
-    public MainAccount getMainAccountGetProfile ()
-    {
-        return mainAccountGetProfile;
-    }
-
-    public CheckUserAccessLevel.ServiceProfile getServiceProfile ()
-    {
-        return serviceProfile;
-    }
-
-    public MainAccountService getMainAccountService ()
-    {
-        return mainAccountService;
-    }
-
-    public UserLoginService getUserLoginService ()
-    {
-        return userLoginService;
     }
 }

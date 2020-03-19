@@ -20,13 +20,13 @@ import java.util.List;
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNBlock.RN_GET_BLOCK, method = RequestMethod.POST)
 public final class GetBlock
 {
-    private UserLoginService userLoginService;
-    private UserBlockedService userBlockedService;
+    private final UserLoginService userLoginService;
+    private final UserBlockedService userBlockedService;
 
-    public GetBlock (UserLoginService _UserLoginService , UserBlockedService UserBlockedService)
+    public GetBlock (UserLoginService _UserLoginService , UserBlockedService _UserBlockedService)
     {
         this.userLoginService = _UserLoginService;
-        this.userBlockedService = UserBlockedService;
+        this.userBlockedService = _UserBlockedService;
     }
 
     @RequestMapping (value = {"" , "/"})

@@ -26,7 +26,6 @@ public class IdUsernameMainAccount
 
     private boolean check ()
     {
-
         if (Str.IsEmpty (username) && idUser <= 0)
         {
             setAnswerToClient (ValAnswer.id_invalid);
