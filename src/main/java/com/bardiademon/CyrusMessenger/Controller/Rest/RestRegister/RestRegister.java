@@ -58,7 +58,7 @@ public class RestRegister
         this.blockedByTheSystemService = _BlockedByTheSystemService;
     }
 
-    @RequestMapping ({"/" , ""})
+    @RequestMapping ({ "/" , "" })
     public AnswerToClient register (HttpServletResponse res , HttpServletRequest request , @RequestBody RegisterRequest registerRequest)
     {
         this.request = request;
@@ -104,7 +104,7 @@ public class RestRegister
                                 {
                                     if (mainAccountService.newAccount (registerRequest , confirmedPhone , confirmCodeService))
                                     {
-                                        answerToClient = new AnswerToClient (200 , true);
+                                        answerToClient = AnswerToClient.OK ();
                                         answerToClient.put (KeyAnswer.answer.name () , ValAnswer.recorded.name ());
                                         answerToClient.put (KeyAnswer.phone.name () , confirmedPhone.getPhone ());
                                         submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , false);

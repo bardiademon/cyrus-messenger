@@ -117,7 +117,7 @@ public class RestLogin
                         assert code != null;
                         if (userLoginService.newLogin (code , mainAccount , req.getRemoteAddr ()))
                         {
-                            answerToClient = new AnswerToClient (200 , true);
+                            answerToClient = AnswerToClient.OK ();
                             answerToClient.put (KeyAnswer.is_login.name () , true);
                             answerToClient.put (KeyAnswer.code_login.name () , code);
                             answerToClient.put (KeyAnswer.credit_up.name () , userLoginService.getCreditUp ());

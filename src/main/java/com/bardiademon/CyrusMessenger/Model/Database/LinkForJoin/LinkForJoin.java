@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table (name = "link_for_join")
-public class LinkForJoin
+public final class LinkForJoin
 {
     public final static int MAX_LEN_CODE = 20;
 

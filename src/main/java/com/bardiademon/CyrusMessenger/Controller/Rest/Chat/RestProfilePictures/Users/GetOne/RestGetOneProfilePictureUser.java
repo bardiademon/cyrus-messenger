@@ -4,33 +4,35 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.P
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
-import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import org.apache.commons.io.IOUtils;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_USER, method = RequestMethod.POST)
@@ -38,31 +40,37 @@ public final class RestGetOneProfilePictureUser
 {
 
     private final UserLoginService userLoginService;
-    private final MainAccountService mainAccountService;
     private final ProfilePicturesService profilePicturesService;
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
     public RestGetOneProfilePictureUser
             (
-                    UserLoginService _UserLoginService ,
                     MainAccountService _MainAccountService ,
-                    ShowProfileForService _ShowProfileForService ,
-                    UserContactsService _UserContactsService ,
+                    EnumTypesService _EnumTypesService ,
+                    UserLoginService _UserLoginService ,
+                    UserListService _UserListService ,
                     UserFriendsService _UserFriendsService ,
-                    SecurityUserProfileService _SecurityUserProfileService ,
+                    UserContactsService _UserContactsService ,
+                    UserSeparateProfilesService _UserSeparateProfilesService ,
                     UserBlockedService _UserBlockedService ,
                     ProfilePicturesService _ProfilePicturesService
             )
     {
         this.userLoginService = _UserLoginService;
-        this.mainAccountService = _MainAccountService;
         this.profilePicturesService = _ProfilePicturesService;
-        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
+                _EnumTypesService ,
+                _UserListService ,
+                _UserFriendsService ,
+                _UserContactsService ,
+                _UserSeparateProfilesService ,
+                _UserBlockedService ,
+                _ProfilePicturesService);
     }
 
 
-    @RequestMapping (value = {"/" , "" , "/{ID_PROFILE_PICTURE}"}, produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping (value = { "/" , "" , "/{ID_PROFILE_PICTURE}" }, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getOne
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -84,10 +92,21 @@ public final class RestGetOneProfilePictureUser
                     assert both.getIsLogin () != null;
                     MainAccount mainAccountRequest = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
                     MainAccount mainAccountUser = profilePictures.getMainAccount ();
-                    CheckUserAccessLevel accessLevel = new CheckUserAccessLevel (mainAccountRequest , mainAccountUser , mainAccountService);
-                    accessLevel.setServiceProfile (serviceProfile);
-                    if (accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.cover))
-                        return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
+                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (serviceProfile , mainAccountRequest , mainAccountUser);
+                    if (accessLevel.hasAccess (Which.cover))
+                    {
+                        if (accessLevel.isSeparateProfilePictures ())
+                        {
+                            List <ProfilePictures> separateProfilePictures = accessLevel.getProfilePictures ();
+                            for (ProfilePictures profilePicture : separateProfilePictures)
+                            {
+                                if (profilePicture.getId () == profilePictures.getId ())
+                                    return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
+                            }
+                        }
+                        else
+                            return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
+                    }
                 }
 
             }

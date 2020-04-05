@@ -8,7 +8,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.LUFU_Service;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.UserFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
@@ -33,7 +32,6 @@ public final class NewFriend
     private MainAccount user, friend;
 
     private UserLoginService userLoginService;
-    private MainAccountService mainAccountService;
     private UserFriendsService userFriendsService;
     private UsernamesService usernamesService;
     private LUFU_Service lufu_service;
@@ -41,13 +39,11 @@ public final class NewFriend
     @Autowired
     public NewFriend
             (UserLoginService _UserLoginService ,
-             MainAccountService _MainAccountService ,
              UserFriendsService _UserFriendsService ,
              UsernamesService _UsernamesService,
              LUFU_Service LUFU_Service)
     {
         this.userLoginService = _UserLoginService;
-        this.mainAccountService = _MainAccountService;
         this.userFriendsService = _UserFriendsService;
         this.usernamesService = _UsernamesService;
         this.lufu_service = LUFU_Service;

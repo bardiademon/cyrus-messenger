@@ -2,10 +2,12 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserList;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,6 +69,18 @@ public class MainAccount
     @JsonBackReference
     @Where (clause = "`deleted` = false and `this_pic_for` = 'user'")
     private List<ProfilePictures> profilePictures;
+
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
+    @JsonBackReference
+    @Where (clause = "`deleted` = false")
+    private List<UserList> userList;
+
+    @OneToMany (mappedBy = "mainAccount")
+    @JsonIgnore
+    @JsonBackReference
+    @Where (clause = "`deleted` = false")
+    private List<UserSeparateProfiles> userSeparateProfiles;
 
     @JsonIgnore
     @OneToOne (mappedBy = "mainAccount")
@@ -343,5 +357,25 @@ public class MainAccount
     public void setSystemBlockAt (LocalDateTime systemBlockAt)
     {
         this.systemBlockAt = systemBlockAt;
+    }
+
+    public List<UserList> getUserList ()
+    {
+        return userList;
+    }
+
+    public void setUserList (List<UserList> userList)
+    {
+        this.userList = userList;
+    }
+
+    public List<UserSeparateProfiles> getUserSeparateProfiles ()
+    {
+        return userSeparateProfiles;
+    }
+
+    public void setUserSeparateProfiles (List<UserSeparateProfiles> userSeparateProfiles)
+    {
+        this.userSeparateProfiles = userSeparateProfiles;
     }
 }

@@ -7,9 +7,11 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.P
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -19,6 +21,8 @@ import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -39,9 +43,9 @@ import java.time.LocalDateTime;
 public final class RestUploadProfilePictureUser
 {
 
-    private UserLoginService userLoginService;
-    private ProfilePicturesService profilePicturesService;
-    private SecurityUserProfileService securityUserProfileService;
+    private final UserLoginService userLoginService;
+    private final ProfilePicturesService profilePicturesService;
+    private final SecurityUserProfileService securityUserProfileService;
 
     @Autowired
     public RestUploadProfilePictureUser
@@ -53,7 +57,7 @@ public final class RestUploadProfilePictureUser
         this.securityUserProfileService = _SecurityUserProfileService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient upload
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -86,7 +90,38 @@ public final class RestUploadProfilePictureUser
                         int maxUploadProfilePictures = securityUserProfileService.Repository.getMaxUploadProfilePictures (mainAccount.getId ());
                         int countUploadPicUser = profilePicturesService.countUploadPicUser (mainAccount.getId ());
                         if (countUploadPicUser < maxUploadProfilePictures)
-                            answerToClient = upload (request , profilePictures , checkRequest.getCheckImage () , mainAccount , res , req , router);
+                        {
+                            boolean ok = false;
+
+                            List <AccessLevel.Who> who = null;
+                            if (request.isSeparate ())
+                            {
+                                List <String> whoStr = request.getWho ();
+                                if (whoStr != null && whoStr.size () > 0)
+                                {
+                                    who = new ArrayList <> ();
+                                    AccessLevel.Who to;
+                                    for (String whoS : whoStr)
+                                    {
+                                        to = AccessLevel.Who.to (whoS);
+                                        if (to != null)
+                                        {
+                                            if (!ok) ok = true;
+                                            who.add (to);
+                                        }
+                                        else
+                                        {
+                                            ok = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else ok = true;
+
+                            if (ok)
+                                answerToClient = upload (request , profilePictures , checkRequest.getCheckImage () , mainAccount , res , req , router , who);
+                        }
                         else
                         {
                             answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed.name ());
@@ -118,7 +153,7 @@ public final class RestUploadProfilePictureUser
         return answerToClient;
     }
 
-    private AnswerToClient upload (RequestUploadProfilePictureUser request , ProfilePictures profilePictures , CheckImage checkImage , MainAccount mainAccount , HttpServletResponse res , HttpServletRequest req , String router)
+    private AnswerToClient upload (RequestUploadProfilePictureUser request , ProfilePictures profilePictures , CheckImage checkImage , MainAccount mainAccount , HttpServletResponse res , HttpServletRequest req , String router , List <AccessLevel.Who> who)
     {
         AnswerToClient answerToClient;
         try
@@ -159,6 +194,25 @@ public final class RestUploadProfilePictureUser
                 else newProfilePictures.setMainPic (request.isMain ());
 
                 newProfilePictures = profilePicturesService.Repository.save (newProfilePictures);
+
+
+                if (who != null)
+                {
+                    List <EnumTypes> enumTypes = new ArrayList <> ();
+
+                    EnumTypes enumType;
+                    for (AccessLevel.Who w : who)
+                    {
+                        enumType = new EnumTypes ();
+                        enumType.setEnumType (w.name ());
+                        enumType.setId2 (newProfilePictures.getId ());
+                        enumTypes.add (enumType);
+                    }
+                    newProfilePictures.setSeparate (true);
+                    newProfilePictures.setSeparateFor (enumTypes);
+
+                    profilePicturesService.Repository.save (newProfilePictures);
+                }
 
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
                 answerToClient.put (AnswerToClient.CUK.id.name () , newProfilePictures.getId ());

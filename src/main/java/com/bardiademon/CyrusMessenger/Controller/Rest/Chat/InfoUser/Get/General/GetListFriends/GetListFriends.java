@@ -3,10 +3,11 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
@@ -14,6 +15,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,27 +36,35 @@ public class GetListFriends
     private IsLogin isLogin;
 
     private final UserLoginService userLoginService;
-    private final MainAccountService mainAccountService;
 
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
     public GetListFriends
-            (UserFriendsService _UserFriendsService ,
+            (MainAccountService _MainAccountService ,
+             EnumTypesService _EnumTypesService ,
              UserLoginService _UserLoginService ,
-             MainAccountService _MainAccountService ,
-             ShowProfileForService _ShowProfileForService ,
+             UserListService _UserListService ,
+             UserFriendsService _UserFriendsService ,
              UserContactsService _UserContactsService ,
-             SecurityUserProfileService _SecurityUserProfileService ,
-             UserBlockedService _UserBlockedService
+             UserSeparateProfilesService _UserSeparateProfilesService ,
+             UserBlockedService _UserBlockedService ,
+             ProfilePicturesService _ProfilePicturesService
             )
     {
-        serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
+                _EnumTypesService ,
+                _UserListService ,
+                _UserFriendsService ,
+                _UserContactsService ,
+                _UserSeparateProfilesService ,
+                _UserBlockedService ,
+                _ProfilePicturesService);
+
         this.userLoginService = _UserLoginService;
-        this.mainAccountService = _MainAccountService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient getList
             (HttpServletResponse res ,
              @RequestParam ("status") String status ,
@@ -72,7 +83,7 @@ public class GetListFriends
                 try
                 {
                     answerToClient = AnswerToClient.OK ();
-                    List<UserFriends> userFriendsList;
+                    List <UserFriends> userFriendsList;
                     if (status.equals (KeyRequest.all.name ()))
                     {
                         answerToClient = AnswerToClient.OK ();
@@ -92,26 +103,24 @@ public class GetListFriends
                     {
                         StatusFriends statusFriends = StatusFriends.valueOf (status);
                         MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-                        userFriendsList =
-                                serviceProfile._UserFriendsService.Repository.findAllByMainAccountAndStatus
-                                        (mainAccount , statusFriends);
+                        userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
+                                (mainAccount , statusFriends);
 
 
                         if (userFriendsList.size () > 0)
                         {
-                            Map<String, String> friend;
+                            Map <String, String> friend;
                             UserFriends userFriends;
 
-                            CheckUserAccessLevel checkUserAccessLevel;
+                            UserProfileAccessLevel checkUserAccessLevel;
 
                             for (int i = 0; i < userFriendsList.size (); i++)
                             {
                                 userFriends = userFriendsList.get (i);
-                                friend = new LinkedHashMap<> ();
+                                friend = new LinkedHashMap <> ();
 
-                                checkUserAccessLevel = new CheckUserAccessLevel (mainAccount , userFriends.getMainAccountFriend () , mainAccountService);
-                                checkUserAccessLevel.setServiceProfile (serviceProfile);
-                                if (checkUserAccessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_username))
+                                checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
+                                if (checkUserAccessLevel.hasAccess (Which.username))
                                     friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
 
                                 friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());

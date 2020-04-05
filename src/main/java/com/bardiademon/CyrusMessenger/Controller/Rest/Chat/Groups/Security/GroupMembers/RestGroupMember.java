@@ -4,9 +4,11 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevel;
@@ -15,13 +17,14 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -44,30 +47,33 @@ public final class RestGroupMember
     private final UserLoginService userLoginService;
     private final GroupsService groupsService;
     private final JoinGroupService joinGroupService;
-    private final MainAccountService mainAccountService;
     private final GroupManagementService groupManagementService;
 
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final UserProfileAccessLevel.Service service;
 
     @Autowired
     public RestGroupMember
             (UserLoginService _UserLoginService ,
              GroupsService _GroupsService ,
              JoinGroupService _JoinGroupService ,
-             MainAccountService _MainAccountService ,
-             ShowProfileForService _ShowProfileForService , UserContactsService _UserContactsService ,
-             UserFriendsService _UserFriendsService , SecurityUserProfileService _SecurityUserProfileService ,
-             UserBlockedService _UserBlockedService , GroupManagementService _GroupManagementService)
+             GroupManagementService _GroupManagementService , MainAccountService _MainAccountService ,
+             EnumTypesService _EnumTypesService ,
+             UserListService _UserListService ,
+             UserFriendsService _UserFriendsService ,
+             UserContactsService _UserContactsService ,
+             UserSeparateProfilesService _UserSeparateProfilesService ,
+             UserBlockedService _UserBlockedService ,
+             ProfilePicturesService _ProfilePicturesService)
     {
         this.userLoginService = _UserLoginService;
         this.groupsService = _GroupsService;
         this.joinGroupService = _JoinGroupService;
-        this.mainAccountService = _MainAccountService;
         this.groupManagementService = _GroupManagementService;
-        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.service = new UserProfileAccessLevel.Service (_MainAccountService , _EnumTypesService , _UserListService , _UserFriendsService ,
+                _UserContactsService , _UserSeparateProfilesService , _UserBlockedService , _ProfilePicturesService);
     }
 
-    @RequestMapping (value = {"" , "/" , "/{id_group}"})
+    @RequestMapping (value = { "" , "/" , "/{id_group}" })
     public AnswerToClient get
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -149,12 +155,12 @@ public final class RestGroupMember
                                 GroupSecurityProfile groupSecurityProfile = group.getGroupSecurityProfile ();
                                 if (isOwner || (isManagement && managementHasAccess) || (!isManagement && groupSecurityProfile.isShowListMember () && groupSecurityProfile.isShowNumberOfMember ()))
                                 {
-                                    List<JoinGroup> members = group.getMembers ();
+                                    List <JoinGroup> members = group.getMembers ();
                                     if (members != null && members.size () > 0)
                                     {
-                                        CheckUserAccessLevel accessLevel;
+                                        UserProfileAccessLevel accessLevel;
                                         MainAccount memberMainAccount;
-                                        List<Long> idMembers = new ArrayList<> ();
+                                        List <Long> idMembers = new ArrayList <> ();
 
                                         if (groupSecurityProfile.isShowOwner ())
                                             idMembers.add (group.getOwner ().getId ());
@@ -162,9 +168,8 @@ public final class RestGroupMember
                                         for (JoinGroup member : members)
                                         {
                                             memberMainAccount = member.getMainAccount ();
-                                            accessLevel = new CheckUserAccessLevel (mainAccount , memberMainAccount , mainAccountService);
-                                            accessLevel.setServiceProfile (serviceProfile);
-                                            if (isOwner || (mainAccount.getId () == memberMainAccount.getId ()) || (isManagement && managementHasAccessHiddenMember) || (!isManagement && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_in_group) && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_id)))
+                                            accessLevel = new UserProfileAccessLevel (service , memberMainAccount , mainAccount);
+                                            if (isOwner || (mainAccount.getId () == memberMainAccount.getId ()) || (isManagement && managementHasAccessHiddenMember) || (!isManagement && accessLevel.hasAccess (Which.in_group) && accessLevel.hasAccess (Which.id)))
                                                 idMembers.add (memberMainAccount.getId ());
                                         }
 

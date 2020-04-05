@@ -96,30 +96,39 @@ public abstract class Domain
                 private static final String RN_CHANGE_USER = RN_MAIN_INFO_USER + "/change";
                 public static final String RN_CHANGE_USERNAME = RN_CHANGE_USER + "/username";
             }
+
+            public static abstract class RNUserList
+            {
+                private static final String RN_USER_LIST = RN_MAIN_INFO_USER + "/user_list";
+                public static final String RN_USER_LIST_ADD = RN_USER_LIST + "/add";
+                public static final String RN_USER_LIST_REMOVE = RN_USER_LIST + "/remove";
+            }
+
+            public static abstract class RNSeparateProfile
+            {
+                private static final String RN_SEPARATE_PROFILE = RN_MAIN_INFO_USER + "/separate_profile";
+                public static final String RN_SEPARATE_PROFILE_ADD = RN_SEPARATE_PROFILE + "/add";
+                public static final String RN_SEPARATE_PROFILE_GET = RN_SEPARATE_PROFILE + "/get";
+                public static final String RN_SEPARATE_PROFILE_REMOVE = RN_SEPARATE_PROFILE + "/remove";
+                public static final String RN_SEPARATE_PROFILE_CHANGE = RN_SEPARATE_PROFILE + "/change";
+            }
         }
 
         public static abstract class RNNewInfoUser
         {
-            public static final String RN_MAIN = RN_MAIN_CHAT + "/info_user/new/";
+            public static final String RN_INFO_USER_NEW = RNInfoUser.RN_MAIN_INFO_USER + "/new";
 
-            public static final String RN_GENERAL = RN_MAIN + "/general";
-
+            public static final String RN_GENERAL = RN_INFO_USER_NEW + "/general";
             public static final String RN_NEW_FRIEND = RNNewInfoUser.RN_GENERAL + "/new_friend";
-
             public static final String RN_NEW_EMAIL = RNNewInfoUser.RN_GENERAL + "/new_email";
         }
 
         public static abstract class RNOtherUsers
         {
             public static final String RN_MAIN = RN_MAIN_CHAT + "/info_user/other_users/";
-
             public static final String RN_GENERAL = RN_MAIN + "/general";
-
             public static final String RN_SHOW_PROFILE = RN_GENERAL + "/show_profile";
-
             public static final String RN_GET_INFO_PROFILE = RN_GENERAL + "/info_profile";
-
-
         }
 
         public static abstract class RNGroups
@@ -153,16 +162,13 @@ public abstract class Domain
     public static abstract class RNConfirm
     {
         public static final String RN_MAIN = RN_MAIN_API + "/confirm";
-
         public static final String RN_CONFIRM_PHONE = RN_MAIN + "/phone";
     }
 
     public abstract static class RNLogin
     {
         public static final String RN_LOGIN = RN_MAIN_API + "/login";
-
         public static final String RN_LOGOUT = RN_LOGIN + "/logout";
-
         public static final String RN_IS_VALID_UEP = RN_LOGIN + "/is_valid_uep";
     }
 

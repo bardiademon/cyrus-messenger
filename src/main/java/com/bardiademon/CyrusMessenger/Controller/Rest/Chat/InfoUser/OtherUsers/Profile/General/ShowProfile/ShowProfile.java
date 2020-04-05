@@ -3,15 +3,18 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.OtherUsers.
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,26 +34,34 @@ public final class ShowProfile
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
 
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
-
+    private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
     public ShowProfile
-            (UserLoginService _UserLoginService ,
-             MainAccountService _MainAccountService ,
-             ShowProfileForService _ShowProfileForService ,
-             UserContactsService _UserContactsService ,
+            (MainAccountService _MainAccountService ,
+             EnumTypesService _EnumTypesService ,
+             UserLoginService _UserLoginService ,
+             UserListService _UserListService ,
              UserFriendsService _UserFriendsService ,
-             SecurityUserProfileService _SecurityUserProfileService ,
-             UserBlockedService _UserBlockedService
+             UserContactsService _UserContactsService ,
+             UserSeparateProfilesService _UserSeparateProfilesService ,
+             UserBlockedService _UserBlockedService ,
+             ProfilePicturesService _ProfilePicturesService
             )
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
+                _EnumTypesService ,
+                _UserListService ,
+                _UserFriendsService ,
+                _UserContactsService ,
+                _UserSeparateProfilesService ,
+                _UserBlockedService ,
+                _ProfilePicturesService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient showProfile
             (HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -67,13 +78,11 @@ public final class ShowProfile
             {
                 MainAccount mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
 
-                CheckUserAccessLevel accessLevel = new CheckUserAccessLevel
-                        (isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile , mainAccountService);
+                UserProfileAccessLevel accessLevel = new UserProfileAccessLevel
+                        (serviceProfile , isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile);
 
-                accessLevel.setCheckProfile (CheckUserAccessLevel.CheckProfile.show_profile);
-                accessLevel.setServiceProfile (serviceProfile);
                 answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
-                        KeyAnswer.i_can.name () , accessLevel.check (accessLevel.CHK_PROFILE));
+                        KeyAnswer.i_can.name () , accessLevel.hasAccess (Which.profile));
 
             }
             else answerToClient = idUsernameMainAccount.getAnswerToClient ();

@@ -14,5 +14,6 @@ public enum SubmitRequestType
     new_manager, remove_admin, change_manager, remove_group_member,
 
     placement_number_user, placement_number_group,
-    update_info_group, change_username_group, change_username_user, add_show_for_profile
+    update_info_group, change_username_group, change_username_user,
+    add_user_list, remove_user_list
 }

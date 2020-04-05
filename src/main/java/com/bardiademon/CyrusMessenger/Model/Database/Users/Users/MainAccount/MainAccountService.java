@@ -11,8 +11,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileFor;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
@@ -29,7 +27,6 @@ public class MainAccountService
     public final MainAccountRepository Repository;
     public final SecurityUserChatRepository repositorySecurityChat;
     public final SecurityUserProfileRepository repositorySecurityProfile;
-    public final ShowProfileForService showProfileForService;
     public final ShowChatForService showChatForService;
     public final UsernamesService usernamesService;
 
@@ -38,7 +35,6 @@ public class MainAccountService
             (MainAccountRepository Repository ,
              SecurityUserChatRepository RepositorySecurityChat ,
              SecurityUserProfileRepository RepositorySecurityProfile ,
-             ShowProfileForService _ShowProfileForService ,
              ShowChatForService _ShowChatForService ,
              UsernamesService _UsernamesService
             )
@@ -46,7 +42,6 @@ public class MainAccountService
         this.Repository = Repository;
         this.repositorySecurityChat = RepositorySecurityChat;
         this.repositorySecurityProfile = RepositorySecurityProfile;
-        this.showProfileForService = _ShowProfileForService;
         this.showChatForService = _ShowChatForService;
         this.usernamesService = _UsernamesService;
     }
@@ -79,17 +74,11 @@ public class MainAccountService
         securityUserChat.setCanSendNumberOfMessageUnread (0);
         securityUserChat.setMainAccount (save);
 
-        SecurityUserProfile newSecurityUserProfile = repositorySecurityProfile.save (securityUserProfile);
+        repositorySecurityProfile.save (securityUserProfile);
         SecurityUserChat newSecurityUserChat = repositorySecurityChat.save (securityUserChat);
-
-        ShowProfileFor showProfileFor = new ShowProfileFor ();
-        showProfileFor.setSecurityUserProfile (newSecurityUserProfile);
 
         ShowChatFor showChatFor = new ShowChatFor ();
         showChatFor.setSecurityUserChat (newSecurityUserChat);
-
-        showProfileForService.Repository.save (showProfileFor);
-        showChatForService.Repository.save (showChatFor);
 
 
         ConfirmCode confirmCode = confirmedPhone.getConfirmCode ();

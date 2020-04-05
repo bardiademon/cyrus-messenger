@@ -7,30 +7,23 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredF
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
-import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequestService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
-import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
-import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
-import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @RestController
@@ -39,7 +32,6 @@ public class Test
 {
 
     private MainAccountService mainAccountService;
-    private ShowProfileForService showProfileForService;
     private SecurityUserProfileService securityUserProfileService;
     private ShowChatForService showChatForService;
     private UserContactsService userContactsService;
@@ -55,7 +47,6 @@ public class Test
     @Autowired
     public Test
             (MainAccountService mainAccountService ,
-             ShowProfileForService showProfileForService ,
              SecurityUserProfileService securityUserProfileService ,
              ShowChatForService showChatForService ,
              UserContactsService userContactsService ,
@@ -71,7 +62,6 @@ public class Test
     {
 
         this.mainAccountService = mainAccountService;
-        this.showProfileForService = showProfileForService;
         this.securityUserProfileService = securityUserProfileService;
         this.showChatForService = showChatForService;
         this.userContactsService = userContactsService;

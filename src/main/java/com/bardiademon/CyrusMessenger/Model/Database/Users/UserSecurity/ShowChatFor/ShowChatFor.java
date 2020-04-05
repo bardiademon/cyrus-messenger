@@ -2,7 +2,6 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowCha
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
 
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;

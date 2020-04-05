@@ -4,15 +4,18 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowProfileFor.ShowProfileForService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
@@ -35,25 +38,34 @@ public final class RestGetAllProfilePictureUser
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final UserProfileAccessLevel.Service serviceProfile;
 
     public RestGetAllProfilePictureUser
             (
-                    UserLoginService _UserLoginService ,
                     MainAccountService _MainAccountService ,
-                    ShowProfileForService _ShowProfileForService ,
-                    UserContactsService _UserContactsService ,
+                    EnumTypesService _EnumTypesService ,
+                    UserLoginService _UserLoginService ,
+                    UserListService _UserListService ,
                     UserFriendsService _UserFriendsService ,
-                    SecurityUserProfileService _SecurityUserProfileService ,
-                    UserBlockedService _UserBlockedService
+                    UserContactsService _UserContactsService ,
+                    UserSeparateProfilesService _UserSeparateProfilesService ,
+                    UserBlockedService _UserBlockedService ,
+                    ProfilePicturesService _ProfilePicturesService
             )
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile (_ShowProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
+                _EnumTypesService ,
+                _UserListService ,
+                _UserFriendsService ,
+                _UserContactsService ,
+                _UserSeparateProfilesService ,
+                _UserBlockedService ,
+                _ProfilePicturesService);
     }
 
-    @RequestMapping (value = {"" , "/" , "/{id_user}"})
+    @RequestMapping (value = { "" , "/" , "/{id_user}" })
     public AnswerToClient getAll
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -77,16 +89,19 @@ public final class RestGetAllProfilePictureUser
                     MainAccount mainAccountUser = mainAccountService.findId (idUser.getId ());
                     if (mainAccountUser != null)
                     {
-                        CheckUserAccessLevel checkUserAccessLevel = new CheckUserAccessLevel (mainAccount , mainAccountUser , mainAccountService);
-                        checkUserAccessLevel.setServiceProfile (serviceProfile);
-                        if (checkUserAccessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.cover))
+                        UserProfileAccessLevel checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , mainAccountUser);
+                        if (checkUserAccessLevel.hasAccess (Which.cover))
                         {
-                            List<ProfilePictures> profilePictures = mainAccountUser.getProfilePictures ();
+                            List <ProfilePictures> profilePictures;
+                            if (checkUserAccessLevel.isSeparateProfilePictures ())
+                                profilePictures = checkUserAccessLevel.getProfilePictures ();
+                            else profilePictures = mainAccountUser.getProfilePictures ();
+
                             if (profilePictures != null && profilePictures.size () > 0)
                             {
                                 profilePictures = (new SortProfilePictures (profilePictures)).getNewProfilePictures ();
 
-                                List<Long> ids = new ArrayList<> ();
+                                List <Long> ids = new ArrayList <> ();
                                 for (ProfilePictures profilePicture : profilePictures)
                                     ids.add (profilePicture.getId ());
 

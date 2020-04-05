@@ -14,7 +14,7 @@ public class AnswerToClient
 {
 
     private int statusCode;
-    private Map<String, Object> message;
+    private Map <String, Object> message;
     private boolean ok;
 
     @JsonIgnore
@@ -28,7 +28,7 @@ public class AnswerToClient
     {
         this.statusCode = StatusCode;
         this.ok = Ok;
-        message = new LinkedHashMap<> ();
+        message = new LinkedHashMap <> ();
     }
 
     @JsonIgnore
@@ -131,7 +131,7 @@ public class AnswerToClient
         setStatusCode ();
     }
 
-    public void setMessage (Map<String, Object> message)
+    public void setMessage (Map <String, Object> message)
     {
         this.message = message;
     }
@@ -178,7 +178,7 @@ public class AnswerToClient
     }
 
     @JsonProperty ("message")
-    public Map<String, Object> getMessage ()
+    public Map <String, Object> getMessage ()
     {
         return message;
     }
@@ -192,14 +192,14 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id, ids, system, time, limit, which,result
+        answer, id, ids, system, time, limit, which, result
     }
 
     // CUK => Commonly used value
     public enum CUV
     {
         sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error,
-        request_is_null, account_deactive, please_try_again, username_invalid
+        request_is_null, account_deactive, please_try_again, username_invalid, removed
     }
 
     @JsonIgnore

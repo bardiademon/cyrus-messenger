@@ -1,7 +1,9 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Users.Upload;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public class RequestUploadProfilePictureUser
@@ -13,6 +15,9 @@ public class RequestUploadProfilePictureUser
     private String id;
 
     private boolean update_main;
+
+    private boolean separate;
+    private List <String> who;
 
     @JsonIgnore
     private ID idProfilePicture;
@@ -87,5 +92,25 @@ public class RequestUploadProfilePictureUser
     public void setUpdate_main (boolean update_main)
     {
         this.update_main = update_main;
+    }
+
+    public boolean isSeparate ()
+    {
+        return separate;
+    }
+
+    public void setSeparate (boolean separate)
+    {
+        this.separate = separate;
+    }
+
+    public List <String> getWho ()
+    {
+        return who;
+    }
+
+    public void setWho (List <String> who)
+    {
+        this.who = who;
     }
 }

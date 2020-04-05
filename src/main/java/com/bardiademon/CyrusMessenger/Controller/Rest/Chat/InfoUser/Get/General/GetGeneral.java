@@ -47,7 +47,7 @@ public class GetGeneral
             {
                 MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 
-                answerToClient = new AnswerToClient (200 , true);
+                answerToClient = AnswerToClient.OK ();
 
                 if (requestInfoUser.isGetName ())
                     answerToClient.put (KeyAnswer.name.name () , mainAccount.getName ());

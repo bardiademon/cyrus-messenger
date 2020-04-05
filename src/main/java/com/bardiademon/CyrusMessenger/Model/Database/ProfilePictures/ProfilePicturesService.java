@@ -1,7 +1,10 @@
 package com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public final class ProfilePicturesService
@@ -67,6 +70,11 @@ public final class ProfilePicturesService
     public int deleteMainPic (long idUser)
     {
         return Repository.deleteMainPic (idUser);
+    }
+
+    public List <ProfilePictures> getSeparate (long idUser)
+    {
+        return Repository.findByMainAccountIdAndSeparateTrueAndDeletedFalse (idUser);
     }
 
 }

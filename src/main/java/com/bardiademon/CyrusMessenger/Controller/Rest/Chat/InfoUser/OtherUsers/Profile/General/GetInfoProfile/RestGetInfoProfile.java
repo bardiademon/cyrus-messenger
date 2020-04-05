@@ -5,13 +5,18 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Get.General.
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.CheckUserAccessLevel.CheckUserAccessLevel;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
+import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
@@ -36,24 +41,33 @@ public final class RestGetInfoProfile
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
 
-    private final CheckUserAccessLevel.ServiceProfile serviceProfile;
+    private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
-    public RestGetInfoProfile
-            (UserLoginService _UserLoginService ,
-             MainAccountService _MainAccountService ,
-             UserContactsService _UserContactsService ,
-             UserFriendsService _UserFriendsService ,
-             SecurityUserProfileService _SecurityUserProfileService ,
-             UserBlockedService _UserBlockedService)
+    public RestGetInfoProfile (
+            MainAccountService _MainAccountService ,
+            EnumTypesService _EnumTypesService ,
+            UserLoginService _UserLoginService ,
+            UserListService _UserListService ,
+            UserFriendsService _UserFriendsService ,
+            UserContactsService _UserContactsService ,
+            UserSeparateProfilesService _UserSeparateProfilesService ,
+            UserBlockedService _UserBlockedService ,
+            ProfilePicturesService _ProfilePicturesService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new CheckUserAccessLevel.ServiceProfile
-                (mainAccountService.showProfileForService , _UserContactsService , _UserFriendsService , _SecurityUserProfileService , _UserBlockedService);
+        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
+                _EnumTypesService ,
+                _UserListService ,
+                _UserFriendsService ,
+                _UserContactsService ,
+                _UserSeparateProfilesService ,
+                _UserBlockedService ,
+                _ProfilePicturesService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient get
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -74,9 +88,8 @@ public final class RestGetInfoProfile
                 if (idUsernameMainAccount.isValid ())
                 {
                     MainAccount mainAccountGetInfo = idUsernameMainAccount.getMainAccount ();
-                    CheckUserAccessLevel accessLevel = new CheckUserAccessLevel (mainAccount , mainAccountGetInfo , mainAccountService);
-                    accessLevel.setServiceProfile (serviceProfile);
-                    if (accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_profile))
+                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , mainAccountGetInfo);
+                    if (accessLevel.hasAccess (Which.profile))
                     {
                         answerToClient = checkGet (request , accessLevel , mainAccountGetInfo);
                         answerToClient.setReqRes (req , res);
@@ -112,33 +125,71 @@ public final class RestGetInfoProfile
         return answerToClient;
     }
 
-    private AnswerToClient checkGet (RequestGetInfoProfile request , CheckUserAccessLevel accessLevel , MainAccount mainAccount)
+    private AnswerToClient checkGet (RequestGetInfoProfile request , UserProfileAccessLevel accessLevel , MainAccount mainAccount)
     {
         AnswerToClient answerToClient = AnswerToClient.OK ();
 
-        if (request.isGetId () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_id))
+        if (request.isGetId () && accessLevel.hasAccess (Which.id))
             answerToClient.put (GetGeneral.KeyAnswer.id.name () , mainAccount.getId ());
 
-        if (request.isGetName () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_name))
-            answerToClient.put (GetGeneral.KeyAnswer.name.name () , mainAccount.getName ());
+        UserSeparateProfiles separateProfiles = null;
+        if (accessLevel.isSeparateProfile ()) separateProfiles = accessLevel.getSeparateProfile ();
 
-        if (request.isGetFamily () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_family))
-            answerToClient.put (GetGeneral.KeyAnswer.family.name () , mainAccount.getFamily ());
+        if (request.isGetName () && accessLevel.hasAccess (Which.name))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.name.name () , separateProfiles.getName ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.name.name () , mainAccount.getName ());
+        }
 
-        if (request.isGetMyLink () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_mylink))
-            answerToClient.put (GetGeneral.KeyAnswer.mylink.name () , mainAccount.getMyLink ());
+        if (request.isGetFamily () && accessLevel.hasAccess (Which.family))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.family.name () , separateProfiles.getFamily ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.family.name () , mainAccount.getFamily ());
+        }
 
-        if (request.isGetEmail () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_email))
-            answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getEmail ());
+        if (request.isGetMyLink () && accessLevel.hasAccess (Which.mylink))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.mylink.name () , separateProfiles.getMylink ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.mylink.name () , mainAccount.getMyLink ());
+        }
 
-        if (request.isGetPhone () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_phone))
+        if (request.isGetEmail () && accessLevel.hasAccess (Which.email))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.email.name () , separateProfiles.getEmail ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getEmail ());
+        }
+
+        if (request.isGetPhone () && accessLevel.hasAccess (Which.phone))
             answerToClient.put (GetGeneral.KeyAnswer.phone.name () , mainAccount.getPhone ());
 
-        if (request.isGetUsername () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.show_username))
+        if (request.isGetUsername () && accessLevel.hasAccess (Which.username))
             answerToClient.put (GetGeneral.KeyAnswer.username.name () , mainAccount.getUsername ().getUsername ());
 
-        if (request.isGetBio () && accessLevel.hasAccessProfile (CheckUserAccessLevel.CheckProfile.bio))
-            answerToClient.put (GetGeneral.KeyAnswer.bio.name () , mainAccount.getBio ());
+        if (request.isGetBio () && accessLevel.hasAccess (Which.bio))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.bio.name () , separateProfiles.getBio ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.bio.name () , mainAccount.getBio ());
+        }
 
         return answerToClient;
     }
