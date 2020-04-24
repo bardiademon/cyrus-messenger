@@ -9,4 +9,6 @@ import java.util.List;
 public interface EnumTypesRepository extends JpaRepository <EnumTypes, Long>
 {
     List <EnumTypes> findById2AndDeletedFalseAndDes (long id2 , String des);
+
+    List <EnumTypes> findById2AndDeletedFalse (long id2);
 }

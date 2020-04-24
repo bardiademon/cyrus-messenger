@@ -42,11 +42,6 @@ public final class UserSeparateProfiles
     @Column (name = "my_link")
     private String mylink;
 
-    @Column (name = "this_profile_for", nullable = false)
-    @OneToMany (mappedBy = "id2")
-    @Where (clause = "`deleted` = false")
-    private List<EnumTypes> profileFor;
-
     @Column (name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -128,16 +123,6 @@ public final class UserSeparateProfiles
     public void setMylink (String mylink)
     {
         this.mylink = mylink;
-    }
-
-    public List<EnumTypes> getProfileFor ()
-    {
-        return profileFor;
-    }
-
-    public void setProfileFor (List<EnumTypes> profileFor)
-    {
-        this.profileFor = profileFor;
     }
 
     public LocalDateTime getCreatedAt ()

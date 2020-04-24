@@ -97,11 +97,13 @@ public final class UserProfileAccessLevel
                     if (which.equals (Which.cover))
                     {
                         List <ProfilePictures> separate = service.profilePicturesService.getSeparate (user.getId ());
+                        List <EnumTypes> byId2AndDeletedFalse;
                         if (separate != null && separate.size () > 0)
                         {
                             for (ProfilePictures pictures : separate)
                             {
-                                if (checkEnumTypesCheck (pictures.getSeparateFor ()))
+                                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
+                                if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                                 {
                                     this.profilePictures = separate;
                                     return true;
@@ -117,11 +119,13 @@ public final class UserProfileAccessLevel
                     if (which.equals (Which.cover))
                     {
                         List <ProfilePictures> separate = service.profilePicturesService.getSeparate (user.getId ());
+                        List <EnumTypes> byId2AndDeletedFalse;
                         if (separate != null && separate.size () > 0)
                         {
                             for (ProfilePictures pictures : separate)
                             {
-                                if (checkEnumTypesCheck (pictures.getSeparateFor ()))
+                                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
+                                if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                                 {
                                     this.profilePictures = separate;
                                     return true;
@@ -174,9 +178,11 @@ public final class UserProfileAccessLevel
     {
         if (separateProfiles != null && separateProfiles.size () > 0)
         {
+            List <EnumTypes> byId2AndDeletedFalse;
             for (UserSeparateProfiles separateProfile : separateProfiles)
             {
-                if (checkEnumTypesCheck (separateProfile.getProfileFor ()))
+                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (separateProfile.getId ());
+                if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                 {
                     this.separateProfile = separateProfile;
                     return true;

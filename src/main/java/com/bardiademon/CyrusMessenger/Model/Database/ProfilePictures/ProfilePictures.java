@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "profile_pictures")
+@Table (name = "profile_pictures")
 public final class ProfilePictures
 {
     @Id
@@ -31,16 +31,16 @@ public final class ProfilePictures
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id")
+    @JoinColumn (name = "id_user", referencedColumnName = "id")
     @JsonIgnore
     private MainAccount mainAccount;
 
     @ManyToOne
-    @JoinColumn(name = "id_group", referencedColumnName = "id")
+    @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
 
     @ManyToOne
-    @JoinColumn(name = "id_channel", referencedColumnName = "id")
+    @JoinColumn (name = "id_channel", referencedColumnName = "id")
     private Channel channel;
 
     private String name;
@@ -51,33 +51,28 @@ public final class ProfilePictures
 
     private boolean deleted;
 
-    @Column(name = "main_pic", nullable = false)
+    @Column (name = "main_pic", nullable = false)
     private boolean mainPic = false;
 
-    @Column(name = "placement_number", nullable = false)
+    @Column (name = "placement_number", nullable = false)
     private int placementNumber = 0;
 
-    @Column(name = "this_pic_for", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column (name = "this_pic_for", nullable = false)
+    @Enumerated (EnumType.STRING)
     private ProfilePicFor thisPicFor;
 
-    @Column(name = "uploaded_at", nullable = false, updatable = false)
+    @Column (name = "uploaded_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime uploadedAt;
 
-    @Column(name = "deleted_at", insertable = false)
+    @Column (name = "deleted_at", insertable = false)
     private LocalDateTime deletedAt;
 
-    @Column(name = "updated_at", insertable = false)
+    @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     private boolean separate = false;
-
-    @Column(name = "separate_for")
-    @OneToMany(mappedBy = "id2")
-    @Where(clause = "`deleted` = false and `separate` = true")
-    private List <EnumTypes> separateFor = null;
 
     public ProfilePictures ()
     {
@@ -233,13 +228,4 @@ public final class ProfilePictures
         this.separate = separate;
     }
 
-    public List <EnumTypes> getSeparateFor ()
-    {
-        return separateFor;
-    }
-
-    public void setSeparateFor (List <EnumTypes> separateFor)
-    {
-        this.separateFor = separateFor;
-    }
 }

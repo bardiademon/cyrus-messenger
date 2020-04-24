@@ -24,12 +24,12 @@ public final class UserEmails
 
     @OneToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
-    @Where (clause = "`deleted` = false")
+    @Where (clause = "`deleted` = false and `confirmed` = true")
     private MainAccount mainAccount;
 
     @OneToOne
     @JoinColumn (name = "id_user_sep_pro", referencedColumnName = "id")
-    @Where (clause = "`deleted` = false")
+    @Where (clause = "`deleted` = false and `confirmed` = true")
     private UserSeparateProfiles userSeparateProfiles;
 
     @Column (nullable = false)

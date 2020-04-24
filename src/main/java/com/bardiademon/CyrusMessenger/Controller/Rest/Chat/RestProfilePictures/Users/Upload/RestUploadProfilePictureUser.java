@@ -8,6 +8,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -46,15 +47,17 @@ public final class RestUploadProfilePictureUser
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
     private final SecurityUserProfileService securityUserProfileService;
+    private EnumTypesService enumTypesService;
 
     @Autowired
     public RestUploadProfilePictureUser
             (UserLoginService _UserLoginService , ProfilePicturesService _ProfilePicturesService ,
-             SecurityUserProfileService _SecurityUserProfileService)
+             SecurityUserProfileService _SecurityUserProfileService , EnumTypesService _EnumTypesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
         this.securityUserProfileService = _SecurityUserProfileService;
+        this.enumTypesService = _EnumTypesService;
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -208,9 +211,9 @@ public final class RestUploadProfilePictureUser
                         enumType.setId2 (newProfilePictures.getId ());
                         enumTypes.add (enumType);
                     }
-                    newProfilePictures.setSeparate (true);
-                    newProfilePictures.setSeparateFor (enumTypes);
+                    enumTypesService.Repository.saveAll (enumTypes);
 
+                    newProfilePictures.setSeparate (true);
                     profilePicturesService.Repository.save (newProfilePictures);
                 }
 
