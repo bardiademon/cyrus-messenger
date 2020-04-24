@@ -188,7 +188,6 @@ public class AnswerToClient
         return ok;
     }
 
-
     // CUK => Commonly used keys
     public enum CUK
     {

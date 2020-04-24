@@ -34,9 +34,10 @@ public class GetGeneral
         this.userFriendsService = _UserFriendsService;
     }
 
-    @RequestMapping ({"/" , ""})
-    public AnswerToClient getInfoUser (HttpServletResponse res , @RequestBody RequestGeneral requestInfoUser ,
-                                       @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+    @RequestMapping ({ "/" , "" })
+    public AnswerToClient getInfoUser
+            (HttpServletResponse res , @RequestBody RequestGeneral requestInfoUser ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
 
@@ -99,7 +100,7 @@ public class GetGeneral
         return answerToClient;
     }
 
-    private List<String> getListFriend (long id , StatusFriends status)
+    private List <String> getListFriend (long id , StatusFriends status)
     {
         return userFriendsService.Repository.findUsernameUser (id , status);
     }

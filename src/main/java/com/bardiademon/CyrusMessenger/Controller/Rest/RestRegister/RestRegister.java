@@ -42,13 +42,13 @@ public class RestRegister
     private HttpServletRequest request;
 
     @Autowired
-    public RestRegister (MainAccountService _MainAccountService ,
-                         ConfirmedPhoneService _ConfirmedPhoneService ,
-                         ConfirmCodeService _ConfirmCodeService ,
-                         SubmitRequestService _SubmitRequestService ,
-                         UsernamesService _UsernamesService ,
-                         BlockedByTheSystemService _BlockedByTheSystemService
-    )
+    public RestRegister
+            (MainAccountService _MainAccountService ,
+             ConfirmedPhoneService _ConfirmedPhoneService ,
+             ConfirmCodeService _ConfirmCodeService ,
+             SubmitRequestService _SubmitRequestService ,
+             UsernamesService _UsernamesService ,
+             BlockedByTheSystemService _BlockedByTheSystemService)
     {
         this.mainAccountService = _MainAccountService;
         this.confirmedPhoneService = _ConfirmedPhoneService;
