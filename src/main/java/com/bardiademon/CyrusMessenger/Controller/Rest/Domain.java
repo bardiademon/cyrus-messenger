@@ -112,6 +112,16 @@ public abstract class Domain
                 public static final String RN_SEPARATE_PROFILE_REMOVE = RN_SEPARATE_PROFILE + "/remove";
                 public static final String RN_SEPARATE_PROFILE_CHANGE = RN_SEPARATE_PROFILE + "/change";
             }
+
+
+            public static abstract class RNFriends
+            {
+                private static final String RN_FRIENDS = RNInfoUser.RN_MAIN_INFO_USER + "/friends";
+                public static final String RN_FRIENDS_ADD = RN_FRIENDS + "/add";
+                public static final String RN_FRIENDS_DELETE = RN_FRIENDS + "/delete";
+                public static final String RN_FRIENDS_GET = RN_FRIENDS + "/get";
+                public static final String RN_FRIENDS_REJECT_OR_APPROVE = RN_FRIENDS + "/reject_or_approve";
+            }
         }
 
         public static abstract class RNNewInfoUser
@@ -122,6 +132,7 @@ public abstract class Domain
             public static final String RN_NEW_FRIEND = RNNewInfoUser.RN_GENERAL + "/new_friend";
             public static final String RN_NEW_EMAIL = RNNewInfoUser.RN_GENERAL + "/new_email";
         }
+
 
         public static abstract class RNOtherUsers
         {
