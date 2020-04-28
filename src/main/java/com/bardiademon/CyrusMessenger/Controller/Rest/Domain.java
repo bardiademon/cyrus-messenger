@@ -120,7 +120,7 @@ public abstract class Domain
                 public static final String RN_FRIENDS_ADD = RN_FRIENDS + "/add";
                 public static final String RN_FRIENDS_DELETE = RN_FRIENDS + "/delete";
                 public static final String RN_FRIENDS_GET = RN_FRIENDS + "/get";
-                public static final String RN_FRIENDS_REJECT_OR_APPROVE = RN_FRIENDS + "/reject_or_approve";
+                public static final String RN_FRIENDS_APPROVE = RN_FRIENDS + "/approve";
             }
         }
 

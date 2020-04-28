@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Friends.DeleteFriend;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Friends.ApproveFriend;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -15,7 +15,6 @@ import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_DELETE, method = RequestMethod.POST)
-public final class DeleteFriend
+@RequestMapping (value = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_APPROVE, method = RequestMethod.POST)
+public final class ApproveFriend
 {
+
     private final String router;
     private final SubmitRequestType type;
     private final UserLoginService userLoginService;
@@ -36,7 +36,7 @@ public final class DeleteFriend
     private final UsernamesService usernamesService;
 
     @Autowired
-    public DeleteFriend
+    public ApproveFriend
             (UserLoginService _UserLoginService ,
              UserFriendsService _UserFriendsService ,
              UsernamesService _UsernamesService)
@@ -44,12 +44,12 @@ public final class DeleteFriend
         this.userLoginService = _UserLoginService;
         this.userFriendsService = _UserFriendsService;
         this.usernamesService = _UsernamesService;
-        this.router = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_DELETE;
-        this.type = SubmitRequestType.del_friend;
+        this.router = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_APPROVE;
+        this.type = SubmitRequestType.approve_friend;
     }
 
     @RequestMapping (value = { "" , "/" }, method = RequestMethod.POST)
-    public AnswerToClient del
+    public AnswerToClient approve
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestParam (value = "username") String username)
@@ -66,28 +66,15 @@ public final class DeleteFriend
             FITD_Username fitd_username = new FITD_Username (username , usernamesService);
             if (fitd_username.isFound ())
             {
-                UserFriends friend = userFriendsService.findValidFriend (mainAccount , fitd_username.getMainAccount ());
+                UserFriends friend = userFriendsService.findFriend (mainAccount , fitd_username.getMainAccount () , StatusFriends.awaiting_approval);
                 if (friend != null)
                 {
-                    StatusFriends statusTemp = friend.getStatus ();
-
-                    friend.setDeleted (true);
-                    friend.setDeletedAt (LocalDateTime.now ());
-
-                    if (statusTemp.equals (StatusFriends.awaiting_approval))
-                    {
-                        friend.setStatus (StatusFriends.rejected);
-                        statusTemp = StatusFriends.rejected;
-                    }
-                    else
-                        friend.setStatus (StatusFriends.deleted);
-
+                    friend.setStatus (StatusFriends.friend);
                     userFriendsService.Repository.save (friend);
 
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
-                    answerToClient.put (KeyAnswer.status.name () , statusTemp);
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.approved.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name ());
+                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.approved.name ());
                     r.n (mainAccount , type , false);
                 }
                 else
@@ -106,18 +93,14 @@ public final class DeleteFriend
                 r.n (mainAccount , type , true);
             }
         }
-        else answerToClient = both.getAnswerToClient ();
+        else
+            answerToClient = both.getAnswerToClient ();
 
         return answerToClient;
     }
 
     private enum ValAnswer
     {
-        friend_not_found
-    }
-
-    private enum KeyAnswer
-    {
-        status
+        friend_not_found, approved
     }
 }
