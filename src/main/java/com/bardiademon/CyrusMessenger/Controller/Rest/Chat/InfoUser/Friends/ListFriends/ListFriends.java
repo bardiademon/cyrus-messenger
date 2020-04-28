@@ -33,8 +33,6 @@ import java.util.Map;
 public final class ListFriends
 {
 
-    private IsLogin isLogin;
-
     private final UserLoginService userLoginService;
 
     private final UserProfileAccessLevel.Service serviceProfile;
@@ -68,14 +66,13 @@ public final class ListFriends
     public AnswerToClient getList
             (HttpServletResponse res ,
              @RequestParam ("status") String status ,
-             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin , boolean login)
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
 
-        if (!login)
-            isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
 
-        if (login || isLogin.isValid ())
+        if (isLogin.isValid ())
         {
             if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.error400 ();
             else
@@ -84,53 +81,36 @@ public final class ListFriends
                 {
                     answerToClient = AnswerToClient.OK ();
                     List <UserFriends> userFriendsList;
-                    if (status.equals (KeyRequest.all.name ()))
+                    StatusFriends statusFriends = StatusFriends.valueOf (status);
+                    MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
+                    userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
+                            (mainAccount , statusFriends);
+
+
+                    if (userFriendsList.size () > 0)
                     {
-                        answerToClient = AnswerToClient.OK ();
-                        answerToClient.put (StatusFriends.deleted.name () ,
-                                (getList (res , StatusFriends.deleted.name () , codeLogin , false)).getMessage ());
+                        Map <String, String> friend;
+                        UserFriends userFriends;
 
-                        answerToClient.put (StatusFriends.rejected.name () ,
-                                (getList (res , StatusFriends.rejected.name () , codeLogin , false)).getMessage ());
+                        UserProfileAccessLevel checkUserAccessLevel;
 
-                        answerToClient.put (StatusFriends.awaiting_approval.name () ,
-                                (getList (res , StatusFriends.awaiting_approval.name () , codeLogin , false)).getMessage ());
-
-                        answerToClient.put (StatusFriends.friend.name () ,
-                                (getList (res , StatusFriends.friend.name () , codeLogin , false)).getMessage ());
-                    }
-                    else
-                    {
-                        StatusFriends statusFriends = StatusFriends.valueOf (status);
-                        MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-                        userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
-                                (mainAccount , statusFriends);
-
-
-                        if (userFriendsList.size () > 0)
+                        for (int i = 0; i < userFriendsList.size (); i++)
                         {
-                            Map <String, String> friend;
-                            UserFriends userFriends;
+                            userFriends = userFriendsList.get (i);
+                            friend = new LinkedHashMap <> ();
 
-                            UserProfileAccessLevel checkUserAccessLevel;
+                            checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
+                            if (checkUserAccessLevel.hasAccess (Which.username))
+                                friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
 
-                            for (int i = 0; i < userFriendsList.size (); i++)
-                            {
-                                userFriends = userFriendsList.get (i);
-                                friend = new LinkedHashMap <> ();
+                            friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
+                            friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
+                            friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
 
-                                checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
-                                if (checkUserAccessLevel.hasAccess (Which.username))
-                                    friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
-
-                                friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
-                                friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
-                                friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
-
-                                answerToClient.put (String.valueOf (i) , friend);
-                            }
+                            answerToClient.put (String.valueOf (i) , friend);
                         }
                     }
+
                 }
                 catch (IllegalArgumentException e)
                 {
@@ -143,11 +123,6 @@ public final class ListFriends
 
         answerToClient.setResponse (res);
         return answerToClient;
-    }
-
-    private enum KeyRequest
-    {
-        all
     }
 
     private enum KeyAnswer
