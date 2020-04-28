@@ -73,7 +73,15 @@ public final class DeleteFriend
 
                     friend.setDeleted (true);
                     friend.setDeletedAt (LocalDateTime.now ());
-                    friend.setStatus (StatusFriends.deleted);
+
+                    if (statusTemp.equals (StatusFriends.awaiting_approval))
+                    {
+                        friend.setStatus (StatusFriends.rejected);
+                        statusTemp = StatusFriends.rejected;
+                    }
+                    else
+                        friend.setStatus (StatusFriends.deleted);
+
                     userFriendsService.Repository.save (friend);
 
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
