@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Friends.GetListFriends;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Friends.ListFriends;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_LIST, method = RequestMethod.POST)
-public class GetListFriends
+public final class ListFriends
 {
 
     private IsLogin isLogin;
@@ -40,7 +40,7 @@ public class GetListFriends
     private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
-    public GetListFriends
+    public ListFriends
             (MainAccountService _MainAccountService ,
              EnumTypesService _EnumTypesService ,
              UserLoginService _UserLoginService ,
