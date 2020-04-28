@@ -19,7 +19,7 @@ public class UserFriendsService
 
     public UserFriends findValidFriend (MainAccount user , MainAccount friend)
     {
-        return Repository.findByMainAccountAndMainAccountFriendAndDeletedAtIsNull (user , friend);
+        return Repository.findByMainAccountAndMainAccountFriendAndDeletedFalse (user , friend);
     }
 
     public UserFriends findFriend (MainAccount user , MainAccount friend , StatusFriends StatusFriends)
@@ -27,8 +27,9 @@ public class UserFriendsService
         return Repository.findByMainAccountAndMainAccountFriendAndStatus (user , friend , StatusFriends);
     }
 
-    public List<UserFriends> findValidFriend (MainAccount user)
+
+    public List <UserFriends> findValidFriend (MainAccount user)
     {
-        return Repository.findByMainAccountAndDeletedAtIsNull (user);
+        return Repository.findByMainAccountAndDeletedFalse (user);
     }
 }

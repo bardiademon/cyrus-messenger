@@ -34,18 +34,20 @@ public class UserFriends
     private MainAccount mainAccountFriend;
 
     @Enumerated (EnumType.STRING)
-    public StatusFriends status;
+    private StatusFriends status;
 
     @Column (name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column (name = "deleted_at", insertable = false)
-    public LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
+
+    private boolean deleted;
 
     public UserFriends ()
     {
@@ -125,5 +127,15 @@ public class UserFriends
     public void setDeletedAt (LocalDateTime deletedAt)
     {
         this.deletedAt = deletedAt;
+    }
+
+    public boolean isDeleted ()
+    {
+        return deleted;
+    }
+
+    public void setDeleted (boolean deleted)
+    {
+        this.deleted = deleted;
     }
 }

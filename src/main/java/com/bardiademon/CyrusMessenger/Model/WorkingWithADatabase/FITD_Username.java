@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase;
 
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
@@ -15,11 +16,14 @@ public final class FITD_Username
     private boolean valid;
     private boolean found;
 
+    private AnswerToClient answer;
+
     public FITD_Username (String Username , UsernamesService _UsernamesService)
     {
         this.username = Username;
         this.usernamesService = _UsernamesService;
         if (validation ()) found = foundUsername ();
+        else answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
     }
 
     private boolean validation ()
@@ -35,7 +39,16 @@ public final class FITD_Username
             this.mainAccount = usernames.getMainAccount ();
             return true;
         }
-        else return false;
+        else
+        {
+            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
+            return false;
+        }
+    }
+
+    private enum ValAnswer
+    {
+        username_not_found, username_invalid
     }
 
     public MainAccount getMainAccount ()
@@ -53,5 +66,8 @@ public final class FITD_Username
         return found;
     }
 
-
+    public AnswerToClient getAnswer ()
+    {
+        return answer;
+    }
 }

@@ -9,24 +9,24 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserFriendsRepository extends JpaRepository<UserFriends, Long>
+public interface UserFriendsRepository extends JpaRepository <UserFriends, Long>
 {
-    UserFriends findByMainAccountAndMainAccountFriendAndDeletedAtIsNull (MainAccount user , MainAccount friend);
+    UserFriends findByMainAccountAndMainAccountFriendAndDeletedFalse (MainAccount user , MainAccount friend);
 
     UserFriends findByMainAccountAndMainAccountFriendAndStatus
             (MainAccount user , MainAccount friend , StatusFriends statusFriends);
 
-    List<UserFriends> findByMainAccountAndDeletedAtIsNull (MainAccount user);
+    List <UserFriends> findByMainAccountAndDeletedFalse (MainAccount user);
 
-    List<UserFriends> findByMainAccountAndDeletedAtIsNotNull (MainAccount user);
+    List <UserFriends> findByMainAccountAndDeletedAtIsNotNull (MainAccount user);
 
-    List<UserFriends> findByMainAccountAndStatus (MainAccount user , StatusFriends statusFriends);
+    List <UserFriends> findByMainAccountAndStatus (MainAccount user , StatusFriends statusFriends);
 
-    List<UserFriends> findAllByMainAccountAndStatus (MainAccount user , StatusFriends statusFriends);
+    List <UserFriends> findAllByMainAccountAndStatus (MainAccount user , StatusFriends statusFriends);
 
-    List<UserFriends> findAllByMainAccount (MainAccount user);
+    List <UserFriends> findAllByMainAccount (MainAccount user);
 
     @Query ("select userFriends.mainAccountFriend.username from UserFriends userFriends " +
             "where userFriends.mainAccount.id = :ID and userFriends.status = :STATUS")
-    List<String> findUsernameUser (@Param ("ID") long id , @Param ("STATUS") StatusFriends status);
+    List <String> findUsernameUser (@Param ("ID") long id , @Param ("STATUS") StatusFriends status);
 }

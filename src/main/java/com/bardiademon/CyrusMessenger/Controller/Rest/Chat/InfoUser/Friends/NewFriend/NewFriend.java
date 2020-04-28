@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 public final class NewFriend
 {
     private final String router;
-    private SubmitRequestType type = SubmitRequestType.add_friend;
+    private final SubmitRequestType type;
 
     private MainAccount user, friend;
 
@@ -70,6 +70,7 @@ public final class NewFriend
                 (_MainAccountService , _EnumTypesService , _UserListService , _UserFriendsService , _UserContactsService ,
                         _UserSeparateProfilesService , _UserBlockedService , _ProfilePicturesService);
         this.router = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_ADD;
+        this.type = SubmitRequestType.add_friend;
         this.userLoginService = _UserLoginService;
         this.userFriendsService = _UserFriendsService;
         this.usernamesService = _UsernamesService;
