@@ -55,11 +55,6 @@ public abstract class Domain
                 public static final String RN_SHOW_PROFILE_FOR_REMOVE = RN_SHOW_PROFILE_FOR + "/remove";
             }
 
-            public static abstract class RNGetListFriends
-            {
-                public static final String RN_GET_LIST_FRIENDS = RNInfoUser.RN_GENERAL + "/list_friends";
-            }
-
             public abstract static class RNUpdate
             {
                 public static final String RN_MAIN = RN_MAIN_INFO_USER + "/update";
@@ -121,6 +116,7 @@ public abstract class Domain
                 public static final String RN_FRIENDS_DELETE = RN_FRIENDS + "/delete";
                 public static final String RN_FRIENDS_GET = RN_FRIENDS + "/get";
                 public static final String RN_FRIENDS_APPROVE = RN_FRIENDS + "/approve";
+                public static final String RN_FRIENDS_LIST = RN_FRIENDS + "/list";
             }
         }
 
