@@ -1,21 +1,16 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles;
 
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table (name = "user_separate_profile")
@@ -27,7 +22,7 @@ public final class UserSeparateProfiles
     private long id;
 
     @ManyToOne
-    @JoinTable (name = "id_user", joinColumns = @JoinColumn (name = "id_user", referencedColumnName = "id"))
+    @JoinColumn (name = "id_user", referencedColumnName = "id")
     private MainAccount mainAccount;
 
     @Column (nullable = false)
