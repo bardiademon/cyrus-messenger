@@ -66,7 +66,7 @@ public final class ApproveFriend
             FITD_Username fitd_username = new FITD_Username (username , usernamesService);
             if (fitd_username.isFound ())
             {
-                UserFriends friend = userFriendsService.findFriend (mainAccount , fitd_username.getMainAccount () , StatusFriends.awaiting_approval);
+                UserFriends friend = userFriendsService.findFriend (fitd_username.getMainAccount () , mainAccount , StatusFriends.awaiting_approval);
                 if (friend != null)
                 {
                     friend.setStatus (StatusFriends.friend);
