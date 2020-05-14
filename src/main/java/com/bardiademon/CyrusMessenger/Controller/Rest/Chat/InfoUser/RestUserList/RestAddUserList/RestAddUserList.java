@@ -71,7 +71,7 @@ public final class RestAddUserList
                         if (userListType != null)
                         {
                             UserList userList = userListService.getUserList (mainAccount.getId () , idUsernameMainAccount.getIdUser () , userListType);
-                            if (userList != null)
+                            if (userList == null)
                             {
                                 userList = userListService.getUserListNot (mainAccount.getId () , idUsernameMainAccount.getIdUser () , userListType);
 

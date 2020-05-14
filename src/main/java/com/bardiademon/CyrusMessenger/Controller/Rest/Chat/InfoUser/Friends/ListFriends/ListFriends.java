@@ -47,8 +47,7 @@ public final class ListFriends
              UserContactsService _UserContactsService ,
              UserSeparateProfilesService _UserSeparateProfilesService ,
              UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService
-            )
+             ProfilePicturesService _ProfilePicturesService)
     {
         this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
                 _EnumTypesService ,
@@ -77,44 +76,56 @@ public final class ListFriends
             if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.error400 ();
             else
             {
-                try
+                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
+
+                answerToClient = AnswerToClient.OK ();
+
+                if (status.equals (Status.requests.name ()))
                 {
-                    answerToClient = AnswerToClient.OK ();
-                    List <UserFriends> userFriendsList;
-                    StatusFriends statusFriends = StatusFriends.valueOf (status);
-                    MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-                    userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
-                            (mainAccount , statusFriends);
-
-
-                    if (userFriendsList.size () > 0)
-                    {
-                        Map <String, String> friend;
-                        UserFriends userFriends;
-
-                        UserProfileAccessLevel checkUserAccessLevel;
-
-                        for (int i = 0; i < userFriendsList.size (); i++)
-                        {
-                            userFriends = userFriendsList.get (i);
-                            friend = new LinkedHashMap <> ();
-
-                            checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
-                            if (checkUserAccessLevel.hasAccess (Which.username))
-                                friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
-
-                            friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
-                            friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
-                            friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
-
-                            answerToClient.put (String.valueOf (i) , friend);
-                        }
-                    }
-
+                    List <String> requests = serviceProfile.userFriendsService.requests (mainAccount.getId ());
+                    if (requests != null && requests.size () > 0)
+                        AnswerToClient.OneAnswer (answerToClient , KeyAnswer.usernames.name () , requests);
+                    else
+                        AnswerToClient.OneAnswer (answerToClient , AnswerToClient.CUV.not_found.name ());
                 }
-                catch (IllegalArgumentException e)
+                else
                 {
-                    answerToClient = AnswerToClient.error400 ();
+                    try
+                    {
+                        List <UserFriends> userFriendsList;
+                        StatusFriends statusFriends = StatusFriends.valueOf (status);
+                        userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
+                                (mainAccount , statusFriends);
+
+                        if (userFriendsList.size () > 0)
+                        {
+                            Map <String, String> friend;
+                            UserFriends userFriends;
+
+                            UserProfileAccessLevel checkUserAccessLevel;
+
+                            for (int i = 0; i < userFriendsList.size (); i++)
+                            {
+                                userFriends = userFriendsList.get (i);
+                                friend = new LinkedHashMap <> ();
+
+                                checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
+                                if (checkUserAccessLevel.hasAccess (Which.username))
+                                    friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
+
+                                friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
+                                friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
+                                friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
+
+                                answerToClient.put (String.valueOf (i) , friend);
+                            }
+                        }
+
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        answerToClient = AnswerToClient.error400 ();
+                    }
                 }
             }
 
@@ -125,9 +136,14 @@ public final class ListFriends
         return answerToClient;
     }
 
+    private enum Status
+    {
+        requests
+    }
+
     private enum KeyAnswer
     {
-        name, status, created_at, updated_at,
+        name, status, created_at, updated_at, usernames
     }
 
 }

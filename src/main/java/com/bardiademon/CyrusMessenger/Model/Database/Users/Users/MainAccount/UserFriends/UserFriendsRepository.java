@@ -29,4 +29,10 @@ public interface UserFriendsRepository extends JpaRepository <UserFriends, Long>
     @Query ("select userFriends.mainAccountFriend.username from UserFriends userFriends " +
             "where userFriends.mainAccount.id = :ID and userFriends.status = :STATUS")
     List <String> findUsernameUser (@Param ("ID") long id , @Param ("STATUS") StatusFriends status);
+
+    @Query ("select usernames.username from Usernames usernames where usernames.active = true and usernames.mainAccount.id in (" +
+            "select account.id from MainAccount account where account.id in (" +
+            "select friends.mainAccount.id from UserFriends friends where friends.status = 'awaiting_approval' and friends.mainAccountFriend.id = :ID_USER_FRIEND))")
+    List <String> getUsernameRequests (@Param ("ID_USER_FRIEND") long idUserFriend);
+
 }

@@ -73,7 +73,7 @@ public final class UserProfileAccessLevel
             isAnonymous = isAnonymous ();
 
             List <EnumTypes> listEnum
-                    = service.enumTypesService.Repository.findById2AndDeletedFalseAndDes (securityUser.getId () , desEnumTypes);
+                    = service.enumTypesService.Repository.findById2AndDeletedFalseAndDes (user.getId () , desEnumTypes);
             if (accessLevel.equals (AccessLevel.all_except))
             {
                 if (listEnum != null && listEnum.size () > 0) return !(checkEnumTypesCheck (listEnum));

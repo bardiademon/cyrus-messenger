@@ -27,9 +27,13 @@ public class UserFriendsService
         return Repository.findByMainAccountAndMainAccountFriendAndStatus (user , friend , StatusFriends);
     }
 
-
     public List <UserFriends> findValidFriend (MainAccount user)
     {
         return Repository.findByMainAccountAndDeletedFalse (user);
+    }
+
+    public List <String> requests (long idUser)
+    {
+        return Repository.getUsernameRequests (idUser);
     }
 }
