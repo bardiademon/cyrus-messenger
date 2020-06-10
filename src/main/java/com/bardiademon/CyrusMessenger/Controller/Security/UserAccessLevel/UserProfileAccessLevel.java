@@ -60,7 +60,13 @@ public final class UserProfileAccessLevel
 
     private boolean isBlock ()
     {
-        return (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType))) != null;
+        if (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType)) == null)
+        {
+            if (!userBlockedType.equals (UserBlocked.Type.all.name ()))
+                return (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.all) != null);
+            else return false;
+        }
+        else return true;
     }
 
     private boolean hasAccess (AccessLevel accessLevel , boolean showProfileForAnonymous)
