@@ -103,6 +103,9 @@ public class SecurityUserProfile
     @Column (name = "max_upload_profile_pictures", nullable = false)
     private int maxUploadProfilePictures = 20;
 
+    @Column (name = "show_profile_for_anonymous")
+    private boolean showProfileForAnonymous = true;
+
     public SecurityUserProfile ()
     {
     }
@@ -315,5 +318,15 @@ public class SecurityUserProfile
     public void setShowId (AccessLevel showId)
     {
         this.showId = showId;
+    }
+
+    public boolean isShowProfileForAnonymous ()
+    {
+        return showProfileForAnonymous;
+    }
+
+    public void setShowProfileForAnonymous (boolean showProfileForAnonymous)
+    {
+        this.showProfileForAnonymous = showProfileForAnonymous;
     }
 }

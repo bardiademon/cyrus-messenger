@@ -1,9 +1,5 @@
 package com.bardiademon.CyrusMessenger.Model.Database.EnumTypes;
 
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
-import java.util.List;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;

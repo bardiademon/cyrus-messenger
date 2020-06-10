@@ -55,7 +55,7 @@ public final class UserProfileAccessLevel
         final SecurityUserProfile securityUser = service.mainAccountService.repositorySecurityProfile.findByMainAccount (user);
         final AccessLevel accessLevel = getAccessLevel (securityUser);
 
-        return (securityUser != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUser));
+        return (securityUser != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUser.isShowProfileForAnonymous ()));
     }
 
     private boolean isBlock ()
@@ -63,30 +63,26 @@ public final class UserProfileAccessLevel
         return (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType))) != null;
     }
 
-    private boolean hasAccess (AccessLevel accessLevel , SecurityUserProfile securityUser)
+    private boolean hasAccess (AccessLevel accessLevel , boolean showProfileForAnonymous)
     {
         assert desEnumTypes != null;
+
+        isAnonymous = isAnonymous ();
+
+        if (isAnonymous && !showProfileForAnonymous) return false;
 
         if (accessLevel.equals (AccessLevel.all)) return true;
         else
         {
-            isAnonymous = isAnonymous ();
 
-            List <EnumTypes> listEnum
-                    = service.enumTypesService.Repository.findById2AndDeletedFalseAndDes (user.getId () , desEnumTypes);
+            UserList userList = service.userListService.getUserList (user.getId () , applicant.getId ());
             if (accessLevel.equals (AccessLevel.all_except))
             {
-                if (listEnum != null && listEnum.size () > 0) return !(checkEnumTypesCheck (listEnum));
-                else return true;
+                return userList == null;
             }
-            else if (accessLevel.equals (AccessLevel.just))
-            {
-                if (listEnum != null && listEnum.size () > 0) return checkEnumTypesCheck (listEnum);
-                else return false;
-            }
+            else if (accessLevel.equals (AccessLevel.just)) return userList != null;
             else
             {
-
                 List <UserSeparateProfiles> separateProfiles
                         = service.userSeparateProfilesService.Repository.findByMainAccountIdAndDeletedFalse (user.getId ());
 

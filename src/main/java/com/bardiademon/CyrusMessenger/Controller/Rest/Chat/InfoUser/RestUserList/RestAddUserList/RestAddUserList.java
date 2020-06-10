@@ -30,9 +30,9 @@ import java.time.LocalDateTime;
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNUserList.RN_USER_LIST_ADD, method = RequestMethod.POST)
 public final class RestAddUserList
 {
-    private UserLoginService userLoginService;
-    private MainAccountService mainAccountService;
-    private UserListService userListService;
+    private final UserLoginService userLoginService;
+    private final MainAccountService mainAccountService;
+    private final UserListService userListService;
 
     @Autowired
     public RestAddUserList
