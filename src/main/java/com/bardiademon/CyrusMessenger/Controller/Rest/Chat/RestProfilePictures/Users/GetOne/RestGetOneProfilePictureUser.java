@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_USER, method = RequestMethod.POST)
+@RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_USER, method = { RequestMethod.POST , RequestMethod.GET })
 public final class RestGetOneProfilePictureUser
 {
 

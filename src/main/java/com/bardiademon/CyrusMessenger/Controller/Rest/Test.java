@@ -15,15 +15,19 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChat
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.IdEnTy;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -43,6 +47,7 @@ public class Test
     private FiredFromGroupService firedFromGroupService;
     private GroupManagementService groupManagementService;
     private GroupsService groupsService;
+    private UserSeparateProfilesService userSeparateProfilesService;
 
     @Autowired
     public Test
@@ -57,7 +62,8 @@ public class Test
              SecurityUserChatService securityUserChatService ,
              FiredFromGroupService firedFromGroupService ,
              GroupManagementService groupManagementService ,
-             GroupsService groupsService
+             GroupsService groupsService ,
+             UserSeparateProfilesService userSeparateProfilesService
             )
     {
 
@@ -73,9 +79,10 @@ public class Test
         this.firedFromGroupService = firedFromGroupService;
         this.groupManagementService = groupManagementService;
         this.groupsService = groupsService;
+        this.userSeparateProfilesService = userSeparateProfilesService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{username}/{username2}"})
+    @RequestMapping (value = { "" , "/" , "/{username}/{username2}" })
     public AnswerToClient test (HttpServletRequest req , HttpServletResponse res , @PathVariable (value = "username", required = false) String username , @PathVariable (value = "username2", required = false) String username2)
     {
         AnswerToClient answerToClient;
@@ -127,6 +134,13 @@ public class Test
         numberOfSubmitRequest.setNumberOfRequest (request);
         numberOfSubmitRequest.setType (type);
         return numberOfSubmitRequest;
+    }
+
+
+    @RequestMapping (value = "/test-find-sep-prof/{id_user}")
+    public List <IdEnTy> testFindUserSeparateProfiles (@PathVariable (value = "id_user") int id)
+    {
+        return userSeparateProfilesService.findIdType (id);
     }
 
     public enum TestEnum

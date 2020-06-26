@@ -47,7 +47,7 @@ public final class RestUploadProfilePictureUser
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
     private final SecurityUserProfileService securityUserProfileService;
-    private EnumTypesService enumTypesService;
+    private final EnumTypesService enumTypesService;
 
     @Autowired
     public RestUploadProfilePictureUser

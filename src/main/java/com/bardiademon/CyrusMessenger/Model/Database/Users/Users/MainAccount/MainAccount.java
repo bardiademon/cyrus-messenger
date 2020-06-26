@@ -51,36 +51,35 @@ public class MainAccount
     @JsonIgnore
     @JsonBackReference
     @Where (clause = "deleted_at != null")
-    private List<UserFriends> userFriends;
+    private List <UserFriends> userFriends;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
     @Where (clause = "deleted = false")
-    private List<UserContacts> userContacts;
+    private List <UserContacts> userContacts;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
-    private List<UserBlocked> userBlocked;
+    private List <UserBlocked> userBlocked;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
     @Where (clause = "`deleted` = false and `this_pic_for` = 'user'")
-    private List<ProfilePictures> profilePictures;
+    private List <ProfilePictures> profilePictures;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
     @JsonBackReference
     @Where (clause = "`deleted` = false")
-    private List<UserList> userList;
+    private List <UserList> userList;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     @Where (clause = "`deleted` = false")
-    private List<UserSeparateProfiles> userSeparateProfiles;
+    private List <UserSeparateProfiles> userSeparateProfiles;
 
     @JsonIgnore
     @OneToOne (mappedBy = "mainAccount")
@@ -172,32 +171,32 @@ public class MainAccount
         this.phone = phone;
     }
 
-    public List<UserFriends> getUserFriends ()
+    public List <UserFriends> getUserFriends ()
     {
         return userFriends;
     }
 
-    public void setUserFriends (List<UserFriends> userFriends)
+    public void setUserFriends (List <UserFriends> userFriends)
     {
         this.userFriends = userFriends;
     }
 
-    public List<UserContacts> getUserContacts ()
+    public List <UserContacts> getUserContacts ()
     {
         return userContacts;
     }
 
-    public void setUserContacts (List<UserContacts> userContacts)
+    public void setUserContacts (List <UserContacts> userContacts)
     {
         this.userContacts = userContacts;
     }
 
-    public List<UserBlocked> getUserBlocked ()
+    public List <UserBlocked> getUserBlocked ()
     {
         return userBlocked;
     }
 
-    public void setUserBlocked (List<UserBlocked> userBlocked)
+    public void setUserBlocked (List <UserBlocked> userBlocked)
     {
         this.userBlocked = userBlocked;
     }
@@ -329,12 +328,12 @@ public class MainAccount
         this.deletedAt = deletedAt;
     }
 
-    public List<ProfilePictures> getProfilePictures ()
+    public List <ProfilePictures> getProfilePictures ()
     {
         return profilePictures;
     }
 
-    public void setProfilePictures (List<ProfilePictures> profilePictures)
+    public void setProfilePictures (List <ProfilePictures> profilePictures)
     {
         this.profilePictures = profilePictures;
     }
@@ -359,22 +358,22 @@ public class MainAccount
         this.systemBlockAt = systemBlockAt;
     }
 
-    public List<UserList> getUserList ()
+    public List <UserList> getUserList ()
     {
         return userList;
     }
 
-    public void setUserList (List<UserList> userList)
+    public void setUserList (List <UserList> userList)
     {
         this.userList = userList;
     }
 
-    public List<UserSeparateProfiles> getUserSeparateProfiles ()
+    public List <UserSeparateProfiles> getUserSeparateProfiles ()
     {
         return userSeparateProfiles;
     }
 
-    public void setUserSeparateProfiles (List<UserSeparateProfiles> userSeparateProfiles)
+    public void setUserSeparateProfiles (List <UserSeparateProfiles> userSeparateProfiles)
     {
         this.userSeparateProfiles = userSeparateProfiles;
     }

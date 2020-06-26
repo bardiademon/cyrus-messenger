@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.RestProfilePictures.Users.Upload;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;

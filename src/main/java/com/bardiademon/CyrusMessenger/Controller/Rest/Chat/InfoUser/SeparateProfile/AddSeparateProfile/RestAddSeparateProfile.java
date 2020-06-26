@@ -36,7 +36,7 @@ public final class RestAddSeparateProfile
 
     private final UserLoginService userLoginService;
     private final EnumTypesService enumTypesService;
-    private UserSeparateProfilesService userSeparateProfilesService;
+    private final UserSeparateProfilesService userSeparateProfilesService;
 
     public RestAddSeparateProfile
             (UserLoginService _UserLoginService , EnumTypesService _EnumTypesService ,

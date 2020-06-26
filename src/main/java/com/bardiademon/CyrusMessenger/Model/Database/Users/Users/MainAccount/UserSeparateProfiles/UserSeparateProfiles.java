@@ -1,16 +1,15 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.Table;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import javax.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table (name = "user_separate_profile")
