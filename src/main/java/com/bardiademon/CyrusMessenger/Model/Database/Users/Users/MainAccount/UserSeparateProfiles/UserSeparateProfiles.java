@@ -1,6 +1,8 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -22,6 +25,7 @@ public final class UserSeparateProfiles
 
     @ManyToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
+    @JsonIgnore
     private MainAccount mainAccount;
 
     @Column (nullable = false)
@@ -37,12 +41,19 @@ public final class UserSeparateProfiles
     private String mylink;
 
     @Column (name = "created_at", nullable = false, updatable = false)
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Transient
+    @JsonProperty ("created_at")
+    private String createdAtForShowClient;
+
     @Column (name = "deleted_at", insertable = false)
+    @JsonIgnore
     private LocalDateTime deletedAt;
 
+    @JsonIgnore
     private boolean deleted;
 
     public UserSeparateProfiles ()
@@ -127,6 +138,16 @@ public final class UserSeparateProfiles
     public void setCreatedAt (LocalDateTime createdAt)
     {
         this.createdAt = createdAt;
+    }
+
+    public String getCreatedAtForShowClient ()
+    {
+        return createdAtForShowClient;
+    }
+
+    public void setCreatedAtForShowClient (String createdAtForShowClient)
+    {
+        this.createdAtForShowClient = createdAtForShowClient;
     }
 
     public LocalDateTime getDeletedAt ()

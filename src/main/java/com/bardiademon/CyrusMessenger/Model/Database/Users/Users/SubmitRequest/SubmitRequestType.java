@@ -16,6 +16,6 @@ public enum SubmitRequestType
     placement_number_user, placement_number_group,
     update_info_group, change_username_group, change_username_user,
     add_user_list, remove_user_list,
-    add_user_separate_profile, get_user_separate_profile, remove_user_separate_profile,
+    add_user_separate_profile, get_user_separate_profile, get_one_user_separate_profile, remove_user_separate_profile,
     add_friend, del_friend, approve_friend
 }

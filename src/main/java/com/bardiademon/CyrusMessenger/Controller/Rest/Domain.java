@@ -104,6 +104,7 @@ public abstract class Domain
                 private static final String RN_SEPARATE_PROFILE = RN_MAIN_INFO_USER + "/separate_profile";
                 public static final String RN_SEPARATE_PROFILE_ADD = RN_SEPARATE_PROFILE + "/add";
                 public static final String RN_SEPARATE_PROFILE_GET = RN_SEPARATE_PROFILE + "/get";
+                public static final String RN_SEPARATE_PROFILE_GET_ONE = RN_SEPARATE_PROFILE_GET + "/one";
                 public static final String RN_SEPARATE_PROFILE_REMOVE = RN_SEPARATE_PROFILE + "/remove";
                 public static final String RN_SEPARATE_PROFILE_CHANGE = RN_SEPARATE_PROFILE + "/change";
             }

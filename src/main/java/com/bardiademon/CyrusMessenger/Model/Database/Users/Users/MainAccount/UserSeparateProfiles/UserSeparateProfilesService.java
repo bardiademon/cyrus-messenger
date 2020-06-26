@@ -19,7 +19,7 @@ public final class UserSeparateProfilesService
     public UserSeparateProfilesService (UserSeparateProfilesRepository Repository , EnumTypesService _EnumTypesService)
     {
         this.Repository = Repository;
-        enumTypesService = _EnumTypesService;
+        this.enumTypesService = _EnumTypesService;
     }
 
     /*

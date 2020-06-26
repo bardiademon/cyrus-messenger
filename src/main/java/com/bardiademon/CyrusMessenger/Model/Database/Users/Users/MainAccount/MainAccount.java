@@ -2,32 +2,29 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserList;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserList;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table (name = "main_account")
@@ -49,30 +46,25 @@ public class MainAccount
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     @Where (clause = "deleted_at != null")
     private List <UserFriends> userFriends;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     @Where (clause = "deleted = false")
     private List <UserContacts> userContacts;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     private List <UserBlocked> userBlocked;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     @Where (clause = "`deleted` = false and `this_pic_for` = 'user'")
     private List <ProfilePictures> profilePictures;
 
     @OneToMany (mappedBy = "mainAccount")
     @JsonIgnore
-    @JsonBackReference
     @Where (clause = "`deleted` = false")
     private List <UserList> userList;
 
@@ -84,7 +76,6 @@ public class MainAccount
     @JsonIgnore
     @OneToOne (mappedBy = "mainAccount")
     @Where (clause = "`username_for` = 'user' and `deleted` = false")
-    @JsonBackReference
     private Usernames username;
 
     @Column (nullable = false)
