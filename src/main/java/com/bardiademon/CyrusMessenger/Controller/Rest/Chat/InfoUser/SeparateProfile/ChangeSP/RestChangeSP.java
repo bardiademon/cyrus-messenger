@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.ChangeSeparateProfile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.ChangeSP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+// SP => Separate Profile
+
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_CHANGE, method = RequestMethod.POST)
-public final class RestChangeSeparateProfile
+public final class RestChangeSP
 {
     private final String router;
     private final SubmitRequestType type;
@@ -24,7 +26,7 @@ public final class RestChangeSeparateProfile
     private final UserSeparateProfilesService userSeparateProfilesService;
 
     @Autowired
-    public RestChangeSeparateProfile
+    public RestChangeSP
             (UserLoginService _UserLoginService ,
              UserSeparateProfilesService _UserSeparateProfilesService)
     {

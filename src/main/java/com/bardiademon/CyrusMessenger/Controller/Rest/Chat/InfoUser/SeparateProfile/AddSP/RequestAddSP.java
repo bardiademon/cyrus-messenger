@@ -1,16 +1,18 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.AddSeparateProfile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.AddSP;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public final class RequestAddSeparateProfile
+// SP => Separate Profile
+
+public final class RequestAddSP
 {
     private String bio, family, mylink, name;
 
     @JsonProperty ("profile_for")
     private List <String> profileFor;
 
-    public RequestAddSeparateProfile ()
+    public RequestAddSP ()
     {
     }
 

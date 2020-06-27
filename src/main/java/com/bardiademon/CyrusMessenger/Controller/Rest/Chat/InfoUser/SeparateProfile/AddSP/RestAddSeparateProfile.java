@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.AddSeparateProfile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.AddSP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+// SP => Separate Profile
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_ADD, method = RequestMethod.POST)
@@ -54,7 +56,7 @@ public final class RestAddSeparateProfile
     public AnswerToClient add
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             @RequestBody RequestAddSeparateProfile request)
+             @RequestBody RequestAddSP request)
     {
         AnswerToClient answerToClient;
         CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , type);
@@ -182,7 +184,7 @@ public final class RestAddSeparateProfile
         enumTypesService.Repository.saveAll (enumTypes);
     }
 
-    private boolean isEmpty (RequestAddSeparateProfile req)
+    private boolean isEmpty (RequestAddSP req)
     {
         return (Str.IsEmpty (req.getName ()) && Str.IsEmpty (req.getBio ()) && Str.IsEmpty (req.getFamily ()) && Str.IsEmpty (req.getMylink ()));
     }

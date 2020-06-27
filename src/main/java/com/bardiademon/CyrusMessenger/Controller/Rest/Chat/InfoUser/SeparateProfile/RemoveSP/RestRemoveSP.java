@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.RemoveSeparateProfile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.RemoveSP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+// SP => Separate Profile
+
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_REMOVE, method = RequestMethod.POST)
-public final class RestRemoveSeparateProfile
+public final class RestRemoveSP
 {
 
     private final String router;
@@ -38,7 +40,7 @@ public final class RestRemoveSeparateProfile
     private final EnumTypesService enumTypesService;
 
     @Autowired
-    public RestRemoveSeparateProfile
+    public RestRemoveSP
             (UserLoginService _UserLoginService , UserSeparateProfilesService _UserSeparateProfilesService , EnumTypesService _EnumTypesService)
     {
         this.userLoginService = _UserLoginService;

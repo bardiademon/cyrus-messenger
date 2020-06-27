@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.GetSeparateProfile;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.GetSP;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+// SP => Separate Profile
+
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_GET, method = RequestMethod.POST)
-public final class RestGetSeparateProfile
+public final class RestGetSP
 {
 
     // router1 => baraye method ke etelaat yek SeparateProfile ro migire
@@ -43,7 +45,7 @@ public final class RestGetSeparateProfile
     private final EnumTypesService enumTypesService;
 
     @Autowired
-    public RestGetSeparateProfile
+    public RestGetSP
             (UserLoginService _UserLoginService ,
              UserSeparateProfilesService _UserSeparateProfilesService , EnumTypesService _EnumTypesService)
     {
