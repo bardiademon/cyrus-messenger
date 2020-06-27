@@ -12,12 +12,12 @@ public final class TAOTL
     {
         try
         {
-            if (link.substring (0 , 7).equals ("http://") || link.substring (0 , 8).equals ("https://"))
+            if (link.startsWith ("http://") || link.startsWith ("https://"))
             {
                 ((new URL (link)).openConnection ()).connect ();
                 return true;
             }
-            else throw new IOException ("Http or https nof found");
+            else throw new IOException ("Http or https not found");
         }
         catch (Exception e)
         {

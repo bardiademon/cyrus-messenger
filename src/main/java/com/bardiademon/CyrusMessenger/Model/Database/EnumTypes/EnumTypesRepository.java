@@ -16,6 +16,6 @@ public interface EnumTypesRepository extends JpaRepository <EnumTypes, Long>
 
     EnumTypes findById2AndEnumTypeAndDeletedFalse (long id2 , String enumType);
 
-    @Query ("select enty.enumType from EnumTypes enty where enty.id2 = :ID2 and enty.deleted = false")
-    List <String> getEnumType (@Param ("ID2") long id2);
+    @Query ("select enty.id,enty.enumType from EnumTypes enty where enty.id2 = :ID2 and enty.deleted = false")
+    List <Object[]> getEnumType (@Param ("ID2") long id2);
 }

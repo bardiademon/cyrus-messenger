@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.ETIdName;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.IdEnTy;
@@ -88,6 +89,7 @@ public final class RestGetSeparateProfile
         }
         else answerToClient = both.getAnswerToClient ();
 
+        System.gc ();
         return answerToClient;
     }
 
@@ -111,8 +113,8 @@ public final class RestGetSeparateProfile
             {
                 UserSeparateProfiles sep = userSeparateProfilesService.forUser (idSep.getId () , mainAccount.getId ());
 
-                List <String> sepFor;
-                if (sep != null && (sepFor = enumTypesService.Repository.getEnumType (sep.getId ())) != null)
+                List <ETIdName> sepFor;
+                if (sep != null && (sepFor = enumTypesService.getEnumType (sep.getId ())) != null)
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
 
@@ -121,15 +123,15 @@ public final class RestGetSeparateProfile
                     answerToClient.put (KeyAnswer.sep.name () , sep);
                     answerToClient.put (KeyAnswer.sep_for.name () , sepFor);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
-                    r.n (request , type , false);
+                    l.n (request , router1 , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                    r.n (request , type1 , false);
                 }
                 else
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_BAD_REQUEST) , AnswerToClient.CUV.not_found.name ());
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
-                    r.n (mainAccount , type , true);
+                    l.n (request , router1 , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                    r.n (mainAccount , type1 , true);
                 }
             }
             else
@@ -142,6 +144,7 @@ public final class RestGetSeparateProfile
         }
         else answerToClient = both.getAnswerToClient ();
 
+        System.gc ();
         return answerToClient;
     }
 

@@ -14,6 +14,6 @@ public interface UserSeparateProfilesRepository extends JpaRepository <UserSepar
 
     UserSeparateProfiles findByIdAndMainAccountIdAndDeletedFalse (long id , long idUser);
 
-    @Query ("select enty.enumType,sep.id from EnumTypes enty,UserSeparateProfiles sep where sep.mainAccount.id = :ID_USER and enty.id2 = sep.id")
+    @Query ("select enty.enumType,sep.id,enty.id from EnumTypes enty,UserSeparateProfiles sep where sep.mainAccount.id = :ID_USER and enty.id2 = sep.id")
     List <Object[]> findIdSeparateProfiles (@Param ("ID_USER") long idUser);
 }

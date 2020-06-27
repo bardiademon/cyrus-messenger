@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Controller.Rest;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
+import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroupService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
@@ -35,19 +36,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test
 {
 
-    private MainAccountService mainAccountService;
-    private SecurityUserProfileService securityUserProfileService;
-    private ShowChatForService showChatForService;
-    private UserContactsService userContactsService;
-    private UserBlockedService userBlockedService;
-    private SubmitRequestService submitRequestService;
-    private BlockedByTheSystemService blockedByTheSystemService;
-    private NumberOfSubmitRequestService numberOfSubmitRequestService;
-    private SecurityUserChatService securityUserChatService;
-    private FiredFromGroupService firedFromGroupService;
-    private GroupManagementService groupManagementService;
-    private GroupsService groupsService;
-    private UserSeparateProfilesService userSeparateProfilesService;
+    private final MainAccountService mainAccountService;
+    private final SecurityUserProfileService securityUserProfileService;
+    private final ShowChatForService showChatForService;
+    private final UserContactsService userContactsService;
+    private final UserBlockedService userBlockedService;
+    private final SubmitRequestService submitRequestService;
+    private final BlockedByTheSystemService blockedByTheSystemService;
+    private final NumberOfSubmitRequestService numberOfSubmitRequestService;
+    private final SecurityUserChatService securityUserChatService;
+    private final FiredFromGroupService firedFromGroupService;
+    private final GroupManagementService groupManagementService;
+    private final GroupsService groupsService;
+    private final UserSeparateProfilesService userSeparateProfilesService;
+    private final EnumTypesService enumTypesService;
 
     @Autowired
     public Test
@@ -63,7 +65,8 @@ public class Test
              FiredFromGroupService firedFromGroupService ,
              GroupManagementService groupManagementService ,
              GroupsService groupsService ,
-             UserSeparateProfilesService userSeparateProfilesService
+             UserSeparateProfilesService userSeparateProfilesService ,
+             EnumTypesService enumTypesService
             )
     {
 
@@ -80,6 +83,7 @@ public class Test
         this.groupManagementService = groupManagementService;
         this.groupsService = groupsService;
         this.userSeparateProfilesService = userSeparateProfilesService;
+        this.enumTypesService = enumTypesService;
     }
 
     @RequestMapping (value = { "" , "/" , "/{username}/{username2}" })

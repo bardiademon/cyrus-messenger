@@ -54,6 +54,7 @@ public final class UserSeparateProfilesService
                 idEnTy.setId (new ID (idSeparateProfile[1]));
                 idEntyLst.add (idEnTy);
             }
+            System.gc ();
             return idEntyLst;
         }
         else return null;
