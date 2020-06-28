@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.AddSP;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

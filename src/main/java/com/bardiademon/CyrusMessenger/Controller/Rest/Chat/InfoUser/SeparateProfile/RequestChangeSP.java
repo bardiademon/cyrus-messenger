@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile.ChangeSP;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.SeparateProfile;
 
 // SP => Separate Profile
 
