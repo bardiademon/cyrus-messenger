@@ -2,12 +2,15 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Us
 
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 // IdEnTy , Id => id separate profile , EnTy => Enum Type
 public final class IdEnTy
 {
 
     private ID id;
+
+    @JsonProperty("enum_type")
     private String enumType;
 
     public IdEnTy ()
