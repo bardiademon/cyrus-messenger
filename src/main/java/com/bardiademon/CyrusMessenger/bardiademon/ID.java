@@ -42,7 +42,6 @@ public final class ID
         valid = (id > 0);
     }
 
-    @JsonIgnore
     public long getId ()
     {
         return id;

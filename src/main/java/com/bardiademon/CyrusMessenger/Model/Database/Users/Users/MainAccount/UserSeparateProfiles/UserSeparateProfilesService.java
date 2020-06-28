@@ -59,4 +59,11 @@ public final class UserSeparateProfilesService
         }
         else return null;
     }
+
+    // baraye ke bebinam id sep baraye user darkhast konande hast ya na
+    public boolean idIsExists (long idSep , long idUser)
+    {
+        Long res;
+        return ((res = Repository.findId (idSep , idUser)) != null && res > 0);
+    }
 }

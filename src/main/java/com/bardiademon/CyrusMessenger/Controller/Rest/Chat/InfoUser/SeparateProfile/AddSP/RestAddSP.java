@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_ADD, method = RequestMethod.POST)
-public final class RestAddSeparateProfile
+public final class RestAddSP
 {
     private final String router;
     private final SubmitRequestType type;
@@ -40,7 +40,7 @@ public final class RestAddSeparateProfile
     private final EnumTypesService enumTypesService;
     private final UserSeparateProfilesService userSeparateProfilesService;
 
-    public RestAddSeparateProfile
+    public RestAddSP
             (UserLoginService _UserLoginService , EnumTypesService _EnumTypesService ,
              UserSeparateProfilesService _UserSeparateProfilesService)
     {
@@ -68,61 +68,71 @@ public final class RestAddSeparateProfile
             {
                 if (!isEmpty (request))
                 {
-                    if (Str.IsEmpty (request.getMylink ()) || taotl.isLink (request.getMylink ()))
+                    if (!Str.IsEmpty (request.getName ()))
                     {
-                        if (getProfileFor (request.getProfileFor ()))
+                        if (Str.IsEmpty (request.getMylink ()) || taotl.isLink (request.getMylink ()))
                         {
-                            String found;
-                            if ((found = foundEnum (request.getProfileFor () , mainAccount)) == null)
+                            if (getProfileFor (request.getProfileFor ()))
                             {
-                                UserSeparateProfiles separateProfiles = new UserSeparateProfiles ();
-                                separateProfiles.setBio (request.getBio ());
-                                separateProfiles.setFamily (request.getFamily ());
-                                separateProfiles.setMylink (request.getMylink ());
-                                separateProfiles.setName (request.getName ());
-                                separateProfiles.setMainAccount (mainAccount);
-                                separateProfiles = userSeparateProfilesService.Repository.save (separateProfiles);
-                                if (separateProfiles.getId () > 0)
+                                String found;
+                                if ((found = foundEnum (request.getProfileFor () , mainAccount)) == null)
                                 {
-                                    toEnumTypesList (request.getProfileFor () , separateProfiles.getId ());
+                                    UserSeparateProfiles separateProfiles = new UserSeparateProfiles ();
+                                    separateProfiles.setBio (request.getBio ());
+                                    separateProfiles.setFamily (request.getFamily ());
+                                    separateProfiles.setMylink (request.getMylink ());
+                                    separateProfiles.setName (request.getName ());
+                                    separateProfiles.setMainAccount (mainAccount);
+                                    separateProfiles = userSeparateProfilesService.Repository.save (separateProfiles);
+                                    if (separateProfiles.getId () > 0)
+                                    {
+                                        toEnumTypesList (request.getProfileFor () , separateProfiles.getId ());
 
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added.name ());
-                                    answerToClient.put (AnswerToClient.CUV.id.name () , separateProfiles.getId ());
-                                    answerToClient.setReqRes (req , res);
-                                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.added.name ());
-                                    r.n (mainAccount , type , false);
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added.name ());
+                                        answerToClient.put (AnswerToClient.CUV.id.name () , separateProfiles.getId ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.added.name ());
+                                        r.n (mainAccount , type , false);
+                                    }
+                                    else
+                                    {
+                                        answerToClient = AnswerToClient.ServerError ();
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                        r.n (mainAccount , type , true);
+                                    }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.ServerError ();
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_found.name ());
+                                    answerToClient.put (AnswerToClient.CUV.found.name () , found);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_found.name ()) , null);
                                     r.n (mainAccount , type , true);
                                 }
+
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_found.name ());
-                                answerToClient.put (AnswerToClient.CUV.found.name () , found);
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_invalid.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_found.name ()) , null);
+                                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_invalid.name ()) , null);
                                 r.n (mainAccount , type , true);
                             }
-
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
                             answerToClient.setReqRes (req , res);
-                            l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_invalid.name ()) , null);
+                            l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
                             r.n (mainAccount , type , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_is_empty.name ());
                         answerToClient.setReqRes (req , res);
-                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
+                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_is_empty.name ()) , null);
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -191,6 +201,6 @@ public final class RestAddSeparateProfile
 
     private enum ValAnswer
     {
-        empty, link_invalid, profile_for_invalid, added, profile_for_found
+        empty, link_invalid, profile_for_invalid, added, profile_for_found, name_is_empty
     }
 }
