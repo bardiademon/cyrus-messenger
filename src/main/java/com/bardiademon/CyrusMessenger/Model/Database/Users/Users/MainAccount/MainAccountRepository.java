@@ -9,6 +9,8 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
 
     MainAccount findByPhoneAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone);
 
+    MainAccount findByPhoneLikeAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String phone);
+
     MainAccount findByUsernameUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String username);
 
     MainAccount findByEmailAndDeletedFalseAndSystemBlockFalseAndActiveTrue (String email);
@@ -22,8 +24,6 @@ public interface MainAccountRepository extends JpaRepository<MainAccount, Long>
     MainAccount findByIdAndEmailNotNullAndDeletedFalseAndSystemBlockFalseAndActiveTrue (long id);
 
     MainAccount findByIdAndDeletedFalseAndSystemBlockFalseAndActiveTrue (long id);
-
-    MainAccount findByPhoneLikeAndSystemBlockFalseAndActiveTrue (String phone);
 
     MainAccount findByIdAndSystemBlockFalseAndActiveTrue (long id);
 

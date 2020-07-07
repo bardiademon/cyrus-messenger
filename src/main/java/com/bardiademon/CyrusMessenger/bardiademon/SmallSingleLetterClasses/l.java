@@ -5,8 +5,9 @@ import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.Log;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.LogService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.bardiademon.InfoLine;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 
 // l =>  Log
 // esmesho injori neveshtam chon ke hameja estefade mishe rahat bashe va motefavet
@@ -20,6 +21,14 @@ public final class l extends Thread implements Runnable
     private final InfoLine _InfoLine;
     private final Exception E;
     private final String Description;
+
+    private static LogService Service;
+
+    // ns => new Service
+    public static void ns ()
+    {
+        Service = CyrusMessengerApplication.Context ().getBean (LogService.class);
+    }
 
     private l (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)
     {
@@ -57,10 +66,17 @@ public final class l extends Thread implements Runnable
         new l (Request , Route , _MainAccount , _AnswerToClient , StackTrace , E , Description);
     }
 
+    // n => new , r r => request
+    public static void n (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description , SubmitRequestType _TypeRequest , boolean active)
+    {
+        new l (Request , Route , _MainAccount , _AnswerToClient , StackTrace , E , Description);
+        r.n (_MainAccount , _TypeRequest , active);
+    }
+
     @Override
     public void run ()
     {
-        LogService _LogService = CyrusMessengerApplication.Context ().getBean (LogService.class);
+        if (Service == null) ns ();
 
         Log log = new Log ();
         if (_AnswerToClient != null)
@@ -102,7 +118,7 @@ public final class l extends Thread implements Runnable
 
         if (Request != null) log.setRequest (Request);
         if (Description != null) log.setDescription (Description);
-        _LogService.Repository.save (log);
+        Service.Repository.save (log);
 
     }
 }

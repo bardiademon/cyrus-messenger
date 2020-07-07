@@ -23,11 +23,16 @@ public class UserContactsService
     {
         UserContacts userContacts;
 
-        if (phone.substring (0 , 1).equals ("0")) phone = phone.substring (1);
+        if (phone.startsWith ("0")) phone = phone.substring (1);
 
         userContacts = Repository.findByPhoneLikeAndDeleted ("%" + phone , false);
         if (userContacts == null) return Repository.hasPhoneMainAccount ("%" + phone , false);
         else return userContacts;
+    }
+
+    public UserContacts hasPhoneForUser (long idUser , String phone)
+    {
+        return Repository.findByPhoneLikeAndMainAccountIdAndDeleted ("%" + phone , idUser , false);
     }
 
 }

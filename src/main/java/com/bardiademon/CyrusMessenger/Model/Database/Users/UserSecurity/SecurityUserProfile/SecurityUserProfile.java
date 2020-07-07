@@ -106,6 +106,14 @@ public class SecurityUserProfile
     @Column (name = "show_profile_for_anonymous")
     private boolean showProfileForAnonymous = true;
 
+    @Enumerated (value = EnumType.STRING)
+    @Column (name = "find_me_by_phone", nullable = false)
+    private AccessLevel findMeByPhone = AccessLevel.all;
+
+    @Enumerated (value = EnumType.STRING)
+    @Column (name = "find_me", nullable = false)
+    private AccessLevel findMe = AccessLevel.all;
+
     public SecurityUserProfile ()
     {
     }
@@ -328,5 +336,25 @@ public class SecurityUserProfile
     public void setShowProfileForAnonymous (boolean showProfileForAnonymous)
     {
         this.showProfileForAnonymous = showProfileForAnonymous;
+    }
+
+    public AccessLevel getFindMeByPhone ()
+    {
+        return findMeByPhone;
+    }
+
+    public void setFindMeByPhone (AccessLevel findMeByPhone)
+    {
+        this.findMeByPhone = findMeByPhone;
+    }
+
+    public AccessLevel getFindMe ()
+    {
+        return findMe;
+    }
+
+    public void setFindMe (AccessLevel findMe)
+    {
+        this.findMe = findMe;
     }
 }

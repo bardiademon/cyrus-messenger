@@ -57,7 +57,7 @@ public class RestLogin
         this.usernamesService = _UsernamesService;
     }
 
-    @RequestMapping ({"/" , ""})
+    @RequestMapping ({ "/" , "" })
     public AnswerToClient login
             (@RequestBody LoginRequest request ,
              HttpServletRequest req , HttpServletResponse res , @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
@@ -79,7 +79,7 @@ public class RestLogin
             RestIsValidUEP restIsValidUEP = new RestIsValidUEP (mainAccountService , usersStatusService , submitRequestService , usernamesService);
             answerToClient = restIsValidUEP.isValid (request.getIsValidUEPRequest () , res , req , true);
 
-            Map<String, Object> message = answerToClient.getMessage ();
+            Map <String, Object> message = answerToClient.getMessage ();
 
             Object objValid;
             boolean valid = (boolean) ((objValid = message.get (RestIsValidUEP.KeyAnswer.is_valid.name ())) == null ? false : objValid);
@@ -115,12 +115,14 @@ public class RestLogin
                     if (createCode)
                     {
                         assert code != null;
-                        if (userLoginService.newLogin (code , mainAccount , req.getRemoteAddr ()))
+
+                        UserLoginService.ResNewLogin resNewLogin = userLoginService.newLogin (code , mainAccount , req.getRemoteAddr ());
+                        if (resNewLogin.isLogin ())
                         {
                             answerToClient = AnswerToClient.OK ();
                             answerToClient.put (KeyAnswer.is_login.name () , true);
                             answerToClient.put (KeyAnswer.code_login.name () , code);
-                            answerToClient.put (KeyAnswer.credit_up.name () , userLoginService.getCreditUp ());
+                            answerToClient.put (KeyAnswer.credit_up.name () , resNewLogin.getCreditUp ());
                             res.addCookie (MCookie.CookieApi (code));
                             submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , false);
 
@@ -128,6 +130,7 @@ public class RestLogin
                         }
                         else
                         {
+                            userLoginService.loginFailed (req.getRemoteAddr ());
                             answerToClient = AnswerToClient.ServerError ();
                             answerToClient.setReqRes (req , res);
 
@@ -135,6 +138,7 @@ public class RestLogin
                             createClass.put ("code" , code).put ("account" , ToJson.To (mainAccount)).put ("ip" , req.getRemoteAddr ());
                             l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("can not save new login") , createClass.toJson ());
                         }
+                        System.gc ();
                     }
                     else
                     {
@@ -161,6 +165,7 @@ public class RestLogin
             }
         }
         answerToClient.setReqRes (req , res);
+        System.gc ();
         return answerToClient;
     }
 

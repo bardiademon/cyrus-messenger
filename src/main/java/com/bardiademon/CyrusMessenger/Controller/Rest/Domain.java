@@ -70,11 +70,12 @@ public abstract class Domain
 
             public static abstract class RNContacts
             {
-                public static final String RN_MAIN = RN_MAIN_INFO_USER + "/contacts";
+                public static final String RN_CONTACTS = RN_MAIN_INFO_USER + "/contacts";
 
-                public static final String RN_NEW_CONTACT = RN_MAIN + "/new";
+                public static final String RN_NEW_CONTACT = RN_CONTACTS + "/add";
+                public static final String RN_REMOVE_CONTACT = RN_CONTACTS + "/remove";
 
-                public static final String RN_GET_CONTACT = RN_MAIN + "/get";
+                public static final String RN_GET_CONTACT = RN_CONTACTS + "/get";
             }
 
             public static abstract class RNBlock

@@ -1,19 +1,14 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-
 
 @Service
-public class UserLoginService
+public final class UserLoginService
 {
-
-    private LocalDateTime creditUp;
 
     public final UserLoginRepository Repository;
 
@@ -31,18 +26,53 @@ public class UserLoginService
         Repository.save (userLogin);
     }
 
-    public boolean newLogin (String code , MainAccount mainAccount , String ip)
+    public ResNewLogin newLogin (String code , MainAccount mainAccount , String ip)
     {
         UserLogin userLogin = new UserLogin ();
         userLogin.setIp (ip);
         userLogin.setCodeLogin (code);
         userLogin.setMainAccount (mainAccount);
         userLogin.setTimeLogin (LocalDateTime.now ());
-        creditUp = LocalDateTime.now ().plusDays (1);
-        userLogin.setCreditUp (creditUp);
+
+        ResNewLogin resNewLogin = new ResNewLogin ();
+        resNewLogin.setCreditUp (LocalDateTime.now ().plusDays (1));
+
+        userLogin.setCreditUp (resNewLogin.getCreditUp ());
         userLogin.setSuccessful (true);
 
-        return ((Repository.save (userLogin)).getId () > 0);
+        resNewLogin.setLogin ((Repository.save (userLogin)).getId () > 0);
+
+        return resNewLogin;
+    }
+
+    public static class ResNewLogin
+    {
+        private boolean login;
+        private LocalDateTime creditUp;
+
+        private ResNewLogin ()
+        {
+        }
+
+        public boolean isLogin ()
+        {
+            return login;
+        }
+
+        private void setLogin (boolean login)
+        {
+            this.login = login;
+        }
+
+        public LocalDateTime getCreditUp ()
+        {
+            return creditUp;
+        }
+
+        private void setCreditUp (LocalDateTime creditUp)
+        {
+            this.creditUp = creditUp;
+        }
     }
 
     public boolean logout (String codeLogin)
@@ -62,10 +92,5 @@ public class UserLoginService
         userLogin.setIp (ip);
         userLogin.setSuccessful (true);
         Repository.save (userLogin);
-    }
-
-    public String getCreditUp ()
-    {
-        return creditUp.format (DateTimeFormatter.ofPattern ("yyyy-MM-dd HH:mm:ss"));
     }
 }

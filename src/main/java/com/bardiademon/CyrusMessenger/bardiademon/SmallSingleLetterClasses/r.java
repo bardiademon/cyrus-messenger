@@ -10,6 +10,14 @@ import com.bardiademon.CyrusMessenger.bardiademon.Str;
 public final class r extends Thread implements Runnable
 {
 
+    private static SubmitRequestService Service;
+
+    // ns => new service
+    public static void ns ()
+    {
+        Service = CyrusMessengerApplication.Context ().getBean (SubmitRequestService.class);
+    }
+
     private String ip;
     private SubmitRequestType type;
     private boolean active;
@@ -44,9 +52,9 @@ public final class r extends Thread implements Runnable
     @Override
     public void run ()
     {
-        SubmitRequestService service = CyrusMessengerApplication.Context ().getBean (SubmitRequestService.class);
+        if (Service == null) ns ();
 
-        if (ip == null || ip.isEmpty ()) service.newRequest (ip , type , active);
-        else service.newRequest (mainAccount , type , active);
+        if (ip == null || ip.isEmpty ()) Service.newRequest (ip , type , active);
+        else Service.newRequest (mainAccount , type , active);
     }
 }

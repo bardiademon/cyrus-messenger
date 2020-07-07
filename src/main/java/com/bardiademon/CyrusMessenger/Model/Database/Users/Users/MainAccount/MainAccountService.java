@@ -165,7 +165,7 @@ public class MainAccountService
 
     public MainAccount findPhoneLike (String phone)
     {
-        return Repository.findByPhoneLikeAndSystemBlockFalseAndActiveTrue ("%" + phone);
+        return Repository.findByPhoneLikeAndDeletedFalseAndSystemBlockFalseAndActiveTrue ("%" + phone);
     }
 
 }

@@ -2,31 +2,20 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Us
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table (name = "user_contacts")
 public class UserContacts
 {
-    @Transient
-    @JsonIgnore
-    public static final int MIN_PHONE = 10;
-
-    @Transient
-    @JsonIgnore
-    public static final int MAX_PHONE = 20;
 
     @Id
     @GeneratedValue
@@ -45,15 +34,12 @@ public class UserContacts
     private MainAccount mainAccountContact;
 
     @Column (nullable = false)
-    @JsonInclude (JsonInclude.Include.NON_NULL)
     private String name;
 
-    private String phone;
+    @Column (nullable = false)
+    private String family;
 
-    @Transient
-    @JsonInclude (JsonInclude.Include.NON_NULL)
-    @JsonProperty ("new_phone")
-    private String newPhone;
+    private String phone;
 
     @JsonIgnore
     private boolean deleted;
@@ -62,12 +48,6 @@ public class UserContacts
     @JsonIgnore
     private LocalDateTime deletedAt;
 
-    @JsonInclude (JsonInclude.Include.NON_NULL)
-    @Transient
-    private String message;
-
-    @Transient
-    private boolean successfully = false;
 
     public UserContacts ()
     {
@@ -113,6 +93,16 @@ public class UserContacts
         this.name = name;
     }
 
+    public String getFamily ()
+    {
+        return family;
+    }
+
+    public void setFamily (String family)
+    {
+        this.family = family;
+    }
+
     public String getPhone ()
     {
         return phone;
@@ -143,33 +133,4 @@ public class UserContacts
         this.deletedAt = deletedAt;
     }
 
-    public String getMessage ()
-    {
-        return message;
-    }
-
-    public void setMessage (String message)
-    {
-        this.message = message;
-    }
-
-    public boolean isSuccessfully ()
-    {
-        return successfully;
-    }
-
-    public void setSuccessfully (boolean successfully)
-    {
-        this.successfully = successfully;
-    }
-
-    public String getNewPhone ()
-    {
-        return newPhone;
-    }
-
-    public void setNewPhone (String newPhone)
-    {
-        this.newPhone = newPhone;
-    }
 }
