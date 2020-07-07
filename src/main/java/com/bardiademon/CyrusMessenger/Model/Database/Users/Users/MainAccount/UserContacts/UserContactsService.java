@@ -19,6 +19,11 @@ public class UserContactsService
         return Repository.findByMainAccountIdAndMainAccountContactIdAndDeletedFalse (id , idContact);
     }
 
+    public UserContacts withId (long id , long idUser)
+    {
+        return Repository.findByIdAndMainAccountIdAndDeletedFalse (id , idUser);
+    }
+
     public UserContacts hasPhone (String phone)
     {
         UserContacts userContacts;

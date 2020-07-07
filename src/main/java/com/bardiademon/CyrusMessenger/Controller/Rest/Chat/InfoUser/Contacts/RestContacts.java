@@ -12,9 +12,11 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,8 +40,8 @@ public final class RestContacts
     private final UserContactsService userContactsService;
     private final MainAccountService mainAccountService;
 
-    private final String rAdd, rRemove;
-    private final SubmitRequestType tAdd, tRemove;
+    private final String rAdd, rRemove, rRemoveWithPhone;
+    private final SubmitRequestType tAdd, tRemove, tRemoveWithPhone;
 
     @Autowired
     public RestContacts
@@ -55,6 +58,9 @@ public final class RestContacts
 
         rRemove = Domain.RNChat.RNInfoUser.RNContacts.RN_REMOVE_CONTACT;
         tRemove = SubmitRequestType.remove_contact;
+
+        rRemoveWithPhone = Domain.RNChat.RNInfoUser.RNContacts.RN_REMOVE_WITH_PHONE_CONTACT;
+        tRemoveWithPhone = SubmitRequestType.remove_contact_with_phone;
 
     }
 
@@ -178,14 +184,129 @@ public final class RestContacts
 
     // End code rest add contacts
 
+    // Start code rest remove contacts
 
-    private AnswerToClient remove
+    @RequestMapping (value = { "/remove_with_phone" , "/remove_with_phone/{PHONE_NUMBER}" })
+    private AnswerToClient removeWithPhone
             (HttpServletRequest req , HttpServletResponse res ,
-             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @PathVariable (value = "PHONE_NUMBER", required = false) String phoneNumber)
     {
-        return null;
+        AnswerToClient answerToClient;
+
+        String request = ToJson.CreateClass.nj ("phone_number" , phoneNumber);
+
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , rRemove , tRemove);
+
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (!Str.IsEmpty (phoneNumber))
+            {
+                int lengthPhone = phoneNumber.length ();
+                if (lengthPhone >= MIN_PHONE && lengthPhone <= MAX_PHONE)
+                {
+                    UserContacts contacts = userContactsService.hasPhoneForUser (mainAccount.getId () , phoneNumber);
+                    if (contacts != null)
+                    {
+                        contacts.setDeleted (true);
+                        contacts.setDeletedAt (LocalDateTime.now ());
+                        userContactsService.Repository.save (contacts);
+
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , tRemoveWithPhone , false);
+                    }
+                    else
+                    {
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tRemoveWithPhone , true);
+                    }
+                }
+                else
+                {
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_number_invalid.name ());
+                    answerToClient.setReqRes (req , res);
+                    l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_number_invalid.name ()) , null , tRemoveWithPhone , true);
+                }
+            }
+            else
+            {
+                answerToClient = AnswerToClient.RequestIsNull ();
+                answerToClient.setReqRes (req , res);
+                l.n (null , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , tRemoveWithPhone , true);
+            }
+        }
+        else answerToClient = both.getAnswerToClient ();
+
+
+        return answerToClient;
     }
 
+    @RequestMapping (value = { "/remove" , "/remove/{ID}" })
+    private AnswerToClient removeWithId
+            (HttpServletRequest req , HttpServletResponse res ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @PathVariable (value = "ID", required = false) String strId)
+    {
+        AnswerToClient answerToClient;
+
+        String request = ToJson.CreateClass.nj ("id" , strId);
+
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , rRemove , tRemove);
+
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (!Str.IsEmpty (strId))
+            {
+                ID idContacts = new ID (strId);
+                if (idContacts.isValid ())
+                {
+                    UserContacts contacts = userContactsService.withId (idContacts.getId () , mainAccount.getId ());
+                    if (contacts != null)
+                    {
+                        contacts.setDeleted (true);
+                        contacts.setDeletedAt (LocalDateTime.now ());
+                        userContactsService.Repository.save (contacts);
+
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , tRemove , false);
+                    }
+                    else
+                    {
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tRemove , true);
+                    }
+                }
+                else
+                {
+                    answerToClient = AnswerToClient.IdInvalid ();
+                    answerToClient.setReqRes (req , res);
+                    l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null , tRemove , true);
+                }
+
+
+            }
+            else
+            {
+                answerToClient = AnswerToClient.RequestIsNull ();
+                answerToClient.setReqRes (req , res);
+                l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , tRemove , true);
+            }
+        }
+        else answerToClient = both.getAnswerToClient ();
+
+
+        return answerToClient;
+    }
+
+    // End code rest remove contacts
     private enum ValAnswer
     {
         // For rest add contacts
@@ -194,7 +315,6 @@ public final class RestContacts
 
     private enum KeyAnswer
     {
-
         // For rest add contacts
         message, len_phone, phone
     }

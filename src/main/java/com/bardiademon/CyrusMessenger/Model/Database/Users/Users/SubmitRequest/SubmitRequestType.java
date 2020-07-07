@@ -6,7 +6,7 @@ public enum SubmitRequestType
     get_all_profile_pictures_group, delete_profile_picture_user, delete_profile_picture_group,
     get_one_profile_picture_user, get_one_profile_picture_group, upload_profile_picture_user,
     new_block, unblock, update_block, upload_profile_picture_group,
-    get_contact, new_contact, remove_contact, update_contact, get_general, get_list_friends,
+    get_contact, new_contact, remove_contact, remove_contact_with_phone, update_contact, get_general, get_list_friends,
     get_security_profile, get_security_chat, new_email, new_friend,
     new_general, get_info_profile, req_i_can_show_profile,
     update_security_profile, confirmed_phone, is_valid_uep,

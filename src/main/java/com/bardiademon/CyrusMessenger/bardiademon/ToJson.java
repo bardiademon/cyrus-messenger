@@ -98,7 +98,7 @@ public final class ToJson
 //            jsonObject.put ("cookies" , "");
 //        }
 
-        Enumeration<String> headerNames = request.getHeaderNames ();
+        Enumeration <String> headerNames = request.getHeaderNames ();
         CreateClass header = new CreateClass ();
         if (headerNames != null)
         {
@@ -133,7 +133,7 @@ public final class ToJson
         {
             if (response.getHeaderNames () != null)
             {
-                Collection<String> headerNames = response.getHeaderNames ();
+                Collection <String> headerNames = response.getHeaderNames ();
                 CreateClass header = new CreateClass ();
                 if (headerNames != null)
                 {
@@ -158,7 +158,7 @@ public final class ToJson
     public static class CreateClass
     {
         @JsonProperty ("create_class")
-        public Map<String, Object> createClass = new LinkedHashMap<> ();
+        public Map <String, Object> createClass = new LinkedHashMap <> ();
 
         public CreateClass put (String key , Object value)
         {
@@ -167,7 +167,7 @@ public final class ToJson
         }
 
         @JsonProperty ("create_class")
-        public Map<String, Object> getCreateClass ()
+        public Map <String, Object> getCreateClass ()
         {
             return createClass;
         }
@@ -200,6 +200,12 @@ public final class ToJson
         public static CreateClass n (String key , Object value)
         {
             return ((new CreateClass ()).put (key , value));
+        }
+
+        // n => New , j => to json
+        public static String nj (String key , Object value)
+        {
+            return ((new CreateClass ()).put (key , value)).toJson ();
         }
 
         public static String SCLogin (String CLogin)

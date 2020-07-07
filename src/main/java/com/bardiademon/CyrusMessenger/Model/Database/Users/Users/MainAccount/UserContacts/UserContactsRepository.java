@@ -12,6 +12,8 @@ public interface UserContactsRepository extends JpaRepository <UserContacts, Lon
 
     UserContacts findByPhoneLikeAndDeleted (String phone , boolean deleted);
 
+    UserContacts findByIdAndMainAccountIdAndDeletedFalse (long id , long idUser);
+
     UserContacts findByPhoneLikeAndMainAccountIdAndDeleted (String phone , long idUser , boolean deleted);
 
     @Query ("select userContacts from UserContacts userContacts " +
