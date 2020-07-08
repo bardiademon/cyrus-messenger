@@ -20,6 +20,7 @@ public final class RequestContacts
     private String region;
 
     @JsonInclude (JsonInclude.Include.NON_NULL)
+    @JsonProperty ("has_account")
     private boolean hasAccount;
 
     @JsonInclude (JsonInclude.Include.NON_NULL)
