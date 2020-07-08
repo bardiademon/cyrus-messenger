@@ -75,8 +75,7 @@ public abstract class Domain
                 public static final String RN_NEW_CONTACT = RN_CONTACTS + "/add";
                 public static final String RN_REMOVE_CONTACT = RN_CONTACTS + "/remove";
                 public static final String RN_REMOVE_WITH_PHONE_CONTACT = RN_CONTACTS + "/remove_with_phone";
-
-                public static final String RN_GET_CONTACT = RN_CONTACTS + "/get";
+                public static final String RN_LIST_CONTACTS = RN_CONTACTS + "/list_contacts";
             }
 
             public static abstract class RNBlock

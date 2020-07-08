@@ -5,28 +5,23 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import static com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel._Service;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_LIST, method = RequestMethod.POST)
@@ -35,29 +30,9 @@ public final class ListFriends
 
     private final UserLoginService userLoginService;
 
-    private final UserProfileAccessLevel.Service serviceProfile;
-
     @Autowired
-    public ListFriends
-            (MainAccountService _MainAccountService ,
-             EnumTypesService _EnumTypesService ,
-             UserLoginService _UserLoginService ,
-             UserListService _UserListService ,
-             UserFriendsService _UserFriendsService ,
-             UserContactsService _UserContactsService ,
-             UserSeparateProfilesService _UserSeparateProfilesService ,
-             UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService)
+    public ListFriends (UserLoginService _UserLoginService)
     {
-        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
-                _EnumTypesService ,
-                _UserListService ,
-                _UserFriendsService ,
-                _UserContactsService ,
-                _UserSeparateProfilesService ,
-                _UserBlockedService ,
-                _ProfilePicturesService);
-
         this.userLoginService = _UserLoginService;
     }
 
@@ -82,7 +57,7 @@ public final class ListFriends
 
                 if (status.equals (Status.requests.name ()))
                 {
-                    List <String> requests = serviceProfile.userFriendsService.requests (mainAccount.getId ());
+                    List <String> requests = _Service.userFriendsService.requests (mainAccount.getId ());
                     if (requests != null && requests.size () > 0)
                         AnswerToClient.OneAnswer (answerToClient , KeyAnswer.usernames.name () , requests);
                     else
@@ -94,7 +69,7 @@ public final class ListFriends
                     {
                         List <UserFriends> userFriendsList;
                         StatusFriends statusFriends = StatusFriends.valueOf (status);
-                        userFriendsList = serviceProfile.userFriendsService.Repository.findAllByMainAccountAndStatus
+                        userFriendsList = _Service.userFriendsService.Repository.findAllByMainAccountAndStatus
                                 (mainAccount , statusFriends);
 
                         if (userFriendsList.size () > 0)
@@ -109,7 +84,7 @@ public final class ListFriends
                                 userFriends = userFriendsList.get (i);
                                 friend = new LinkedHashMap <> ();
 
-                                checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , userFriends.getMainAccountFriend ());
+                                checkUserAccessLevel = new UserProfileAccessLevel (mainAccount , userFriends.getMainAccountFriend ());
                                 if (checkUserAccessLevel.hasAccess (Which.username))
                                     friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
 

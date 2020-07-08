@@ -2,8 +2,10 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public final class RequestAddContacts
+public final class RequestContacts
 {
 
     @JsonIgnore
@@ -12,9 +14,19 @@ public final class RequestAddContacts
     @JsonIgnore
     public static final int MAX_PHONE = 20;
 
-    private String name, family, phone, region;
+    private String name, family, phone;
 
-    public RequestAddContacts ()
+    @JsonInclude (JsonInclude.Include.NON_NULL)
+    private String region;
+
+    @JsonInclude (JsonInclude.Include.NON_NULL)
+    private boolean hasAccount;
+
+    @JsonInclude (JsonInclude.Include.NON_NULL)
+    @JsonProperty ("id_user")
+    private Long idUserContacts;
+
+    public RequestContacts ()
     {
     }
 
@@ -56,5 +68,25 @@ public final class RequestAddContacts
     public void setRegion (String region)
     {
         this.region = region;
+    }
+
+    public boolean isHasAccount ()
+    {
+        return hasAccount;
+    }
+
+    public void setHasAccount (boolean hasAccount)
+    {
+        this.hasAccount = hasAccount;
+    }
+
+    public Long getIdUserContacts ()
+    {
+        return idUserContacts;
+    }
+
+    public void setIdUserContacts (Long idUserContacts)
+    {
+        this.idUserContacts = idUserContacts;
     }
 }

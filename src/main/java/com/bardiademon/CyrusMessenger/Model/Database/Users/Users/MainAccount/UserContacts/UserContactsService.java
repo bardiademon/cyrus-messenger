@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,20 +25,14 @@ public class UserContactsService
         return Repository.findByIdAndMainAccountIdAndDeletedFalse (id , idUser);
     }
 
-    public UserContacts hasPhone (String phone)
-    {
-        UserContacts userContacts;
-
-        if (phone.startsWith ("0")) phone = phone.substring (1);
-
-        userContacts = Repository.findByPhoneLikeAndDeleted ("%" + phone , false);
-        if (userContacts == null) return Repository.hasPhoneMainAccount ("%" + phone , false);
-        else return userContacts;
-    }
-
     public UserContacts hasPhoneForUser (long idUser , String phone)
     {
         return Repository.findByPhoneLikeAndMainAccountIdAndDeleted ("%" + phone , idUser , false);
+    }
+
+    public List <UserContacts> listContacts (long idUser)
+    {
+        return Repository.findByMainAccountIdAndDeletedFalse (idUser);
     }
 
 }

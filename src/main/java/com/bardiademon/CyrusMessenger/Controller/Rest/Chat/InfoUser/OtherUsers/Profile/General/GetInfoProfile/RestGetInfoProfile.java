@@ -7,16 +7,8 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
@@ -24,47 +16,25 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNOtherUsers.RN_GET_INFO_PROFILE, method = RequestMethod.POST)
 public final class RestGetInfoProfile
 {
     private final UserLoginService userLoginService;
-    private final MainAccountService mainAccountService;
-
-    private final UserProfileAccessLevel.Service serviceProfile;
 
     @Autowired
-    public RestGetInfoProfile (
-            MainAccountService _MainAccountService ,
-            EnumTypesService _EnumTypesService ,
-            UserLoginService _UserLoginService ,
-            UserListService _UserListService ,
-            UserFriendsService _UserFriendsService ,
-            UserContactsService _UserContactsService ,
-            UserSeparateProfilesService _UserSeparateProfilesService ,
-            UserBlockedService _UserBlockedService ,
-            ProfilePicturesService _ProfilePicturesService)
+    public RestGetInfoProfile (UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
-        this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
-                _EnumTypesService ,
-                _UserListService ,
-                _UserFriendsService ,
-                _UserContactsService ,
-                _UserSeparateProfilesService ,
-                _UserBlockedService ,
-                _ProfilePicturesService);
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -84,11 +54,11 @@ public final class RestGetInfoProfile
 
             if (request != null && (request.getIdUser () > 0 || !Str.IsEmpty (request.getUsername ())))
             {
-                IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (mainAccountService , request.getIdUser () , request.getUsername ());
+                IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (UserProfileAccessLevel._Service.mainAccountService , request.getIdUser () , request.getUsername ());
                 if (idUsernameMainAccount.isValid ())
                 {
                     MainAccount mainAccountGetInfo = idUsernameMainAccount.getMainAccount ();
-                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , mainAccountGetInfo);
+                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccount , mainAccountGetInfo);
                     if (accessLevel.hasAccess (Which.profile))
                     {
                         answerToClient = checkGet (request , accessLevel , mainAccountGetInfo);

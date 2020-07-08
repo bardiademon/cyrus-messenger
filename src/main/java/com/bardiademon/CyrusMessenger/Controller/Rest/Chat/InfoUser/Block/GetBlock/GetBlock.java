@@ -6,26 +6,17 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNBlock.RN_GET_BLOCK, method = RequestMethod.POST)
@@ -33,29 +24,10 @@ public final class GetBlock
 {
     private final UserLoginService userLoginService;
 
-    private final UserProfileAccessLevel.Service serviceProfile;
-
     @Autowired
-    public GetBlock
-            (MainAccountService _MainAccountService ,
-             EnumTypesService _EnumTypesService ,
-             UserLoginService _UserLoginService ,
-             UserListService _UserListService ,
-             UserFriendsService _UserFriendsService ,
-             UserContactsService _UserContactsService ,
-             UserSeparateProfilesService _UserSeparateProfilesService ,
-             UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService)
+    public GetBlock ( UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
-        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
-                _EnumTypesService ,
-                _UserListService ,
-                _UserFriendsService ,
-                _UserContactsService ,
-                _UserSeparateProfilesService ,
-                _UserBlockedService ,
-                _ProfilePicturesService);
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -69,7 +41,7 @@ public final class GetBlock
         {
             MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 
-            List <UserBlocked> userBlocked = serviceProfile.userBlockedService.listBlocked (mainAccount.getId ());
+            List <UserBlocked> userBlocked = UserProfileAccessLevel._Service.userBlockedService.listBlocked (mainAccount.getId ());
             if (userBlocked == null || userBlocked.size () == 0)
                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
             else
@@ -79,7 +51,7 @@ public final class GetBlock
                 for (int i = 0, len = userBlocked.size (); i < len; i++)
                 {
                     blocked = userBlocked.get (i);
-                    accessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , blocked.getMainAccountBlocked ());
+                    accessLevel = new UserProfileAccessLevel (mainAccount , blocked.getMainAccountBlocked ());
 
                     if (accessLevel.hasAccess (Which.id))
                         blocked.setIdBlocked (blocked.getMainAccountBlocked ().getId ());

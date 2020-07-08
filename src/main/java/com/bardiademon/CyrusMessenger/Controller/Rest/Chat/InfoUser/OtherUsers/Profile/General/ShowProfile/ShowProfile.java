@@ -6,25 +6,17 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNOtherUsers.RN_SHOW_PROFILE, method = RequestMethod.POST)
@@ -34,31 +26,11 @@ public final class ShowProfile
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
 
-    private final UserProfileAccessLevel.Service serviceProfile;
-
     @Autowired
-    public ShowProfile
-            (MainAccountService _MainAccountService ,
-             EnumTypesService _EnumTypesService ,
-             UserLoginService _UserLoginService ,
-             UserListService _UserListService ,
-             UserFriendsService _UserFriendsService ,
-             UserContactsService _UserContactsService ,
-             UserSeparateProfilesService _UserSeparateProfilesService ,
-             UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService
-            )
+    public ShowProfile (MainAccountService _MainAccountService , UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
-                _EnumTypesService ,
-                _UserListService ,
-                _UserFriendsService ,
-                _UserContactsService ,
-                _UserSeparateProfilesService ,
-                _UserBlockedService ,
-                _ProfilePicturesService);
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -79,7 +51,7 @@ public final class ShowProfile
                 MainAccount mainAccountGetProfile = idUsernameMainAccount.getMainAccount ();
 
                 UserProfileAccessLevel accessLevel = new UserProfileAccessLevel
-                        (serviceProfile , isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile);
+                        (isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile);
 
                 answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
                         KeyAnswer.i_can.name () , accessLevel.hasAccess (Which.profile));

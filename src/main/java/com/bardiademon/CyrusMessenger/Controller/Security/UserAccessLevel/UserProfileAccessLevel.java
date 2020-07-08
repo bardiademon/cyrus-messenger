@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel;
 
+import static com.bardiademon.CyrusMessenger.CyrusMessengerApplication.Context;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
@@ -19,15 +20,14 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
-
 import java.util.List;
 import java.util.Objects;
 
 public final class UserProfileAccessLevel
 {
-    private final Service service;
-    private final MainAccount applicant;
-    private final MainAccount user;
+    public final static Service _Service = new Service ();
+    private MainAccount applicant;
+    private MainAccount user;
     private Which which;
 
     private String desEnumTypes;
@@ -38,11 +38,25 @@ public final class UserProfileAccessLevel
 
     private boolean isAnonymous;
 
-    public UserProfileAccessLevel (Service _Service , MainAccount Applicant , MainAccount User)
+    public UserProfileAccessLevel (MainAccount Applicant)
     {
-        this.service = _Service;
+        this (Applicant , null);
+    }
+
+    public UserProfileAccessLevel (MainAccount Applicant , MainAccount User)
+    {
         this.applicant = Applicant;
-        this.user = User;
+        setUser (User);
+    }
+
+    public void setUser (MainAccount user)
+    {
+        this.user = user;
+    }
+
+    public void setApplicant (MainAccount applicant)
+    {
+        this.applicant = applicant;
     }
 
     public boolean hasAccess (Which _Which)
@@ -52,7 +66,7 @@ public final class UserProfileAccessLevel
         if (this.applicant.getId () == this.user.getId ())
             return true;
 
-        final SecurityUserProfile securityUser = service.mainAccountService.repositorySecurityProfile.findByMainAccount (user);
+        final SecurityUserProfile securityUser = _Service.mainAccountService.repositorySecurityProfile.findByMainAccount (user);
         final AccessLevel accessLevel = getAccessLevel (securityUser);
 
         return (securityUser != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUser.isShowProfileForAnonymous ()));
@@ -60,10 +74,10 @@ public final class UserProfileAccessLevel
 
     private boolean isBlock ()
     {
-        if (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType)) == null)
+        if (_Service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType)) == null)
         {
             if (!userBlockedType.equals (UserBlocked.Type.all.name ()))
-                return (service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.all) != null);
+                return (_Service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.all) != null);
             else return false;
         }
         else return true;
@@ -81,7 +95,7 @@ public final class UserProfileAccessLevel
         else
         {
 
-            UserList userList = service.userListService.getUserList (user.getId () , applicant.getId ());
+            UserList userList = _Service.userListService.getUserList (user.getId () , applicant.getId ());
             if (accessLevel.equals (AccessLevel.all_except))
             {
                 return userList == null;
@@ -90,7 +104,7 @@ public final class UserProfileAccessLevel
             else
             {
                 List <UserSeparateProfiles> separateProfiles
-                        = service.userSeparateProfilesService.Repository.findByMainAccountIdAndDeletedFalse (user.getId ());
+                        = _Service.userSeparateProfilesService.Repository.findByMainAccountIdAndDeletedFalse (user.getId ());
 
                 Boolean hasSeparately = hasSeparately (separateProfiles);
 
@@ -98,13 +112,13 @@ public final class UserProfileAccessLevel
                 {
                     if (which.equals (Which.cover))
                     {
-                        List <ProfilePictures> separate = service.profilePicturesService.getSeparate (user.getId ());
+                        List <ProfilePictures> separate = _Service.profilePicturesService.getSeparate (user.getId ());
                         List <EnumTypes> byId2AndDeletedFalse;
                         if (separate != null && separate.size () > 0)
                         {
                             for (ProfilePictures pictures : separate)
                             {
-                                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
+                                byId2AndDeletedFalse = _Service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
                                 if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                                 {
                                     this.profilePictures = separate;
@@ -120,13 +134,13 @@ public final class UserProfileAccessLevel
                 {
                     if (which.equals (Which.cover))
                     {
-                        List <ProfilePictures> separate = service.profilePicturesService.getSeparate (user.getId ());
+                        List <ProfilePictures> separate = _Service.profilePicturesService.getSeparate (user.getId ());
                         List <EnumTypes> byId2AndDeletedFalse;
                         if (separate != null && separate.size () > 0)
                         {
                             for (ProfilePictures pictures : separate)
                             {
-                                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
+                                byId2AndDeletedFalse = _Service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
                                 if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                                 {
                                     this.profilePictures = separate;
@@ -155,12 +169,12 @@ public final class UserProfileAccessLevel
             }
             else if (!isAnonymous && strEnumType.equals (AccessLevel.Who.friend.name ()))
             {
-                if (service.userFriendsService.findFriend (user , applicant , StatusFriends.friend) != null)
+                if (_Service.userFriendsService.findFriend (user , applicant , StatusFriends.friend) != null)
                     return true;
             }
             else if (!isAnonymous && strEnumType.equals (AccessLevel.Who.contact.name ()))
             {
-                if (service.userContactsService.findContact (user.getId () , applicant.getId ()) != null)
+                if (_Service.userContactsService.findContact (user.getId () , applicant.getId ()) != null)
                     return true;
             }
             else if (!isAnonymous && strEnumType.equals (AccessLevel.Who.trustworthy.name ()))
@@ -183,7 +197,7 @@ public final class UserProfileAccessLevel
             List <EnumTypes> byId2AndDeletedFalse;
             for (UserSeparateProfiles separateProfile : separateProfiles)
             {
-                byId2AndDeletedFalse = service.enumTypesService.Repository.findById2AndDeletedFalse (separateProfile.getId ());
+                byId2AndDeletedFalse = _Service.enumTypesService.Repository.findById2AndDeletedFalse (separateProfile.getId ());
                 if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
                 {
                     this.separateProfile = separateProfile;
@@ -196,7 +210,7 @@ public final class UserProfileAccessLevel
 
     private boolean hasInList (UserListType type)
     {
-        UserList userList = service.userListService.Repository
+        UserList userList = _Service.userListService.Repository
                 .findByMainAccountIdAndUserIdAndTypeAndDeletedFalse (user.getId () , applicant.getId () , type);
         return userList != null;
     }
@@ -206,11 +220,11 @@ public final class UserProfileAccessLevel
         return (!hasInList (UserListType.family) &&
                 !hasInList (UserListType.trustworthy) &&
                 !hasInList (UserListType.unreliable) &&
-                (service.userContactsService.findContact (user.getId () , applicant.getId ()) == null) &&
-                ((service.userFriendsService.findFriend (user , applicant , StatusFriends.friend)) == null) &&
-                ((service.userFriendsService.findFriend (user , applicant , StatusFriends.awaiting_approval)) == null) &&
-                ((service.userFriendsService.findFriend (user , applicant , StatusFriends.deleted)) == null) &&
-                ((service.userFriendsService.findFriend (user , applicant , StatusFriends.rejected)) == null)
+                (_Service.userContactsService.findContact (user.getId () , applicant.getId ()) == null) &&
+                ((_Service.userFriendsService.findFriend (user , applicant , StatusFriends.friend)) == null) &&
+                ((_Service.userFriendsService.findFriend (user , applicant , StatusFriends.awaiting_approval)) == null) &&
+                ((_Service.userFriendsService.findFriend (user , applicant , StatusFriends.deleted)) == null) &&
+                ((_Service.userFriendsService.findFriend (user , applicant , StatusFriends.rejected)) == null)
         );
     }
 
@@ -312,24 +326,16 @@ public final class UserProfileAccessLevel
         public final UserBlockedService userBlockedService;
         public final ProfilePicturesService profilePicturesService;
 
-        public Service
-                (MainAccountService _MainAccountService ,
-                 EnumTypesService _EnumTypesService ,
-                 UserListService _UserListService ,
-                 UserFriendsService _UserFriendsService ,
-                 UserContactsService _UserContactsService ,
-                 UserSeparateProfilesService _UserSeparateProfilesService ,
-                 UserBlockedService _UserBlockedService ,
-                 ProfilePicturesService _ProfilePicturesService)
+        public Service ()
         {
-            this.mainAccountService = _MainAccountService;
-            this.enumTypesService = _EnumTypesService;
-            this.userListService = _UserListService;
-            this.userFriendsService = _UserFriendsService;
-            this.userContactsService = _UserContactsService;
-            this.userSeparateProfilesService = _UserSeparateProfilesService;
-            this.userBlockedService = _UserBlockedService;
-            this.profilePicturesService = _ProfilePicturesService;
+            this.mainAccountService = Context ().getBean (MainAccountService.class);
+            this.enumTypesService = Context ().getBean (EnumTypesService.class);
+            this.userListService = Context ().getBean (UserListService.class);
+            this.userFriendsService = Context ().getBean (UserFriendsService.class);
+            this.userContactsService = Context ().getBean (UserContactsService.class);
+            this.userSeparateProfilesService = Context ().getBean (UserSeparateProfilesService.class);
+            this.userBlockedService = Context ().getBean (UserBlockedService.class);
+            this.profilePicturesService = Context ().getBean (ProfilePicturesService.class);
         }
     }
 

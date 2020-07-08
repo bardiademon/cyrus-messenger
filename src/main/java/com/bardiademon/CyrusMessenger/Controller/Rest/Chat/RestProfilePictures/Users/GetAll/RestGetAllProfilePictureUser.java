@@ -6,16 +6,9 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
@@ -24,12 +17,15 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ALL_USER, method = RequestMethod.POST)
@@ -38,31 +34,11 @@ public final class RestGetAllProfilePictureUser
 
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
-    private final UserProfileAccessLevel.Service serviceProfile;
 
-    public RestGetAllProfilePictureUser
-            (
-                    MainAccountService _MainAccountService ,
-                    EnumTypesService _EnumTypesService ,
-                    UserLoginService _UserLoginService ,
-                    UserListService _UserListService ,
-                    UserFriendsService _UserFriendsService ,
-                    UserContactsService _UserContactsService ,
-                    UserSeparateProfilesService _UserSeparateProfilesService ,
-                    UserBlockedService _UserBlockedService ,
-                    ProfilePicturesService _ProfilePicturesService
-            )
+    public RestGetAllProfilePictureUser (MainAccountService _MainAccountService , UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
-        this.serviceProfile = new UserProfileAccessLevel.Service (_MainAccountService ,
-                _EnumTypesService ,
-                _UserListService ,
-                _UserFriendsService ,
-                _UserContactsService ,
-                _UserSeparateProfilesService ,
-                _UserBlockedService ,
-                _ProfilePicturesService);
     }
 
     @RequestMapping (value = { "" , "/" , "/{id_user}" })
@@ -89,7 +65,7 @@ public final class RestGetAllProfilePictureUser
                     MainAccount mainAccountUser = mainAccountService.findId (idUser.getId ());
                     if (mainAccountUser != null)
                     {
-                        UserProfileAccessLevel checkUserAccessLevel = new UserProfileAccessLevel (serviceProfile , mainAccount , mainAccountUser);
+                        UserProfileAccessLevel checkUserAccessLevel = new UserProfileAccessLevel (mainAccount , mainAccountUser);
                         if (checkUserAccessLevel.hasAccess (Which.cover))
                         {
                             List <ProfilePictures> profilePictures;

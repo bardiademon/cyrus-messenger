@@ -1,15 +1,16 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import static com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.RequestAddContacts.MAX_PHONE;
-import static com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.RequestAddContacts.MIN_PHONE;
+import static com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.RequestContacts.MAX_PHONE;
+import static com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Contacts.RequestContacts.MIN_PHONE;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import static com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel._Service;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
@@ -37,21 +38,14 @@ public final class RestContacts
 {
 
     private final UserLoginService userLoginService;
-    private final UserContactsService userContactsService;
-    private final MainAccountService mainAccountService;
 
-    private final String rAdd, rRemove, rRemoveWithPhone;
-    private final SubmitRequestType tAdd, tRemove, tRemoveWithPhone;
+    private final String rAdd, rRemove, rRemoveWithPhone, rList;
+    private final SubmitRequestType tAdd, tRemove, tRemoveWithPhone, tList;
 
     @Autowired
-    public RestContacts
-            (UserLoginService _UserLoginService ,
-             UserContactsService _UserContactsService ,
-             MainAccountService _MainAccountService)
+    public RestContacts (UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
-        this.userContactsService = _UserContactsService;
-        this.mainAccountService = _MainAccountService;
 
         rAdd = Domain.RNChat.RNInfoUser.RNContacts.RN_NEW_CONTACT;
         tAdd = SubmitRequestType.new_contact;
@@ -62,6 +56,8 @@ public final class RestContacts
         rRemoveWithPhone = Domain.RNChat.RNInfoUser.RNContacts.RN_REMOVE_WITH_PHONE_CONTACT;
         tRemoveWithPhone = SubmitRequestType.remove_contact_with_phone;
 
+        rList = Domain.RNChat.RNInfoUser.RNContacts.RN_LIST_CONTACTS;
+        tList = SubmitRequestType.list_contact;
     }
 
     // Start code rest add contacts
@@ -70,7 +66,7 @@ public final class RestContacts
     public AnswerToClient add
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             @RequestBody List <RequestAddContacts> reqLst)
+             @RequestBody List <RequestContacts> reqLst)
     {
         AnswerToClient answerToClient;
 
@@ -89,24 +85,24 @@ public final class RestContacts
 
                 List <Map <String, Object>> allResult = new ArrayList <> ();
                 boolean added = false;
-                for (RequestAddContacts request : reqLst)
+                for (RequestContacts request : reqLst)
                 {
                     if ((result = checkRequestAdd (request , mainAccount)) == null)
                     {
                         result = new LinkedHashMap <> ();
-                        if (userContactsService.hasPhoneForUser (mainAccount.getId () , request.getPhone ()) == null)
+                        if (_Service.userContactsService.hasPhoneForUser (mainAccount.getId () , request.getPhone ()) == null)
                         {
                             UserContacts contacts = new UserContacts ();
                             contacts.setMainAccount (mainAccount);
 
-                            MainAccount phoneLike = mainAccountService.findPhoneLike (request.getPhone ());
+                            MainAccount phoneLike = _Service.mainAccountService.findPhoneLike (request.getPhone ());
                             if (phoneLike != null) contacts.setMainAccountContact (phoneLike);
 
                             contacts.setPhone (request.getPhone ());
                             contacts.setName (request.getName ());
                             contacts.setFamily (request.getFamily ());
 
-                            userContactsService.Repository.save (contacts);
+                            _Service.userContactsService.Repository.save (contacts);
 
                             added = true;
 
@@ -153,7 +149,7 @@ public final class RestContacts
         return answerToClient;
     }
 
-    private Map <String, Object> checkRequestAdd (RequestAddContacts request , MainAccount mainAccount)
+    private Map <String, Object> checkRequestAdd (RequestContacts request , MainAccount mainAccount)
     {
         Map <String, Object> result = null;
 
@@ -181,7 +177,6 @@ public final class RestContacts
 
         return result;
     }
-
     // End code rest add contacts
 
     // Start code rest remove contacts
@@ -207,12 +202,12 @@ public final class RestContacts
                 int lengthPhone = phoneNumber.length ();
                 if (lengthPhone >= MIN_PHONE && lengthPhone <= MAX_PHONE)
                 {
-                    UserContacts contacts = userContactsService.hasPhoneForUser (mainAccount.getId () , phoneNumber);
+                    UserContacts contacts = _Service.userContactsService.hasPhoneForUser (mainAccount.getId () , phoneNumber);
                     if (contacts != null)
                     {
                         contacts.setDeleted (true);
                         contacts.setDeletedAt (LocalDateTime.now ());
-                        userContactsService.Repository.save (contacts);
+                        _Service.userContactsService.Repository.save (contacts);
 
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
                         answerToClient.setReqRes (req , res);
@@ -266,12 +261,12 @@ public final class RestContacts
                 ID idContacts = new ID (strId);
                 if (idContacts.isValid ())
                 {
-                    UserContacts contacts = userContactsService.withId (idContacts.getId () , mainAccount.getId ());
+                    UserContacts contacts = _Service.userContactsService.withId (idContacts.getId () , mainAccount.getId ());
                     if (contacts != null)
                     {
                         contacts.setDeleted (true);
                         contacts.setDeletedAt (LocalDateTime.now ());
-                        userContactsService.Repository.save (contacts);
+                        _Service.userContactsService.Repository.save (contacts);
 
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
                         answerToClient.setReqRes (req , res);
@@ -290,8 +285,6 @@ public final class RestContacts
                     answerToClient.setReqRes (req , res);
                     l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null , tRemove , true);
                 }
-
-
             }
             else
             {
@@ -305,8 +298,72 @@ public final class RestContacts
 
         return answerToClient;
     }
-
     // End code rest remove contacts
+
+    @RequestMapping (value = { "list_contacts" })
+    private AnswerToClient hasAccount
+            (HttpServletRequest req , HttpServletResponse res ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+    {
+        AnswerToClient answerToClient;
+
+        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , rList , tList);
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+
+            List <UserContacts> contacts = _Service.userContactsService.listContacts (mainAccount.getId ());
+            if (contacts != null && contacts.size () > 0)
+            {
+                List <RequestContacts> listContacts = new ArrayList <> ();
+
+                MainAccount mainAccountContact;
+
+                UserProfileAccessLevel accessLevel = null;
+                for (UserContacts contact : contacts)
+                {
+                    RequestContacts reqContacts = new RequestContacts ();
+                    reqContacts.setName (contact.getName ());
+                    reqContacts.setFamily (contact.getFamily ());
+                    reqContacts.setPhone (contact.getPhone ());
+
+                    if ((mainAccountContact = (contact.getMainAccountContact ())) != null)
+                    {
+                        if (accessLevel == null) accessLevel = new UserProfileAccessLevel (mainAccount);
+
+                        accessLevel.setUser (mainAccountContact);
+
+                        if (accessLevel.hasAccess (Which.find_me) && accessLevel.hasAccess (Which.find_me_by_phone))
+                        {
+                            reqContacts.setHasAccount (true);
+
+                            if (accessLevel.hasAccess (Which.id))
+                                reqContacts.setIdUserContacts (mainAccountContact.getId ());
+
+                        }
+                    }
+
+                    listContacts.add (reqContacts);
+                }
+
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                answerToClient.put (KeyAnswer.contacts.name () , listContacts);
+                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
+            }
+            else
+            {
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                answerToClient.setReqRes (req , res);
+                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+            }
+
+        }
+        else answerToClient = both.getAnswerToClient ();
+
+        return answerToClient;
+    }
+
     private enum ValAnswer
     {
         // For rest add contacts
@@ -316,6 +373,8 @@ public final class RestContacts
     private enum KeyAnswer
     {
         // For rest add contacts
-        message, len_phone, phone
+        message, len_phone, phone,
+
+        contacts
     }
 }

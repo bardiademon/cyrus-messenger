@@ -6,21 +6,14 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import static com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel._Service;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.LUFU_Service;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ListUsersForUser.UserFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
@@ -45,34 +38,17 @@ public final class NewFriend
 
     private MainAccount user, friend;
 
-    private UserLoginService userLoginService;
-    private UserFriendsService userFriendsService;
-    private UsernamesService usernamesService;
-    private LUFU_Service lufu_service;
-
-    private final UserProfileAccessLevel.Service service;
+    private final UserLoginService userLoginService;
+    private final UsernamesService usernamesService;
+    private final LUFU_Service lufu_service;
 
     @Autowired
     public NewFriend
-            (UserLoginService _UserLoginService ,
-             UserFriendsService _UserFriendsService ,
-             UsernamesService _UsernamesService ,
-             LUFU_Service LUFU_Service ,
-             MainAccountService _MainAccountService ,
-             EnumTypesService _EnumTypesService ,
-             UserListService _UserListService ,
-             UserContactsService _UserContactsService ,
-             UserSeparateProfilesService _UserSeparateProfilesService ,
-             UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService)
+            (UserLoginService _UserLoginService, UsernamesService _UsernamesService , LUFU_Service LUFU_Service)
     {
-        this.service = new UserProfileAccessLevel.Service
-                (_MainAccountService , _EnumTypesService , _UserListService , _UserFriendsService , _UserContactsService ,
-                        _UserSeparateProfilesService , _UserBlockedService , _ProfilePicturesService);
         this.router = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_ADD;
         this.type = SubmitRequestType.add_friend;
         this.userLoginService = _UserLoginService;
-        this.userFriendsService = _UserFriendsService;
         this.usernamesService = _UsernamesService;
         this.lufu_service = LUFU_Service;
     }
@@ -98,14 +74,14 @@ public final class NewFriend
                     user = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
                     friend = fitd_username.getMainAccount ();
 
-                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (service , user , friend);
+                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (user , friend);
                     if (accessLevel.hasAccess (Which.username))
                     {
                         if (user.getId () == friend.getId ())
                             answerToClient = AnswerToClient.error400 ();
                         else
                         {
-                            UserFriends validFriend = userFriendsService.findValidFriend (user , friend);
+                            UserFriends validFriend = _Service.userFriendsService.findValidFriend (user , friend);
                             if (validFriend == null)
                             {
                                 answerToClient = confirmationMethod ();
@@ -217,7 +193,7 @@ public final class NewFriend
     {
         UserFriends userFriends = new UserFriends (user , friend);
         userFriends.setStatus (statusFriends);
-        userFriendsService.Repository.save (userFriends);
+        _Service.userFriendsService.Repository.save (userFriends);
     }
 
     public enum KeyAnswer

@@ -8,7 +8,6 @@ import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagementAccessLevel.GroupManagementAccessLevel;
@@ -17,14 +16,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
-import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriendsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -49,28 +41,17 @@ public final class RestGroupMember
     private final JoinGroupService joinGroupService;
     private final GroupManagementService groupManagementService;
 
-    private final UserProfileAccessLevel.Service service;
-
     @Autowired
     public RestGroupMember
             (UserLoginService _UserLoginService ,
              GroupsService _GroupsService ,
              JoinGroupService _JoinGroupService ,
-             GroupManagementService _GroupManagementService , MainAccountService _MainAccountService ,
-             EnumTypesService _EnumTypesService ,
-             UserListService _UserListService ,
-             UserFriendsService _UserFriendsService ,
-             UserContactsService _UserContactsService ,
-             UserSeparateProfilesService _UserSeparateProfilesService ,
-             UserBlockedService _UserBlockedService ,
-             ProfilePicturesService _ProfilePicturesService)
+             GroupManagementService _GroupManagementService)
     {
         this.userLoginService = _UserLoginService;
         this.groupsService = _GroupsService;
         this.joinGroupService = _JoinGroupService;
         this.groupManagementService = _GroupManagementService;
-        this.service = new UserProfileAccessLevel.Service (_MainAccountService , _EnumTypesService , _UserListService , _UserFriendsService ,
-                _UserContactsService , _UserSeparateProfilesService , _UserBlockedService , _ProfilePicturesService);
     }
 
     @RequestMapping (value = { "" , "/" , "/{id_group}" })
@@ -165,10 +146,12 @@ public final class RestGroupMember
                                         if (groupSecurityProfile.isShowOwner ())
                                             idMembers.add (group.getOwner ().getId ());
 
+                                        accessLevel = new UserProfileAccessLevel (null , mainAccount);
                                         for (JoinGroup member : members)
                                         {
                                             memberMainAccount = member.getMainAccount ();
-                                            accessLevel = new UserProfileAccessLevel (service , memberMainAccount , mainAccount);
+                                            accessLevel.setApplicant (memberMainAccount);
+
                                             if (isOwner || (mainAccount.getId () == memberMainAccount.getId ()) || (isManagement && managementHasAccessHiddenMember) || (!isManagement && accessLevel.hasAccess (Which.in_group) && accessLevel.hasAccess (Which.id)))
                                                 idMembers.add (memberMainAccount.getId ());
                                         }
