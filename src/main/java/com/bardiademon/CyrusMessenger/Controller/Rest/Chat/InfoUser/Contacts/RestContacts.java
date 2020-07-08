@@ -300,7 +300,7 @@ public final class RestContacts
     }
     // End code rest remove contacts
 
-    @RequestMapping (value = { "list_contacts" })
+    @RequestMapping (value = { "/list_contacts" })
     private AnswerToClient hasAccount
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
