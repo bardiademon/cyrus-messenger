@@ -111,6 +111,7 @@ public final class RestContacts
                         else
                         {
                             result.put (KeyAnswer.message.name () , AnswerToClient.CUV.found.name ());
+                            added = false;
                             l.n (ToJson.To (request) , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null , tAdd , true);
                         }
                     }

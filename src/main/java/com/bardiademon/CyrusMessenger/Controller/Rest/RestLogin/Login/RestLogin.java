@@ -18,6 +18,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,7 @@ public class RestLogin
                             answerToClient = AnswerToClient.OK ();
                             answerToClient.put (KeyAnswer.is_login.name () , true);
                             answerToClient.put (KeyAnswer.code_login.name () , code);
-                            answerToClient.put (KeyAnswer.credit_up.name () , resNewLogin.getCreditUp ());
+                            answerToClient.put (KeyAnswer.credit_up.name () , Time.toString (resNewLogin.getCreditUp ()));
                             res.addCookie (MCookie.CookieApi (code));
                             submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , false);
 
