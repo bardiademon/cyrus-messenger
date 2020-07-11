@@ -32,7 +32,7 @@ public final class UpdateSecurityProfile
         this.securityUserProfileService = _SecurityUserProfileService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient update
             (HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -93,6 +93,12 @@ public final class UpdateSecurityProfile
 
             if ((accessLevel = (checkAccessLevel (request.getSecShowFamily ()))) != null)
                 securityUserProfile.setShowFamily (accessLevel);
+
+            if ((accessLevel = (checkAccessLevel (request.getSecFindMe ()))) != null)
+                securityUserProfile.setFindMe (accessLevel);
+
+            if ((accessLevel = (checkAccessLevel (request.getSecFindMeByPhone ()))) != null)
+                securityUserProfile.setFindMeByPhone (accessLevel);
 
             return securityUserProfile;
         }

@@ -40,6 +40,12 @@ public final class RequestUpdateSecurityProfile
     @JsonProperty ("sec_show_family")
     private String secShowFamily;
 
+    @JsonProperty ("sec_find_me")
+    private String secFindMe;
+
+    @JsonProperty ("sec_find_me_by_phone")
+    private String secFindMeByPhone;
+
     public RequestUpdateSecurityProfile ()
     {
     }
@@ -159,7 +165,28 @@ public final class RequestUpdateSecurityProfile
         return secShowFamily;
     }
 
+    public void setSecShowFamily (String secShowFamily)
     {
         this.secShowFamily = secShowFamily;
+    }
+
+    public String getSecFindMe ()
+    {
+        return secFindMe;
+    }
+
+    public void setSecFindMe (String secFindMe)
+    {
+        this.secFindMe = secFindMe;
+    }
+
+    public String getSecFindMeByPhone ()
+    {
+        return secFindMeByPhone;
+    }
+
+    public void setSecFindMeByPhone (String secFindMeByPhone)
+    {
+        this.secFindMeByPhone = secFindMeByPhone;
     }
 }
