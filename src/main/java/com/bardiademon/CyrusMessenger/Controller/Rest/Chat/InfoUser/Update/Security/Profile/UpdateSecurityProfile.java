@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 public final class UpdateSecurityProfile
 {
 
-    private UserLoginService userLoginService;
-    private SecurityUserProfileService securityUserProfileService;
+    private final UserLoginService userLoginService;
+    private final SecurityUserProfileService securityUserProfileService;
 
     public UpdateSecurityProfile (UserLoginService _UserLoginService , SecurityUserProfileService _SecurityUserProfileService)
     {
