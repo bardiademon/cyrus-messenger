@@ -17,6 +17,10 @@ public final class RequestContacts
     private String name, family, phone;
 
     @JsonInclude (JsonInclude.Include.NON_NULL)
+    @JsonProperty ("id")
+    private Long idContacts;
+
+    @JsonInclude (JsonInclude.Include.NON_NULL)
     private String region;
 
     @JsonInclude (JsonInclude.Include.NON_NULL)
@@ -27,8 +31,19 @@ public final class RequestContacts
     @JsonProperty ("id_user")
     private Long idUserContacts;
 
+
     public RequestContacts ()
     {
+    }
+
+    public Long getIdContacts ()
+    {
+        return idContacts;
+    }
+
+    public void setIdContacts (Long idContacts)
+    {
+        this.idContacts = idContacts;
     }
 
     public String getName ()

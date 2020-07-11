@@ -325,6 +325,7 @@ public final class RestContacts
                 for (UserContacts contact : contacts)
                 {
                     RequestContacts reqContacts = new RequestContacts ();
+                    reqContacts.setIdContacts (contact.getId ());
                     reqContacts.setName (contact.getName ());
                     reqContacts.setFamily (contact.getFamily ());
                     reqContacts.setPhone (contact.getPhone ());
@@ -344,7 +345,6 @@ public final class RestContacts
 
                         }
                     }
-
                     listContacts.add (reqContacts);
                 }
 
