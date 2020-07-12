@@ -279,7 +279,8 @@ public final class RestFriends
 
                                 friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
                                 friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
-                                friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
+                                if (userFriends.getUpdatedAt () != null)
+                                    friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
 
                                 answerToClient.put (String.valueOf (i) , friend);
                             }
