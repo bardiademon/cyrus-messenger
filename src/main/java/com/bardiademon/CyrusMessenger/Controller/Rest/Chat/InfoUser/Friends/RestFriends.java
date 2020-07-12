@@ -5,7 +5,6 @@ import static com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUK.answe
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.Login.IsLogin;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import static com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel._Service;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
@@ -40,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping (value = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS, method = RequestMethod.POST)
 public final class RestFriends
 {
-    private final String rAdd, rRemove, rApprove;
-    private final SubmitRequestType tAdd, tRemove, tApprove;
+    private final String rAdd, rRemove, rApprove, rList;
+    private final SubmitRequestType tAdd, tRemove, tApprove, tList;
 
     private final UserLoginService userLoginService;
     private final UserFriendsService userFriendsService;
@@ -60,13 +59,16 @@ public final class RestFriends
         this.lufuService = LUFU_Service;
 
         rAdd = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_ADD;
-        tAdd = SubmitRequestType.approve_friend;
+        tAdd = SubmitRequestType.add_friend;
 
         rRemove = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_DELETE;
         tRemove = SubmitRequestType.del_friend;
 
         rApprove = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_APPROVE;
         tApprove = SubmitRequestType.approve_friend;
+
+        rList = Domain.RNChat.RNInfoUser.RNFriends.RN_FRIENDS_LIST;
+        tList = SubmitRequestType.list_friends;
     }
 
     @RequestMapping (value = "/add")
@@ -215,30 +217,41 @@ public final class RestFriends
 
     @RequestMapping (value = { "/list" })
     public AnswerToClient list
-            (HttpServletResponse res ,
+            (HttpServletRequest req , HttpServletResponse res ,
              @RequestParam ("status") String status ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
 
-        IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
+        String request = ToJson.CreateClass.nj ("status" , status);
 
-        if (isLogin.isValid ())
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , rList , tList);
+
+        if (both.isOk ())
         {
             if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.error400 ();
             else
             {
-                MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
-
-                answerToClient = AnswerToClient.OK ();
+                assert both.getIsLogin () != null;
+                MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
 
                 if (status.equals (Status.requests.name ()))
                 {
                     List <String> requests = _Service.userFriendsService.requests (mainAccount.getId ());
                     if (requests != null && requests.size () > 0)
-                        AnswerToClient.OneAnswer (answerToClient , KeyAnswer.usernames.name () , requests);
+                    {
+                        answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
+                                AnswerToClient.CUK.answer.name () , AnswerToClient.CUV.found.name () ,
+                                KeyAnswer.usernames.name () , requests);
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
+                    }
                     else
-                        AnswerToClient.OneAnswer (answerToClient , AnswerToClient.CUV.not_found.name ());
+                    {
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+                    }
                 }
                 else
                 {
@@ -256,6 +269,7 @@ public final class RestFriends
 
                             UserProfileAccessLevel checkUserAccessLevel;
 
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
                             for (int i = 0; i < userFriendsList.size (); i++)
                             {
                                 userFriends = userFriendsList.get (i);
@@ -271,20 +285,29 @@ public final class RestFriends
 
                                 answerToClient.put (String.valueOf (i) , friend);
                             }
-                        }
+                            answerToClient.setReqRes (req , res);
+                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
 
+                        }
+                        else
+                        {
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                            answerToClient.setReqRes (req , res);
+                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+                        }
                     }
                     catch (IllegalArgumentException e)
                     {
                         answerToClient = AnswerToClient.error400 ();
+                        answerToClient.setReqRes (req , res);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.error.name () , tList , true);
                     }
                 }
             }
 
         }
-        else answerToClient = isLogin.getAnswerToClient ();
+        else answerToClient = both.getAnswerToClient ();
 
-        answerToClient.setResponse (res);
         return answerToClient;
     }
 

@@ -116,7 +116,6 @@ public abstract class Domain
                 public static final String RN_FRIENDS = RNInfoUser.RN_MAIN_INFO_USER + "/friends";
                 public static final String RN_FRIENDS_ADD = RN_FRIENDS + "/add";
                 public static final String RN_FRIENDS_DELETE = RN_FRIENDS + "/remove";
-                public static final String RN_FRIENDS_GET = RN_FRIENDS + "/get";
                 public static final String RN_FRIENDS_APPROVE = RN_FRIENDS + "/approve";
                 public static final String RN_FRIENDS_LIST = RN_FRIENDS + "/list";
             }
