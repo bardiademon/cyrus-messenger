@@ -310,11 +310,14 @@ public final class RestFriends
         return answerToClient;
     }
 
+    /**
+     * Remove => remove {friend , awaiting_approval => rejected}
+     */
     @RequestMapping (value = { "/remove" }, method = RequestMethod.POST)
     public AnswerToClient remove
-            (HttpServletRequest req , HttpServletResponse res ,
-             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             @RequestParam (value = "username") String username)
+    (HttpServletRequest req , HttpServletResponse res ,
+     @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+     @RequestParam (value = "username") String username)
     {
         AnswerToClient answerToClient;
         String request = ToJson.CreateClass.n ("username" , username).toJson ();
