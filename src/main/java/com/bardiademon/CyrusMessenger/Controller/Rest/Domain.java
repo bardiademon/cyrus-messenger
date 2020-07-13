@@ -43,6 +43,12 @@ public abstract class Domain
             public static final String RN_MAIN = RN_MAIN_INFO_USER + "/get";
             public static final String RN_GENERAL = RN_MAIN + "/general";
 
+            public static abstract class Modify
+            {
+                public static final String RN_MODIFY = RN_MAIN_INFO_USER + "/modify";
+                public static final String RN_MODIFY_INFO_USER = RN_MODIFY + "/info_user";
+            }
+
             public static abstract class RNSecurity
             {
                 public static final String RN_MAIN = RNInfoUser.RN_MAIN + "/security";

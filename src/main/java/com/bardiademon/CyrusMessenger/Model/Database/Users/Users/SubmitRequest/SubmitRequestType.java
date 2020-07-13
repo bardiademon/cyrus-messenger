@@ -18,5 +18,5 @@ public enum SubmitRequestType
     add_user_list, remove_user_list,
     add_user_separate_profile, get_user_separate_profile, get_one_user_separate_profile, remove_user_separate_profile,
     change_user_separate_profile,
-    add_friend, del_friend, approve_friend, list_friends
+    add_friend, del_friend, approve_friend, list_friends, modify_info_user
 }

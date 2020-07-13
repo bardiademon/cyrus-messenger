@@ -118,6 +118,9 @@ public class MainAccount
     @Column (name = "system_block_at", insertable = false)
     private LocalDateTime systemBlockAt;
 
+    @Enumerated (EnumType.STRING)
+    private UserGender gender = UserGender.not_specified;
+
     public MainAccount ()
     {
     }
@@ -367,5 +370,15 @@ public class MainAccount
     public void setUserSeparateProfiles (List <UserSeparateProfiles> userSeparateProfiles)
     {
         this.userSeparateProfiles = userSeparateProfiles;
+    }
+
+    public UserGender getGender ()
+    {
+        return gender;
+    }
+
+    public void setGender (UserGender gender)
+    {
+        this.gender = gender;
     }
 }

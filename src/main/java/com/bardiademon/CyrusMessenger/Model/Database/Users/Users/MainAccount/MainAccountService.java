@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
-import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General.RequestGeneral;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Modify.ModifyInfoUser.RequestMIU;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister.RegisterRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernameFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
@@ -15,6 +15,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.Con
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
+import static com.bardiademon.CyrusMessenger.bardiademon.Str.IsEmpty;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,29 +90,33 @@ public class MainAccountService
 
     }
 
-    public RequestGeneral updateGeneral (MainAccount mainAccount , RequestGeneral req)
+    public RequestMIU updateInfoUser (MainAccount mainAccount , RequestMIU req)
     {
-        if (!req.thereIsAtLeastOneTrue ()) return null;
-
-        if (!req.isNull (req.getBio ()))
+        if (!IsEmpty (req.getBio ()))
         {
             mainAccount.setBio (req.getBio ());
             req.setUpdatedBio ();
         }
 
-        if (!req.isNull (req.getName ()))
+        if (!IsEmpty (req.getName ()))
         {
             mainAccount.setName (req.getName ());
             req.setUpdatedName ();
         }
 
-        if (!req.isNull (req.getFamily ()))
+        if (!IsEmpty (req.getFamily ()))
         {
             mainAccount.setFamily (req.getFamily ());
             req.setUpdatedFamily ();
         }
 
-        if (!req.isNull (req.getMylink ()) && ((new UrlValidator ()).isValid (req.getMylink ())))
+        if (!IsEmpty (req.getGender ()))
+        {
+            mainAccount.setGender (UserGender.to (req.getGender ()));
+            req.setUpdatedGender ();
+        }
+
+        if (!IsEmpty (req.getMylink ()) && ((new UrlValidator ()).isValid (req.getMylink ())))
         {
             mainAccount.setMyLink (req.getMylink ());
             req.setUpdatedMylink ();

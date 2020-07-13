@@ -1,23 +1,23 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import java.time.LocalDateTime;
 
 @Entity
 @Table (name = "user_blocked")
@@ -193,8 +193,8 @@ public final class UserBlocked
     {
 //        cns => Can Not Show
 
-        cns_cover, cns_send_message, cns_profile,
-        cns_bio, cns_email, cns_phone, cns_name, cns_family, cns_username, cns_mylink, all
+        cns_cover, cns_send_message, cns_profile, cns_find_me, cns_find_be_by_phone,
+        cns_bio, cns_email, cns_phone, cns_name, cns_family, cns_username, cns_mylink, all, cns_gender
     }
 
 

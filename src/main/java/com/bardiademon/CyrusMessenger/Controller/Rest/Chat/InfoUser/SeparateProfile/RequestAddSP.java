@@ -7,7 +7,7 @@ import java.util.List;
 
 public final class RequestAddSP
 {
-    private String bio, family, mylink, name;
+    private String bio, family, mylink, name, gender;
 
     @JsonProperty ("profile_for")
     private List <String> profileFor;
@@ -64,5 +64,15 @@ public final class RequestAddSP
     public void setProfileFor (List <String> profileFor)
     {
         this.profileFor = profileFor;
+    }
+
+    public String getGender ()
+    {
+        return gender;
+    }
+
+    public void setGender (String gender)
+    {
+        this.gender = gender;
     }
 }

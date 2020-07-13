@@ -238,11 +238,11 @@ public final class UserProfileAccessLevel
                 return securityUser.getShowId ();
             case find_me:
                 desEnumTypes = DesEnumTypes.find_me.name ();
-                userBlockedType = UserBlocked.Type.cns_profile.name ();
+                userBlockedType = UserBlocked.Type.cns_find_me.name ();
                 return securityUser.getFindMe ();
             case find_me_by_phone:
                 desEnumTypes = DesEnumTypes.find_me_by_phone.name ();
-                userBlockedType = UserBlocked.Type.cns_profile.name ();
+                userBlockedType = UserBlocked.Type.cns_find_be_by_phone.name ();
                 return securityUser.getFindMeByPhone ();
             case bio:
                 desEnumTypes = DesEnumTypes.show_bio.name ();
@@ -308,6 +308,10 @@ public final class UserProfileAccessLevel
                 desEnumTypes = DesEnumTypes.show_personal_information.name ();
                 userBlockedType = UserBlocked.Type.all.name ();
                 return securityUser.getShowPersonalInformation ();
+            case gender:
+                desEnumTypes = DesEnumTypes.gender.name ();
+                userBlockedType = UserBlocked.Type.cns_gender.name ();
+                return securityUser.getShowGender ();
             default:
                 desEnumTypes = null;
                 userBlockedType = null;

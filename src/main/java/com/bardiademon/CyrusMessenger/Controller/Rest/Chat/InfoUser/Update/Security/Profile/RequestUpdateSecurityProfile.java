@@ -46,6 +46,9 @@ public final class RequestUpdateSecurityProfile
     @JsonProperty ("sec_find_me_by_phone")
     private String secFindMeByPhone;
 
+    @JsonProperty ("sec_show_gender")
+    private String secShowGender;
+
     public RequestUpdateSecurityProfile ()
     {
     }
@@ -188,5 +191,15 @@ public final class RequestUpdateSecurityProfile
     public void setSecFindMeByPhone (String secFindMeByPhone)
     {
         this.secFindMeByPhone = secFindMeByPhone;
+    }
+
+    public String getSecShowGender ()
+    {
+        return secShowGender;
+    }
+
+    public void setSecShowGender (String secShowGender)
+    {
+        this.secShowGender = secShowGender;
     }
 }

@@ -144,9 +144,19 @@ public final class RestGetInfoProfile
             }
             else answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getEmail ());
         }
+        if (request.isGetGender () && accessLevel.hasAccess (Which.gender))
+        {
+            if (accessLevel.isSeparateProfile ())
+            {
+                assert separateProfiles != null;
+                answerToClient.put (GetGeneral.KeyAnswer.gender.name () , separateProfiles.getGender ());
+            }
+            else answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getGender ());
+        }
 
         if (request.isGetPhone () && accessLevel.hasAccess (Which.phone))
             answerToClient.put (GetGeneral.KeyAnswer.phone.name () , mainAccount.getPhone ());
+
 
         if (request.isGetUsername () && accessLevel.hasAccess (Which.username))
             answerToClient.put (GetGeneral.KeyAnswer.username.name () , mainAccount.getUsername ().getUsername ());

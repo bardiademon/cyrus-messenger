@@ -40,6 +40,9 @@ public class RequestGeneral
     @JsonProperty ("get_list_friends_deleted")
     private boolean getListFriendsDeleted;
 
+    @JsonProperty ("get_gender")
+    private boolean getGender;
+
     public RequestGeneral ()
     {
     }
@@ -167,5 +170,15 @@ public class RequestGeneral
     public void setGetListFriendsDeleted (boolean getListFriendsDeleted)
     {
         this.getListFriendsDeleted = getListFriendsDeleted;
+    }
+
+    public boolean isGetGender ()
+    {
+        return getGender;
+    }
+
+    public void setGetGender (boolean getGender)
+    {
+        this.getGender = getGender;
     }
 }

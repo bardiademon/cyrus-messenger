@@ -1,11 +1,14 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -39,6 +42,10 @@ public final class UserSeparateProfiles
 
     @Column (name = "my_link")
     private String mylink;
+
+    @Column (name = "gender")
+    @Enumerated (EnumType.STRING)
+    private UserGender gender = UserGender.not_specified;
 
     @Column (name = "created_at", nullable = false, updatable = false)
     @JsonIgnore
@@ -168,5 +175,15 @@ public final class UserSeparateProfiles
     public void setDeleted (boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public UserGender getGender ()
+    {
+        return gender;
+    }
+
+    public void setGender (UserGender gender)
+    {
+        this.gender = gender;
     }
 }

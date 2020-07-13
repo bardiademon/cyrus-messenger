@@ -27,10 +27,10 @@ import java.time.LocalDateTime;
 public class NewEmail
 {
 
-    private MainAccountService mainAccountService;
-    private UserLoginService userLoginService;
-    private ConfirmCodeService confirmCodeService;
-    private UsersStatusService usersStatusService;
+    private final MainAccountService mainAccountService;
+    private final UserLoginService userLoginService;
+    private final ConfirmCodeService confirmCodeService;
+    private final UsersStatusService usersStatusService;
 
     public NewEmail
             (MainAccountService _MainAccountService ,

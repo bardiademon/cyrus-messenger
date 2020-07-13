@@ -10,7 +10,7 @@ import java.util.List;
 public final class RequestChangeSP
 {
     private ID id;
-    private String bio, family, mylink, name;
+    private String bio, family, mylink, name, gender;
 
     @JsonProperty ("bio_null")
     private boolean bioNull;
@@ -118,4 +118,13 @@ public final class RequestChangeSP
         this.mylinkNull = mylinkNull;
     }
 
+    public String getGender ()
+    {
+        return gender;
+    }
+
+    public void setGender (String gender)
+    {
+        this.gender = gender;
+    }
 }

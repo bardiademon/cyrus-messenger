@@ -24,8 +24,8 @@ import java.util.List;
 public class GetGeneral
 {
 
-    private UserLoginService userLoginService;
-    private UserFriendsService userFriendsService;
+    private final UserLoginService userLoginService;
+    private final UserFriendsService userFriendsService;
 
     @Autowired
     public GetGeneral (UserLoginService _UserLoginService , UserFriendsService _UserFriendsService)
@@ -91,6 +91,9 @@ public class GetGeneral
                     answerToClient.put (KeyAnswer.list_friends_deleted.name () ,
                             getListFriend (mainAccount.getId () , StatusFriends.deleted));
 
+                if (requestInfoUser.isGetGender ())
+                    answerToClient.put (KeyAnswer.gender.name () , mainAccount.getGender ().name ());
+
             }
             else answerToClient = AnswerToClient.error400 ();
         }
@@ -107,7 +110,7 @@ public class GetGeneral
 
     public enum KeyAnswer
     {
-        name, family, username, email, phone, id,
+        name, family, username, email, phone, id, gender,
         bio, mylink, list_friends, list_friends_reject, list_friends_awaiting_approval, list_friends_deleted
     }
 }

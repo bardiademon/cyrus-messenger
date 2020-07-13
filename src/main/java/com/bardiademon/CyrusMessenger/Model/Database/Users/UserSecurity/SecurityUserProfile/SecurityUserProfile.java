@@ -114,6 +114,10 @@ public class SecurityUserProfile
     @Column (name = "find_me", nullable = false)
     private AccessLevel findMe = AccessLevel.all;
 
+    @Enumerated (value = EnumType.STRING)
+    @Column (name = "show_gender", nullable = false)
+    private AccessLevel showGender = AccessLevel.all;
+
     public SecurityUserProfile ()
     {
     }
@@ -356,5 +360,15 @@ public class SecurityUserProfile
     public void setFindMe (AccessLevel findMe)
     {
         this.findMe = findMe;
+    }
+
+    public AccessLevel getShowGender ()
+    {
+        return showGender;
+    }
+
+    public void setShowGender (AccessLevel showGender)
+    {
+        this.showGender = showGender;
     }
 }

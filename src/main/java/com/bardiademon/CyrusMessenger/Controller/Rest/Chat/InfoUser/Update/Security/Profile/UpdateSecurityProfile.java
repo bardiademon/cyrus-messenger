@@ -100,6 +100,9 @@ public final class UpdateSecurityProfile
             if ((accessLevel = (checkAccessLevel (request.getSecFindMeByPhone ()))) != null)
                 securityUserProfile.setFindMeByPhone (accessLevel);
 
+            if ((accessLevel = (checkAccessLevel (request.getSecShowGender ()))) != null)
+                securityUserProfile.setShowGender (accessLevel);
+
             return securityUserProfile;
         }
     }

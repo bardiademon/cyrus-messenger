@@ -1,14 +1,11 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.New.General;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Modify.ModifyInfoUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public final class RequestGeneral
+// MIU => Modify Info User
+public final class RequestMIU
 {
-    private String bio;
-    private String name;
-    private String family;
-    private String mylink;
-
+    private String bio, name, family, mylink, gender;
 
     @JsonIgnore
     private boolean updatedBio;
@@ -25,9 +22,13 @@ public final class RequestGeneral
     @JsonIgnore
     private boolean updatedMylink;
 
-    public RequestGeneral ()
+    @JsonIgnore
+    private boolean updatedGender;
+
+    public RequestMIU ()
     {
     }
+
     public String getBio ()
     {
         return bio;
@@ -66,16 +67,6 @@ public final class RequestGeneral
     public void setMylink (String mylink)
     {
         this.mylink = mylink;
-    }
-
-    public boolean thereIsAtLeastOneTrue ()
-    {
-        return (isNull (getBio ()) || isNull (getName ()) || isNull (getFamily ()) || isNull (getMylink ()));
-    }
-
-    public boolean isNull (String str)
-    {
-        return (str == null || str.isEmpty ());
     }
 
     public boolean isUpdatedBio ()
@@ -127,4 +118,26 @@ public final class RequestGeneral
     {
         this.updatedMylink = true;
     }
+
+    public void setUpdatedGender ()
+    {
+        this.updatedGender = true;
+    }
+
+    public String getGender ()
+    {
+        return gender;
+    }
+
+    public void setGender (String gender)
+    {
+        this.gender = gender;
+    }
+
+    public boolean isUpdatedGender ()
+    {
+        return updatedGender;
+    }
+
+
 }
