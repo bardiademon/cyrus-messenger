@@ -30,11 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 public final class RestGetInfoProfile
 {
     private final UserLoginService userLoginService;
+    private final String router;
+    private final SubmitRequestType type;
 
     @Autowired
     public RestGetInfoProfile (UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
+        router = Domain.RNChat.RNOtherUsers.RN_GET_INFO_PROFILE;
+        type = SubmitRequestType.get_info_profile;
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -44,8 +48,6 @@ public final class RestGetInfoProfile
              @RequestBody RequestGetInfoProfile request)
     {
         AnswerToClient answerToClient;
-        String router = Domain.RNChat.RNOtherUsers.RN_GET_INFO_PROFILE;
-        SubmitRequestType type = SubmitRequestType.get_info_profile;
         CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , type);
         if (both.isOk ())
         {
