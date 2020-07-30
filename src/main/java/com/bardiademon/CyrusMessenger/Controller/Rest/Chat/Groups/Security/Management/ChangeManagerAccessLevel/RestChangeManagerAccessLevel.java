@@ -37,7 +37,7 @@ public final class RestChangeManagerAccessLevel
 {
 
     private final UserLoginService userLoginService;
-    private GroupManagementAccessLevelService groupManagementAccessLevelService;
+    private final GroupManagementAccessLevelService groupManagementAccessLevelService;
 
     private final ManageGroup.Service service;
 
