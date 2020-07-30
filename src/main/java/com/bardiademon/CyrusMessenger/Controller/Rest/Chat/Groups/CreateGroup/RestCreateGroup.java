@@ -53,7 +53,7 @@ public final class RestCreateGroup
         this.usernamesService = _UsernamesService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient create
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -119,7 +119,7 @@ public final class RestCreateGroup
             l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
             r.n (mainAccount , SubmitRequestType.create_group , true);
         }
-        if (answerToClient == null && Str.IsEmpty (request.getUsername ()) && Str.IsEmpty (request.getCreateLinkJoin ()))
+        if (answerToClient == null && Str.IsEmpty (request.getUsername ()))
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_and_link_join_empty.name ());
             answerToClient.setReqRes (req , res);
@@ -148,22 +148,7 @@ public final class RestCreateGroup
                 }
             }
         }
-        if (answerToClient == null && !Str.IsEmpty (request.getCreateLinkJoin ()))
-        {
-            try
-            {
-                String createLinkJoin = request.getCreateLinkJoin ();
-                if (!createLinkJoin.equals ("true") && !createLinkJoin.equals ("false"))
-                    throw new Exception (ValAnswer.create_link_join_invalid.name ());
-            }
-            catch (Exception e)
-            {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , e.getMessage ());
-                answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
-                r.n (mainAccount , SubmitRequestType.create_group , true);
-            }
-        }
+
         return answerToClient;
     }
 
@@ -191,7 +176,7 @@ public final class RestCreateGroup
         boolean createCode = false;
 
         LinkForJoin linkForJoin = null;
-        if (request.getCreateLinkJoin ().equals ("true"))
+        if (request.isCreateLinkJoin ())
         {
 
             linkForJoin = linkForJoinService.create (LinkForJoin.LinkFor.group);
@@ -253,7 +238,7 @@ public final class RestCreateGroup
 
     private enum ValAnswer
     {
-        name_empty, username_and_link_join_empty, create_link_join_invalid, created, username_is_exists, you_have_made_too_many_groups, username_invalid
+        name_empty, username_and_link_join_empty, created, username_is_exists, you_have_made_too_many_groups, username_invalid
     }
 
     private enum KeyAnswer

@@ -1,12 +1,8 @@
 package com.bardiademon.CyrusMessenger.bardiademon.Default;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.security.core.parameters.P;
-
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.IntStream;
+import org.apache.commons.io.FilenameUtils;
 
 public abstract class Path
 {
@@ -23,10 +19,21 @@ public abstract class Path
     public static final String COVER_USER = StickTogether (FILES , "Users" , "Cover");
     public static final String TEXT_TO_IMAGE = StickTogether (FILES , "TextToImage");
 
-    public static final String IMAGE_NOT_FOUND = StickTogether (IMAGES , "ImageNotFound.png");
-    public static final String IC_NOT_LOGGED = StickTogether (IMAGES , "ic_not_logged.png");
-    public static final String IC_NO_COVER = StickTogether (IMAGES , "ic_no_cover.png");
-    public static final String IMAGE_ERROR_500 = StickTogether (IMAGES , "error_500.png");
+    public static final String IMAGE_NOT_FOUND = "ImageNotFound.png";
+    public static final String IC_NOT_LOGGED = "ic_not_logged.png";
+
+    public static final String IC_COVER_DEFAULT = "ic_cover_default.png";
+    public static final String IC_COVER_MAN = "ic_cover_man.png";
+    public static final String IC_COVER_WOMAN = "ic_cover_woman.png";
+    public static final String IC_COVER_BISEXUAL = "ic_cover_bisexual.png";
+    public static final String IC_DO_NOT_WANT = "ic_do_not_want.png";
+
+    public static final String IMAGE_ERROR_500 = "error_500.png";
+
+    public static String GetImage (String Name)
+    {
+        return StickTogether (IMAGES , Name);
+    }
 
     public static String StickTogether (String... Path)
     {

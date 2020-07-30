@@ -13,7 +13,6 @@ public final class SortProfilePictures
     private List<ProfilePictures> newProfilePictures;
     private ProfilePictures mainProfilePicture;
 
-
     public SortProfilePictures (List<ProfilePictures> _ProfilePictures)
     {
         this (null , _ProfilePictures);
@@ -74,6 +73,11 @@ public final class SortProfilePictures
     public List<ProfilePictures> getNewProfilePictures ()
     {
         return newProfilePictures;
+    }
+
+    public ProfilePictures getMainProfilePicture ()
+    {
+        return mainProfilePicture;
     }
 
     public List<Long> getIds ()

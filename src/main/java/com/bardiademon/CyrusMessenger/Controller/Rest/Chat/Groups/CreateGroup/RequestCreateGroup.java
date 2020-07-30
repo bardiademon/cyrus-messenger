@@ -7,7 +7,7 @@ public final class RequestCreateGroup
     private String name, description, bio, link, username;
 
     @JsonProperty ("create_link_join")
-    private String createLinkJoin;
+    private boolean createLinkJoin;
 
     @JsonProperty ("family_group")
     private boolean familyGroup;
@@ -56,12 +56,12 @@ public final class RequestCreateGroup
         this.username = username;
     }
 
-    public String getCreateLinkJoin ()
+    public boolean isCreateLinkJoin ()
     {
         return createLinkJoin;
     }
 
-    public void setCreateLinkJoin (String createLinkJoin)
+    public void setCreateLinkJoin (boolean createLinkJoin)
     {
         this.createLinkJoin = createLinkJoin;
     }

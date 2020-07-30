@@ -10,6 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePict
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures.SortProfilePictures;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
@@ -32,10 +33,13 @@ public final class RestGetOneProfilePictureUser
 
     private final UserLoginService userLoginService;
 
+    private final String router;
+
     @Autowired
     public RestGetOneProfilePictureUser (UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
+        router = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_USER;
     }
 
     @RequestMapping (value = { "/" , "" , "/{ID_PROFILE_PICTURE}" }, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -46,9 +50,10 @@ public final class RestGetOneProfilePictureUser
     {
         String request = ToJson.CreateClass.n ("ID_PROFILE_PICTURE" , id).toJson ();
 
-        String router = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_USER;
+        MainAccount mainAccountUser;
 
         CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , SubmitRequestType.get_one_profile_picture_user);
+
         if (both.isOk ())
         {
             ID idProfilePicture = new ID (id);
@@ -59,7 +64,7 @@ public final class RestGetOneProfilePictureUser
                 {
                     assert both.getIsLogin () != null;
                     MainAccount mainAccountRequest = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
-                    MainAccount mainAccountUser = profilePictures.getMainAccount ();
+                    mainAccountUser = profilePictures.getMainAccount ();
                     UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccountRequest , mainAccountUser);
                     if (accessLevel.hasAccess (Which.cover))
                     {
@@ -76,10 +81,83 @@ public final class RestGetOneProfilePictureUser
                             return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
                     }
                 }
-
             }
         }
-        return toByte (Path.IC_NO_COVER);
+        else return toByte (Path.GetImage (Path.IC_NOT_LOGGED));
+
+
+        return toByte (Path.GetImage (Path.IMAGE_NOT_FOUND));
+    }
+
+    @RequestMapping (value = { "/id" , "/id/{ID}" }, produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getOneWithId
+            (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             HttpServletResponse res , HttpServletRequest req ,
+             @PathVariable (value = "ID", required = false) String id)
+    {
+        String request = ToJson.CreateClass.n ("ID_PROFILE_PICTURE" , id).toJson ();
+
+        MainAccount mainAccountUser = null;
+
+
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , SubmitRequestType.get_one_profile_picture_user);
+
+        if (both.isOk ())
+        {
+            ID idAccount = new ID (id);
+            if (idAccount.isValid ())
+            {
+                mainAccountUser = UserProfileAccessLevel._Service.mainAccountService.findId (idAccount.getId ());
+                if (mainAccountUser != null)
+                {
+                    assert both.getIsLogin () != null;
+                    MainAccount mainAccountRequest = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+                    UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccountRequest , mainAccountUser);
+                    if (accessLevel.hasAccess (Which.cover))
+                    {
+                        ProfilePictures profilePicture;
+
+                        if (accessLevel.isSeparateProfilePictures ())
+                            profilePicture = (new SortProfilePictures (accessLevel.getProfilePictures ())).getMainProfilePicture ();
+                        else
+                            profilePicture = (new SortProfilePictures (mainAccountUser.getProfilePictures ())).getMainProfilePicture ();
+
+                        if (profilePicture != null)
+                            return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePicture.getName () , profilePicture.getType ()));
+
+                    }
+                }
+            }
+        }
+        else return toByte (Path.GetImage (Path.IC_NOT_LOGGED));
+
+
+        if (mainAccountUser != null)
+        {
+            String pathNoCover = null;
+
+            switch (mainAccountUser.getGender ())
+            {
+                case lady:
+                    pathNoCover = Path.IC_COVER_WOMAN;
+                    break;
+                case bisexual:
+                    pathNoCover = Path.IC_COVER_BISEXUAL;
+                    break;
+                case gentleman:
+                    pathNoCover = Path.IC_COVER_MAN;
+                    break;
+                case do_not_want:
+                    pathNoCover = Path.IC_DO_NOT_WANT;
+                    break;
+                case not_specified:
+                    pathNoCover = Path.IC_COVER_DEFAULT;
+                    break;
+            }
+
+            return toByte (Path.GetImage (pathNoCover));
+        }
+        else return toByte (Path.GetImage (Path.IMAGE_NOT_FOUND));
     }
 
     private byte[] toByte (String path)

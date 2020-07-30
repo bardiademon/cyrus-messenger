@@ -37,11 +37,11 @@ import java.util.List;
 @RequestMapping (value = Domain.RNChat.RNProfilePicture.RN_PROFILE_PICTURES_GET_ONE_GROUP, method = RequestMethod.POST)
 public final class RestGetOneProfilePictureGroup
 {
-    private UserLoginService userLoginService;
-    private ProfilePicturesService profilePicturesService;
-    private JoinGroupService joinGroupService;
-    private GroupsService groupsService;
-    private GroupManagementService groupManagementService;
+    private final UserLoginService userLoginService;
+    private final ProfilePicturesService profilePicturesService;
+    private final JoinGroupService joinGroupService;
+    private final GroupsService groupsService;
+    private final GroupManagementService groupManagementService;
 
     @Autowired
     public RestGetOneProfilePictureGroup
@@ -56,7 +56,7 @@ public final class RestGetOneProfilePictureGroup
         this.groupManagementService = _GroupManagementService;
     }
 
-    @RequestMapping (value = {"/" , "" , "/{ID_PROFILE_PICTURE}"}, produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping (value = { "/" , "" , "/{ID_PROFILE_PICTURE}" }, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getOne
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -100,16 +100,16 @@ public final class RestGetOneProfilePictureGroup
                                 return getByteProfilePicture (pathProfilePicture , mainAccount , router , request);
                             else
                             {
-                                List<ProfilePictures> profilePictures = profilePicture.getGroups ().getProfilePictures ();
+                                List <ProfilePictures> profilePictures = profilePicture.getGroups ().getProfilePictures ();
                                 if (profilePictures != null)
                                 {
-                                    List<Long> ids = (new SortProfilePictures (profilePictures)).getIds ();
+                                    List <Long> ids = (new SortProfilePictures (profilePictures)).getIds ();
                                     assert ids != null;
                                     if (ids.get (0) == idProfilePicture.getId ())
                                         return getByteProfilePicture (pathProfilePicture , mainAccount , router , request);
-                                    else return toByte (Path.IC_NO_COVER);
+                                    else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
                                 }
-                                else return toByte (Path.IC_NO_COVER);
+                                else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
                             }
                         }
                     }
@@ -118,16 +118,16 @@ public final class RestGetOneProfilePictureGroup
                 else
                 {
                     l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_not_found") , null);
-                    return toByte (Path.IMAGE_ERROR_500);
+                    return toByte (Path.GetImage (Path.IMAGE_ERROR_500));
                 }
             }
             else
             {
                 l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_id_invalid") , null);
-                return toByte (Path.IC_NO_COVER);
+                return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
             }
         }
-        else return toByte (Path.IC_NO_COVER);
+        else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
     }
 
     private byte[] getByteProfilePicture (String pathProfilePicture , MainAccount mainAccount , String router , String request)
@@ -141,7 +141,7 @@ public final class RestGetOneProfilePictureGroup
         else
         {
             l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_file_not_found") , file.getPath ());
-            return toByte (Path.IMAGE_ERROR_500);
+            return toByte (Path.GetImage (Path.IMAGE_ERROR_500));
         }
     }
 

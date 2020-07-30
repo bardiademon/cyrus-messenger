@@ -20,13 +20,13 @@ public interface ProfilePicturesRepository extends JpaRepository <ProfilePicture
 
     @Modifying
     @Transactional
-    @Query("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.mainAccount.id = :ID and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
-    void disableMainPhotoUser (@Param("ID") long id , @Param("THIS_PIC_FOR") ProfilePicFor profilePicFor);
+    @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.mainAccount.id = :ID and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
+    void disableMainPhotoUser (@Param ("ID") long id , @Param ("THIS_PIC_FOR") ProfilePicFor profilePicFor);
 
     @Modifying
     @Transactional
-    @Query("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.groups.id = :ID_GROUP and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
-    void disableMainPhotoGroup (@Param("ID_GROUP") long idGroup , @Param("THIS_PIC_FOR") ProfilePicFor profilePicFor);
+    @Query ("update ProfilePictures profilePictures set profilePictures.mainPic = false where profilePictures.groups.id = :ID_GROUP and profilePictures.deleted = false and profilePictures.thisPicFor = :THIS_PIC_FOR")
+    void disableMainPhotoGroup (@Param ("ID_GROUP") long idGroup , @Param ("THIS_PIC_FOR") ProfilePicFor profilePicFor);
 
     ProfilePictures findByIdAndDeletedFalse (long id);
 
@@ -36,27 +36,27 @@ public interface ProfilePicturesRepository extends JpaRepository <ProfilePicture
 
     @Modifying
     @Transactional
-    @Query("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and ((profilePictures.placementNumber = 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber = 0 and profilePictures.mainPic = :MAIN_PIC))")
-    Integer deletePlacementNumberZero (@Param("ID_USER") long idUser , @Param("MAIN_PIC") boolean mainPic);
+    @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and ((profilePictures.placementNumber = 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber = 0 and profilePictures.mainPic = :MAIN_PIC))")
+    Integer deletePlacementNumberZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
 
     @Modifying
     @Transactional
-    @Query("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and profilePictures.mainPic = true")
-    Integer deleteMainPic (@Param("ID_USER") long idUser);
+    @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and profilePictures.mainPic = true")
+    Integer deleteMainPic (@Param ("ID_USER") long idUser);
 
     @Modifying
     @Transactional
-    @Query("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and (profilePictures.placementNumber != 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber != 0 and profilePictures.mainPic = :MAIN_PIC)")
-    Integer deletePlacementNumberNotZero (@Param("ID_USER") long idUser , @Param("MAIN_PIC") boolean mainPic);
+    @Query ("update ProfilePictures profilePictures set profilePictures.deleted = true , profilePictures.deletedAt = CURRENT_TIMESTAMP where  profilePictures.mainAccount.id = :ID_USER and (profilePictures.placementNumber != 0 and profilePictures.mainPic = false) or (profilePictures.placementNumber != 0 and profilePictures.mainPic = :MAIN_PIC)")
+    Integer deletePlacementNumberNotZero (@Param ("ID_USER") long idUser , @Param ("MAIN_PIC") boolean mainPic);
 
-    @Query("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.groups.id = :ID_GROUP and profilePictures.thisPicFor = 'group'")
-    Integer countUploadGroup (@Param("ID_GROUP") long idGroup);
+    @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.groups.id = :ID_GROUP and profilePictures.thisPicFor = 'group'")
+    Integer countUploadGroup (@Param ("ID_GROUP") long idGroup);
 
-    @Query("select profilePictures from ProfilePictures profilePictures where  profilePictures.id = :ID_PROFILE_PICTURE and profilePictures.thisPicFor = 'group'")
-    ProfilePictures findProfilePictureGroup (@Param("ID_PROFILE_PICTURE") long idProfilePicture);
+    @Query ("select profilePictures from ProfilePictures profilePictures where  profilePictures.id = :ID_PROFILE_PICTURE and profilePictures.thisPicFor = 'group'")
+    ProfilePictures findProfilePictureGroup (@Param ("ID_PROFILE_PICTURE") long idProfilePicture);
 
-    @Query("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.mainAccount.id = :ID_USER and profilePictures.thisPicFor = 'user'")
-    Integer countUploadUser (@Param("ID_USER") long idUser);
+    @Query ("select count(profilePictures) from ProfilePictures profilePictures where  profilePictures.mainAccount.id = :ID_USER and profilePictures.thisPicFor = 'user'")
+    Integer countUploadUser (@Param ("ID_USER") long idUser);
 
     ProfilePictures findByIdAndThisPicForAndDeletedFalse (long idProfilePicture , ProfilePicFor profilePicFor);
 

@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
