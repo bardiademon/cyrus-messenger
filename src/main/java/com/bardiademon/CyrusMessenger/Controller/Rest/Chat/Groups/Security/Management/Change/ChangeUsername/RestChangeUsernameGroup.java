@@ -93,9 +93,9 @@ public final class RestChangeUsernameGroup
 
                                 if (findGroup.getId () == group.getId ())
                                 {
-                                    Usernames username = group.getUsername ();
-                                    Usernames findGroupUsername = findGroup.getUsername ();
-                                    if (findGroupUsername != null && findGroupUsername.getUsername ().equals (username.getUsername ()))
+                                    Usernames groupname = group.getGroupname ();
+                                    Usernames findGroupname = findGroup.getGroupname ();
+                                    if (findGroupname != null && findGroupname.getUsername ().equals (groupname.getUsername ()))
                                     {
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.repetitive.name ());
                                         answerToClient.setReqRes (req , res);
@@ -115,7 +115,7 @@ public final class RestChangeUsernameGroup
 
                             if (change)
                             {
-                                Usernames oldUsername = group.getUsername ();
+                                Usernames oldUsername = group.getGroupname ();
 
                                 if (oldUsername != null)
                                 {
@@ -133,7 +133,7 @@ public final class RestChangeUsernameGroup
                                 username.setUsernameFor (UsernameFor.group);
                                 username = usernamesService.Repository.save (username);
 
-                                group.setUsername (username);
+                                group.setGroupname (username);
                                 service.groupsService.Repository.save (group);
 
                                 answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());

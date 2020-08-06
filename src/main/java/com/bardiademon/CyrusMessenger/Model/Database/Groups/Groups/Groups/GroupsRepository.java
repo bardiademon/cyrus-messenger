@@ -10,7 +10,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Long>
 {
     int countByOwnerIdAndDeletedFalse (long id);
 
-    Groups findByUsernameAndDeletedFalse (String username);
+    Groups findByGroupnameAndDeletedFalse (String username);
 
     Groups findByLinkForJoinIdAndDeletedFalse (long id);
 

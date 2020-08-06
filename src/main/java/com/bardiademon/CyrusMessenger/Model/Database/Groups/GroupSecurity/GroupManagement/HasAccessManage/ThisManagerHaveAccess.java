@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupM
 public final class ThisManagerHaveAccess
 {
 
-    private GroupManagement groupManagement;
+    private final GroupManagement groupManagement;
     private AccessLevel accessLevel;
 
     public ThisManagerHaveAccess (GroupManagement _GroupManagement , AccessLevel _AccessLevel)
@@ -63,6 +63,8 @@ public final class ThisManagerHaveAccess
                 return accessLevel.isChangePicture ();
             case del_main_pic:
                 return accessLevel.isDelMainPic ();
+            case send_message:
+                return accessLevel.isSendMessage ();
             default:
                 return false;
         }

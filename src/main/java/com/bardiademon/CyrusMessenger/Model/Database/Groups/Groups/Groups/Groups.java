@@ -44,15 +44,15 @@ public class Groups
 
     @OneToMany (mappedBy = "groups")
     @Where (clause = "deleted = false")
-    private List<GroupManagement> groupManagements;
+    private List <GroupManagement> groupManagements;
 
     @OneToMany (mappedBy = "groups")
     @Where (clause = "leave_group = false")
-    private List<JoinGroup> members;
+    private List <JoinGroup> members;
 
     @OneToMany (mappedBy = "groups")
     @Where (clause = "`deleted` = false")
-    private List<ProfilePictures> profilePictures;
+    private List <ProfilePictures> profilePictures;
 
     @OneToOne
     @JoinColumn (name = "id_group_security_profile", referencedColumnName = "id")
@@ -64,7 +64,7 @@ public class Groups
     @OneToOne (mappedBy = "groups")
     @Where (clause = "`username_for` = 'group' and `deleted` = false")
     @JsonBackReference
-    private Usernames username;
+    private Usernames groupname;
 
     private String bio;
 
@@ -92,6 +92,8 @@ public class Groups
     @Where (clause = "deleted = false")
     @JoinColumn (name = "id_link_for_join", referencedColumnName = "id")
     private LinkForJoin linkForJoin;
+
+    private boolean isChannel = false;
 
     public long getId ()
     {
@@ -123,14 +125,14 @@ public class Groups
         this.name = name;
     }
 
-    public Usernames getUsername ()
+    public Usernames getGroupname ()
     {
-        return username;
+        return groupname;
     }
 
-    public void setUsername (Usernames username)
+    public void setGroupname (Usernames groupname)
     {
-        this.username = username;
+        this.groupname = groupname;
     }
 
     public LocalDateTime getCreatedAt ()
@@ -213,12 +215,12 @@ public class Groups
         this.deletedAt = deletedAt;
     }
 
-    public List<GroupManagement> getGroupManagements ()
+    public List <GroupManagement> getGroupManagements ()
     {
         return groupManagements;
     }
 
-    public void setGroupManagements (List<GroupManagement> groupManagements)
+    public void setGroupManagements (List <GroupManagement> groupManagements)
     {
         this.groupManagements = groupManagements;
     }
@@ -233,22 +235,22 @@ public class Groups
         this.linkForJoin = linkForJoin;
     }
 
-    public List<JoinGroup> getMembers ()
+    public List <JoinGroup> getMembers ()
     {
         return members;
     }
 
-    public void setMembers (List<JoinGroup> members)
+    public void setMembers (List <JoinGroup> members)
     {
         this.members = members;
     }
 
-    public List<ProfilePictures> getProfilePictures ()
+    public List <ProfilePictures> getProfilePictures ()
     {
         return profilePictures;
     }
 
-    public void setProfilePictures (List<ProfilePictures> profilePictures)
+    public void setProfilePictures (List <ProfilePictures> profilePictures)
     {
         this.profilePictures = profilePictures;
     }
@@ -261,5 +263,15 @@ public class Groups
     public void setGroupSecurityProfile (GroupSecurityProfile groupSecurityProfile)
     {
         this.groupSecurityProfile = groupSecurityProfile;
+    }
+
+    public boolean isChannel ()
+    {
+        return isChannel;
+    }
+
+    public void setChannel (boolean channel)
+    {
+        isChannel = channel;
     }
 }

@@ -1,13 +1,10 @@
 package com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Channel.Channel.Channel.Channel;
-import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Table;
 import javax.persistence.Entity;
@@ -18,9 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table (name = "profile_pictures")
@@ -38,10 +33,6 @@ public final class ProfilePictures
     @ManyToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
-
-    @ManyToOne
-    @JoinColumn (name = "id_channel", referencedColumnName = "id")
-    private Channel channel;
 
     private String name;
 
@@ -106,16 +97,6 @@ public final class ProfilePictures
     public void setGroups (Groups groups)
     {
         this.groups = groups;
-    }
-
-    public Channel getChannel ()
-    {
-        return channel;
-    }
-
-    public void setChannel (Channel channel)
-    {
-        this.channel = channel;
     }
 
     public String getName ()

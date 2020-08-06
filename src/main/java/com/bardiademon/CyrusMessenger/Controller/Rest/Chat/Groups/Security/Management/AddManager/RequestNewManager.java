@@ -74,6 +74,10 @@ public final class RequestNewManager
 
     @JsonProperty ("add_member")
     private String addMember;
+
+    @JsonProperty ("send_message")
+    private String sendMessage;
+
     /**
      * karbarani ke ghesmat security (show_in_group) ra false gozashtand
      */
@@ -296,6 +300,16 @@ public final class RequestNewManager
         this.addMember = addMember;
     }
 
+    public String getSendMessage ()
+    {
+        return sendMessage;
+    }
+
+    public void setSendMessage (String sendMessage)
+    {
+        this.sendMessage = sendMessage;
+    }
+
     @Nullable
     public AnswerToClient checkRequest ()
     {
@@ -316,6 +330,7 @@ public final class RequestNewManager
         else if (checkBool (getShowMemberHidden ())) return notBool ("show_member_hidden");
         else if (checkBool (getUploadPicture ())) return notBool ("upload_picture");
         else if (checkBool (getAddMember ())) return notBool ("add_member");
+        else if (checkBool (getSendMessage ())) return notBool ("send_message");
         else return null;
     }
 

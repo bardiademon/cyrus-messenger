@@ -49,7 +49,7 @@ public final class RestFindGroups
         this.usernamesService = _UsernamesService;
     }
 
-    @RequestMapping (value = {"/u" , "/u/{username}"})
+    @RequestMapping (value = { "/u" , "/u/{username}" })
     public AnswerToClient findByUsername (HttpServletResponse res , HttpServletRequest req , @PathVariable (value = "username", required = false) String username)
     {
         AnswerToClient answerToClient;
@@ -63,7 +63,7 @@ public final class RestFindGroups
                 {
                     Usernames forGroup = usernamesService.findForGroup (username);
                     if (forGroup != null)
-                        answerToClient = getInfoGroup (req , res , forGroup.getGroups () , ValAnswer.username.name () , username);
+                        answerToClient = getInfoGroup (req , res , forGroup.getGroups () , ValAnswer.groupname.name () , username);
                     else
                     {
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found.name ());
@@ -97,7 +97,7 @@ public final class RestFindGroups
         return answerToClient;
     }
 
-    @RequestMapping (value = {"/l" , "/l/{link}"})
+    @RequestMapping (value = { "/l" , "/l/{link}" })
     public AnswerToClient findByLink (HttpServletResponse res , HttpServletRequest req , @PathVariable (value = "link", required = false) String link)
     {
         AnswerToClient answerToClient;
@@ -148,16 +148,16 @@ public final class RestFindGroups
         else
         {
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.found.name ());
-            Map<String, Object> infoGroup = new LinkedHashMap<> ();
+            Map <String, Object> infoGroup = new LinkedHashMap <> ();
 
             infoGroup.put (AnswerToClient.CUK.id.name () , group.getId ());
 
             LinkForJoin linkForJoin = group.getLinkForJoin ();
             if (linkForJoin != null) infoGroup.put (ValAnswer.link_join.name () , linkForJoin.getLink ());
 
-            Usernames username = group.getUsername ();
+            Usernames username = group.getGroupname ();
             if (username != null && !Str.IsEmpty (username.getUsername ()))
-                infoGroup.put (ValAnswer.username.name () , username.getUsername ());
+                infoGroup.put (ValAnswer.groupname.name () , username.getUsername ());
 
             String link = group.getLink ();
             if (!Str.IsEmpty (link)) infoGroup.put (ValAnswer.link.name () , link);
@@ -175,7 +175,7 @@ public final class RestFindGroups
 
             if (group.getGroupSecurityProfile ().isShowNumberOfMember ())
             {
-                List<JoinGroup> joinGroups = group.getMembers ();
+                List <JoinGroup> joinGroups = group.getMembers ();
                 long numberOfMembers = 0;
                 if (joinGroups != null) numberOfMembers = joinGroups.size ();
 
@@ -184,6 +184,8 @@ public final class RestFindGroups
 
             infoGroup.put (ValAnswer.created_at.name () , Time.toString (group.getCreatedAt ()));
             infoGroup.put (ValAnswer.description.name () , group.getDescription ());
+
+            infoGroup.put (ValAnswer.is_channel.name () , group.isChannel ());
 
             answerToClient.put (ValAnswer.info_group.name () , infoGroup);
             answerToClient.setReqRes (req , res);
@@ -197,9 +199,9 @@ public final class RestFindGroups
 
     public enum ValAnswer
     {
-        link_is_empty, username_is_empty, username_invalid, link_invalid, not_found, found,
+        link_is_empty, username_is_empty, username_invalid, link_invalid, not_found, found, is_channel,
 
-        username, link_join, bio, link, created_at, members, id_profile_picture, owner, info_group, description
+        groupname, link_join, bio, link, created_at, members, id_profile_picture, owner, info_group, description
     }
 
 }

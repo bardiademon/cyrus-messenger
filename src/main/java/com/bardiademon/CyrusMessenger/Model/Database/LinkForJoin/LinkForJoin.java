@@ -1,17 +1,15 @@
 package com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Channel.Channel.Channel.Channel;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table (name = "link_for_join")
@@ -33,10 +31,6 @@ public final class LinkForJoin
     @ManyToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
-
-    @ManyToOne
-    @JoinColumn (name = "id_channel", referencedColumnName = "id")
-    private Channel channel;
 
     @Column (name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -89,16 +83,6 @@ public final class LinkForJoin
     public void setGroups (Groups groups)
     {
         this.groups = groups;
-    }
-
-    public Channel getChannel ()
-    {
-        return channel;
-    }
-
-    public void setChannel (Channel channel)
-    {
-        this.channel = channel;
     }
 
     public LocalDateTime getCreatedAt ()

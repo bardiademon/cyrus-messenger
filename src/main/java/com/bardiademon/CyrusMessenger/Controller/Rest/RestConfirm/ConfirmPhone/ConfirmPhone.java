@@ -32,9 +32,9 @@ public class ConfirmPhone
 
     private String phone;
 
-    private ConfirmCodeService confirmCodeService;
-    private ConfirmedPhoneService confirmedPhoneService;
-    private MainAccountService mainAccountService;
+    private final ConfirmCodeService confirmCodeService;
+    private final ConfirmedPhoneService confirmedPhoneService;
+    private final MainAccountService mainAccountService;
 
     private AnswerToClient answerToClient;
 

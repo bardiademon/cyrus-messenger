@@ -83,6 +83,12 @@ public final class GroupManagementAccessLevel
     private boolean changePlacementNumber;
 
     /**
+     * if Column(groups.is_channel) = true
+     */
+    @Column (name = "send_message")
+    private boolean sendMessage;
+
+    /**
      * karbarani ke ghesmat security (show_in_group) ra false gozashtand
      */
     @Column (name = "show_member_hidden")
@@ -310,5 +316,15 @@ public final class GroupManagementAccessLevel
     public void setChangeUsername (boolean changeUsername)
     {
         this.changeUsername = changeUsername;
+    }
+
+    public boolean isSendMessage ()
+    {
+        return sendMessage;
+    }
+
+    public void setSendMessage (boolean sendMessage)
+    {
+        this.sendMessage = sendMessage;
     }
 }

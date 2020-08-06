@@ -46,10 +46,11 @@ public final class RestNewManager
     private final ManageGroup.Service service;
 
     @Autowired
-    public RestNewManager (UserLoginService _UserLoginService ,
-                           GroupsService _GroupsService , GroupManagementService _GroupManagementService ,
-                           MainAccountService _MainAccountService , JoinGroupService _JoinGroupService ,
-                           GroupManagementAccessLevelService _GroupManagementAccessLevelService)
+    public RestNewManager
+            (UserLoginService _UserLoginService ,
+             GroupsService _GroupsService , GroupManagementService _GroupManagementService ,
+             MainAccountService _MainAccountService , JoinGroupService _JoinGroupService ,
+             GroupManagementAccessLevelService _GroupManagementAccessLevelService)
     {
         this.userLoginService = _UserLoginService;
         this.joinGroupService = _JoinGroupService;
@@ -57,7 +58,7 @@ public final class RestNewManager
         service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient newManager
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -192,6 +193,7 @@ public final class RestNewManager
             accessLevel.setDelAdmin (toBool (request.getDelAdmin ()));
             accessLevel.setChangeNameGroup (toBool (request.getChangeNameGroup ()));
             accessLevel.setAddMember (toBool (request.getAddMember ()));
+            accessLevel.setSendMessage (toBool (request.getSendMessage ()));
             accessLevel = groupManagementAccessLevelService.Repository.save (accessLevel);
 
             if (!update)

@@ -119,32 +119,38 @@ public final class RestCreateGroup
             l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
             r.n (mainAccount , SubmitRequestType.create_group , true);
         }
-        if (answerToClient == null && Str.IsEmpty (request.getUsername ()))
+        else
         {
-            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_and_link_join_empty.name ());
-            answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_and_link_join_empty.name ()) , null);
-            r.n (mainAccount , SubmitRequestType.create_group , true);
-        }
-        if (answerToClient == null && !Str.IsEmpty (request.getUsername ()))
-        {
-            Usernames forGroup = usernamesService.findForGroup (request.getUsername ());
-            if (forGroup != null)
+            if (Str.IsEmpty (request.getGroupname ()) && !request.isCreateLinkJoin ())
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_exists.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_and_link_join_empty.name ());
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_is_exists.name ()) , null);
+                l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_and_link_join_empty.name ()) , null);
                 r.n (mainAccount , SubmitRequestType.create_group , true);
             }
             else
             {
-                VUsername vUsername = new VUsername (request.getUsername ());
-                if (!vUsername.check ())
+                if (!Str.IsEmpty (request.getGroupname ()))
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
-                    answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
-                    r.n (mainAccount , SubmitRequestType.create_group , true);
+                    VUsername vUsername = new VUsername (request.getGroupname ());
+                    if (!vUsername.check ())
+                    {
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_invalid.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_invalid.name ()) , null);
+                        r.n (mainAccount , SubmitRequestType.create_group , true);
+                    }
+                    else
+                    {
+                        Usernames forGroup = usernamesService.findForGroup (request.getGroupname ());
+                        if (forGroup != null)
+                        {
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_is_exists.name ());
+                            answerToClient.setReqRes (req , res);
+                            l.n (ToJson.To (request) , Domain.RNChat.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_is_exists.name ()) , null);
+                            r.n (mainAccount , SubmitRequestType.create_group , true);
+                        }
+                    }
                 }
             }
         }
@@ -159,18 +165,19 @@ public final class RestCreateGroup
         groups.setBio (request.getBio ());
         groups.setName (request.getName ());
         groups.setOwner (mainAccount);
+        groups.setChannel (request.isChannel ());
 
         Usernames usernames = null;
 
         if (!Str.IsEmpty (request.getDescription ())) groups.setDescription (request.getDescription ());
-        if (!Str.IsEmpty (request.getUsername ()))
+        if (!Str.IsEmpty (request.getGroupname ()))
         {
             usernames = new Usernames ();
             usernames.setUsernameFor (UsernameFor.group);
-            usernames.setUsername (request.getUsername ());
+            usernames.setUsername (request.getGroupname ());
             usernames = usernamesService.Repository.save (usernames);
 
-            groups.setUsername (usernames);
+            groups.setGroupname (usernames);
         }
 
         boolean createCode = false;
@@ -210,8 +217,8 @@ public final class RestCreateGroup
 
 
             answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.created.name ());
-            if (!Str.IsEmpty (request.getUsername ()))
-                answerToClient.put (KeyAnswer.username.name () , groups.getUsername ().getUsername ());
+            if (!Str.IsEmpty (request.getGroupname ()))
+                answerToClient.put (KeyAnswer.groupname.name () , groups.getGroupname ().getUsername ());
 
             if (createCode) answerToClient.put (KeyAnswer.link.name () , linkForJoin.getLink ());
 
@@ -235,15 +242,14 @@ public final class RestCreateGroup
 
     }
 
-
     private enum ValAnswer
     {
-        name_empty, username_and_link_join_empty, created, username_is_exists, you_have_made_too_many_groups, username_invalid
+        name_empty, groupname_and_link_join_empty, created, groupname_is_exists, you_have_made_too_many_groups, groupname_invalid
     }
 
     private enum KeyAnswer
     {
-        username, link, construction_limit
+        groupname, link, construction_limit
     }
 
 }

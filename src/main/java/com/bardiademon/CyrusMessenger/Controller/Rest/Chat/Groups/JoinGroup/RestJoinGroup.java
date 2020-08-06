@@ -41,8 +41,8 @@ public final class RestJoinGroup
     private final GroupsService groupsService;
     private final GroupSecurityProfileService groupSecurityProfileService;
     private final JoinGroupService joinGroupService;
-    private GroupManagementService groupManagementService;
-    private FiredFromGroupService firedFromGroupService;
+    private final GroupManagementService groupManagementService;
+    private final FiredFromGroupService firedFromGroupService;
 
     public RestJoinGroup (GroupsService _GroupsService ,
                           GroupSecurityProfileService _GroupSecurityProfileService , JoinGroupService _JoinGroupService ,
@@ -261,7 +261,6 @@ public final class RestJoinGroup
         }
         return answerToClient;
     }
-
 
     public enum ValAnswer
     {

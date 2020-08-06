@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class RequestCreateGroup
 {
-    private String name, description, bio, link, username;
+    private String name, description, bio, link, groupname;
 
     @JsonProperty ("create_link_join")
     private boolean createLinkJoin;
 
     @JsonProperty ("family_group")
     private boolean familyGroup;
+
+    @JsonProperty ("is_channel")
+    private boolean isChannel = false;
 
     public RequestCreateGroup ()
     {
@@ -46,14 +49,14 @@ public final class RequestCreateGroup
         this.link = link;
     }
 
-    public String getUsername ()
+    public String getGroupname ()
     {
-        return username;
+        return groupname;
     }
 
-    public void setUsername (String username)
+    public void setGroupname (String groupname)
     {
-        this.username = username;
+        this.groupname = groupname;
     }
 
     public boolean isCreateLinkJoin ()
@@ -84,5 +87,15 @@ public final class RequestCreateGroup
     public void setDescription (String description)
     {
         this.description = description;
+    }
+
+    public boolean isChannel ()
+    {
+        return isChannel;
+    }
+
+    public void setChannel (boolean channel)
+    {
+        isChannel = channel;
     }
 }

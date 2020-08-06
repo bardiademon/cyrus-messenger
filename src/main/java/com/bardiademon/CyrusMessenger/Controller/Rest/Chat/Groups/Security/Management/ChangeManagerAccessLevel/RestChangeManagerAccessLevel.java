@@ -210,6 +210,9 @@ public final class RestChangeManagerAccessLevel
             if (!Str.IsEmpty (request.getAddMember ()))
                 accessLevelUser.setAddMember (Str.RealBool (request.getAddMember ()));
 
+            if (!Str.IsEmpty (request.getSendMessage ()))
+                accessLevelUser.setSendMessage (Str.RealBool (request.getSendMessage ()));
+
             groupManagementAccessLevelService.Repository.save (accessLevelUser);
 
             if (!request.getName ().equals (RequestNewManager.DO_NOT_SET))
