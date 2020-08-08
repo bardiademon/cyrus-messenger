@@ -61,7 +61,8 @@ public final class ModifyInfoUser
 
                 if (IsEmpty (requestMIU.getGender ())
                         && IsEmpty (requestMIU.getBio ()) && IsEmpty (requestMIU.getFamily ())
-                        && IsEmpty (requestMIU.getMylink ()) && IsEmpty (requestMIU.getName ()))
+                        && IsEmpty (requestMIU.getMylink ()) && IsEmpty (requestMIU.getName ())
+                        && IsEmpty (requestMIU.getCodeConfirmPhone ()))
                 {
                     answerToClient = AnswerToClient.RequestIsNull ();
                     answerToClient.setReqRes (req , res);
@@ -95,6 +96,13 @@ public final class ModifyInfoUser
                         if (requestMIU.isUpdatedGender () || !IsEmpty (requestMIU.getGender ()))
                             answerToClient.put (KeyAnswer.gender.name () , true);
 
+                        if (requestMIU.isUpdatePhone () || !IsEmpty (requestMIU.getCodeConfirmPhone ()))
+                            answerToClient.put (KeyAnswer.phone.name () , true);
+
+                        if (requestMIU.getMessage () != null)
+                            answerToClient.put (KeyAnswer.messages.name () , requestMIU.getMessage ());
+
+
                         answerToClient.setReqRes (req , res);
                         l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.check_the_request.name ()) , null , type , false);
                     }
@@ -120,7 +128,7 @@ public final class ModifyInfoUser
 
     private enum KeyAnswer
     {
-        bio, name, family, mylink, gender
+        bio, name, family, mylink, gender, phone, messages
     }
 
 
