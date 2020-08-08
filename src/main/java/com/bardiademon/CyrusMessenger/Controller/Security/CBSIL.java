@@ -11,10 +11,9 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import org.springframework.lang.Nullable;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.lang.Nullable;
 
 // CBSIL => CBS : CheckBlockSystem , IL: IsLogin
 public final class CBSIL
@@ -23,14 +22,17 @@ public final class CBSIL
     @Nullable
     private final IsLogin isLogin;
 
+    private final CheckBlockSystem checkBlockSystem;
+
     @Nullable
     private final AnswerToClient answerToClient;
 
     private final boolean ok;
 
-    private CBSIL (@Nullable IsLogin _IsLogin , @Nullable AnswerToClient _AnswerToClient , boolean OK)
+    private CBSIL (@Nullable IsLogin _IsLogin , CheckBlockSystem _CheckBlockSystem , @Nullable AnswerToClient _AnswerToClient , boolean OK)
     {
         this.isLogin = _IsLogin;
+        this.checkBlockSystem = _CheckBlockSystem;
         this.answerToClient = _AnswerToClient;
         this.ok = OK;
     }
@@ -43,6 +45,41 @@ public final class CBSIL
     public static CheckBlockSystem BSubmitRequest (HttpServletRequest Req , SubmitRequestType Type)
     {
         return new CheckBlockSystem (Req , BlockedFor.submit_request , Type.name ());
+    }
+
+    public static CBSIL BSubmitRequest (String Request , String Router , HttpServletRequest Req , HttpServletResponse Res , SubmitRequestType Type , String CodeLogin , UserLoginService _UserLoginService)
+    {
+        CheckBlockSystem blockSystem = new CheckBlockSystem (Req , BlockedFor.submit_request , Type.name ());
+
+        AnswerToClient answerToClient;
+        if (blockSystem.isBlocked ())
+        {
+            answerToClient = blockSystem.getAnswerToClient ();
+            answerToClient.setReqRes (Req , Res);
+            l.n (Request , Router , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , null);
+            r.n (Req.getRemoteAddr () , Type , true);
+            return new CBSIL (null , blockSystem , answerToClient , false);
+        }
+        else
+        {
+            IsLogin login = isLogin (CodeLogin , _UserLoginService);
+            if (login.isValid ())
+            {
+                blockSystem = new CheckBlockSystem (login.getVCodeLogin ().getMainAccount ().getId () , BlockedFor.submit_request , Type.name ());
+                if (blockSystem.isBlocked ())
+                {
+                    answerToClient = blockSystem.getAnswerToClient ();
+                    answerToClient.setReqRes (Req , Res);
+
+                    l.n (Request , Router , login.getVCodeLogin ().getMainAccount () , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , null);
+                    r.n (login.getVCodeLogin ().getMainAccount () , Type , true);
+                    return new CBSIL (login , blockSystem , answerToClient , false);
+                }
+            }
+        }
+        l.n (Request , Router , null , null , Thread.currentThread ().getStackTrace () , null , ValAnswer.ok.name ());
+        r.n (Req.getRemoteAddr () , Type , false);
+        return new CBSIL (null , null , null , true);
     }
 
     public static IsLogin isLogin (String CodeLogin)
@@ -75,14 +112,14 @@ public final class CBSIL
                 {
                     _AnswerToClient = BlockSystem.getAnswerToClient ();
                     _AnswerToClient.setReqRes (Req , Res);
-                    l.n (ToJson.To (request) , Router , mainAccount , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception ("blocked by system") , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+                    l.n (ToJson.To (request) , Router , mainAccount , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
                 }
             }
             else
             {
                 _AnswerToClient = _IsLogin.getAnswerToClient ();
                 _AnswerToClient.setReqRes (Req , Res);
-                l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+                l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_login.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
                 r.n (Req.getRemoteAddr () , type , true);
             }
         }
@@ -90,9 +127,9 @@ public final class CBSIL
         {
             _AnswerToClient = BlockSystem.getAnswerToClient ();
             _AnswerToClient.setReqRes (Req , Res);
-            l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception ("blocked by system") , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+            l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
         }
-        return new CBSIL (_IsLogin , _AnswerToClient , OK);
+        return new CBSIL (_IsLogin , BlockSystem , _AnswerToClient , OK);
     }
 
     @Nullable
@@ -106,10 +143,20 @@ public final class CBSIL
         return ok;
     }
 
+    public CheckBlockSystem getCheckBlockSystem ()
+    {
+        return checkBlockSystem;
+    }
+
     @Nullable
     public AnswerToClient getAnswerToClient ()
     {
         return answerToClient;
+    }
+
+    private enum ValAnswer
+    {
+        blocked_by_system, not_login, ok
     }
 
 }

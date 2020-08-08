@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "user_emails")
@@ -24,12 +23,10 @@ public final class UserEmails
 
     @OneToOne
     @JoinColumn (name = "id_user", referencedColumnName = "id")
-    @Where (clause = "`deleted` = false and `confirmed` = true")
     private MainAccount mainAccount;
 
     @OneToOne
     @JoinColumn (name = "id_user_sep_pro", referencedColumnName = "id")
-    @Where (clause = "`deleted` = false and `confirmed` = true")
     private UserSeparateProfiles userSeparateProfiles;
 
     @Column (nullable = false)

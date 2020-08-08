@@ -1,11 +1,20 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Modify.ModifyInfoUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 // MIU => Modify Info User
 public final class RequestMIU
 {
     private String bio, name, family, mylink, gender;
+
+    @JsonProperty ("code_confirm_phone")
+    private String codeConfirmPhone;
+
+    @JsonIgnore
+    private List <String> message = null;
 
     @JsonIgnore
     private boolean updatedBio;
@@ -24,6 +33,9 @@ public final class RequestMIU
 
     @JsonIgnore
     private boolean updatedGender;
+
+    @JsonIgnore
+    private boolean updatePhone;
 
     public RequestMIU ()
     {
@@ -139,5 +151,39 @@ public final class RequestMIU
         return updatedGender;
     }
 
+    public String getCodeConfirmPhone ()
+    {
+        return codeConfirmPhone;
+    }
 
+    public void setCodeConfirmPhone (String codeConfirmPhone)
+    {
+        this.codeConfirmPhone = codeConfirmPhone;
+    }
+
+    public boolean isUpdatePhone ()
+    {
+        return updatePhone;
+    }
+
+    public void setUpdatePhone ()
+    {
+        this.updatePhone = true;
+    }
+
+    public List <String> getMessage ()
+    {
+        return message;
+    }
+
+    public void setMessage (Message message)
+    {
+        if (this.message == null) this.message = new ArrayList <> ();
+        this.message.add (message.name ());
+    }
+
+    public enum Message
+    {
+        duplicate_phone_number
+    }
 }

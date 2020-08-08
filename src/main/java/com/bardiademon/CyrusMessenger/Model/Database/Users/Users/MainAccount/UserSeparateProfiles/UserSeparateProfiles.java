@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmails;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserGender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,9 +14,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "user_separate_profile")
@@ -38,7 +41,11 @@ public final class UserSeparateProfiles
 
     private String bio;
 
-    private String email;
+    @JsonIgnore
+    @OneToOne (mappedBy = "userSeparateProfiles")
+    @Where (clause = "`deleted` = false and `confirmed` = true")
+    @JoinColumn (name = "id_email", referencedColumnName = "id")
+    private UserEmails email;
 
     @Column (name = "my_link")
     private String mylink;
@@ -117,12 +124,12 @@ public final class UserSeparateProfiles
         this.bio = bio;
     }
 
-    public String getEmail ()
+    public UserEmails getEmail ()
     {
         return email;
     }
 
-    public void setEmail (String email)
+    public void setEmail (UserEmails email)
     {
         this.email = email;
     }

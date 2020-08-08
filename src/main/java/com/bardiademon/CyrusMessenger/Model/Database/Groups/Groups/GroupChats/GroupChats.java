@@ -13,12 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
-
 @Entity
 @Table (name = "group_chats")
 public class GroupChats
 {
-
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
@@ -44,15 +42,6 @@ public class GroupChats
 
     public GroupChats ()
     {
-    }
-
-    public GroupChats (MainAccount from , GroupChats reply , TypeChat type , String text , String realText)
-    {
-        this.from = from;
-        this.reply = reply;
-        this.type = type;
-        this.text = text;
-        this.realText = realText;
     }
 
     public long getId ()

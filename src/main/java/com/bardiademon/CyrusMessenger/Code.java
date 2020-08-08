@@ -10,11 +10,12 @@ import java.util.Random;
 public class Code
 {
 
-    private List<Character> finalResult;
+    private List <Character> finalResult;
     private boolean endCreatePassword = true;
 
     private int _charInt = 8;
-    private boolean isNumber, isLowercaseLetters, isCapitalLetters, isOther;
+    private boolean isNumber, isLowercaseLetters, isCapitalLetters;
+    private final boolean isOther;
 
     private String code;
 
@@ -143,7 +144,7 @@ public class Code
             }
 
 
-            finalResult = new ArrayList<> ();
+            finalResult = new ArrayList <> ();
 
             if (isNumber && number != null) setFinalResult (number);
             if (isLowercaseLetters && lowercaseLetters != null) setFinalResult (lowercaseLetters);
@@ -169,7 +170,7 @@ public class Code
     @bardiademon
     private String createOther (int _char)
     {
-        final String[] other = {"~" , "`" , "!" , "@" , "#" , "$" , "%" , "^" , "&" , "*" , "(" , ")" , "-" , "_" , "=" , "+" , "\\" , "|" , "."};
+        final String[] other = { "~" , "`" , "!" , "@" , "#" , "$" , "%" , "^" , "&" , "*" , "(" , ")" , "-" , "_" , "=" , "+" , "\\" , "|" , "." };
 
         StringBuilder result = new StringBuilder ();
 
@@ -187,7 +188,7 @@ public class Code
     {
         Random random = new Random ();
 
-        List<Long> lstNumber = new ArrayList<> ();
+        List <Long> lstNumber = new ArrayList <> ();
         for (int i = 0; i < _char; i++) lstNumber.add (Math.abs (random.nextLong ()));
 
         Collections.shuffle (lstNumber);
@@ -219,7 +220,7 @@ public class Code
 
         Random random = new Random ();
 
-        List<String> lstStr = new ArrayList<> ();
+        List <String> lstStr = new ArrayList <> ();
         for (int i = 0; i < _char; i++)
         {
             char c = (char) (random.nextInt ((max - min) + 1) + min);

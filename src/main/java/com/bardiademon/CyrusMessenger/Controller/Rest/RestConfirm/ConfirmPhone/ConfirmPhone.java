@@ -118,10 +118,8 @@ public class ConfirmPhone
                                     answerToClient.put (KeyAnswer.id.name () , confirmCode.getId ());
                                     answerToClient.put (KeyAnswer.waiting_time.name () , Time.getTime (confirmCode.getTimeToBeOutdated ()));
                                 }
-                                else
-                                {
-                                    answerToClient = AnswerToClient.ServerError ();
-                                }
+                                else answerToClient = AnswerToClient.ServerError ();
+
                                 synchronized (Wait)
                                 {
                                     Wait.notify ();

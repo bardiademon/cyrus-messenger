@@ -1,177 +1,175 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
-import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
-import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedFor;
-import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlockSystem;
+import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @RestController
 @RequestMapping (value = Domain.RNRegister.RN_MAIN, method = RequestMethod.POST)
-public class RestRegister
+public final class RestRegister
 {
-
-    private AnswerToClient answerToClient;
-
-    private RegisterRequest registerRequest;
 
     private final MainAccountService mainAccountService;
     private final ConfirmedPhoneService confirmedPhoneService;
     private final ConfirmCodeService confirmCodeService;
-    private final SubmitRequestService submitRequestService;
     private final UsernamesService usernamesService;
-    private final BlockedByTheSystemService blockedByTheSystemService;
-    private HttpServletRequest request;
+    private final UserLoginService userLoginService;
+
+    private final SubmitRequestType type;
+    private final String router;
 
     @Autowired
     public RestRegister
             (MainAccountService _MainAccountService ,
              ConfirmedPhoneService _ConfirmedPhoneService ,
              ConfirmCodeService _ConfirmCodeService ,
-             SubmitRequestService _SubmitRequestService ,
              UsernamesService _UsernamesService ,
-             BlockedByTheSystemService _BlockedByTheSystemService)
+             UserLoginService _UserLoginService)
     {
         this.mainAccountService = _MainAccountService;
         this.confirmedPhoneService = _ConfirmedPhoneService;
         this.confirmCodeService = _ConfirmCodeService;
-        this.submitRequestService = _SubmitRequestService;
         this.usernamesService = _UsernamesService;
-        this.blockedByTheSystemService = _BlockedByTheSystemService;
+        this.userLoginService = _UserLoginService;
+
+        this.type = SubmitRequestType.register;
+        this.router = Domain.RNRegister.RN_MAIN;
     }
 
     @RequestMapping ({ "/" , "" })
-    public AnswerToClient register (HttpServletResponse res , HttpServletRequest request , @RequestBody RegisterRequest registerRequest)
+    public AnswerToClient register
+            (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             HttpServletRequest req , HttpServletResponse res ,
+             @RequestBody RegisterRequest request)
     {
-        this.request = request;
-        CheckBlockSystem checkBlockSystem;
-        if ((checkBlockSystem = new CheckBlockSystem (request , blockedByTheSystemService , BlockedFor.submit_request , SubmitRequestType.register.name ())).isBlocked ())
-            answerToClient = checkBlockSystem.getAnswerToClient ();
-        else
-        {
-            this.registerRequest = registerRequest;
+        AnswerToClient answerToClient;
 
-            if (isNull ())
+        String strReq = ToJson.To (request);
+
+        CBSIL cbsil = CBSIL.BSubmitRequest (strReq , router , req , res , type , codeLogin , userLoginService);
+        if (cbsil.isOk ())
+        {
+            MainAccount mainAccount = null;
+            if (cbsil.getIsLogin () != null) mainAccount = cbsil.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (request != null && !isNull (request))
             {
-                answerToClient = AnswerToClient.error400 ();
-                answerToClient.put (KeyAnswer.answer.name () , ValAnswer.request_is_null.name ());
-                submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , true);
-            }
-            else
-            {
-                String emptyName = ValAnswer.empty.name ();
-                if (isEmpty (registerRequest.getUsername ())) setError400 (ValAnswer.username.name () , emptyName);
-                if (isEmpty (registerRequest.getPassword ())) setError400 (ValAnswer.password.name () , emptyName);
-                else if (isEmpty (registerRequest.getName ())) setError400 (ValAnswer.name.name () , emptyName);
-                else if (isEmpty (registerRequest.getFamily ())) setError400 (ValAnswer.family.name () , emptyName);
-                else if (isEmpty (registerRequest.getCodeConfirmedPhone ()))
+                if (Str.IsEmpty (request.getCodeConfirmedPhone ()))
                 {
-                    submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , true);
-                    setError400 (ValAnswer.code_confirmed_phone.name () , emptyName);
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_phone_is_empty.name ());
+                    answerToClient.setReqRes (req , res);
+                    l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_confirmed_phone_is_empty.name ()) , null);
+                    if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                    else r.n (mainAccount , type , true);
                 }
                 else
                 {
-                    if ((new VUsername (registerRequest.getUsername ())).check ())
+                    ConfirmedPhone confirmedPhone = confirmedPhoneService.getConfirmedPhoneIsActiveConfirmed (request.getCodeConfirmedPhone ());
+                    if (confirmedPhone == null)
                     {
-                        if (!checkExists ()) return answerToClient;
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_phone_invalid.name ());
+                        answerToClient.setReqRes (req , res);
+                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_confirmed_phone_invalid.name ()) , null);
+                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                        else r.n (mainAccount , type , true);
+                    }
+                    else
+                    {
+                        FITD_Username fitd_username = new FITD_Username (request.getUsername () , usernamesService);
+                        if (!fitd_username.isValid ())
+                        {
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+                            answerToClient.setReqRes (req , res);
+                            l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                            if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                            else r.n (mainAccount , type , true);
+                        }
                         else
                         {
-                            ConfirmedPhone confirmedPhone = checkCodeConfirmedPhone (registerRequest.getCodeConfirmedPhone ());
-                            if (confirmedPhone == null)
-                                setError400 (ValAnswer.code_confirmed_phone.name () , ValAnswer.invalid.name ());
+                            if (fitd_username.isFound ())
+                            {
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_used.name ());
+                                answerToClient.setReqRes (req , res);
+                                l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_used.name ()) , null);
+                                if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                                else r.n (mainAccount , type , true);
+                            }
                             else
                             {
-                                MainAccount mainAccount = confirmedPhone.getConfirmCode ().getMainAccount ();
-                                if (mainAccount == null || mainAccount.isDeleted () || !checkExistsPhone (confirmedPhone.getPhone ()))
+                                MainAccount mainAccountCP = confirmedPhone.getConfirmCode ().getMainAccount ();
+                                if (mainAccountCP == null || mainAccountCP.isDeleted () || (mainAccountService.findPhone (confirmedPhone.getPhone ())) == null)
                                 {
-                                    if (mainAccountService.newAccount (registerRequest , confirmedPhone , confirmCodeService))
+                                    boolean addedAccount = mainAccountService.newAccount (request , confirmedPhone , confirmCodeService);
+                                    if (addedAccount)
                                     {
-                                        answerToClient = AnswerToClient.OK ();
-                                        answerToClient.put (KeyAnswer.answer.name () , ValAnswer.recorded.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
                                         answerToClient.put (KeyAnswer.phone.name () , confirmedPhone.getPhone ());
-                                        submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , false);
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name ());
+                                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , false);
+                                        else r.n (mainAccount , type , false);
                                     }
                                     else
                                     {
                                         answerToClient = AnswerToClient.ServerError ();
-                                        answerToClient.put (KeyAnswer.answer.name () , ValAnswer.error_recorded.name ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                                        else r.n (mainAccount , type , true);
                                     }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
-                                    answerToClient.put (KeyAnswer.answer.name () , ValAnswer.phone_is_exists.name ());
-                                    submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , true);
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_is_exists.name ());
+                                    answerToClient.setReqRes (req , res);
+                                    l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_is_exists.name ()) , null);
+                                    if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                                    else r.n (mainAccount , type , true);
                                 }
                             }
                         }
                     }
-                    else
-                    {
-                        setError400 (ValAnswer.username.name () , ValAnswer.invalid.name ());
-                        submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , true);
-                    }
                 }
             }
+            else
+            {
+                answerToClient = AnswerToClient.RequestIsNull ();
+                answerToClient.setReqRes (req , res);
+                l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
+                else r.n (mainAccount , type , true);
+            }
         }
-        answerToClient.setResponse (res);
+        else answerToClient = cbsil.getAnswerToClient ();
+
         return answerToClient;
     }
 
-    private boolean checkExistsPhone (String phone)
+    private boolean isNull (RegisterRequest registerRequest)
     {
-        return mainAccountService.findPhone (phone) != null;
-    }
-
-    private ConfirmedPhone checkCodeConfirmedPhone (String code)
-    {
-        return confirmedPhoneService.getConfirmedPhoneIsActiveConfirmed (code);
-    }
-
-    private boolean isEmpty (String value)
-    {
-        return value == null || value.equals ("");
-    }
-
-    private boolean checkExists ()
-    {
-        FITD_Username fitd_username = new FITD_Username (registerRequest.getUsername () , usernamesService);
-        if (fitd_username.isFound ())
-        {
-            setError400 (ValAnswer.username.name () , ValAnswer.exists.name ());
-            return false;
-        }
-        return true;
-    }
-
-    private void setError400 (String what , String is)
-    {
-        answerToClient = AnswerToClient.error400 ();
-        answerToClient.put (KeyAnswer.answer.name () , String.format ("%s_is_%s" , what , is));
-        submitRequestService.newRequest (request.getRemoteAddr () , SubmitRequestType.register , true);
-    }
-
-    private boolean isNull ()
-    {
-        return (registerRequest.getFamily () == null || registerRequest.getName () == null || registerRequest.getUsername () == null);
+        return (Str.IsEmpty (registerRequest.getFamily ()) || Str.IsEmpty (registerRequest.getName ())
+                || Str.IsEmpty (registerRequest.getUsername ()));
     }
 
     private enum KeyAnswer
@@ -181,8 +179,8 @@ public class RestRegister
 
     private enum ValAnswer
     {
-        recorded, error_recorded,
-        request_is_null, phone, username, code_confirmed_phone, exists, invalid, empty, password, name, family, phone_is_exists
+        recorded, request_is_null, phone, username, code_confirmed_phone_invalid, code_confirmed_phone_is_empty,
+        password, name, family, phone_is_exists, username_invalid, username_used
     }
 
 }

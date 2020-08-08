@@ -43,14 +43,6 @@ public class TimeChatsGroup
     {
     }
 
-    public TimeChatsGroup (GroupChats groupChats , LocalDateTime timeSend , LocalDateTime timeDelivered , LocalDateTime timeRead)
-    {
-        this.groupChats = groupChats;
-        this.timeSend = timeSend;
-        this.timeDelivered = timeDelivered;
-        this.timeRead = timeRead;
-    }
-
     public int getId ()
     {
         return id;

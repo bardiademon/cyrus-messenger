@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePict
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmails;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.StatusFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserFriends.UserFriends;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserList;
@@ -19,6 +20,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -82,9 +84,11 @@ public class MainAccount
     @JsonIgnore
     private String password;
 
-    @Column (unique = true)
     @JsonIgnore
-    private String email;
+    @OneToOne (mappedBy = "mainAccount")
+    @Where (clause = "`deleted` = false and `confirmed` = true")
+    @JoinColumn (name = "id_email", referencedColumnName = "id")
+    private UserEmails email;
 
     @Column (name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
@@ -215,12 +219,12 @@ public class MainAccount
         this.password = password;
     }
 
-    public String getEmail ()
+    public UserEmails getEmail ()
     {
         return email;
     }
 
-    public void setEmail (String email)
+    public void setEmail (UserEmails email)
     {
         this.email = email;
     }

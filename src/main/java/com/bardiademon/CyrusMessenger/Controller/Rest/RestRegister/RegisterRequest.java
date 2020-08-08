@@ -17,15 +17,6 @@ public final class RegisterRequest
     {
     }
 
-    public RegisterRequest (String username , String name , String family , String password , String codeConfirmedPhone)
-    {
-        this.username = username;
-        this.name = name;
-        this.family = family;
-        this.password = password;
-        this.codeConfirmedPhone = codeConfirmedPhone;
-    }
-
     public String getUsername ()
     {
         return username;
