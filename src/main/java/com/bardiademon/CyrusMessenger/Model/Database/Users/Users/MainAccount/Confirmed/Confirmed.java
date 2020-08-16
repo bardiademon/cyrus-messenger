@@ -1,25 +1,33 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone;
+package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table (name = "confirmed_phone")
-public class ConfirmedPhone
+@Table (name = "user_confirmed")
+public final class Confirmed
 {
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
     private long id;
 
-    private String phone;
+    /**
+     * val =>  phone , email , ...
+     */
+    private String value;
 
     @OneToOne
     @JoinColumn (name = "id_confirm_code", referencedColumnName = "id")
@@ -29,7 +37,15 @@ public class ConfirmedPhone
 
     private boolean active = false;
 
-    public ConfirmedPhone ()
+    @Enumerated (EnumType.STRING)
+    @Column (name = "confirmed_for", nullable = false)
+    private ConfirmCodeFor confirmedFor;
+
+    @Column (name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public Confirmed ()
     {
     }
 
@@ -43,14 +59,14 @@ public class ConfirmedPhone
         this.id = id;
     }
 
-    public String getPhone ()
+    public String getValue ()
     {
-        return phone;
+        return value;
     }
 
-    public void setPhone (String phone)
+    public void setValue (String value)
     {
-        this.phone = phone;
+        this.value = value;
     }
 
     public ConfirmCode getConfirmCode ()
@@ -82,4 +98,25 @@ public class ConfirmedPhone
     {
         this.active = active;
     }
+
+    public ConfirmCodeFor getConfirmedFor ()
+    {
+        return confirmedFor;
+    }
+
+    public void setConfirmedFor (ConfirmCodeFor confirmedFor)
+    {
+        this.confirmedFor = confirmedFor;
+    }
+
+    public LocalDateTime getCreatedAt ()
+    {
+        return createdAt;
+    }
+
+    public void setCreatedAt (LocalDateTime createdAt)
+    {
+        this.createdAt = createdAt;
+    }
+
 }

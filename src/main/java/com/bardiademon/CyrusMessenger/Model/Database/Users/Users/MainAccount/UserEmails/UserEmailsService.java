@@ -11,4 +11,14 @@ public class UserEmailsService
     {
         this.Repository = Repository;
     }
+
+    public UserEmails findFor (EmailFor emailFor)
+    {
+        return Repository.findByEmailForAndDeletedFalseOrConfirmedFalse (emailFor);
+    }
+
+    public boolean find ()
+    {
+        return findFor (EmailFor.usp) != null || findFor (EmailFor.ma) != null;
+    }
 }

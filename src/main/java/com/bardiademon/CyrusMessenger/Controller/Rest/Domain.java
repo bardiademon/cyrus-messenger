@@ -177,6 +177,7 @@ public abstract class Domain
     {
         public static final String RN_MAIN = RN_MAIN_API + "/confirm";
         public static final String RN_CONFIRM_PHONE = RN_MAIN + "/phone";
+        public static final String RN_CONFIRM_EMAIL = RN_MAIN + "/email";
     }
 
     public abstract static class RNLogin

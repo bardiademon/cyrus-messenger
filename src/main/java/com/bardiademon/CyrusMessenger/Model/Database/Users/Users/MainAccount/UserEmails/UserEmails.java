@@ -5,6 +5,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -45,6 +47,10 @@ public final class UserEmails
 
     @Column (name = "confirmed_at", insertable = false)
     private LocalDateTime confirmedAt;
+
+    @Column (name = "email_for", nullable = false)
+    @Enumerated (EnumType.STRING)
+    private EmailFor emailFor;
 
     public UserEmails ()
     {
@@ -138,5 +144,15 @@ public final class UserEmails
     public void setConfirmedAt (LocalDateTime confirmedAt)
     {
         this.confirmedAt = confirmedAt;
+    }
+
+    public EmailFor getEmailFor ()
+    {
+        return emailFor;
+    }
+
+    public void setEmailFor (EmailFor emailFor)
+    {
+        this.emailFor = emailFor;
     }
 }

@@ -39,6 +39,16 @@ public final class r extends Thread implements Runnable
         start ();
     }
 
+    /**
+     * nim => New , IP OR MainAccount , if (mainAccount == null) using ip else using mainAccount ,
+     * nim > i=>ip , m=>mainAccount
+     */
+    public static void nim (String ip , MainAccount mainAccount , SubmitRequestType type , boolean active)
+    {
+        if (mainAccount == null) n (ip , type , active);
+        else n (mainAccount , type , active);
+    }
+
     public static void n (String ip , SubmitRequestType type , boolean active)
     {
         if (!Str.IsEmpty (ip) && type != null) new r (ip , type , active);

@@ -1,15 +1,15 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone;
+package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConfirmedPhoneService
+public class ConfirmedService
 {
-    public final ConfirmedPhoneRepository Repository;
+    public final ConfirmedRepository Repository;
 
     @Autowired
-    public ConfirmedPhoneService (ConfirmedPhoneRepository Repository)
+    public ConfirmedService (ConfirmedRepository Repository)
     {
         this.Repository = Repository;
     }
@@ -19,7 +19,7 @@ public class ConfirmedPhoneService
         return getConfirmedPhoneIsActiveConfirmed (code) != null;
     }
 
-    public ConfirmedPhone getConfirmedPhoneIsActiveConfirmed (String code)
+    public Confirmed getConfirmedPhoneIsActiveConfirmed (String code)
     {
         return Repository.findByCodeAndActiveTrueAndConfirmCodeConfirmedTrue (code);
     }

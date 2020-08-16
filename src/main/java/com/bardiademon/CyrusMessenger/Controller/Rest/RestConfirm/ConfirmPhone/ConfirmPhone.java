@@ -8,8 +8,8 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VPhone;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.SMS.SendSMS.SendSMSConfirmPhone;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
@@ -33,16 +33,16 @@ public class ConfirmPhone
     private String phone;
 
     private final ConfirmCodeService confirmCodeService;
-    private final ConfirmedPhoneService confirmedPhoneService;
+    private final ConfirmedService confirmedService;
     private final MainAccountService mainAccountService;
 
     private AnswerToClient answerToClient;
 
     @Autowired
-    public ConfirmPhone (ConfirmCodeService _ConfirmCodeService , ConfirmedPhoneService _ConfirmedPhoneService , MainAccountService _MainAccountService)
+    public ConfirmPhone (ConfirmCodeService _ConfirmCodeService , ConfirmedService _ConfirmedService , MainAccountService _MainAccountService)
     {
         this.confirmCodeService = _ConfirmCodeService;
-        this.confirmedPhoneService = _ConfirmedPhoneService;
+        this.confirmedService = _ConfirmedService;
         this.mainAccountService = _MainAccountService;
     }
 
@@ -74,7 +74,6 @@ public class ConfirmPhone
                     }
                     confirmCodeService.Repository.saveAll (lstFindCode);
                     answerToClient = AnswerToClient.ServerError ();
-                    answerToClient.put (CUK.system.name () , AnswerToClient.CUV.sorry_for_this_error.name ());
                     return answerToClient;
                 }
 
@@ -218,7 +217,7 @@ public class ConfirmPhone
     {
         new Thread (() -> Code.CreateCodeIsNotExists (Code.CreateCodeLong () , 10 , (code , last) ->
         {
-            if (confirmedPhoneService.hasCode (code))
+            if (confirmedService.hasCode (code))
             {
                 if (last)
                 {
@@ -252,7 +251,7 @@ public class ConfirmPhone
         }
         if (code != null)
         {
-            ConfirmedPhone oldConfirmed = confirmedPhoneService.Repository.findByPhoneAndActiveTrue (this.phone);
+            Confirmed oldConfirmed = confirmedService.Repository.findByValueAndActiveTrue (this.phone);
 
             if (oldConfirmed != null)
                 oldConfirmed.setActive (false);
@@ -261,15 +260,15 @@ public class ConfirmPhone
             confirmCode.setUsing (true);
             confirmCode.setTimeToConfirmed (LocalDateTime.now ());
 
-            ConfirmedPhone confirmedPhone = new ConfirmedPhone ();
-            confirmedPhone.setActive (true);
-            confirmedPhone.setConfirmCode (confirmCode);
-            confirmedPhone.setCode (code);
-            confirmedPhone.setPhone (this.phone);
+            Confirmed confirmed = new Confirmed ();
+            confirmed.setActive (true);
+            confirmed.setConfirmCode (confirmCode);
+            confirmed.setCode (code);
+            confirmed.setValue (this.phone);
 
             confirmCodeService.Repository.save (confirmCode);
-            if (oldConfirmed != null) confirmedPhoneService.Repository.save (oldConfirmed);
-            confirmedPhoneService.Repository.save (confirmedPhone);
+            if (oldConfirmed != null) confirmedService.Repository.save (oldConfirmed);
+            confirmedService.Repository.save (confirmed);
         }
     }
 

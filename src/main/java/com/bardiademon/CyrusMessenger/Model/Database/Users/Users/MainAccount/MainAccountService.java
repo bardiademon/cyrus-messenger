@@ -13,8 +13,9 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChat
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import static com.bardiademon.CyrusMessenger.bardiademon.Str.IsEmpty;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -30,7 +31,7 @@ public class MainAccountService
     public final SecurityUserChatRepository repositorySecurityChat;
     public final SecurityUserProfileRepository repositorySecurityProfile;
     public final ShowChatForService showChatForService;
-    private final ConfirmedPhoneService confirmedPhoneService;
+    private final ConfirmedService confirmedService;
     public final UsernamesService usernamesService;
 
     @Autowired
@@ -39,7 +40,7 @@ public class MainAccountService
              SecurityUserChatRepository RepositorySecurityChat ,
              SecurityUserProfileRepository RepositorySecurityProfile ,
              ShowChatForService _ShowChatForService ,
-             ConfirmedPhoneService _ConfirmedPhoneService ,
+             ConfirmedService _ConfirmedService ,
              UsernamesService _UsernamesService
             )
     {
@@ -47,17 +48,17 @@ public class MainAccountService
         this.repositorySecurityChat = RepositorySecurityChat;
         this.repositorySecurityProfile = RepositorySecurityProfile;
         this.showChatForService = _ShowChatForService;
-        this.confirmedPhoneService = _ConfirmedPhoneService;
+        this.confirmedService = _ConfirmedService;
         this.usernamesService = _UsernamesService;
     }
 
 
-    public boolean newAccount (RegisterRequest registerRequest , ConfirmedPhone confirmedPhone , ConfirmCodeService confirmCodeService)
+    public boolean newAccount (RegisterRequest registerRequest , Confirmed confirmed , ConfirmCodeService confirmCodeService)
     {
         MainAccount mainAccount = new MainAccount ();
         mainAccount.setName (registerRequest.getName ());
         mainAccount.setFamily (registerRequest.getFamily ());
-        mainAccount.setPhone (confirmedPhone.getPhone ());
+        mainAccount.setPhone (confirmed.getValue ());
 
         Usernames usernames = new Usernames ();
         usernames.setUsername (registerRequest.getUsername ());
@@ -86,7 +87,7 @@ public class MainAccountService
         showChatFor.setSecurityUserChat (newSecurityUserChat);
 
 
-        ConfirmCode confirmCode = confirmedPhone.getConfirmCode ();
+        ConfirmCode confirmCode = confirmed.getConfirmCode ();
         confirmCode.setMainAccount (mainAccount);
         confirmCodeService.Repository.save (confirmCode);
 
@@ -128,18 +129,18 @@ public class MainAccountService
 
         if (!IsEmpty (req.getCodeConfirmPhone ()))
         {
-            ConfirmedPhone confirmedPhone
-                    = confirmedPhoneService.getConfirmedPhoneIsActiveConfirmed (req.getCodeConfirmPhone ());
-            if (confirmedPhone != null)
+            Confirmed confirmed
+                    = confirmedService.getConfirmedPhoneIsActiveConfirmed (req.getCodeConfirmPhone ());
+            if (confirmed != null)
             {
                 String phone = mainAccount.getPhone ();
-                if (phone.equals (confirmedPhone.getPhone ()))
+                if (phone.equals (confirmed.getValue ()))
                     req.setMessage (RequestMIU.Message.duplicate_phone_number);
                 else
                 {
-                    confirmedPhoneService.Repository.deactivePhone (mainAccount.getPhone ());
+                    confirmedService.Repository.deactive (mainAccount.getPhone () , ConfirmedFor.phone);
 
-                    mainAccount.setPhone (confirmedPhone.getPhone ());
+                    mainAccount.setPhone (confirmed.getValue ());
                     req.setUpdatePhone ();
                 }
             }

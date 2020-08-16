@@ -189,6 +189,12 @@ public final class ToJson
             }
         }
 
+        @Override
+        public String toString ()
+        {
+            return toJson ();
+        }
+
         public static CreateClass OCLogin (String CLogin)
         {
             CreateClass createClass = new CreateClass ();

@@ -2,6 +2,10 @@ package com.bardiademon.CyrusMessenger.Controller.Rest;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
+import com.bardiademon.CyrusMessenger.Model.Database.Default.Default;
+import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
+import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
+import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultType;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroupService;
@@ -36,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test
 {
 
+    private final DefaultService defaultService;
     private final MainAccountService mainAccountService;
     private final SecurityUserProfileService securityUserProfileService;
     private final ShowChatForService showChatForService;
@@ -53,23 +58,25 @@ public class Test
 
     @Autowired
     public Test
-            (MainAccountService mainAccountService ,
-             SecurityUserProfileService securityUserProfileService ,
-             ShowChatForService showChatForService ,
-             UserContactsService userContactsService ,
-             UserBlockedService userBlockedService ,
-             SubmitRequestService submitRequestService ,
-             BlockedByTheSystemService blockedByTheSystemService ,
-             NumberOfSubmitRequestService numberOfSubmitRequestService ,
-             SecurityUserChatService securityUserChatService ,
-             FiredFromGroupService firedFromGroupService ,
-             GroupManagementService groupManagementService ,
-             GroupsService groupsService ,
-             UserSeparateProfilesService userSeparateProfilesService ,
-             EnumTypesService enumTypesService
+            (
+                    DefaultService defaultService ,
+                    MainAccountService mainAccountService ,
+                    SecurityUserProfileService securityUserProfileService ,
+                    ShowChatForService showChatForService ,
+                    UserContactsService userContactsService ,
+                    UserBlockedService userBlockedService ,
+                    SubmitRequestService submitRequestService ,
+                    BlockedByTheSystemService blockedByTheSystemService ,
+                    NumberOfSubmitRequestService numberOfSubmitRequestService ,
+                    SecurityUserChatService securityUserChatService ,
+                    FiredFromGroupService firedFromGroupService ,
+                    GroupManagementService groupManagementService ,
+                    GroupsService groupsService ,
+                    UserSeparateProfilesService userSeparateProfilesService ,
+                    EnumTypesService enumTypesService
             )
     {
-
+        this.defaultService = defaultService;
         this.mainAccountService = mainAccountService;
         this.securityUserProfileService = securityUserProfileService;
         this.showChatForService = showChatForService;
@@ -145,6 +152,41 @@ public class Test
     public List <IdEnTy> testFindUserSeparateProfiles (@PathVariable (value = "id_user") int id)
     {
         return userSeparateProfilesService.findIdType (id);
+    }
+
+    @RequestMapping (value = { "/get-default" , "/get-default/{key}" })
+    public String getDefault (@PathVariable (value = "key", required = false) String key)
+    {
+        if (key != null && !key.isEmpty ()) return defaultService.getString (DefaultKey.valueOf (key));
+        else return null;
+    }
+
+    @RequestMapping (value =
+            {
+                    "/set-default" ,
+                    "/set-default/{key}" ,
+                    "/set-default/{key}/{value}" ,
+                    "/set-default/{key}/{value}/{type}"
+            })
+    public Default setDefault (@PathVariable (value = "key", required = false) String key ,
+                               @PathVariable (value = "value", required = false) String value ,
+                               @PathVariable (value = "type", required = false) String type)
+    {
+        if (key != null && !key.isEmpty () && value != null && !value.isEmpty () && type != null && !type.isEmpty ())
+        {
+            DefaultType defaultType = DefaultType.to (type);
+            if (defaultType != null)
+            {
+                Default aDefault = new Default ();
+
+                aDefault.setKey (DefaultKey.valueOf (key));
+                aDefault.setValue (value);
+                aDefault.setTypeValue (defaultType);
+
+                return defaultService.Repository.save (aDefault);
+            }
+        }
+        return null;
     }
 
     public enum TestEnum

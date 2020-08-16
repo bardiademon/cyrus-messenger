@@ -6,8 +6,8 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhone;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.ConfirmedPhone.ConfirmedPhoneService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -32,7 +32,7 @@ public final class RestRegister
 {
 
     private final MainAccountService mainAccountService;
-    private final ConfirmedPhoneService confirmedPhoneService;
+    private final ConfirmedService confirmedService;
     private final ConfirmCodeService confirmCodeService;
     private final UsernamesService usernamesService;
     private final UserLoginService userLoginService;
@@ -43,13 +43,13 @@ public final class RestRegister
     @Autowired
     public RestRegister
             (MainAccountService _MainAccountService ,
-             ConfirmedPhoneService _ConfirmedPhoneService ,
+             ConfirmedService _ConfirmedService ,
              ConfirmCodeService _ConfirmCodeService ,
              UsernamesService _UsernamesService ,
              UserLoginService _UserLoginService)
     {
         this.mainAccountService = _MainAccountService;
-        this.confirmedPhoneService = _ConfirmedPhoneService;
+        this.confirmedService = _ConfirmedService;
         this.confirmCodeService = _ConfirmCodeService;
         this.usernamesService = _UsernamesService;
         this.userLoginService = _UserLoginService;
@@ -85,8 +85,8 @@ public final class RestRegister
                 }
                 else
                 {
-                    ConfirmedPhone confirmedPhone = confirmedPhoneService.getConfirmedPhoneIsActiveConfirmed (request.getCodeConfirmedPhone ());
-                    if (confirmedPhone == null)
+                    Confirmed confirmed = confirmedService.getConfirmedPhoneIsActiveConfirmed (request.getCodeConfirmedPhone ());
+                    if (confirmed == null)
                     {
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_phone_invalid.name ());
                         answerToClient.setReqRes (req , res);
@@ -117,14 +117,14 @@ public final class RestRegister
                             }
                             else
                             {
-                                MainAccount mainAccountCP = confirmedPhone.getConfirmCode ().getMainAccount ();
-                                if (mainAccountCP == null || mainAccountCP.isDeleted () || (mainAccountService.findPhone (confirmedPhone.getPhone ())) == null)
+                                MainAccount mainAccountCP = confirmed.getConfirmCode ().getMainAccount ();
+                                if (mainAccountCP == null || mainAccountCP.isDeleted () || (mainAccountService.findPhone (confirmed.getValue ())) == null)
                                 {
-                                    boolean addedAccount = mainAccountService.newAccount (request , confirmedPhone , confirmCodeService);
+                                    boolean addedAccount = mainAccountService.newAccount (request , confirmed , confirmCodeService);
                                     if (addedAccount)
                                     {
                                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
-                                        answerToClient.put (KeyAnswer.phone.name () , confirmedPhone.getPhone ());
+                                        answerToClient.put (KeyAnswer.phone.name () , confirmed.getValue ());
                                         answerToClient.setReqRes (req , res);
                                         l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name ());
                                         if (mainAccount == null) r.n (req.getRemoteAddr () , type , false);

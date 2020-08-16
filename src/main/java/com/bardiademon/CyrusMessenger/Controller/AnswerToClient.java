@@ -89,6 +89,7 @@ public class AnswerToClient
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);
         answerToClient.put (CUK.answer.name () , CUV.please_try_again.name ());
+        answerToClient.put (AnswerToClient.CUK.system.name () , AnswerToClient.CUV.sorry_for_this_error.name ());
         return answerToClient;
     }
 

@@ -28,6 +28,12 @@ public class ConfirmCode
     @JoinColumn (name = "id_user", referencedColumnName = "id")
     private MainAccount mainAccount;
 
+    /**
+     * baraye tqable haee ke rabti be mainaccount nadarad
+     */
+    @Column (name = "id2")
+    private long id2;
+
     @Column (nullable = false)
     private String code;
 
@@ -167,5 +173,15 @@ public class ConfirmCode
     public void setDeleted (boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public long getId2 ()
+    {
+        return id2;
+    }
+
+    public void setId2 (long id2)
+    {
+        this.id2 = id2;
     }
 }
