@@ -19,8 +19,8 @@ public final class r extends Thread implements Runnable
     }
 
     private String ip;
-    private SubmitRequestType type;
-    private boolean active;
+    private final SubmitRequestType type;
+    private final boolean active;
     private MainAccount mainAccount;
 
     private r (String ip , SubmitRequestType type , boolean active)

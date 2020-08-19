@@ -15,7 +15,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.Con
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.EmailFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmails;
@@ -161,8 +160,7 @@ public class MainAccountService
                     req.setMessage (RequestMIU.Message.duplicate_phone_number);
                 else
                 {
-                    confirmedService.Repository.deactive (mainAccount.getPhone () , ConfirmedFor.phone);
-
+                    confirmedService.deactive (mainAccount.getPhone () , ConfirmCodeFor.phone);
                     mainAccount.setPhone (confirmed.getValue ());
                     req.setUpdatePhone ();
                 }
@@ -180,6 +178,8 @@ public class MainAccountService
                     req.setMessage (RequestMIU.Message.email_previously_added);
                 else
                 {
+                    confirmedService.deactive (mainAccount.getEmail ().getEmail () , ConfirmCodeFor.email);
+
                     UserEmails userEmails = new UserEmails ();
                     userEmails.setMainAccount (mainAccount);
                     userEmails.setEmailFor (EmailFor.ma);

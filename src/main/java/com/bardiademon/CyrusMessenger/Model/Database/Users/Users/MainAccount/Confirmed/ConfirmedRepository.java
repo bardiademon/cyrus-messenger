@@ -20,6 +20,6 @@ public interface ConfirmedRepository extends JpaRepository <Confirmed, Long>
     @Transactional
     @Modifying
     @Query ("update Confirmed con set con.active = false where con.value = :VALUE and con.active = true and con.confirmedFor = :CONFIRMED_FOR")
-    void deactive (@Param ("VALUE") String phone , @Param ("CONFIRMED_FOR") ConfirmedFor confirmedFor);
+    void deactive (@Param ("VALUE") String value , @Param ("CONFIRMED_FOR") ConfirmCodeFor confirmedFor);
 
 }
