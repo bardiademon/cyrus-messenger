@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public final class RegisterRequest
 {
 
+    public final String EMAIL_NULL = "nl";
+
     private String username;
     private String name, family;
 
@@ -12,6 +14,13 @@ public final class RegisterRequest
 
     @JsonProperty ("code_confirmed_phone")
     private String codeConfirmedPhone;
+
+    /**
+     * nl => agar in bashad barasi nemishavad
+     * agar hata khali bashad yani darone darkhast ersal shode
+     */
+    @JsonProperty ("code_confirmed_email")
+    private String codeEmail = EMAIL_NULL;
 
     public RegisterRequest ()
     {
@@ -65,6 +74,16 @@ public final class RegisterRequest
     public void setCodeConfirmedPhone (String codeConfirmedPhone)
     {
         this.codeConfirmedPhone = codeConfirmedPhone;
+    }
+
+    public String getCodeEmail ()
+    {
+        return codeEmail;
+    }
+
+    public void setCodeEmail (String codeEmail)
+    {
+        this.codeEmail = codeEmail;
     }
 }
 

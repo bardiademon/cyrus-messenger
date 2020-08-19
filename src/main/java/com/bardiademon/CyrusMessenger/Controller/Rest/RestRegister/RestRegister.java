@@ -5,6 +5,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
@@ -64,7 +65,7 @@ public final class RestRegister
              HttpServletRequest req , HttpServletResponse res ,
              @RequestBody RegisterRequest request)
     {
-        AnswerToClient answerToClient;
+        AnswerToClient answerToClient = null;
 
         String strReq = ToJson.To (request);
 
@@ -80,72 +81,87 @@ public final class RestRegister
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_phone_is_empty.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_confirmed_phone_is_empty.name ()) , null);
-                    if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                    else r.n (mainAccount , type , true);
+                    r.nim (req.getRemoteAddr () , mainAccount , type , true);
                 }
                 else
                 {
-                    Confirmed confirmed = confirmedService.getConfirmedPhoneIsActiveConfirmed (request.getCodeConfirmedPhone ());
+                    Confirmed confirmed = confirmedService.getConfirmedIsActiveConfirmed (request.getCodeConfirmedPhone ());
                     if (confirmed == null)
                     {
                         answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_phone_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_confirmed_phone_invalid.name ()) , null);
-                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                        else r.n (mainAccount , type , true);
+                        r.nim (req.getRemoteAddr () , mainAccount , type , true);
                     }
                     else
                     {
-                        FITD_Username fitd_username = new FITD_Username (request.getUsername () , usernamesService);
-                        if (!fitd_username.isValid ())
+                        boolean okEmail = true;
+
+                        Confirmed confirmedEmail = null;
+
+                        if (request.getCodeEmail () != null && !request.getCodeEmail ().equals (request.EMAIL_NULL))
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
-                            answerToClient.setReqRes (req , res);
-                            l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
-                            if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                            else r.n (mainAccount , type , true);
-                        }
-                        else
-                        {
-                            if (fitd_username.isFound ())
+                            confirmedEmail = confirmedService.hasCodeFor (request.getCodeConfirmedPhone () , ConfirmCodeFor.email);
+                            if (confirmedEmail == null)
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_used.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_confirmed_email_invalid.name ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_used.name ()) , null);
-                                if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                                else r.n (mainAccount , type , true);
+                                l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_confirmed_email_invalid.name ()) , null);
+                                r.nim (req.getRemoteAddr () , mainAccount , type , true);
+                                okEmail = false;
+                            }
+                        }
+
+                        if (okEmail)
+                        {
+                            FITD_Username fitd_username = new FITD_Username (request.getUsername () , usernamesService);
+                            if (!fitd_username.isValid ())
+                            {
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+                                answerToClient.setReqRes (req , res);
+                                l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                                r.nim (req.getRemoteAddr () , mainAccount , type , true);
                             }
                             else
                             {
-                                MainAccount mainAccountCP = confirmed.getConfirmCode ().getMainAccount ();
-                                if (mainAccountCP == null || mainAccountCP.isDeleted () || (mainAccountService.findPhone (confirmed.getValue ())) == null)
+                                if (fitd_username.isFound ())
                                 {
-                                    boolean addedAccount = mainAccountService.newAccount (request , confirmed , confirmCodeService);
-                                    if (addedAccount)
-                                    {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
-                                        answerToClient.put (KeyAnswer.phone.name () , confirmed.getValue ());
-                                        answerToClient.setReqRes (req , res);
-                                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name ());
-                                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , false);
-                                        else r.n (mainAccount , type , false);
-                                    }
-                                    else
-                                    {
-                                        answerToClient = AnswerToClient.ServerError ();
-                                        answerToClient.setReqRes (req , res);
-                                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
-                                        if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                                        else r.n (mainAccount , type , true);
-                                    }
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_used.name ());
+                                    answerToClient.setReqRes (req , res);
+                                    l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_used.name ()) , null);
+                                    r.nim (req.getRemoteAddr () , mainAccount , type , true);
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_is_exists.name ());
-                                    answerToClient.setReqRes (req , res);
-                                    l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_is_exists.name ()) , null);
-                                    if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                                    else r.n (mainAccount , type , true);
+                                    MainAccount mainAccountCP = confirmed.getConfirmCode ().getMainAccount ();
+                                    if (mainAccountCP == null || mainAccountCP.isDeleted () || (mainAccountService.findPhone (confirmed.getValue ())) == null)
+                                    {
+                                        boolean addedAccount = mainAccountService.newAccount (request , confirmed , confirmedEmail , confirmCodeService);
+                                        if (addedAccount)
+                                        {
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
+                                            answerToClient.put (KeyAnswer.phone.name () , confirmed.getValue ());
+                                            if (confirmedEmail != null)
+                                                answerToClient.put (KeyAnswer.email.name () , confirmedEmail.getValue ());
+                                            answerToClient.setReqRes (req , res);
+                                            l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name ());
+                                            r.nim (req.getRemoteAddr () , mainAccount , type , false);
+                                        }
+                                        else
+                                        {
+                                            answerToClient = AnswerToClient.ServerError ();
+                                            answerToClient.setReqRes (req , res);
+                                            l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                            r.nim (req.getRemoteAddr () , mainAccount , type , true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_is_exists.name ());
+                                        answerToClient.setReqRes (req , res);
+                                        l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_is_exists.name ()) , null);
+                                        r.nim (req.getRemoteAddr () , mainAccount , type , true);
+                                    }
                                 }
                             }
                         }
@@ -157,8 +173,7 @@ public final class RestRegister
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
                 l.n (strReq , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
-                if (mainAccount == null) r.n (req.getRemoteAddr () , type , true);
-                else r.n (mainAccount , type , true);
+                r.nim (req.getRemoteAddr () , mainAccount , type , true);
             }
         }
         else answerToClient = cbsil.getAnswerToClient ();
@@ -174,12 +189,12 @@ public final class RestRegister
 
     private enum KeyAnswer
     {
-        answer, phone
+        phone, email
     }
 
     private enum ValAnswer
     {
-        recorded, request_is_null, phone, username, code_confirmed_phone_invalid, code_confirmed_phone_is_empty,
+        recorded, request_is_null, phone, username, code_confirmed_phone_invalid, code_confirmed_email_invalid, code_confirmed_phone_is_empty,
         password, name, family, phone_is_exists, username_invalid, username_used
     }
 

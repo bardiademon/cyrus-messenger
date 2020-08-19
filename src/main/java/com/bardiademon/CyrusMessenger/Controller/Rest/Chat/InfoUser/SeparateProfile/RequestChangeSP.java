@@ -18,11 +18,17 @@ public final class RequestChangeSP
     @JsonProperty ("family_null")
     private boolean familyNull;
 
+    @JsonProperty ("emailNull")
+    private boolean emailNull;
+
     @JsonProperty ("mylink_null")
     private boolean mylinkNull;
 
     @JsonProperty ("profile_for")
     private List <ETIdName> profileFor;
+
+    @JsonProperty ("email_confirmed_code")
+    private String emailConfirmedCode;
 
     public RequestChangeSP ()
     {
@@ -126,5 +132,25 @@ public final class RequestChangeSP
     public void setGender (String gender)
     {
         this.gender = gender;
+    }
+
+    public String getEmailConfirmedCode ()
+    {
+        return emailConfirmedCode;
+    }
+
+    public void setEmailConfirmedCode (String emailConfirmedCode)
+    {
+        this.emailConfirmedCode = emailConfirmedCode;
+    }
+
+    public boolean isEmailNull ()
+    {
+        return emailNull;
+    }
+
+    public void setEmailNull (boolean emailNull)
+    {
+        this.emailNull = emailNull;
     }
 }

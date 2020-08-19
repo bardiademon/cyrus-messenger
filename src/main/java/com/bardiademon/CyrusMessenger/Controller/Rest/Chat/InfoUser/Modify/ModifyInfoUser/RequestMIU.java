@@ -13,6 +13,9 @@ public final class RequestMIU
     @JsonProperty ("code_confirm_phone")
     private String codeConfirmPhone;
 
+    @JsonProperty ("code_confirm_email")
+    private String codeEmail;
+
     @JsonIgnore
     private List <String> message = null;
 
@@ -36,6 +39,9 @@ public final class RequestMIU
 
     @JsonIgnore
     private boolean updatePhone;
+
+    @JsonIgnore
+    private boolean updateEmail;
 
     public RequestMIU ()
     {
@@ -171,6 +177,16 @@ public final class RequestMIU
         this.updatePhone = true;
     }
 
+    public boolean isUpdateEmail ()
+    {
+        return updateEmail;
+    }
+
+    public void setUpdateEmail ()
+    {
+        this.updateEmail = true;
+    }
+
     public List <String> getMessage ()
     {
         return message;
@@ -182,8 +198,18 @@ public final class RequestMIU
         this.message.add (message.name ());
     }
 
+    public String getCodeEmail ()
+    {
+        return codeEmail;
+    }
+
+    public void setCodeEmail (String codeEmail)
+    {
+        this.codeEmail = codeEmail;
+    }
+
     public enum Message
     {
-        duplicate_phone_number
+        duplicate_phone_number, email_confirmed_code_invalid, email_previously_added
     }
 }

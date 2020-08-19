@@ -119,6 +119,7 @@ public final class ConfirmEmail
                                     {
                                         ConfirmCode confirmCode = lstFindCode.get (i);
                                         confirmCode.setDeleted (true);
+                                        confirmCode.setDeletedAt (LocalDateTime.now ());
                                         lstFindCode.set (i , confirmCode);
                                     }
                                     confirmCodeService.Repository.saveAll (lstFindCode);
@@ -134,7 +135,7 @@ public final class ConfirmEmail
                                     AtomicBoolean createCode = new AtomicBoolean (false);
                                     new Thread (() -> Code.CreateCodeIsNotExists (Code.GetCodeNumber () , 5 , (Code , Last) ->
                                     {
-                                        if (confirmedService.getConfirmedPhoneIsActiveConfirmed (Code) == null)
+                                        if (confirmedService.getConfirmedIsActiveConfirmed (Code) == null)
                                         {
                                             createCode.set (true);
                                             code.set (Code);
@@ -283,6 +284,7 @@ public final class ConfirmEmail
 
                                     ConfirmCode confirmCode = confirmed.getConfirmCode ();
                                     confirmCode.setDeleted (true);
+                                    confirmCode.setDeletedAt (LocalDateTime.now ());
                                     confirmCodeService.Repository.save (confirmCode);
 
                                     confirmedService.Repository.save (confirmed);

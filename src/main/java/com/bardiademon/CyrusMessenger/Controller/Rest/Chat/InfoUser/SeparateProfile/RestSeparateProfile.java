@@ -8,7 +8,13 @@ import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.ETIdName;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmails;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmailsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserGender;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.IdEnTy;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
@@ -45,15 +51,26 @@ public final class RestSeparateProfile
 
     private final UserLoginService userLoginService;
     private final UserSeparateProfilesService userSeparateProfilesService;
+    private final UserEmailsService userEmailsService;
+    private final ConfirmedService confirmedService;
+    private final ConfirmCodeService confirmedCodeService;
     private final EnumTypesService enumTypesService;
     private final TAOTL taotl;
 
     @Autowired
     public RestSeparateProfile
-            (UserLoginService _UserLoginService , UserSeparateProfilesService _UserSeparateProfilesService , EnumTypesService _EnumTypesService)
+            (UserLoginService _UserLoginService ,
+             UserSeparateProfilesService _UserSeparateProfilesService ,
+             UserEmailsService _UserEmailsService ,
+             ConfirmedService _ConfirmedService ,
+             ConfirmCodeService _ConfirmedCodeService ,
+             EnumTypesService _EnumTypesService)
     {
         this.userLoginService = _UserLoginService;
         this.userSeparateProfilesService = _UserSeparateProfilesService;
+        this.userEmailsService = _UserEmailsService;
+        this.confirmedService = _ConfirmedService;
+        this.confirmedCodeService = _ConfirmedCodeService;
         this.enumTypesService = _EnumTypesService;
 
         this.rRemove = Domain.RNChat.RNInfoUser.RNSeparateProfile.RN_SEPARATE_PROFILE_REMOVE;
@@ -281,6 +298,39 @@ public final class RestSeparateProfile
                     {
                         if (request.isFamilyNull ()) sep.setFamily ("");
                         else sep.setFamily (request.getFamily ());
+                    }
+
+                    if (!Str.IsEmpty (request.getEmailConfirmedCode ()) || request.isEmailNull ())
+                    {
+                        if (request.isEmailNull ())
+                        {
+                            UserEmails email = sep.getEmail ();
+                            email.setDeleted (true);
+                            email.setDeletedAt (LocalDateTime.now ());
+
+                            Confirmed confirmed = confirmedService.fromValue (email.getEmail ());
+                            if (confirmed != null)
+                            {
+                                confirmed.setActive (false);
+
+                                ConfirmCode confirmCode = confirmed.getConfirmCode ();
+                                confirmCode.setDeleted (true);
+                                confirmCode.setDeletedAt (LocalDateTime.now ());
+
+                                if (confirmCode.getMainAccount () != null)
+                                {
+                                    confirmCode.setId2 (mainAccount.getId ());
+                                    confirmCode.setMainAccount (null);
+                                }
+
+                                confirmedCodeService.Repository.save (confirmCode);
+                                confirmedService.Repository.save (confirmed);
+                                userEmailsService.Repository.save (email);
+
+                                sep.setEmail (null);
+
+                            }
+                        }
                     }
 
                     userSeparateProfilesService.Repository.save (sep);

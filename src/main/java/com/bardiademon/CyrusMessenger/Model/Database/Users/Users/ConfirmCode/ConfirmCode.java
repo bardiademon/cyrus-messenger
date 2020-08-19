@@ -29,7 +29,7 @@ public class ConfirmCode
     private MainAccount mainAccount;
 
     /**
-     * baraye tqable haee ke rabti be mainaccount nadarad
+     * baraye table haee ke rabti be mainaccount nadarad
      */
     @Column (name = "id2")
     private long id2;
@@ -58,6 +58,9 @@ public class ConfirmCode
     private boolean using = false;
 
     private boolean deleted;
+
+    @Column (name = "deleted_at", insertable = false)
+    private LocalDateTime deletedAt;
 
     private boolean confirmed;
 
@@ -183,5 +186,15 @@ public class ConfirmCode
     public void setId2 (long id2)
     {
         this.id2 = id2;
+    }
+
+    public LocalDateTime getDeletedAt ()
+    {
+        return deletedAt;
+    }
+
+    public void setDeletedAt (LocalDateTime deletedAt)
+    {
+        this.deletedAt = deletedAt;
     }
 }

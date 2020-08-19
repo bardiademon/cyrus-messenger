@@ -62,6 +62,7 @@ public final class ModifyInfoUser
                 if (IsEmpty (requestMIU.getGender ())
                         && IsEmpty (requestMIU.getBio ()) && IsEmpty (requestMIU.getFamily ())
                         && IsEmpty (requestMIU.getMylink ()) && IsEmpty (requestMIU.getName ())
+                        && IsEmpty (requestMIU.getCodeEmail ())
                         && IsEmpty (requestMIU.getCodeConfirmPhone ()))
                 {
                     answerToClient = AnswerToClient.RequestIsNull ();
@@ -99,6 +100,9 @@ public final class ModifyInfoUser
                         if (requestMIU.isUpdatePhone () || !IsEmpty (requestMIU.getCodeConfirmPhone ()))
                             answerToClient.put (KeyAnswer.phone.name () , true);
 
+                        if (requestMIU.isUpdateEmail () || !IsEmpty (requestMIU.getCodeConfirmPhone ()))
+                            answerToClient.put (KeyAnswer.email.name () , true);
+
                         if (requestMIU.getMessage () != null)
                             answerToClient.put (KeyAnswer.messages.name () , requestMIU.getMessage ());
 
@@ -128,7 +132,7 @@ public final class ModifyInfoUser
 
     private enum KeyAnswer
     {
-        bio, name, family, mylink, gender, phone, messages
+        bio, name, family, mylink, gender, phone, messages, email
     }
 
 

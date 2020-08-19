@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,6 +14,8 @@ public interface ConfirmedRepository extends JpaRepository <Confirmed, Long>
     Confirmed findByValueAndActiveTrue (String value);
 
     Confirmed findByCodeAndActiveTrueAndConfirmCodeConfirmedTrue (String code);
+
+    Confirmed findByCodeAndActiveTrueAndConfirmCodeConfirmedTrueAndConfirmedFor (String code , ConfirmCodeFor confirmedFor);
 
     @Transactional
     @Modifying

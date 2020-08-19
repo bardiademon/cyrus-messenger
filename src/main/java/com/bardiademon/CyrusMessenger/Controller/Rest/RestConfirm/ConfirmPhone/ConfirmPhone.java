@@ -265,6 +265,7 @@ public class ConfirmPhone
             confirmed.setConfirmCode (confirmCode);
             confirmed.setCode (code);
             confirmed.setValue (this.phone);
+            confirmed.setConfirmedFor (ConfirmCodeFor.phone);
 
             confirmCodeService.Repository.save (confirmCode);
             if (oldConfirmed != null) confirmedService.Repository.save (oldConfirmed);

@@ -12,10 +12,14 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCode;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.Confirmed;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed.ConfirmedService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.EmailFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmails;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserEmails.UserEmailsService;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import static com.bardiademon.CyrusMessenger.bardiademon.Str.IsEmpty;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -33,6 +37,7 @@ public class MainAccountService
     public final ShowChatForService showChatForService;
     private final ConfirmedService confirmedService;
     public final UsernamesService usernamesService;
+    private final UserEmailsService userEmailsService;
 
     @Autowired
     public MainAccountService
@@ -41,7 +46,8 @@ public class MainAccountService
              SecurityUserProfileRepository RepositorySecurityProfile ,
              ShowChatForService _ShowChatForService ,
              ConfirmedService _ConfirmedService ,
-             UsernamesService _UsernamesService
+             UsernamesService _UsernamesService ,
+             UserEmailsService _UserEmailsService
             )
     {
         this.Repository = Repository;
@@ -50,15 +56,16 @@ public class MainAccountService
         this.showChatForService = _ShowChatForService;
         this.confirmedService = _ConfirmedService;
         this.usernamesService = _UsernamesService;
+        this.userEmailsService = _UserEmailsService;
     }
 
 
-    public boolean newAccount (RegisterRequest registerRequest , Confirmed confirmed , ConfirmCodeService confirmCodeService)
+    public boolean newAccount (RegisterRequest registerRequest , Confirmed confirmedPhone , Confirmed confirmedEmail , ConfirmCodeService confirmCodeService)
     {
         MainAccount mainAccount = new MainAccount ();
         mainAccount.setName (registerRequest.getName ());
         mainAccount.setFamily (registerRequest.getFamily ());
-        mainAccount.setPhone (confirmed.getValue ());
+        mainAccount.setPhone (confirmedPhone.getValue ());
 
         Usernames usernames = new Usernames ();
         usernames.setUsername (registerRequest.getUsername ());
@@ -69,6 +76,21 @@ public class MainAccountService
         mainAccount.setPassword ((new Hash256 ()).hash (registerRequest.getPassword ()));
 
         MainAccount save = Repository.save (mainAccount);
+
+        if (confirmedEmail != null)
+        {
+            UserEmails userEmails = new UserEmails ();
+            userEmails.setConfirmed (true);
+            userEmails.setConfirmedAt (confirmedEmail.getConfirmCode ().getTimeToConfirmed ());
+            userEmails.setEmail (confirmedEmail.getValue ());
+            userEmails.setEmailFor (EmailFor.ma);
+            userEmails.setMainAccount (save);
+
+            userEmails = userEmailsService.Repository.save (userEmails);
+            save.setEmail (userEmails);
+
+            Repository.save (save);
+        }
 
         usernames.setMainAccount (save);
         usernamesService.Repository.save (usernames);
@@ -87,9 +109,10 @@ public class MainAccountService
         showChatFor.setSecurityUserChat (newSecurityUserChat);
 
 
-        ConfirmCode confirmCode = confirmed.getConfirmCode ();
+        ConfirmCode confirmCode = confirmedPhone.getConfirmCode ();
         confirmCode.setMainAccount (mainAccount);
         confirmCodeService.Repository.save (confirmCode);
+
 
         return mainAccount.getId () > 0;
 
@@ -130,7 +153,7 @@ public class MainAccountService
         if (!IsEmpty (req.getCodeConfirmPhone ()))
         {
             Confirmed confirmed
-                    = confirmedService.getConfirmedPhoneIsActiveConfirmed (req.getCodeConfirmPhone ());
+                    = confirmedService.getConfirmedIsActiveConfirmed (req.getCodeConfirmPhone ());
             if (confirmed != null)
             {
                 String phone = mainAccount.getPhone ();
@@ -145,8 +168,38 @@ public class MainAccountService
                 }
             }
         }
+        mainAccount = Repository.save (mainAccount);
 
-        Repository.save (mainAccount);
+        if (!IsEmpty (req.getCodeEmail ()))
+        {
+            Confirmed confirmedEmail
+                    = confirmedService.hasCodeFor (req.getCodeEmail () , ConfirmCodeFor.email);
+            if (confirmedEmail != null)
+            {
+                if (confirmedEmail.getValue ().equals (mainAccount.getEmail ().getEmail ()))
+                    req.setMessage (RequestMIU.Message.email_previously_added);
+                else
+                {
+                    UserEmails userEmails = new UserEmails ();
+                    userEmails.setMainAccount (mainAccount);
+                    userEmails.setEmailFor (EmailFor.ma);
+                    userEmails.setConfirmed (true);
+                    userEmails.setConfirmedAt (confirmedEmail.getConfirmCode ().getTimeToConfirmed ());
+                    userEmails.setEmail (confirmedEmail.getValue ());
+
+                    userEmails = userEmailsService.Repository.save (userEmails);
+
+                    mainAccount.setEmail (userEmails);
+
+                    Repository.save (mainAccount);
+
+                    req.setUpdateEmail ();
+                }
+            }
+            else
+                req.setMessage (RequestMIU.Message.email_confirmed_code_invalid);
+        }
+
         return req;
     }
 

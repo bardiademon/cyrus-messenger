@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Confirmed;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.ConfirmCode.ConfirmCodeFor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,21 @@ public class ConfirmedService
 
     public boolean hasCode (String code)
     {
-        return getConfirmedPhoneIsActiveConfirmed (code) != null;
+        return getConfirmedIsActiveConfirmed (code) != null;
     }
 
-    public Confirmed getConfirmedPhoneIsActiveConfirmed (String code)
+    public Confirmed getConfirmedIsActiveConfirmed (String code)
     {
         return Repository.findByCodeAndActiveTrueAndConfirmCodeConfirmedTrue (code);
+    }
+
+    public Confirmed hasCodeFor (String code , ConfirmCodeFor confirmCodeFor)
+    {
+        return Repository.findByCodeAndActiveTrueAndConfirmCodeConfirmedTrueAndConfirmedFor (code , confirmCodeFor);
+    }
+
+    public Confirmed fromValue (String value)
+    {
+        return Repository.findByValueAndActiveTrue (value);
     }
 }
