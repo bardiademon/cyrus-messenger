@@ -15,8 +15,8 @@ public final class IsLogin
     private VCodeLogin vCodeLogin;
 
     private boolean valid;
-    private String codeLogin;
-    private UserLoginRepository userLoginRepository;
+    private final String codeLogin;
+    private final UserLoginRepository userLoginRepository;
 
     public IsLogin (String CodeLogin)
     {
