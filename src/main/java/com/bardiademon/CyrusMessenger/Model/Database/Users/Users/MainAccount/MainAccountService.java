@@ -36,7 +36,7 @@ public class MainAccountService
     public final ShowChatForService showChatForService;
     private final ConfirmedService confirmedService;
     public final UsernamesService usernamesService;
-    private final UserEmailsService userEmailsService;
+    public final UserEmailsService userEmailsService;
 
     @Autowired
     public MainAccountService
@@ -225,19 +225,9 @@ public class MainAccountService
         return Repository.findByPhoneAndDeletedFalseAndSystemBlockFalseAndActiveTrue (phone);
     }
 
-    public MainAccount findEmail (String email)
-    {
-        return Repository.findByEmailAndDeletedFalseAndSystemBlockFalseAndActiveTrue (email);
-    }
-
     public MainAccount findPhone (String phone , String password)
     {
         return Repository.findByPhoneAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (phone , password);
-    }
-
-    public MainAccount findEmail (String email , String password)
-    {
-        return Repository.findByEmailAndPasswordAndDeletedFalseAndSystemBlockFalseAndActiveTrue (email , password);
     }
 
     public MainAccount findValidById (long id)

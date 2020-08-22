@@ -164,7 +164,7 @@ public class AnswerToClient
 
     private void setStatusCode ()
     {
-        response.setStatus (getStatusCode ());
+        if (response != null) response.setStatus (getStatusCode ());
     }
 
     public void put (String key , Object value)

@@ -1,14 +1,9 @@
 package com.bardiademon.CyrusMessenger.ServerSocket;
 
-import org.springframework.context.ConfigurableApplicationContext;
-
 public class Server
 {
-    private final ConfigurableApplicationContext Context;
-
-    private Server (ConfigurableApplicationContext Context)
+    private Server ()
     {
-        this.Context = Context;
         runTestConnection ();
     }
 
@@ -17,9 +12,8 @@ public class Server
         SIServer.CreateTestConnection ();
     }
 
-
-    public static void Run (ConfigurableApplicationContext Context)
+    public static void Run ()
     {
-        new Server (Context);
+        new Server ();
     }
 }

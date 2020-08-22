@@ -78,7 +78,7 @@ public final class CBSIL
             }
         }
         l.n (Request , Router , null , null , Thread.currentThread ().getStackTrace () , null , ValAnswer.ok.name ());
-        r.n (Req.getRemoteAddr () , Type , false);
+        if (Req != null) r.n (Req.getRemoteAddr () , Type , false);
         return new CBSIL (null , null , null , true);
     }
 
@@ -120,7 +120,7 @@ public final class CBSIL
                 _AnswerToClient = _IsLogin.getAnswerToClient ();
                 _AnswerToClient.setReqRes (Req , Res);
                 l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_login.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
-                r.n (Req.getRemoteAddr () , type , true);
+                if (Req != null) r.n (Req.getRemoteAddr () , type , true);
             }
         }
         else
