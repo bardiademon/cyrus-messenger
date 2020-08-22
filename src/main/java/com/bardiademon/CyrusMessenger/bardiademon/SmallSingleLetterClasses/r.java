@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses;
 
-import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -15,7 +15,7 @@ public final class r extends Thread implements Runnable
     // ns => new service
     public static void ns ()
     {
-        Service = CyrusMessengerApplication.Context ().getBean (SubmitRequestService.class);
+        Service = ThisApp.Context ().getBean (SubmitRequestService.class);
     }
 
     private String ip;

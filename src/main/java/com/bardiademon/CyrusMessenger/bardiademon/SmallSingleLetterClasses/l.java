@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.Log;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.LogService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -27,7 +27,7 @@ public final class l extends Thread implements Runnable
     // ns => new Service
     public static void ns ()
     {
-        Service = CyrusMessengerApplication.Context ().getBean (LogService.class);
+        Service = ThisApp.Context ().getBean (LogService.class);
     }
 
     private l (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)
@@ -66,6 +66,12 @@ public final class l extends Thread implements Runnable
         new l (Request , Route , _MainAccount , _AnswerToClient , StackTrace , E , Description);
     }
 
+    // n => new
+    public static void n (String Request , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)
+    {
+        new l (Request , null , _MainAccount , _AnswerToClient , StackTrace , E , Description);
+    }
+
     // n => new , r r => request
     public static void n (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description , SubmitRequestType _TypeRequest , boolean active)
     {
@@ -86,7 +92,8 @@ public final class l extends Thread implements Runnable
             String json;
             if (_AnswerToClient.getRequest () != null)
             {
-                log.setIp (_AnswerToClient.getRequest ().getRemoteAddr ());
+                if (_AnswerToClient.getRequest () != null)
+                    log.setIp (_AnswerToClient.getRequest ().getRemoteAddr ());
                 try
                 {
                     json = ToJson.RequestToJson (_AnswerToClient.getRequest ());
