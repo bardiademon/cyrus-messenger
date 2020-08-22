@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class CyrusMessengerApplication
+public class ThisApp
 {
     private static final Services SERVICES = new Services ();
 
@@ -17,12 +17,12 @@ public class CyrusMessengerApplication
 
     public static void main (String[] args)
     {
-        Context = SpringApplication.run (CyrusMessengerApplication.class , args);
+        Context = SpringApplication.run (ThisApp.class , args);
 
         l.ns ();
         r.ns ();
 
-        Server.Run (Context);
+        Server.Run ();
     }
 
     public static ConfigurableApplicationContext Context ()

@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel;
 
-import static com.bardiademon.CyrusMessenger.CyrusMessengerApplication.Context;
+import static com.bardiademon.CyrusMessenger.ThisApp.Context;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;

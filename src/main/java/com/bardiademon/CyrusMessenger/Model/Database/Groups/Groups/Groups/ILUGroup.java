@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.CyrusMessengerApplication;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
@@ -21,12 +21,12 @@ public class ILUGroup
 
     public ILUGroup ()
     {
-        this (CyrusMessengerApplication.Context ().getBean (GroupsService.class) , CyrusMessengerApplication.Context ().getBean (UsernamesService.class));
+        this (ThisApp.Context ().getBean (GroupsService.class) , ThisApp.Context ().getBean (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService)
     {
-        this (_GroupsService , CyrusMessengerApplication.Context ().getBean (UsernamesService.class));
+        this (_GroupsService , ThisApp.Context ().getBean (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService , UsernamesService _UsernamesService)
