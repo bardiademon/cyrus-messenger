@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface UserEmailsRepository extends JpaRepository <UserEmails, Long>
 {
     UserEmails findByEmailForAndDeletedFalseOrConfirmedFalse (EmailFor emailFor);
+
+    UserEmails findByEmailForAndEmailAndDeletedFalseOrConfirmedFalse (EmailFor emailFor , String email);
 }

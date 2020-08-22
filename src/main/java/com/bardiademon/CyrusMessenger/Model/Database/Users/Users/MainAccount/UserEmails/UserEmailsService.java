@@ -17,6 +17,11 @@ public class UserEmailsService
         return Repository.findByEmailForAndDeletedFalseOrConfirmedFalse (emailFor);
     }
 
+    public UserEmails find (String email , EmailFor emailFor)
+    {
+        return Repository.findByEmailForAndEmailAndDeletedFalseOrConfirmedFalse (emailFor , email);
+    }
+
     public boolean find ()
     {
         return findFor (EmailFor.usp) != null || findFor (EmailFor.ma) != null;
