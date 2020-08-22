@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger;
 
+import com.bardiademon.CyrusMessenger.ServerSocket.Server;
+import com.bardiademon.CyrusMessenger.ServerSocket.Services;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class CyrusMessengerApplication
 {
+    private static final Services SERVICES = new Services ();
 
     public static ConfigurableApplicationContext Context;
 
@@ -19,11 +22,18 @@ public class CyrusMessengerApplication
         l.ns ();
         r.ns ();
 
-     //   Server.Run (Context);
+        Server.Run (Context);
     }
 
     public static ConfigurableApplicationContext Context ()
     {
         return Context;
+    }
+
+
+    // S => Services
+    public static Services S ()
+    {
+        return SERVICES;
     }
 }
