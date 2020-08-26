@@ -199,7 +199,7 @@ public class AnswerToClient
     public enum CUV
     {
         sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error,
-        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added
+        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added,ok
     }
 
     @JsonIgnore

@@ -43,6 +43,12 @@ public final class l extends Thread implements Runnable
     }
 
     // n => new
+    public static void n (StackTraceElement[] StackTrace , Exception E)
+    {
+        n (null , null , null , null , StackTrace , E , null);
+    }
+
+    // n => new
     public static void n (StackTraceElement[] StackTrace , Exception E , String Description)
     {
         n (null , null , null , null , StackTrace , E , Description);

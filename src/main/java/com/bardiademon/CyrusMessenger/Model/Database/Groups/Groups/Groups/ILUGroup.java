@@ -14,7 +14,7 @@ public class ILUGroup
     private String link;
     private String username;
     private final GroupsService groupsService;
-    private UsernamesService usernamesService;
+    private final UsernamesService usernamesService;
 
     @Nullable
     private Groups group;

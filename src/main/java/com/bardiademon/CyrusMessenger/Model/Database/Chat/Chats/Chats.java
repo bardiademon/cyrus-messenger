@@ -14,7 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -28,6 +28,7 @@ public final class Chats
     @Column (nullable = false, unique = true)
     private long id;
 
+    @Column (name = "chat_text", length = 999999)
     private String text;
 
     @OneToMany (mappedBy = "chats")
@@ -38,21 +39,21 @@ public final class Chats
     private ChatFor chatFor;
 
     @OneToOne
-    @Column (name = "chat_from", nullable = false)
+    @JoinColumn (name = "chat_from", referencedColumnName = "id", nullable = false)
     private MainAccount from;
 
 
     // if private chat else is null
-    @OneToOne
-    @Column (name = "chat_to_user")
+    @ManyToOne
+    @JoinColumn (name = "chat_to_user", referencedColumnName = "id")
     private MainAccount toUser;
 
     // if group chat else is null
-    @OneToOne
-    @Column (name = "chat_to_group")
+    @ManyToOne
+    @JoinColumn (name = "chat_to_group", referencedColumnName = "id")
     private Groups toGroup;
 
-    private boolean delete;
+    private boolean deleted;
 
     @Column (name = "deleted_at", insertable = false)
     private LocalDateTime deletedAt;
@@ -61,18 +62,17 @@ public final class Chats
     private boolean deletedBoth;
 
     @OneToOne
-    @Column (name = "deleted_by")
+    @JoinColumn (name = "deleted_by", referencedColumnName = "id")
     private MainAccount deletedBy;
 
     @OneToMany (mappedBy = "chats")
-    @JoinTable (joinColumns = @JoinColumn (name = "id_chat_read", referencedColumnName = "id"))
     private List <ChatRead> chatRead;
 
-    @OneToMany
+    @OneToMany (mappedBy = "tChats")
     private List <ChatFiles> filesChats;
 
     @OneToOne
-    @JoinColumn (name = "reply", referencedColumnName = "id")
+    @JoinColumn (name = "reply_chat", referencedColumnName = "id")
     private Chats reply;
 
     public Chats ()
@@ -149,14 +149,14 @@ public final class Chats
         this.toGroup = toGroup;
     }
 
-    public boolean isDelete ()
+    public boolean isDeleted ()
     {
-        return delete;
+        return deleted;
     }
 
-    public void setDelete (boolean delete)
+    public void setDeleted (boolean deleted)
     {
-        this.delete = delete;
+        this.deleted = deleted;
     }
 
     public LocalDateTime getDeletedAt ()

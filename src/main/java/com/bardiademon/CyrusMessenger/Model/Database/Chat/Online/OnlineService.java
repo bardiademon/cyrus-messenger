@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Online;
+package com.bardiademon.CyrusMessenger.Model.Database.Chat.Online;
 
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,19 @@ public final class OnlineService
     public void setOffline (Online online)
     {
         online.setOfflineAt (LocalDateTime.now ());
+        Repository.disableLast (online.getMainAccount ().getId () , LocalDateTime.now ());
+
+        online.setLast (true);
+        online.setOfflineAt (LocalDateTime.now ());
         online.getClient ().disconnect ();
         Repository.save (online);
+    }
+
+    public LocalDateTime lastSeen (long idUser)
+    {
+        Online online = Repository.findByMainAccountIdAndLastTrue (idUser);
+        if (online != null)
+            return online.getOfflineAt ();
+        else return null;
     }
 }

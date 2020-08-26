@@ -3,8 +3,8 @@ package com.bardiademon.CyrusMessenger.ServerSocket;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Online.Online;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Online.OnlineService;
+import com.bardiademon.CyrusMessenger.Model.Database.Chat.Online.Online;
+import com.bardiademon.CyrusMessenger.Model.Database.Chat.Online.OnlineService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.ThisApp;
@@ -28,11 +28,7 @@ public final class FirstRequest
     {
         this.codeLogin = CodeLogin;
         this.client = Client;
-
-        System.out.println (client.getRemoteAddress ().toString ());
-
         request = ToJson.CreateClass.nj ("code_login" , codeLogin);
-
         online ();
     }
 
@@ -72,7 +68,7 @@ public final class FirstRequest
 
     private void checkOnline (String username)
     {
-        SIServer.Offline ((online , index) ->
+        SIServer.LoopOnline ((codeOnline , online) ->
         {
             if (online.getMainAccount ().getUsername ().getUsername ().equals (username))
             {
@@ -80,7 +76,7 @@ public final class FirstRequest
                 if (onlineService != null)
                 {
                     onlineService.setOffline (online);
-                    SIServer.Onlines.remove (index);
+                    SIServer.Onlines.remove (codeOnline);
                 }
                 return false;
             }

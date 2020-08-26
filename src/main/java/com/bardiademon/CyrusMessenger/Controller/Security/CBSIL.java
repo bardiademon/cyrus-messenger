@@ -8,6 +8,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.CheckBlo
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -90,6 +91,11 @@ public final class CBSIL
     public static IsLogin isLogin (String CodeLogin , UserLoginService _UserLoginService)
     {
         return new IsLogin (CodeLogin , _UserLoginService.Repository);
+    }
+
+    public static CBSIL Both (Object request , String CodeLogin , String Router)
+    {
+        return Both (request , null , null , CodeLogin , (UserLoginService) ThisApp.S ().getService (UserLoginService.class) , Router , SubmitRequestType.socket);
     }
 
     public static CBSIL Both

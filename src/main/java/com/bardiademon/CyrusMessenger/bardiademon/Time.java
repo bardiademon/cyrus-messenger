@@ -26,6 +26,12 @@ public abstract class Time
         return time.format (DateTimeFormatter.ofPattern ("HH:mm:ss"));
     }
 
+    public static Timestamp timestamp (LocalDateTime time)
+    {
+        if (time == null) return null;
+        else return Timestamp.valueOf (time);
+    }
+
     public static boolean BiggerNow (LocalDateTime dateTime)
     {
         return ((Timestamp.valueOf (LocalDateTime.now ())).getTime () > (Timestamp.valueOf (dateTime)).getTime ());

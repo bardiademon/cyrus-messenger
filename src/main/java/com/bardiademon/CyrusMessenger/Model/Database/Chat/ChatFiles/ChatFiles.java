@@ -21,13 +21,15 @@ public final class ChatFiles
 
     private String name;
 
+    @Column (name = "size_file")
     private long size;
 
+    @Column (name = "type_file")
     private ChatFilesTypes types;
 
     @ManyToOne
     @JoinColumn (name = "id_chat", referencedColumnName = "id")
-    private Chats chats;
+    private Chats tChats;
 
     @Column (name = "uploaded_at", updatable = false, nullable = false)
     @CreationTimestamp
@@ -84,12 +86,12 @@ public final class ChatFiles
 
     public Chats getChats ()
     {
-        return chats;
+        return tChats;
     }
 
     public void setChats (Chats chats)
     {
-        this.chats = chats;
+        this.tChats = chats;
     }
 
     public LocalDateTime getUploadedAt ()

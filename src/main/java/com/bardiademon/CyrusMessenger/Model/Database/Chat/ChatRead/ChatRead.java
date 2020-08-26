@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -32,12 +33,14 @@ public final class ChatRead
     @CreationTimestamp
     private LocalDateTime receivedAt;
 
+    @Column (name = "is_read")
     private boolean read;
 
+    @Column (name = "is_received")
     private boolean received;
 
-    @ManyToOne
-    @Column (name = "read_by", updatable = false, nullable = false)
+    @OneToOne
+    @JoinColumn (name = "read_by", referencedColumnName = "id", nullable = false)
     private MainAccount readBy;
 
     public ChatRead ()

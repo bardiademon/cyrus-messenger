@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Online;
+package com.bardiademon.CyrusMessenger.Model.Database.Chat.Online;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -29,9 +29,10 @@ public final class Online
     @CreationTimestamp
     private LocalDateTime onlineAt;
 
-    @Column (name = "offline_at", nullable = false, insertable = false)
+    @Column (name = "offline_at", nullable = false, updatable = false)
     private LocalDateTime offlineAt;
 
+    @Column (name = "client_uuid", length = 10000)
     private String uuid;
 
     @Transient
@@ -39,6 +40,9 @@ public final class Online
 
     @Transient
     private LocalDateTime announcementOfPresence;
+
+    @Column (name = "is_last")
+    private boolean last;
 
     public Online ()
     {
@@ -112,5 +116,15 @@ public final class Online
     public void setAnnouncementOfPresence (LocalDateTime announcementOfPresence)
     {
         this.announcementOfPresence = announcementOfPresence;
+    }
+
+    public boolean isLast ()
+    {
+        return last;
+    }
+
+    public void setLast (boolean last)
+    {
+        this.last = last;
     }
 }
