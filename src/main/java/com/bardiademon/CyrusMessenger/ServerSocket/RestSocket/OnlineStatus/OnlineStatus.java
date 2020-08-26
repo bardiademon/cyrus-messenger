@@ -17,6 +17,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class OnlineStatus
 {
@@ -62,12 +63,20 @@ public final class OnlineStatus
                     {
                         if (accessLevel.hasAccess (Which.last_seen))
                         {
-                            if (SIServer.Onlines.containsKey (request.getCodeOnline ()) && SIServer.Onlines.get (request.getCodeOnline ()).getMainAccount ().getUsername ().getUsername ().equals (fitd_username.getMainAccount ().getUsername ().getUsername ()))
+                            AtomicBoolean ok = new AtomicBoolean (false);
+                            SIServer.LoopOnline ((codeOnline , online) ->
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.online.name ());
-                                l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.online.name ());
-                            }
-                            else
+                                if (online.getMainAccount ().getUsername ().getUsername ().equals (fitd_username.getMainAccount ().getUsername ().getUsername ()))
+                                {
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.online.name ());
+                                    l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.online.name ());
+                                    ok.set (true);
+                                    return false;
+                                }
+                                else return true;
+                            });
+
+                            if (!ok.get ())
                             {
                                 OnlineService onlineService = (OnlineService) ThisApp.S ().getService (OnlineService.class);
                                 LocalDateTime lastSeen = onlineService.lastSeen (fitd_username.getMainAccount ().getId ());

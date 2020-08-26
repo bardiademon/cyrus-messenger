@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.Controller;
 
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;

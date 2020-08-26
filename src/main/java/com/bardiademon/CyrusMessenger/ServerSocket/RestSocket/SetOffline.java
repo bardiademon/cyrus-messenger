@@ -20,9 +20,11 @@ public class SetOffline
 
     private AnswerToClient answer;
 
+    private Online online;
+
     private boolean disconnect = false;
 
-    public SetOffline (SocketIOClient Client , PublicRequest Request)
+    public SetOffline (final SocketIOClient Client , final PublicRequest Request)
     {
         this.client = Client;
         this.request = Request;
@@ -42,14 +44,14 @@ public class SetOffline
 
                 if (SIServer.Onlines.containsKey (request.getCodeOnline ()))
                 {
-                    Online online = SIServer.Onlines.get (request.getCodeOnline ());
+                    online = SIServer.Onlines.get (request.getCodeOnline ());
                     SIServer.Onlines.remove (request.getCodeOnline ());
 
                     final OnlineService service = (OnlineService) ThisApp.S ().getService (OnlineService.class);
 
                     service.setOffline (online);
 
-                    answer = AnswerToClient.KeyAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
                     l.n (ToJson.To (request) , EventName.firstr_set_offline.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.ok.name ());
 
                     disconnect = true;
@@ -71,8 +73,20 @@ public class SetOffline
 
     private void sendToClient ()
     {
-        client.sendEvent (EventName.e_firstr_set_offline.name () , ToJson.To (answer));
-        if (disconnect) client.disconnect ();
+        System.out.println (answer.toString ());
+        client.sendEvent (EventName.e_firstr_set_offline.name () , answer.toString ());
+        try
+        {
+            Thread.sleep (1000);
+        }
+        catch (InterruptedException ignored)
+        {
+        }
+        if (!disconnect)
+        {
+            client.disconnect ();
+            online.getClient ().disconnect ();
+        }
     }
 
     private enum ValAnswer
