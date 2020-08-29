@@ -2,8 +2,8 @@ package com.bardiademon.CyrusMessenger.ServerSocket;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.Model.Database.Chat.Online.Online;
-import com.bardiademon.CyrusMessenger.Model.Database.Chat.Online.OnlineService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.OnlineService;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.OnlineStatus.OnlineStatus;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.OnlineStatus.RequestOnlineStatus;
@@ -30,16 +30,18 @@ public final class SIServer
 
     public static final Map <String, Online> Onlines = new LinkedHashMap <> ();
 
-    private static SIServer onlineServer;
-
     private static OnlineService onlineService;
 
     public SIServer (final int Port , Client _Client)
     {
         Server = (create (Port));
         Server.addConnectListener (_Client::Connect);
-        Server.start ();
         System.out.println ("Server Start Port " + Port);
+    }
+
+    public void startServer ()
+    {
+        Server.start ();
     }
 
     private SocketIOServer create (int port)
@@ -50,12 +52,9 @@ public final class SIServer
         return new SocketIOServer (configuration);
     }
 
-    public static void CreateTestConnection ()
+    public static void CreateFirstConnection (SocketIOServer Server)
     {
-        onlineServer = new SIServer (HostPort.PORT_TEST_CONNECTION , Client ->
-                System.out.println (FirstRequest.class.getName () + " > " + Client.getSessionId ()));
-
-        onlineServer.Server.addEventListener (EventName.firstr.name () , String.class , (client , data , ackSender) ->
+        Server.addEventListener (EventName.firstr.name () , String.class , (client , data , ackSender) ->
         {
             FirstRequest firstRequest = new FirstRequest (data , client);
 
@@ -96,8 +95,8 @@ public final class SIServer
             }
         } , 1000 , 1000);
 
-        OnlineStatus ();
-        SetOffline ();
+        OnlineStatus (Server);
+        SetOffline (Server);
     }
 
     private static String SetOnline (Online online)
@@ -152,15 +151,15 @@ public final class SIServer
             if (!loopOnline.doing (entry.getKey () , entry.getValue ())) break;
     }
 
-    public static void OnlineStatus ()
+    private static void OnlineStatus (SocketIOServer Server)
     {
-        onlineServer.Server.addEventListener (EventName.firstr_status_online.name () , RequestOnlineStatus.class , (client , data , ackSender) ->
+        Server.addEventListener (EventName.firstr_status_online.name () , RequestOnlineStatus.class , (client , data , ackSender) ->
                 new OnlineStatus (client , data));
     }
 
-    public static void SetOffline ()
+    public static void SetOffline (SocketIOServer Server)
     {
-        onlineServer.Server.addEventListener (EventName.firstr_set_offline.name () , PublicRequest.class , (client , data , ackSender) ->
+        Server.addEventListener (EventName.set_offline.name () , PublicRequest.class , (client , data , ackSender) ->
                 new SetOffline (client , data));
     }
 

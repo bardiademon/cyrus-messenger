@@ -7,11 +7,11 @@ import com.bardiademon.CyrusMessenger.bardiademon.ID;
 public final class IsJoined
 {
     private JoinGroup joined;
-    private MainAccount mainAccount;
-    private ID idGroup;
-    private JoinGroupService joinGroupService;
+    private final MainAccount mainAccount;
+    private final ID idGroup;
+    private final JoinGroupService joinGroupService;
 
-    public IsJoined (JoinGroupService _JoinGroupService , MainAccount _MainAccount , ID IdGroup)
+    public IsJoined (final JoinGroupService _JoinGroupService , final MainAccount _MainAccount , final ID IdGroup)
     {
         this.joinGroupService = _JoinGroupService;
         this.mainAccount = _MainAccount;

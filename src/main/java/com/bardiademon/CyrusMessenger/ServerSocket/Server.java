@@ -1,15 +1,24 @@
 package com.bardiademon.CyrusMessenger.ServerSocket;
 
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.PrivateGap;
+
 public class Server
 {
     private Server ()
     {
-        runTestConnection ();
+        firstConnection ();
+        privateGap ();
     }
 
-    private void runTestConnection ()
+    private void firstConnection ()
     {
-        SIServer.CreateTestConnection ();
+        SIServer.CreateFirstConnection (new SIServer (HostPort.PORT_TEST_CONNECTION , Client ->
+                System.out.println (FirstRequest.class.getName () + " > " + Client.getSessionId ())).Server);
+    }
+
+    private void privateGap ()
+    {
+        new PrivateGap ();
     }
 
     public static void Run ()

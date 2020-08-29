@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGap;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,7 +23,7 @@ public class ShowChatFor
 
     @OneToOne
     @JoinColumn (name = "id_security_chat", referencedColumnName = "id")
-    private SecurityUserChat securityUserChat;
+    private SecurityUserGap securityUserGap;
 
     @Column (name = "show_just")
     protected String showJust;
@@ -35,9 +35,9 @@ public class ShowChatFor
     {
     }
 
-    public ShowChatFor (SecurityUserChat securityUserChat , String showJust , String showJustFriends , String showAllExcept)
+    public ShowChatFor (SecurityUserGap securityUserGap , String showJust , String showJustFriends , String showAllExcept)
     {
-        this.securityUserChat = securityUserChat;
+        this.securityUserGap = securityUserGap;
         this.showJust = showJust;
         this.showAllExcept = showAllExcept;
     }
@@ -57,14 +57,14 @@ public class ShowChatFor
         this.id = id;
     }
 
-    public SecurityUserChat getSecurityUserChat ()
+    public SecurityUserGap getSecurityUserChat ()
     {
-        return securityUserChat;
+        return securityUserGap;
     }
 
-    public void setSecurityUserChat (SecurityUserChat securityUserChat)
+    public void setSecurityUserChat (SecurityUserGap securityUserGap)
     {
-        this.securityUserChat = securityUserChat;
+        this.securityUserGap = securityUserGap;
     }
 
     public String getShowJust ()

@@ -1,12 +1,12 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount;
 
-import com.bardiademon.CyrusMessenger.Controller.Rest.Chat.InfoUser.Modify.ModifyInfoUser.RequestMIU;
+import com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Modify.ModifyInfoUser.RequestMIU;
 import com.bardiademon.CyrusMessenger.Controller.Rest.RestRegister.RegisterRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernameFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChat;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatRepository;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGap;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGapRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatFor;
@@ -31,7 +31,7 @@ public class MainAccountService
 {
 
     public final MainAccountRepository Repository;
-    public final SecurityUserChatRepository repositorySecurityChat;
+    public final SecurityUserGapRepository repositorySecurityChat;
     public final SecurityUserProfileRepository repositorySecurityProfile;
     public final ShowChatForService showChatForService;
     private final ConfirmedService confirmedService;
@@ -41,7 +41,7 @@ public class MainAccountService
     @Autowired
     public MainAccountService
             (MainAccountRepository Repository ,
-             SecurityUserChatRepository RepositorySecurityChat ,
+             SecurityUserGapRepository RepositorySecurityChat ,
              SecurityUserProfileRepository RepositorySecurityProfile ,
              ShowChatForService _ShowChatForService ,
              ConfirmedService _ConfirmedService ,
@@ -97,15 +97,15 @@ public class MainAccountService
         SecurityUserProfile securityUserProfile = new SecurityUserProfile ();
         securityUserProfile.setMainAccount (save);
 
-        SecurityUserChat securityUserChat = new SecurityUserChat ();
-        securityUserChat.setCanSendNumberOfMessageUnread (0);
-        securityUserChat.setMainAccount (save);
+        SecurityUserGap securityUserGap = new SecurityUserGap ();
+        securityUserGap.setCanSendNumberOfMessageUnread (0);
+        securityUserGap.setMainAccount (save);
 
         repositorySecurityProfile.save (securityUserProfile);
-        SecurityUserChat newSecurityUserChat = repositorySecurityChat.save (securityUserChat);
+        SecurityUserGap newSecurityUserGap = repositorySecurityChat.save (securityUserGap);
 
         ShowChatFor showChatFor = new ShowChatFor ();
-        showChatFor.setSecurityUserChat (newSecurityUserChat);
+        showChatFor.setSecurityUserChat (newSecurityUserGap);
 
 
         ConfirmCode confirmCode = confirmedPhone.getConfirmCode ();

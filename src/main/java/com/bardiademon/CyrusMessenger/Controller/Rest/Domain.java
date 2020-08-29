@@ -10,13 +10,13 @@ public abstract class Domain
 
     public static final String DOMAIN_API = MAIN_DOMAIN + RN_MAIN_API;
 
-    public static abstract class RNChat
+    public static abstract class RNGap
     {
-        public static final String RN_MAIN_CHAT = Domain.RN_MAIN_API + "/chat";
+        public static final String RN_MAIN_GAP = Domain.RN_MAIN_API + "/gap";
 
         public static abstract class RNProfilePicture
         {
-            private static final String RN_PROFILE_PICTURES = RN_MAIN_CHAT + "/profile_pictures";
+            private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile_pictures";
 
             private static final String RN_PROFILE_PICTURES_USER = RN_PROFILE_PICTURES + "/user";
             public static final String RN_PROFILE_PICTURES_UPLOAD_USER = RN_PROFILE_PICTURES_USER + "/upload";
@@ -39,7 +39,7 @@ public abstract class Domain
 
         public static abstract class RNInfoUser
         {
-            public static final String RN_MAIN_INFO_USER = RN_MAIN_CHAT + "/info_user";
+            public static final String RN_MAIN_INFO_USER = RN_MAIN_GAP + "/info_user";
             public static final String RN_MAIN = RN_MAIN_INFO_USER + "/get";
             public static final String RN_GENERAL = RN_MAIN + "/general";
 
@@ -139,7 +139,7 @@ public abstract class Domain
 
         public static abstract class RNOtherUsers
         {
-            public static final String RN_MAIN = RN_MAIN_CHAT + "/info_user/other_users/";
+            public static final String RN_MAIN = RN_MAIN_GAP + "/info_user/other_users/";
             public static final String RN_GENERAL = RN_MAIN + "/general";
             public static final String RN_SHOW_PROFILE = RN_GENERAL + "/show_profile";
             public static final String RN_GET_INFO_PROFILE = RN_GENERAL + "/info_profile";
@@ -148,7 +148,7 @@ public abstract class Domain
         public static abstract class RNGroups
         {
 
-            public static final String RN_GROUPS = RN_MAIN_CHAT + "/groups";
+            public static final String RN_GROUPS = RN_MAIN_GAP + "/groups";
             public static final String RN_CREATE_GROUP = RN_GROUPS + "/create_group";
             public static final String RN_FIND_GROUPS = RN_GROUPS + "/find_group";
             public static final String RN_JOIN_GROUP = RN_GROUPS + "/join";

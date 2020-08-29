@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel;
 
-import static com.bardiademon.CyrusMessenger.ThisApp.Context;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
@@ -20,6 +19,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import java.util.List;
 import java.util.Objects;
 
@@ -332,14 +332,14 @@ public final class UserProfileAccessLevel
 
         public Service ()
         {
-            this.mainAccountService = Context ().getBean (MainAccountService.class);
-            this.enumTypesService = Context ().getBean (EnumTypesService.class);
-            this.userListService = Context ().getBean (UserListService.class);
-            this.userFriendsService = Context ().getBean (UserFriendsService.class);
-            this.userContactsService = Context ().getBean (UserContactsService.class);
-            this.userSeparateProfilesService = Context ().getBean (UserSeparateProfilesService.class);
-            this.userBlockedService = Context ().getBean (UserBlockedService.class);
-            this.profilePicturesService = Context ().getBean (ProfilePicturesService.class);
+            this.mainAccountService = (MainAccountService) ThisApp.S ().getService (MainAccountService.class);
+            this.enumTypesService = (EnumTypesService) ThisApp.S ().getService (EnumTypesService.class);
+            this.userListService = (UserListService) ThisApp.S ().getService (UserListService.class);
+            this.userFriendsService = (UserFriendsService) ThisApp.S ().getService (UserFriendsService.class);
+            this.userContactsService = (UserContactsService) ThisApp.S ().getService (UserContactsService.class);
+            this.userSeparateProfilesService = (UserSeparateProfilesService) ThisApp.S ().getService (UserSeparateProfilesService.class);
+            this.userBlockedService = (UserBlockedService) ThisApp.S ().getService (UserBlockedService.class);
+            this.profilePicturesService = (ProfilePicturesService) ThisApp.S ().getService (ProfilePicturesService.class);
         }
     }
 

@@ -14,7 +14,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequest;
 import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.NumberOfSubmitRequestService;
-import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserChat.SecurityUserChatService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGapService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
@@ -49,7 +49,7 @@ public class Test
     private final SubmitRequestService submitRequestService;
     private final BlockedByTheSystemService blockedByTheSystemService;
     private final NumberOfSubmitRequestService numberOfSubmitRequestService;
-    private final SecurityUserChatService securityUserChatService;
+    private final SecurityUserGapService securityUserGapService;
     private final FiredFromGroupService firedFromGroupService;
     private final GroupManagementService groupManagementService;
     private final GroupsService groupsService;
@@ -68,7 +68,7 @@ public class Test
                     SubmitRequestService submitRequestService ,
                     BlockedByTheSystemService blockedByTheSystemService ,
                     NumberOfSubmitRequestService numberOfSubmitRequestService ,
-                    SecurityUserChatService securityUserChatService ,
+                    SecurityUserGapService securityUserGapService ,
                     FiredFromGroupService firedFromGroupService ,
                     GroupManagementService groupManagementService ,
                     GroupsService groupsService ,
@@ -85,7 +85,7 @@ public class Test
         this.submitRequestService = submitRequestService;
         this.blockedByTheSystemService = blockedByTheSystemService;
         this.numberOfSubmitRequestService = numberOfSubmitRequestService;
-        this.securityUserChatService = securityUserChatService;
+        this.securityUserGapService = securityUserGapService;
         this.firedFromGroupService = firedFromGroupService;
         this.groupManagementService = groupManagementService;
         this.groupsService = groupsService;

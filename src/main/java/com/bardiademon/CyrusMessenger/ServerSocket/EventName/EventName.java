@@ -10,8 +10,11 @@ public enum EventName
     // event_name => request
     // e_event_name => answer to client
 
-    firstr_set_offline, e_firstr_set_offline,
+    set_offline, e_set_offline,
 
     // answer
-    firstr_last_seen
+    firstr_last_seen,
+
+    // pvgp
+    pvgp_send_message, pvgp_receive_message
 }

@@ -4,14 +4,17 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public abstract class Time
+public final class Time
 {
+    private Time ()
+    {
+    }
+
     private static final int MIN_TIMESTAMP = 60000;
 
     public static String toString (LocalDateTime time)
     {
-        if (time == null) return null;
-        return time.format (DateTimeFormatter.ofPattern ("yyyy-MM-dd HH:mm:ss"));
+        return toString (time , "yyyy-MM-dd HH:mm:ss");
     }
 
     public static String toString (LocalDateTime time , String format)
@@ -22,8 +25,7 @@ public abstract class Time
 
     public static String getTime (LocalDateTime time)
     {
-        if (time == null) return null;
-        return time.format (DateTimeFormatter.ofPattern ("HH:mm:ss"));
+        return toString (time , "HH:mm:ss");
     }
 
     public static Timestamp timestamp (LocalDateTime time)

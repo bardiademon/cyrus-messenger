@@ -33,11 +33,11 @@ public final class Str
         }
     }
 
-    public static boolean isNumber (Object str)
+    public static boolean isNumber (Object obj)
     {
-        if (str instanceof Integer || str instanceof Long || str instanceof Short || str instanceof Double || str instanceof Float)
+        if (obj instanceof Integer || obj instanceof Long || obj instanceof Short || obj instanceof Double || obj instanceof Float)
             return true;
-        else return (String.valueOf (str)).matches ("[0-9]*");
+        else return (String.valueOf (obj)).matches ("[0-9]*");
     }
 
     public static boolean RealBool (String str)
