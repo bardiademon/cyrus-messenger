@@ -203,6 +203,11 @@ public class MainAccountService
         return req;
     }
 
+    public MainAccount byUsername (String username)
+    {
+        return Repository.findByUsernameUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
+    }
+
     public boolean hasEmail (long id)
     {
         return (Repository.findByIdAndEmailNotNullAndDeletedFalseAndSystemBlockFalseAndActiveTrue (id) != null);
@@ -210,7 +215,7 @@ public class MainAccountService
 
     public long toId (String username)
     {
-        MainAccount byUsername = Repository.findByUsernameUsernameAndDeletedFalseAndSystemBlockFalseAndActiveTrue (username);
+        MainAccount byUsername = byUsername (username);
         if (byUsername == null) return 0;
         else return byUsername.getId ();
     }

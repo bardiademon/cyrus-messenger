@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 public class Logout
 {
-    private UserLoginRepository userLoginRepository;
-    private String codeLogin;
+    private final UserLoginRepository userLoginRepository;
+    private final String codeLogin;
 
     public Logout (UserLoginRepository _UserLoginRepository , String CodeLogin)
     {

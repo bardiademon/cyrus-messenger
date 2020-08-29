@@ -6,5 +6,9 @@ public enum Which
     phone, email, username, bio,
     id, mylink, personal_information,
     name, family, in_search, in_group,
-    in_channel, profile, list_friends, find_me_by_phone, find_me, gender
+    in_channel, profile, list_friends, find_me_by_phone, find_me, gender,
+
+    // gap
+    // s => send
+    s_message, s_sticker, s_emoji, s_gif, s_file, s_image, s_link, s_voice, s_invitation,
 }

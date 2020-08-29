@@ -1,6 +1,8 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.BlockedByTheSystem.BlockedByTheSystemService;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.Default;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
@@ -17,6 +19,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.NumberOfSubmitRequest.Numbe
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGapService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.SecurityUserProfileService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.ShowChatFor.ShowChatForService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlockedService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContactsService;
@@ -187,6 +190,18 @@ public class Test
             }
         }
         return null;
+    }
+
+    @RequestMapping (value = "/sec-user-gap")
+    public String testSecUserGap ()
+    {
+        MainAccount applicant = mainAccountService.byUsername ("bardiademon");
+        MainAccount user = mainAccountService.byUsername ("system");
+
+        UserGapAccessLevel accessLevel = new UserGapAccessLevel (applicant , user);
+
+        return String.valueOf (accessLevel.hasAccess (Which.s_message));
+
     }
 
     public enum TestEnum

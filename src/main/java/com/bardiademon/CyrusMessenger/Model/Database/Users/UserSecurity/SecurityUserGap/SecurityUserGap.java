@@ -70,6 +70,9 @@ public class SecurityUserGap
     @Column (name = "can_send_invitation")
     private AccessLevel canSendInvitation = AccessLevel.all;
 
+    @Column (name = "can_anonymous_send_message")
+    private boolean canAnonymousSendMessage = true;
+
     @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -216,5 +219,15 @@ public class SecurityUserGap
     public void setUpdatedAt (LocalDateTime updatedAt)
     {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isCanAnonymousSendMessage ()
+    {
+        return canAnonymousSendMessage;
+    }
+
+    public void setCanAnonymousSendMessage (boolean canAnonymousSendMessage)
+    {
+        this.canAnonymousSendMessage = canAnonymousSendMessage;
     }
 }

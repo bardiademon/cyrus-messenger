@@ -23,15 +23,15 @@ import com.bardiademon.CyrusMessenger.ThisApp;
 import java.util.List;
 import java.util.Objects;
 
-public final class UserProfileAccessLevel
+public class UserProfileAccessLevel
 {
     public final static Service _Service = new Service ();
-    private MainAccount applicant;
-    private MainAccount user;
-    private Which which;
+    protected MainAccount applicant;
+    protected MainAccount user;
+    protected Which which;
 
-    private String desEnumTypes;
-    private String userBlockedType;
+    protected String desEnumTypes;
+    protected String userBlockedType;
 
     private UserSeparateProfiles separateProfile;
     private List <ProfilePictures> profilePictures;
@@ -59,9 +59,9 @@ public final class UserProfileAccessLevel
         this.applicant = applicant;
     }
 
-    public boolean hasAccess (Which _Which)
+    public boolean hasAccess (Which which)
     {
-        this.which = _Which;
+        this.which = which;
 
         if (this.applicant.getId () == this.user.getId ())
             return true;
@@ -72,7 +72,7 @@ public final class UserProfileAccessLevel
         return (securityUser != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUser.isShowProfileForAnonymous ()));
     }
 
-    private boolean isBlock ()
+    protected boolean isBlock ()
     {
         if (_Service.userBlockedService.isBlocked (user.getId () , applicant.getId () , UserBlocked.Type.valueOf (userBlockedType)) == null)
         {
@@ -83,18 +83,17 @@ public final class UserProfileAccessLevel
         else return true;
     }
 
-    private boolean hasAccess (AccessLevel accessLevel , boolean showProfileForAnonymous)
+    protected boolean hasAccess (AccessLevel accessLevel , boolean showForAnonymous)
     {
         assert desEnumTypes != null;
 
         isAnonymous = isAnonymous ();
 
-        if (isAnonymous && !showProfileForAnonymous) return false;
+        if (isAnonymous && !showForAnonymous) return false;
 
         if (accessLevel.equals (AccessLevel.all)) return true;
         else
         {
-
             UserList userList = _Service.userListService.getUserList (user.getId () , applicant.getId ());
             if (accessLevel.equals (AccessLevel.all_except))
             {
@@ -157,7 +156,7 @@ public final class UserProfileAccessLevel
         }
     }
 
-    private boolean checkEnumTypesCheck (List <EnumTypes> enumTypes)
+    protected boolean checkEnumTypesCheck (List <EnumTypes> enumTypes)
     {
         String strEnumType;
         for (EnumTypes enumType : enumTypes)
@@ -208,14 +207,14 @@ public final class UserProfileAccessLevel
         return null;
     }
 
-    private boolean hasInList (UserListType type)
+    protected boolean hasInList (UserListType type)
     {
         UserList userList = _Service.userListService.Repository
                 .findByMainAccountIdAndUserIdAndTypeAndDeletedFalse (user.getId () , applicant.getId () , type);
         return userList != null;
     }
 
-    private boolean isAnonymous ()
+    protected boolean isAnonymous ()
     {
         return (!hasInList (UserListType.family) &&
                 !hasInList (UserListType.trustworthy) &&
@@ -302,7 +301,7 @@ public final class UserProfileAccessLevel
                 return securityUser.getListFriends ();
             case seen_message:
                 desEnumTypes = DesEnumTypes.show_seen_message.name ();
-                userBlockedType = UserBlocked.Type.cns_send_message.name ();
+                userBlockedType = UserBlocked.Type.cns_seed_message.name ();
                 return securityUser.getShowSeenMessage ();
             case personal_information:
                 desEnumTypes = DesEnumTypes.show_personal_information.name ();

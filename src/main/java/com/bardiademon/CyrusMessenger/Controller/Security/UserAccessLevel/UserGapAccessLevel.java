@@ -1,5 +1,98 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel;
 
-public final class UserGapAccessLevel
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.AccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGap;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGapService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.DesEnumTypes;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
+import com.bardiademon.CyrusMessenger.ThisApp;
+
+public final class UserGapAccessLevel extends UserProfileAccessLevel
 {
+    public final static Service _Service = new Service ();
+
+//    public UserGapAccessLevel (MainAccount Applicant)
+//    {
+//        super (Applicant);
+//    }
+
+    public UserGapAccessLevel (MainAccount Applicant , MainAccount User)
+    {
+        super (Applicant , User);
+    }
+
+    public boolean hasAccess (Which which)
+    {
+        if (this.applicant.getId () == this.user.getId ())
+            return true;
+
+        if (super.hasAccess (Which.find_me))
+        {
+            super.which = which;
+
+            final SecurityUserGap securityUserGap = _Service._SecurityUserGapService.Repository.findByMainAccount (user);
+            final AccessLevel accessLevel = getAccessLevel (securityUserGap);
+
+            return (securityUserGap != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUserGap.isCanAnonymousSendMessage ()));
+        }
+        else return false;
+    }
+
+    private AccessLevel getAccessLevel (SecurityUserGap securityUserGap)
+    {
+        switch (super.which)
+        {
+            case s_message:
+                super.userBlockedType = UserBlocked.Type.cns_send_message.name ();
+                super.desEnumTypes = DesEnumTypes.sug_send_message.name ();
+                return securityUserGap.getCanSendMessage ();
+            case s_sticker:
+                super.userBlockedType = UserBlocked.Type.cns_sticker.name ();
+                super.desEnumTypes = DesEnumTypes.sug_sticker.name ();
+                return securityUserGap.getCanSendSticker ();
+            case s_emoji:
+                super.userBlockedType = UserBlocked.Type.cns_emoji.name ();
+                super.desEnumTypes = DesEnumTypes.sug_emoji.name ();
+                return securityUserGap.getCanSendEmoji ();
+            case s_gif:
+                super.userBlockedType = UserBlocked.Type.cns_gif.name ();
+                super.desEnumTypes = DesEnumTypes.sug_gif.name ();
+                return securityUserGap.getCanSendGif ();
+            case s_file:
+                super.userBlockedType = UserBlocked.Type.cns_file.name ();
+                super.desEnumTypes = DesEnumTypes.sug_file.name ();
+                return securityUserGap.getCanSendFile ();
+            case s_image:
+                super.userBlockedType = UserBlocked.Type.cns_image.name ();
+                super.desEnumTypes = DesEnumTypes.sug_image.name ();
+                return securityUserGap.getCanSendImage ();
+            case s_link:
+                super.userBlockedType = UserBlocked.Type.cns_link.name ();
+                super.desEnumTypes = DesEnumTypes.sug_link.name ();
+                return securityUserGap.getCanSendLink ();
+            case s_voice:
+                super.userBlockedType = UserBlocked.Type.cns_voice.name ();
+                super.desEnumTypes = DesEnumTypes.sug_voice.name ();
+                return securityUserGap.getCanSendVoice ();
+            case s_invitation:
+                super.userBlockedType = UserBlocked.Type.cns_invitation.name ();
+                super.desEnumTypes = DesEnumTypes.sug_invitation.name ();
+                return securityUserGap.getCanSendInvitation ();
+            default:
+                desEnumTypes = null;
+                userBlockedType = null;
+                return null;
+        }
+    }
+
+    public static class Service
+    {
+        public final SecurityUserGapService _SecurityUserGapService;
+
+        public Service ()
+        {
+            this._SecurityUserGapService = ThisApp.Context ().getBean (SecurityUserGapService.class);
+        }
+    }
 }
