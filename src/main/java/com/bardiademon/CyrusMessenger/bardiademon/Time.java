@@ -34,6 +34,21 @@ public final class Time
         else return Timestamp.valueOf (time);
     }
 
+    public static Timestamp timestamp (long time)
+    {
+        return new Timestamp (time);
+    }
+
+    public static LocalDateTime localDateTime (long time)
+    {
+        return toLocalDateTime (timestamp (time));
+    }
+
+    public static LocalDateTime toLocalDateTime (Timestamp timestamp)
+    {
+        return timestamp.toLocalDateTime ();
+    }
+
     public static boolean BiggerNow (LocalDateTime dateTime)
     {
         return ((Timestamp.valueOf (LocalDateTime.now ())).getTime () > (Timestamp.valueOf (dateTime)).getTime ());

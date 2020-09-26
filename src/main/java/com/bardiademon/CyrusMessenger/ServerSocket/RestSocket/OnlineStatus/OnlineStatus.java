@@ -43,11 +43,11 @@ public final class OnlineStatus
         if (request == null || Str.IsEmpty (request.getUsername ()) || Str.IsEmpty (request.getCodeLogin ()))
         {
             answer = AnswerToClient.RequestIsNull ();
-            l.n (strReq , EventName.firstr_status_online.name () , null , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+            l.n (strReq , EventName.last_seen.name () , null , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
         }
         else
         {
-            CBSIL both = CBSIL.Both (strReq , request.getCodeLogin () , EventName.firstr_status_online.name ());
+            CBSIL both = CBSIL.Both (strReq , request.getCodeLogin () , EventName.last_seen.name ());
             if (both.isOk ())
             {
                 assert both.getIsLogin () != null;
@@ -69,7 +69,7 @@ public final class OnlineStatus
                                 if (online.getMainAccount ().getUsername ().getUsername ().equals (fitd_username.getMainAccount ().getUsername ().getUsername ()))
                                 {
                                     answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.online.name ());
-                                    l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.online.name ());
+                                    l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.online.name ());
                                     ok.set (true);
                                     return false;
                                 }
@@ -85,32 +85,32 @@ public final class OnlineStatus
                                     answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
                                     answer.put (KeyAnswer.last_seen.name () , Time.toString (lastSeen));
                                     answer.put (KeyAnswer.timestamp.name () , Time.timestamp (lastSeen).getTime ());
-                                    l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name ());
+                                    l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name ());
                                 }
                                 else
                                 {
                                     answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.do_not_know.name ());
-                                    l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.do_not_know.name ());
+                                    l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.do_not_know.name ());
                                 }
                             }
                         }
                         else
                         {
                             answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.do_not_know.name ());
-                            l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.do_not_know.name ());
+                            l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.do_not_know.name ());
                         }
                     }
                     else
                     {
                         // chon age gheire faal bashe namaesh profile va peyda kardan pas nabayad begam hamchin useri vojod dare
                         answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
-                        l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null);
+                        l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null);
                     }
                 }
                 else
                 {
                     answer = fitd_username.getAnswer ();
-                    l.n (strReq , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
+                    l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
                 }
 
 
@@ -123,8 +123,8 @@ public final class OnlineStatus
     {
         if (client != null)
         {
-            client.sendEvent (EventName.firstr_last_seen.name () , ToJson.To (answer));
-            l.n (ToJson.To (request) , EventName.firstr_status_online.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , null);
+            client.sendEvent (EventName.e_last_seen.name () , ToJson.To (answer));
+            l.n (ToJson.To (request) , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , null);
         }
     }
 

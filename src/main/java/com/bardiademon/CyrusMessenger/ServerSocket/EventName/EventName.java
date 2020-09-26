@@ -4,17 +4,26 @@ public enum EventName
 {
     // firstr => first request
 
-    // request
-    firstr, firstr_answer, firstr_status_online,
-
     // event_name => request
     // e_event_name => answer to client
 
+    // request
+    firstr, firstr_answer,
+
+    last_seen, e_last_seen,
+
     set_offline, e_set_offline,
 
-    // answer
-    firstr_last_seen,
+    // pvgp => private gap
+    pvgp_send_message, e_pvgp_send_message,
 
-    // pvgp
-    pvgp_send_message, pvgp_receive_message
+    // baraye payam haye daryafti > private gaps
+    pvgp_new_message, e_pvgp_new_message,
+
+    // baraye vaseyat payam > khande shode , daryaft shode , ...
+    pvgp_status_message, e_pvgp_status_message,
+
+    pvgp_receive_message,
+
+    pvgp_typing, e_pvgp_typing, pvgp_is_typing
 }

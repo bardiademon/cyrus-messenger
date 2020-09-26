@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+
 public final class Str
 {
     public static boolean IsEmpty (Object str)
@@ -16,6 +18,7 @@ public final class Str
         }
         catch (Exception e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e);
             return false;
         }
     }
@@ -25,10 +28,11 @@ public final class Str
         try
         {
             if (HasBool (str)) return Boolean.parseBoolean (str);
-            else return null;
+            else throw new Exception (str + " > not bool");
         }
         catch (Exception e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e);
             return null;
         }
     }

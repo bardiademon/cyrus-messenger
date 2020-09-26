@@ -32,16 +32,19 @@ public final class SIServer
 
     private static OnlineService onlineService;
 
+    private final int port;
+
     public SIServer (final int Port , Client _Client)
     {
         Server = (create (Port));
+        this.port = Port;
         Server.addConnectListener (_Client::Connect);
-        System.out.println ("Server Start Port " + Port);
     }
 
     public void startServer ()
     {
         Server.start ();
+        System.out.println ("Server Start Port " + port);
     }
 
     private SocketIOServer create (int port)
@@ -153,7 +156,7 @@ public final class SIServer
 
     private static void OnlineStatus (SocketIOServer Server)
     {
-        Server.addEventListener (EventName.firstr_status_online.name () , RequestOnlineStatus.class , (client , data , ackSender) ->
+        Server.addEventListener (EventName.last_seen.name () , RequestOnlineStatus.class , (client , data , ackSender) ->
                 new OnlineStatus (client , data));
     }
 

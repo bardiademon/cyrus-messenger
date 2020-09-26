@@ -1,6 +1,9 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.Typing;
+import com.bardiademon.CyrusMessenger.ServerSocket.HostPort;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -8,10 +11,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 
 public final class PrivateGap implements SIServer.Client
 {
-    // Private Chat => tak tak char ha ba ham jam shodan shod 1147 hamino gozashtam prt :D
-    private static final int PORT = 1147;
-
-    private final SIServer _SIServer = new SIServer (PORT , this);
+    private final SIServer _SIServer = new SIServer (HostPort.PORT_PRIVATE_CHAT , this);
 
     public PrivateGap ()
     {
@@ -25,10 +25,10 @@ public final class PrivateGap implements SIServer.Client
         _SIServer.Server.addEventListener (EventName.pvgp_send_message.name () , RequestPrivateGap.class , (client , data , ackSender) ->
                 new NewPrivateMessage (client , data));
 
-
-
-
         SIServer.SetOffline (_SIServer.Server);
+
+        _SIServer.Server.addEventListener (EventName.pvgp_typing.name () , ReqTyping.class , (client , data , ackSender) ->
+                new Typing (client , data));
     }
 
     @Override

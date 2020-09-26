@@ -10,5 +10,5 @@ public enum Which
 
     // gap
     // s => send
-    s_message, s_sticker, s_emoji, s_gif, s_file, s_image, s_link, s_voice, s_invitation,
+    s_message, s_sticker, s_emoji, s_video, s_gif, s_file, s_image, s_link, s_voice, s_invitation,
 }

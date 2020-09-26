@@ -2,5 +2,5 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap;
 
 public enum GapType
 {
-    text, pic, video, voice, sticker, gif
+    text, pic, video, voice, sticker, emoji, gif, file
 }

@@ -12,6 +12,8 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
 {
     public final static Service _Service = new Service ();
 
+    private SecurityUserGap securityUserGap;
+
 //    public UserGapAccessLevel (MainAccount Applicant)
 //    {
 //        super (Applicant);
@@ -31,15 +33,17 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
         {
             super.which = which;
 
-            final SecurityUserGap securityUserGap = _Service._SecurityUserGapService.Repository.findByMainAccount (user);
-            final AccessLevel accessLevel = getAccessLevel (securityUserGap);
+            this.securityUserGap = _Service._SecurityUserGapService.Repository.findByMainAccount (user);
+            final AccessLevel accessLevel = getAccessLevel ();
+
+            if (accessLevel != null && accessLevel.equals (AccessLevel.nobody)) return false;
 
             return (securityUserGap != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUserGap.isCanAnonymousSendMessage ()));
         }
         else return false;
     }
 
-    private AccessLevel getAccessLevel (SecurityUserGap securityUserGap)
+    private AccessLevel getAccessLevel ()
     {
         switch (super.which)
         {
@@ -59,6 +63,10 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
                 super.userBlockedType = UserBlocked.Type.cns_gif.name ();
                 super.desEnumTypes = DesEnumTypes.sug_gif.name ();
                 return securityUserGap.getCanSendGif ();
+            case s_video:
+                super.userBlockedType = UserBlocked.Type.cns_video.name ();
+                super.desEnumTypes = DesEnumTypes.sug_video.name ();
+                return securityUserGap.getCanSendVideo ();
             case s_file:
                 super.userBlockedType = UserBlocked.Type.cns_file.name ();
                 super.desEnumTypes = DesEnumTypes.sug_file.name ();
@@ -94,5 +102,10 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
         {
             this._SecurityUserGapService = ThisApp.Context ().getBean (SecurityUserGapService.class);
         }
+    }
+
+    public SecurityUserGap getSecurityUserGap ()
+    {
+        return securityUserGap;
     }
 }

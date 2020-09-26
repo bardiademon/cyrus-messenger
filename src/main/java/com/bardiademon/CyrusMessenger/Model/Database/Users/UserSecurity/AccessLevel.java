@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity;
 
 public enum AccessLevel
 {
+    nobody,
     all,
     all_separately,
     separately,

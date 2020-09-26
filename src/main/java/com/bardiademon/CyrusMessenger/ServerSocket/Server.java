@@ -12,8 +12,12 @@ public class Server
 
     private void firstConnection ()
     {
-        SIServer.CreateFirstConnection (new SIServer (HostPort.PORT_TEST_CONNECTION , Client ->
-                System.out.println (FirstRequest.class.getName () + " > " + Client.getSessionId ())).Server);
+        SIServer siServer = new SIServer (HostPort.PORT_TEST_CONNECTION , Client ->
+                System.out.println (FirstRequest.class.getName () + " > " + Client.getSessionId ()));
+
+        siServer.startServer ();
+
+        SIServer.CreateFirstConnection (siServer.Server);
     }
 
     private void privateGap ()

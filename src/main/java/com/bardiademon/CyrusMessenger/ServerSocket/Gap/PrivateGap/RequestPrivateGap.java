@@ -21,6 +21,9 @@ public final class RequestPrivateGap extends PublicRequest
     @JsonProperty ("time_send")
     private long timeSend;
 
+    @JsonProperty (value = "reply")
+    private String idStrReplyChat;
+
     public RequestPrivateGap ()
     {
     }
@@ -73,5 +76,15 @@ public final class RequestPrivateGap extends PublicRequest
     public void setTimeSend (long timeSend)
     {
         this.timeSend = timeSend;
+    }
+
+    public String getIdStrReplyChat ()
+    {
+        return idStrReplyChat;
+    }
+
+    public void setIdStrReplyChat (String idStrReplyChat)
+    {
+        this.idStrReplyChat = idStrReplyChat;
     }
 }

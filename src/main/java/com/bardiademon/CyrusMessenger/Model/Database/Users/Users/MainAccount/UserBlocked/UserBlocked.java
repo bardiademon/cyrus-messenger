@@ -197,7 +197,8 @@ public final class UserBlocked
         cns_bio, cns_email, cns_phone, cns_name, cns_family, cns_username, cns_mylink, all, cns_gender,
 
         // gap
-        cns_send_message, cns_gif, cns_sticker, cns_file, cns_image, cns_emoji, cns_link, cns_invitation, cns_voice
+        cns_send_message, cns_gif, cns_sticker, cns_file, cns_image,
+        cns_emoji, cns_link, cns_invitation, cns_voice, cns_video
     }
 
 

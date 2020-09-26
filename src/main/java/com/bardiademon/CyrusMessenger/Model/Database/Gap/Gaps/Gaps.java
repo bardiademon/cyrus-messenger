@@ -69,7 +69,7 @@ public final class Gaps
     private List <GapRead> gapRead;
 
     @OneToMany (mappedBy = "gaps")
-    private List <GapFiles> filesChats;
+    private List <GapFiles> filesGaps;
 
     @OneToOne
     @JoinColumn (name = "reply_gap", referencedColumnName = "id")
@@ -206,14 +206,14 @@ public final class Gaps
         this.gapRead = gapRead;
     }
 
-    public List <GapFiles> getFilesChats ()
+    public List <GapFiles> getFilesGaps ()
     {
-        return filesChats;
+        return filesGaps;
     }
 
-    public void setFilesChats (List <GapFiles> filesChats)
+    public void setFilesGaps (List <GapFiles> filesGaps)
     {
-        this.filesChats = filesChats;
+        this.filesGaps = filesGaps;
     }
 
     public Gaps getReply ()

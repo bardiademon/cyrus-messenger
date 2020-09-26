@@ -9,7 +9,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 // FITD => Find In The Database
 public final class FITD_Username
 {
-    private final String username;
+    private String username;
     private final UsernamesService usernamesService;
 
     private MainAccount mainAccount;
@@ -20,10 +20,17 @@ public final class FITD_Username
 
     public FITD_Username (String Username , UsernamesService _UsernamesService)
     {
-        this.username = Username;
         this.usernamesService = _UsernamesService;
+        newClass (Username);
+    }
+
+    public void newClass (String Username)
+    {
+        this.username = Username;
         if (validation ()) found = foundUsername ();
         else answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+
+        if (answer != null) answer.put (KeyAnswer.valusername.name () , Username);
     }
 
     private boolean validation ()
@@ -49,6 +56,11 @@ public final class FITD_Username
     private enum ValAnswer
     {
         username_not_found, username_invalid
+    }
+
+    private enum KeyAnswer
+    {
+        valusername
     }
 
     public MainAccount getMainAccount ()

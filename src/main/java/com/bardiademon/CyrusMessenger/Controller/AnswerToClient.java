@@ -1,15 +1,13 @@
 package com.bardiademon.CyrusMessenger.Controller;
 
-import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class AnswerToClient
 {
@@ -199,8 +197,8 @@ public class AnswerToClient
     // CUK => Commonly used value
     public enum CUV
     {
-        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, found, error,
-        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added,ok
+        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, access_denied, found, error,
+        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added, ok
     }
 
     @JsonIgnore

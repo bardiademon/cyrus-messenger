@@ -63,6 +63,8 @@ public class UserProfileAccessLevel
     {
         this.which = which;
 
+        if (this.applicant == null || this.user == null) return false;
+
         if (this.applicant.getId () == this.user.getId ())
             return true;
 

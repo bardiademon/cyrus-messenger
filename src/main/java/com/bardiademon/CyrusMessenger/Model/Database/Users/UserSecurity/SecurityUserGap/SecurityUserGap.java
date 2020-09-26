@@ -67,6 +67,10 @@ public class SecurityUserGap
     private AccessLevel canSendVoice = AccessLevel.all;
 
     @Enumerated (EnumType.STRING)
+    @Column (name = "can_send_video")
+    private AccessLevel canSendVideo = AccessLevel.all;
+
+    @Enumerated (EnumType.STRING)
     @Column (name = "can_send_invitation")
     private AccessLevel canSendInvitation = AccessLevel.all;
 
@@ -229,5 +233,15 @@ public class SecurityUserGap
     public void setCanAnonymousSendMessage (boolean canAnonymousSendMessage)
     {
         this.canAnonymousSendMessage = canAnonymousSendMessage;
+    }
+
+    public AccessLevel getCanSendVideo ()
+    {
+        return canSendVideo;
+    }
+
+    public void setCanSendVideo (AccessLevel canSendVideo)
+    {
+        this.canSendVideo = canSendVideo;
     }
 }

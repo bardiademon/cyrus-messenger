@@ -30,6 +30,9 @@ public final class GapFiles
     @Column (name = "file_code", nullable = false, unique = true, updatable = false)
     private String code;
 
+    @Column (name = "file_extension", updatable = false)
+    private String fileExtension;
+
     @ManyToOne
     @JoinColumn (name = "id_gap", referencedColumnName = "id")
     private Gaps gaps;
@@ -135,5 +138,15 @@ public final class GapFiles
     public void setDeletedAt (LocalDateTime deletedAt)
     {
         this.deletedAt = deletedAt;
+    }
+
+    public String getFileExtension ()
+    {
+        return fileExtension;
+    }
+
+    public void setFileExtension (String fileExtension)
+    {
+        this.fileExtension = fileExtension;
     }
 }
