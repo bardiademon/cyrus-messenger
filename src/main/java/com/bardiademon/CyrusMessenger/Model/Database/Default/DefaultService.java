@@ -1,6 +1,5 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Default;
 
-import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +25,13 @@ public final class DefaultService
                 if (aDefault.getTypeValue ().equals (DefaultType.integer))
                     return Integer.parseInt (aDefault.getValue ());
                 else
-                    throw new Exception ("Error type " + ToJson.CreateClass.nj ("type" , aDefault.getTypeValue ().name ()));
+                    throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new Exception ("Default is null");
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (Exception e)
+        catch (DefaultException ignored)
         {
-            l.n (Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("key" , key.name ()));
         }
         return null;
     }
@@ -48,14 +46,13 @@ public final class DefaultService
                 if (aDefault.getTypeValue ().equals (DefaultType.lng))
                     return Long.parseLong (aDefault.getValue ());
                 else
-                    throw new Exception ("Error type " + ToJson.CreateClass.nj ("type" , aDefault.getTypeValue ().name ()));
+                    throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new Exception ("Default is null");
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (Exception e)
+        catch (DefaultException ignored)
         {
-            l.n (Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("key" , key.name ()));
         }
         return null;
     }
@@ -70,14 +67,13 @@ public final class DefaultService
                 if (aDefault.getTypeValue ().equals (DefaultType.flt))
                     return Float.parseFloat (aDefault.getValue ());
                 else
-                    throw new Exception ("Error type " + ToJson.CreateClass.nj ("type" , aDefault.getTypeValue ().name ()));
+                    throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new Exception ("Default is null");
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (Exception e)
+        catch (DefaultException ignored)
         {
-            l.n (Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("key" , key.name ()));
         }
         return null;
     }
@@ -92,14 +88,13 @@ public final class DefaultService
                 if (aDefault.getTypeValue ().equals (DefaultType.dbl))
                     return Double.parseDouble (aDefault.getValue ());
                 else
-                    throw new Exception ("Error type " + ToJson.CreateClass.nj ("type" , aDefault.getTypeValue ().name ()));
+                    throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new Exception ("Default is null");
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (Exception e)
+        catch (DefaultException ignored)
         {
-            l.n (Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("key" , key.name ()));
         }
         return null;
     }
@@ -114,14 +109,13 @@ public final class DefaultService
                 if (aDefault.getTypeValue ().equals (DefaultType.string))
                     return aDefault.getValue ();
                 else
-                    throw new Exception ("Error type " + ToJson.CreateClass.nj ("type" , aDefault.getTypeValue ().name ()));
+                    throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new Exception ("Default is null");
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (Exception e)
+        catch (DefaultException ignored)
         {
-            l.n (Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("key" , key.name ()));
         }
         return null;
     }

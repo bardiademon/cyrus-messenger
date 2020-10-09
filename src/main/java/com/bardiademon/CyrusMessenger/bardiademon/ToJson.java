@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -172,11 +173,13 @@ public final class ToJson
             return createClass;
         }
 
+        @JsonIgnore
         public String toJson ()
         {
             return To (this);
         }
 
+        @JsonIgnore
         public JSONObject toJsonObject ()
         {
             try
@@ -189,12 +192,14 @@ public final class ToJson
             }
         }
 
+        @JsonIgnore
         @Override
         public String toString ()
         {
             return toJson ();
         }
 
+        @JsonIgnore
         public static CreateClass OCLogin (String CLogin)
         {
             CreateClass createClass = new CreateClass ();
@@ -202,18 +207,21 @@ public final class ToJson
             return createClass;
         }
 
+        @JsonIgnore
         // n => New
         public static CreateClass n (String key , Object value)
         {
             return ((new CreateClass ()).put (key , value));
         }
 
+        @JsonIgnore
         // n => New , j => to json
         public static String nj (String key , Object value)
         {
             return ((new CreateClass ()).put (key , value)).toJson ();
         }
 
+        @JsonIgnore
         public static String SCLogin (String CLogin)
         {
             return OCLogin (CLogin).toJson ();

@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon.IO;
 
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import java.awt.image.BufferedImage;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,22 +18,29 @@ public final class CheckImage
 
     private boolean isImage;
 
-    private final List<String> lstExtensions = Arrays.asList ("jpg" , "png");
+    private final List <String> lstExtensions = Arrays.asList ("jpg" , "png");
     private String extension;
+
+    private int width, height;
 
     public boolean valid (MultipartFile File)
     {
         try
         {
+            width = 0;
+            height = 0;
+
+            if (File == null) throw new IOException ("Null variable");
+
             this.stream = File.getInputStream ();
             this.extension = FilenameUtils.getExtension (File.getOriginalFilename ());
-            isImage = checkExtensions () && check ();
+            return checkExtensions () && check ();
         }
         catch (IOException e)
         {
-            isImage = false;
+            l.n (Thread.currentThread ().getStackTrace () , e);
         }
-        return isImage;
+        return false;
     }
 
     private boolean checkExtensions ()
@@ -45,10 +54,19 @@ public final class CheckImage
     {
         try
         {
-            return ((ImageIO.read (stream)) != null);
+            BufferedImage image = ImageIO.read (stream);
+            if (image != null)
+            {
+                width = image.getWidth ();
+                height = image.getHeight ();
+
+                return true;
+            }
+            else throw new IOException ();
         }
-        catch (IOException ignored)
+        catch (IOException e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e);
         }
         return false;
     }
@@ -62,5 +80,16 @@ public final class CheckImage
     {
         return extension;
     }
+
+    public int getWidth ()
+    {
+        return width;
+    }
+
+    public int getHeight ()
+    {
+        return height;
+    }
+
 }
 

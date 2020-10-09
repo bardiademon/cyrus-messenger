@@ -171,22 +171,31 @@ public class Test
                     "/set-default/{key}/{value}" ,
                     "/set-default/{key}/{value}/{type}"
             })
-    public Default setDefault (@PathVariable (value = "key", required = false) String key ,
-                               @PathVariable (value = "value", required = false) String value ,
-                               @PathVariable (value = "type", required = false) String type)
+    public Default setDefault
+            (@PathVariable (value = "key", required = false) String key ,
+             @PathVariable (value = "value", required = false) String value ,
+             @PathVariable (value = "type", required = false) String type)
     {
         if (key != null && !key.isEmpty () && value != null && !value.isEmpty () && type != null && !type.isEmpty ())
         {
             DefaultType defaultType = DefaultType.to (type);
-            if (defaultType != null)
+            DefaultKey defaultKey = DefaultKey.to (key);
+
+            if (defaultType != null && defaultKey != null)
             {
-                Default aDefault = new Default ();
+                Default def = defaultService.getDefault (defaultKey);
+                if (def == null)
+                {
+                    def = new Default ();
+                    def.setKey (defaultKey);
+                }
 
-                aDefault.setKey (DefaultKey.valueOf (key));
-                aDefault.setValue (value);
-                aDefault.setTypeValue (defaultType);
+                def.setValue (value);
+                def.setTypeValue (defaultType);
 
-                return defaultService.Repository.save (aDefault);
+                return defaultService.Repository.save (def);
+
+
             }
         }
         return null;

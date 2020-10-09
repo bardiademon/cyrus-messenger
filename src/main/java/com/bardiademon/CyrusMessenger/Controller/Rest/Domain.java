@@ -14,6 +14,8 @@ public abstract class Domain
     {
         public static final String RN_MAIN_GAP = Domain.RN_MAIN_API + "/gap";
 
+        public static final String STICKERS = RN_MAIN_GAP + "/stickers";
+
         public static abstract class RNProfilePicture
         {
             private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile_pictures";

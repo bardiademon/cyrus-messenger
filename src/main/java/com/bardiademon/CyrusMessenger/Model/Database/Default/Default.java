@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Default;
 
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table (name = "dflt")
@@ -66,5 +69,13 @@ public final class Default
     public void setTypeValue (DefaultType typeValue)
     {
         this.typeValue = typeValue;
+    }
+
+    @Transient
+    @JsonIgnore
+    @Override
+    public String toString ()
+    {
+        return ToJson.To (this);
     }
 }

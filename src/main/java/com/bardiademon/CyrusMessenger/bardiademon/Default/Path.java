@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon.Default;
 
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import java.io.File;
-import java.util.stream.IntStream;
 import org.apache.commons.io.FilenameUtils;
 
 public abstract class Path
@@ -12,6 +12,9 @@ public abstract class Path
     public static final String IMAGES = StickTogether (FILES , "Default" , "Images");
 
     public static final String PROFILE_PICTURES = StickTogether (FILES , "ProfilePictures");
+    public static final String GAP_FILES = StickTogether (FILES , "GapFiles");
+    public static final String STICKERS = StickTogether (FILES , "Stickers");
+    public static final String STICKERS_GROUPS = StickTogether (STICKERS , "Groups");
     public static final String PROFILE_PICTURES_USERS = StickTogether (PROFILE_PICTURES , "Users");
     public static final String PROFILE_PICTURES_GROUPS = StickTogether (PROFILE_PICTURES , "Groups");
     public static final String PROFILE_PICTURES_CHANNELS = StickTogether (PROFILE_PICTURES , "Channels");
@@ -35,19 +38,34 @@ public abstract class Path
         return StickTogether (IMAGES , Name);
     }
 
+    public static String StickerGroups (long idMainAccount)
+    {
+        File file = new File (StickTogether (STICKERS_GROUPS , String.valueOf (idMainAccount)));
+        if (!file.exists ()) file.mkdirs ();
+        return file.getPath ();
+    }
+
     public static String StickTogether (String... Path)
+    {
+        return StickTogether (null , Path);
+    }
+
+    public static String StickTogether (String Type , String[] Path)
     {
         StringBuilder NewPath;
         NewPath = new StringBuilder ();
-        IntStream.range (0 , Path.length).forEachOrdered (i ->
+        for (int i = 0, len = Path.length; i < len; i++)
         {
             String p = Path[i];
-            if (((i + 1) < (Path.length - 1)) && Path[i + 1].equals (File.separator)) return;
+            if (((i + 1) < (Path.length - 1)) && Path[i + 1].equals (File.separator)) continue;
             NewPath.append (p);
             String extension = FilenameUtils.getExtension (p);
             if (extension == null || extension.equals ("")) NewPath.append (File.separator);
-        });
-        return NewPath.toString ().replace (File.separator + File.separator , File.separator);
+        }
+        String replace = NewPath.toString ().replace (File.separator + File.separator , File.separator);
+        if (!Str.IsEmpty (Type)) replace += "." + Type;
+
+        return replace;
     }
 
     public static File StickTogetherFile (String... Path)

@@ -51,4 +51,10 @@ public final class Str
         else return false;
     }
 
+    public static String[] toArray (String... value)
+    {
+        return value;
+    }
+
+
 }

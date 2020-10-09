@@ -2,10 +2,11 @@ package com.bardiademon.CyrusMessenger.bardiademon;
 
 public abstract class GetSize
 {
-    public static String Get (long Byte)
+    public static String Get (Long Byte)
     {
+        if (Byte == null) return null;
+
         float kb = (float) Byte / 1024;
-        System.out.println (kb);
         if (kb >= 1024)
         {
             float mb = (kb / 1024);
@@ -21,6 +22,6 @@ public abstract class GetSize
 
     private static String toString (double size)
     {
-        return String.format ("%.2f" , Math.abs (size));
+        return String.format ("%.3f" , Math.abs (size));
     }
 }
