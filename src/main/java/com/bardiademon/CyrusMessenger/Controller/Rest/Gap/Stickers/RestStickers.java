@@ -55,6 +55,12 @@ public final class RestStickers
     private final String csgRouter;
     private final SubmitRequestType csgType;
 
+    /**
+     * gi => Groups ids
+     */
+    private final String giRouter;
+    private final SubmitRequestType giType;
+
     @Autowired
     public RestStickers
             (StickersService _StickersService ,
@@ -69,6 +75,9 @@ public final class RestStickers
         this.defaultService = _DefaultService;
         this.csgRouter = Domain.RNGap.STICKERS + "/create-sticker-group";
         this.csgType = SubmitRequestType.create_sticker_group;
+
+        this.giRouter = Domain.RNGap.STICKERS + "/groups-ids";
+        this.giType = SubmitRequestType.get_groups_ids;
     }
 
     @RequestMapping (value = "/create-sticker-group")
@@ -285,13 +294,13 @@ public final class RestStickers
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
                 answer.put (AnswerToClient.CUK.ids.name () , ids);
                 answer.setReqRes (req , res);
-                l.n (null , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , csgType , false);
+                l.n (null , giRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , giType , false);
             }
             else
             {
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
                 answer.setReqRes (req , res);
-                l.n (null , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , csgType , true);
+                l.n (null , giRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , giType , true);
             }
         }
         else answer = both.getAnswerToClient ();

@@ -20,7 +20,7 @@ public enum SubmitRequestType
     change_user_separate_profile,
     add_friend, del_friend, approve_friend, list_friends, modify_info_user, check_and_send_code__conform_email,
 
-    create_sticker_group,
+    create_sticker_group, get_groups_ids,
 
 
     socket
