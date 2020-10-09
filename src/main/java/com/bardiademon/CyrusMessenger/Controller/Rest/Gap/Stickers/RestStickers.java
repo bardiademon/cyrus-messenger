@@ -267,6 +267,38 @@ public final class RestStickers
         return answer;
     }
 
+    @RequestMapping (value = "/groups-ids")
+    public AnswerToClient stickersGroups
+            (HttpServletResponse res , HttpServletRequest req ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
+    {
+        AnswerToClient answer;
+
+        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            List <Long> ids = stickerGroupsService.ids (mainAccount.getId ());
+            if (ids != null && ids.size () > 0)
+            {
+                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                answer.put (AnswerToClient.CUK.ids.name () , ids);
+                answer.setReqRes (req , res);
+                l.n (null , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , csgType , false);
+            }
+            else
+            {
+                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                answer.setReqRes (req , res);
+                l.n (null , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , csgType , true);
+            }
+        }
+        else answer = both.getAnswerToClient ();
+
+        return answer;
+    }
+
     private enum ValAnswer
     {
         is_empty_group_name, is_empty_group_image, invalid_group_image,
