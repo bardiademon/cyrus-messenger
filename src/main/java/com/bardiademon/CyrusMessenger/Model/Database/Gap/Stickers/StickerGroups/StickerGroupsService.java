@@ -19,4 +19,10 @@ public final class StickerGroupsService
     {
         return Repository.getIds (idUser);
     }
+
+    public StickerGroups stickerGroups (long id)
+    {
+        return Repository.findById (id);
+    }
+
 }

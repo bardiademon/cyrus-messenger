@@ -11,4 +11,6 @@ public interface StickerGroupsRepository extends JpaRepository <StickerGroups, L
 {
     @Query ("select sg.id from StickerGroups sg where sg.addedBy.id = :ID_USER")
     List <Long> getIds (@Param ("ID_USER") long idUser);
+
+    StickerGroups findById (long id);
 }

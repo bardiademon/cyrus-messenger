@@ -18,9 +18,11 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.GetSize;
+import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +35,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,6 +64,12 @@ public final class RestStickers
     private final String giRouter;
     private final SubmitRequestType giType;
 
+    /**
+     * g => Group
+     */
+    private final String gRouter;
+    private final SubmitRequestType gType;
+
     @Autowired
     public RestStickers
             (StickersService _StickersService ,
@@ -73,11 +82,16 @@ public final class RestStickers
         this.userLoginService = _UserLoginService;
         this.uploadedImagesService = _UploadedImagesService;
         this.defaultService = _DefaultService;
+
         this.csgRouter = Domain.RNGap.STICKERS + "/create-sticker-group";
         this.csgType = SubmitRequestType.create_sticker_group;
 
         this.giRouter = Domain.RNGap.STICKERS + "/groups-ids";
         this.giType = SubmitRequestType.get_groups_ids;
+
+
+        this.gRouter = Domain.RNGap.STICKERS + "/group";
+        this.gType = SubmitRequestType.get_info_one_sticker_group;
     }
 
     @RequestMapping (value = "/create-sticker-group")
@@ -265,7 +279,7 @@ public final class RestStickers
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.request_is_null.name ());
+                answer = AnswerToClient.RequestIsNull ();
                 answer.setReqRes (req , res);
                 l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , csgType , true);
             }
@@ -308,6 +322,62 @@ public final class RestStickers
         return answer;
     }
 
+    @RequestMapping (value = { "/group" , "/group/{id_group}" })
+    public AnswerToClient stickersGroups
+            (HttpServletResponse res , HttpServletRequest req ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @PathVariable (value = "id_group", required = false) String strIdGroup)
+    {
+        AnswerToClient answer;
+
+        String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
+        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (!Str.IsEmpty (strIdGroup))
+            {
+                ID idGroup = new ID (strIdGroup);
+                if (idGroup.isValid ())
+                {
+                    StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idGroup.getId ());
+                    if (stickerGroups != null)
+                    {
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                        answer.put (KeyAnswer.name.name () , stickerGroups.getGroupName ());
+                        answer.put (KeyAnswer.des.name () , stickerGroups.getDescription ());
+                        answer.put (KeyAnswer.img_id.name () , stickerGroups.getGroupImage ().getId ());
+                        answer.put (KeyAnswer.added_at.name () , Time.toString (stickerGroups.getAddedAt ()));
+                        answer.setReqRes (req , res);
+                        l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , gType , false);
+                    }
+                    else
+                    {
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                        answer.setReqRes (req , res);
+                        l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gType , true);
+                    }
+                }
+                else
+                {
+                    answer = AnswerToClient.IdInvalid ();
+                    answer.setReqRes (req , res);
+                    l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("id_group" , strIdGroup) , gType , true);
+                }
+            }
+            else
+            {
+                answer = AnswerToClient.RequestIsNull ();
+                answer.setReqRes (req , res);
+                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , gType , true);
+            }
+        }
+        else answer = both.getAnswerToClient ();
+
+        return answer;
+    }
+
     private enum ValAnswer
     {
         is_empty_group_name, is_empty_group_image, invalid_group_image,
@@ -319,7 +389,7 @@ public final class RestStickers
 
     private enum KeyAnswer
     {
-        acceptable_size, your_image_size, extra_size,
+        des, name, img_id, added_at, acceptable_size, your_image_size, extra_size,
         your_image_width_height,
         min_width, min_height,
         max_width, max_height,
