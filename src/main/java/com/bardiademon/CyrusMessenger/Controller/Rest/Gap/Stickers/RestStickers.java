@@ -5,16 +5,21 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Controller.Security.HasStickerAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevel;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
 import com.bardiademon.CyrusMessenger.Model.Database.Images.UploadedImages;
 import com.bardiademon.CyrusMessenger.Model.Database.Images.UploadedImagesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.GetSize;
@@ -51,6 +56,7 @@ public final class RestStickers
     private final UserLoginService userLoginService;
     private final UploadedImagesService uploadedImagesService;
     private final DefaultService defaultService;
+    private final UsernamesService usernamesService;
 
     /**
      * csg => Create Sticker Group
@@ -70,18 +76,22 @@ public final class RestStickers
     private final String gRouter;
     private final SubmitRequestType gType;
 
+    private final HasStickerAccessLevel hasStickerAccessLevel;
+
     @Autowired
     public RestStickers
             (StickersService _StickersService ,
              StickerGroupsService _StickerGroupsService ,
              UserLoginService _UserLoginService ,
-             UploadedImagesService _UploadedImagesService , DefaultService _DefaultService)
+             UploadedImagesService _UploadedImagesService , DefaultService _DefaultService ,
+             StickerAccessLevelService _StickerAccessLevelService , UsernamesService _UsernamesService)
     {
         this.stickersService = _StickersService;
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
         this.uploadedImagesService = _UploadedImagesService;
         this.defaultService = _DefaultService;
+        this.usernamesService = _UsernamesService;
 
         this.csgRouter = Domain.RNGap.STICKERS + "/create-sticker-group";
         this.csgType = SubmitRequestType.create_sticker_group;
@@ -89,9 +99,10 @@ public final class RestStickers
         this.giRouter = Domain.RNGap.STICKERS + "/groups-ids";
         this.giType = SubmitRequestType.get_groups_ids;
 
-
         this.gRouter = Domain.RNGap.STICKERS + "/group";
         this.gType = SubmitRequestType.get_info_one_sticker_group;
+
+        hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
     }
 
     @RequestMapping (value = "/create-sticker-group")
@@ -100,7 +111,7 @@ public final class RestStickers
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @ModelAttribute RequestCreateStickerGroup request)
     {
-        AnswerToClient answer;
+        AnswerToClient answer = null;
 
         String reqStr = ToJson.To (request);
 
@@ -135,79 +146,145 @@ public final class RestStickers
                                     final int imageHeight = checkImage.getHeight ();
                                     if ((imageWidth >= minWidth && imageWidth <= maxWidth) && (imageHeight >= minHeight && imageHeight <= maxHeight))
                                     {
-                                        int counter = 0;
-                                        boolean ok = false;
-                                        List <String> codes = new ArrayList <> ();
-                                        String codeStr = null;
-                                        File saveTo = null;
-                                        Code code;
+                                        boolean okUsernames = true;
+                                        List <MainAccount> mainAccounts = null;
+                                        List <String> licensedUsers = null;
 
-                                        final String typeFile = FilenameUtils.getExtension (groupImage.getOriginalFilename ());
-
-                                        while ((++counter) < 10)
+                                        String with_per = request.getWith_per ();
+                                        if (Str.HasBool (with_per))
                                         {
-                                            code = Code.CreateCodeLong ();
-                                            code.createCode ();
-                                            codeStr = code.getCode ();
-                                            codes.add (codeStr);
-                                            if (!(saveTo = new File (Path.StickTogether (Path.StickerGroups (mainAccount.getId ()) , codeStr + "." + typeFile))).exists ())
+                                            Boolean withPer = Str.ToBool (with_per);
+                                            assert withPer != null;
+                                            request.setWithPermission (withPer);
+                                        }
+
+                                        if (request.isWithPermission ())
+                                        {
+                                            licensedUsers = request.getLicensed_users ();
+
+                                            if (licensedUsers != null && licensedUsers.size () > 0)
                                             {
-                                                ok = true;
-                                                break;
+                                                FITD_Username fitd_username = new FITD_Username (usernamesService);
+
+                                                mainAccounts = new ArrayList <> ();
+                                                for (String licensedUser : licensedUsers)
+                                                {
+                                                    fitd_username.check (licensedUser);
+                                                    if (!fitd_username.isOk ())
+                                                    {
+                                                        answer = fitd_username.getAnswer ();
+                                                        answer.setReqRes (req , res);
+                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , ToJson.CreateClass.nj ("username" , licensedUser) , csgType , true);
+                                                        okUsernames = false;
+                                                        break;
+                                                    }
+                                                    else mainAccounts.add (fitd_username.getMainAccount ());
+                                                }
                                             }
                                         }
-                                        if (ok)
+                                        if (okUsernames)
                                         {
-                                            try
+                                            int counter = 0;
+                                            boolean ok = false;
+                                            List <String> codes = new ArrayList <> ();
+                                            String codeStr = null;
+                                            File saveTo = null;
+                                            Code code;
+
+                                            final String typeFile = FilenameUtils.getExtension (groupImage.getOriginalFilename ());
+
+                                            while ((++counter) < 10)
                                             {
-                                                Files.write (saveTo.toPath () , groupImage.getBytes ());
-
-                                                UploadedImages uploadedImages = new UploadedImages ();
-                                                uploadedImages.setImageFor (StickerGroups.class.getName ());
-                                                uploadedImages.setName (codeStr);
-                                                uploadedImages.setType (typeFile);
-                                                uploadedImages.setWidth (imageWidth);
-                                                uploadedImages.setHeight (imageHeight);
-                                                uploadedImages.setSavedPath (saveTo.getParent ());
-                                                uploadedImages.setSize (groupImage.getSize ());
-                                                uploadedImages.setUploadedBy (mainAccount);
-
-                                                uploadedImages = uploadedImagesService.Repository.save (uploadedImages);
-
-                                                if (uploadedImages.getId () > 0)
+                                                code = Code.CreateCodeLong ();
+                                                code.createCode ();
+                                                codeStr = code.getCode ();
+                                                codes.add (codeStr);
+                                                if (!(saveTo = new File (Path.StickTogether (Path.StickerGroups (mainAccount.getId ()) , codeStr + "." + typeFile))).exists ())
                                                 {
-                                                    StickerGroups stickerGroups = new StickerGroups ();
-                                                    stickerGroups.setAddedBy (mainAccount);
-                                                    stickerGroups.setGroupImage (uploadedImages);
-                                                    stickerGroups.setGroupName (request.getGroup_name ());
-                                                    stickerGroups.setDescription (request.getDescription ());
+                                                    ok = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (ok)
+                                            {
+                                                try
+                                                {
+                                                    Files.write (saveTo.toPath () , groupImage.getBytes ());
 
-                                                    stickerGroups = stickerGroupsService.Repository.save (stickerGroups);
+                                                    UploadedImages uploadedImages = new UploadedImages ();
+                                                    uploadedImages.setImageFor (StickerGroups.class.getName ());
+                                                    uploadedImages.setName (codeStr);
+                                                    uploadedImages.setType (typeFile);
+                                                    uploadedImages.setWidth (imageWidth);
+                                                    uploadedImages.setHeight (imageHeight);
+                                                    uploadedImages.setSavedPath (saveTo.getParent ());
+                                                    uploadedImages.setSize (groupImage.getSize ());
+                                                    uploadedImages.setUploadedBy (mainAccount);
 
-                                                    if (stickerGroups.getId () > 0)
+                                                    uploadedImages = uploadedImagesService.Repository.save (uploadedImages);
+
+                                                    if (uploadedImages.getId () > 0)
                                                     {
-                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added_sticker_group.name ());
-                                                        answer.put (AnswerToClient.CUK.id.name () , stickerGroups.getId ());
-                                                        answer.setReqRes (req , res);
-                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.added_sticker_group.name () , csgType , false);
+                                                        StickerGroups stickerGroups = new StickerGroups ();
+                                                        stickerGroups.setAddedBy (mainAccount);
+                                                        stickerGroups.setGroupImage (uploadedImages);
+                                                        stickerGroups.setGroupName (request.getGroup_name ());
+                                                        stickerGroups.setWithPermission (request.isWithPermission ());
+                                                        stickerGroups.setDescription (request.getDescription ());
+
+                                                        stickerGroups = stickerGroupsService.Repository.save (stickerGroups);
+
+                                                        if (stickerGroups.getId () > 0)
+                                                        {
+                                                            assert licensedUsers != null;
+                                                            System.out.println (request.isWithPermission ());
+                                                            if (request.isWithPermission () && licensedUsers.size () > 0)
+                                                            {
+                                                                List <StickerAccessLevel> stickerAccessLevels = new ArrayList <> ();
+
+                                                                try
+                                                                {
+                                                                    assert mainAccounts != null;
+                                                                    for (MainAccount account : mainAccounts)
+                                                                    {
+                                                                        StickerAccessLevel stickerAccessLevel = new StickerAccessLevel ();
+                                                                        stickerAccessLevel.setMainAccount (account);
+                                                                        stickerAccessLevel.setStickerGroups (stickerGroups);
+                                                                        stickerAccessLevels.add (stickerAccessLevel);
+                                                                    }
+                                                                    hasStickerAccessLevel.getService ().Repository.saveAll (stickerAccessLevels);
+                                                                }
+                                                                catch (NullPointerException e)
+                                                                {
+                                                                    l.n (Thread.currentThread ().getStackTrace () , e);
+                                                                }
+
+                                                            }
+
+                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added_sticker_group.name ());
+                                                            answer.put (AnswerToClient.CUK.id.name () , stickerGroups.getId ());
+                                                            answer.setReqRes (req , res);
+                                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.added_sticker_group.name () , csgType , false);
+                                                        }
+                                                        else
+                                                            throw new IOException (ValAnswer.error_save_info_sticker.name ());
                                                     }
                                                     else
-                                                        throw new IOException (ValAnswer.error_save_info_sticker.name ());
+                                                        throw new IOException (ValAnswer.error_save_info_image.name ());
                                                 }
-                                                else throw new IOException (ValAnswer.error_save_info_image.name ());
+                                                catch (IOException e)
+                                                {
+                                                    answer = AnswerToClient.ServerError ();
+                                                    answer.setReqRes (req , res);
+                                                    l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.n ("error" , ValAnswer.error_write_file.name ()).put ("save_to" , saveTo.getPath ()).toJson () , csgType , true);
+                                                }
                                             }
-                                            catch (IOException e)
+                                            else
                                             {
                                                 answer = AnswerToClient.ServerError ();
                                                 answer.setReqRes (req , res);
-                                                l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.n ("error" , ValAnswer.error_write_file.name ()).put ("save_to" , saveTo.getPath ()).toJson () , csgType , true);
+                                                l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.n ("error" , ValAnswer.error_create_name_group_image.name ()).put ("codes" , codes.toString ()).toJson () , csgType , true);
                                             }
-                                        }
-                                        else
-                                        {
-                                            answer = AnswerToClient.ServerError ();
-                                            answer.setReqRes (req , res);
-                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.n ("error" , ValAnswer.error_create_name_group_image.name ()).put ("codes" , codes.toString ()).toJson () , csgType , true);
                                         }
                                     }
                                     else
@@ -344,13 +421,32 @@ public final class RestStickers
                     StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idGroup.getId ());
                     if (stickerGroups != null)
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                        answer.put (KeyAnswer.name.name () , stickerGroups.getGroupName ());
-                        answer.put (KeyAnswer.des.name () , stickerGroups.getDescription ());
-                        answer.put (KeyAnswer.img_id.name () , stickerGroups.getGroupImage ().getId ());
-                        answer.put (KeyAnswer.added_at.name () , Time.toString (stickerGroups.getAddedAt ()));
-                        answer.setReqRes (req , res);
-                        l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , gType , false);
+                        boolean accessLevel;
+
+                        if (stickerGroups.isWithPermission ())
+                        {
+                            if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
+                            else
+                                accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId ());
+                        }
+                        else accessLevel = true;
+
+                        if (accessLevel)
+                        {
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                            answer.put (KeyAnswer.name.name () , stickerGroups.getGroupName ());
+                            answer.put (KeyAnswer.des.name () , stickerGroups.getDescription ());
+                            answer.put (KeyAnswer.img_id.name () , stickerGroups.getGroupImage ().getId ());
+                            answer.put (KeyAnswer.added_at.name () , Time.toString (stickerGroups.getAddedAt ()));
+                            answer.setReqRes (req , res);
+                            l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , gType , false);
+                        }
+                        else
+                        {
+                            answer = AnswerToClient.AccessDenied ();
+                            answer.setReqRes (req , res);
+                            l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , gType , true);
+                        }
                     }
                     else
                     {

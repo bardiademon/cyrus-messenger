@@ -76,6 +76,12 @@ public class AnswerToClient
     }
 
     @JsonIgnore
+    public static AnswerToClient AccessDenied ()
+    {
+        return OneAnswer (AnswerToClient.New (HttpServletResponse.SC_FORBIDDEN) , CUV.access_denied.name ());
+    }
+
+    @JsonIgnore
     public static AnswerToClient AccountDeactive ()
     {
         AnswerToClient answerToClient = New (HttpServletResponse.SC_FORBIDDEN);

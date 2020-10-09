@@ -18,13 +18,18 @@ public final class FITD_Username
 
     private AnswerToClient answer;
 
+    public FITD_Username (UsernamesService _UsernamesService)
+    {
+        this.usernamesService = _UsernamesService;
+    }
+
     public FITD_Username (String Username , UsernamesService _UsernamesService)
     {
         this.usernamesService = _UsernamesService;
-        newClass (Username);
+        check (Username);
     }
 
-    public void newClass (String Username)
+    public void check (String Username)
     {
         this.username = Username;
         if (validation ()) found = foundUsername ();
@@ -76,6 +81,11 @@ public final class FITD_Username
     public boolean isFound ()
     {
         return found;
+    }
+
+    public boolean isOk ()
+    {
+        return isValid () && isFound ();
     }
 
     public AnswerToClient getAnswer ()

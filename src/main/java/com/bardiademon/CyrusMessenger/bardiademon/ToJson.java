@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,8 +56,10 @@ public final class ToJson
             }
             else return result;
         }
-        catch (JsonProcessingException ignored)
+        catch (JsonProcessingException e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e);
+            System.out.println (e.getMessage ());
             return null;
         }
     }

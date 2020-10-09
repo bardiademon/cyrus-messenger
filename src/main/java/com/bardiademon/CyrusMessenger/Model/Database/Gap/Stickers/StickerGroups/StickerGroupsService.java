@@ -25,4 +25,5 @@ public final class StickerGroupsService
         return Repository.findById (id);
     }
 
+
 }

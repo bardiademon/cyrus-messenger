@@ -50,6 +50,9 @@ public final class StickerGroups
     @Column (name = "deleted_at", insertable = false)
     private LocalDateTime deletedAt;
 
+    @Column (name = "with_permission", nullable = false)
+    private boolean withPermission = false;
+
     public StickerGroups ()
     {
     }
@@ -142,5 +145,15 @@ public final class StickerGroups
     public void setDeletedAt (LocalDateTime deletedAt)
     {
         this.deletedAt = deletedAt;
+    }
+
+    public boolean isWithPermission ()
+    {
+        return withPermission;
+    }
+
+    public void setWithPermission (boolean withPermission)
+    {
+        this.withPermission = withPermission;
     }
 }
