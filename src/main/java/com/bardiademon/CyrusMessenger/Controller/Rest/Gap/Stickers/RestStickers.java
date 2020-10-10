@@ -498,7 +498,7 @@ public final class RestStickers
     private Object getAndDelete (String strIdGroup , HttpServletResponse res , HttpServletRequest req , String
             codeLogin , String r , SubmitRequestType t)
     {
-        // r => Router , r => type
+        // r => Router , t => type
 
         AnswerToClient answer;
 
