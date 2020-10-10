@@ -76,6 +76,12 @@ public final class RestStickers
     private final String gRouter;
     private final SubmitRequestType gType;
 
+    /**
+     * dg => Delete Group
+     */
+    private final String dgRouter;
+    private final SubmitRequestType dgType;
+
     private final HasStickerAccessLevel hasStickerAccessLevel;
 
     @Autowired
@@ -102,6 +108,9 @@ public final class RestStickers
         this.gRouter = Domain.RNGap.STICKERS + "/group";
         this.gType = SubmitRequestType.get_info_one_sticker_group;
 
+        this.dgRouter = Domain.RNGap.STICKERS + "/group";
+        this.dgType = SubmitRequestType.get_info_one_sticker_group;
+
         hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
     }
 
@@ -115,7 +124,7 @@ public final class RestStickers
 
         String reqStr = ToJson.To (request);
 
-        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
+        CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , csgRouter , csgType);
         if (both.isOk ())
         {
             assert both.getIsLogin () != null;
@@ -374,7 +383,7 @@ public final class RestStickers
     {
         AnswerToClient answer;
 
-        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
+        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , giRouter , giType);
         if (both.isOk ())
         {
             assert both.getIsLogin () != null;
@@ -408,7 +417,7 @@ public final class RestStickers
         AnswerToClient answer;
 
         String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
-        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin);
+        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin , gRouter , gType);
 
         if (getAndDelete instanceof AnswerToClient) answer = (AnswerToClient) getAndDelete;
         else
@@ -454,7 +463,7 @@ public final class RestStickers
              @PathVariable (value = "id_group", required = false) String strIdGroup)
     {
         AnswerToClient answer;
-        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin);
+        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin , dgRouter , dgType);
         if (getAndDelete instanceof AnswerToClient) answer = (AnswerToClient) getAndDelete;
         else
         {
@@ -470,13 +479,13 @@ public final class RestStickers
 
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
                 answer.setReqRes (req , res);
-                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , gType , false);
+                l.n (null , dgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , dgType , false);
             }
             else
             {
                 answer = AnswerToClient.AccessDenied ();
                 answer.setReqRes (req , res);
-                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , "stickerGroups.getAddedBy ().getId () != mainAccount.getId ()" , gType , true);
+                l.n (null , dgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , "stickerGroups.getAddedBy ().getId () != mainAccount.getId ()" , dgType , true);
             }
         }
 
@@ -487,12 +496,14 @@ public final class RestStickers
      * @return AnswerToClient OR AnswerGetAndDelete
      */
     private Object getAndDelete (String strIdGroup , HttpServletResponse res , HttpServletRequest req , String
-            codeLogin)
+            codeLogin , String r , SubmitRequestType t)
     {
+        // r => Router , r => type
+
         AnswerToClient answer;
 
         String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
-        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
+        CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , r , t);
         if (both.isOk ())
         {
             assert both.getIsLogin () != null;
@@ -508,21 +519,21 @@ public final class RestStickers
                     {
                         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
                         answer.setReqRes (req , res);
-                        l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gType , true);
+                        l.n (request , r , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , t , true);
                     }
                 }
                 else
                 {
                     answer = AnswerToClient.IdInvalid ();
                     answer.setReqRes (req , res);
-                    l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("id_group" , strIdGroup) , gType , true);
+                    l.n (request , r , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("id_group" , strIdGroup) , t , true);
                 }
             }
             else
             {
                 answer = AnswerToClient.RequestIsNull ();
                 answer.setReqRes (req , res);
-                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , gType , true);
+                l.n (null , r , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , t , true);
             }
         }
         else answer = both.getAnswerToClient ();
