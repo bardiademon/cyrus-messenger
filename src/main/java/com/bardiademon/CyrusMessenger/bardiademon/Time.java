@@ -12,6 +12,11 @@ public final class Time
 
     private static final int MIN_TIMESTAMP = 60000;
 
+    public static LocalDateTime now ()
+    {
+        return LocalDateTime.now ();
+    }
+
     public static String toString (LocalDateTime time)
     {
         return toString (time , "yyyy-MM-dd HH:mm:ss");

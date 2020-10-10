@@ -408,6 +408,90 @@ public final class RestStickers
         AnswerToClient answer;
 
         String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
+        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin);
+
+        if (getAndDelete instanceof AnswerToClient) answer = (AnswerToClient) getAndDelete;
+        else
+        {
+            AnswerGetAndDelete answerGetAndDelete = (AnswerGetAndDelete) getAndDelete;
+            MainAccount mainAccount = answerGetAndDelete.mainAccount;
+            StickerGroups stickerGroups = answerGetAndDelete.stickerGroups;
+
+            boolean accessLevel;
+
+            if (stickerGroups.isWithPermission ())
+            {
+                if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
+                else
+                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId ());
+            }
+            else accessLevel = true;
+
+            if (accessLevel)
+            {
+                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                answer.put (KeyAnswer.name.name () , stickerGroups.getGroupName ());
+                answer.put (KeyAnswer.des.name () , stickerGroups.getDescription ());
+                answer.put (KeyAnswer.img_id.name () , stickerGroups.getGroupImage ().getId ());
+                answer.put (KeyAnswer.added_at.name () , Time.toString (stickerGroups.getAddedAt ()));
+                answer.setReqRes (req , res);
+                l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , gType , false);
+            }
+            else
+            {
+                answer = AnswerToClient.AccessDenied ();
+                answer.setReqRes (req , res);
+                l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , gType , true);
+            }
+        }
+        return answer;
+    }
+
+    @RequestMapping (value = { "/delete-sticker-group" , "/delete-sticker-group/{id_group}" })
+    public AnswerToClient deleteStickerGroup
+            (HttpServletResponse res , HttpServletRequest req ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @PathVariable (value = "id_group", required = false) String strIdGroup)
+    {
+        AnswerToClient answer;
+        Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin);
+        if (getAndDelete instanceof AnswerToClient) answer = (AnswerToClient) getAndDelete;
+        else
+        {
+            AnswerGetAndDelete answerGetAndDelete = (AnswerGetAndDelete) getAndDelete;
+            MainAccount mainAccount = answerGetAndDelete.mainAccount;
+            StickerGroups stickerGroups = answerGetAndDelete.stickerGroups;
+
+            if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ())
+            {
+                stickerGroupsService.Repository.delete (stickerGroups.getId () , mainAccount.getId ());
+                uploadedImagesService.Repository.delete (stickerGroups.getId () , mainAccount.getId ());
+                hasStickerAccessLevel.getService ().delete (stickerGroups.getId () , mainAccount.getId ());
+
+                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                answer.setReqRes (req , res);
+                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , gType , false);
+            }
+            else
+            {
+                answer = AnswerToClient.AccessDenied ();
+                answer.setReqRes (req , res);
+                l.n (null , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , "stickerGroups.getAddedBy ().getId () != mainAccount.getId ()" , gType , true);
+            }
+        }
+
+        return answer;
+    }
+
+    /**
+     * @return AnswerToClient OR AnswerGetAndDelete
+     */
+    private Object getAndDelete (String strIdGroup , HttpServletResponse res , HttpServletRequest req , String
+            codeLogin)
+    {
+        AnswerToClient answer;
+
+        String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
         CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , csgRouter , SubmitRequestType.create_sticker_group);
         if (both.isOk ())
         {
@@ -419,35 +503,7 @@ public final class RestStickers
                 if (idGroup.isValid ())
                 {
                     StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idGroup.getId ());
-                    if (stickerGroups != null)
-                    {
-                        boolean accessLevel;
-
-                        if (stickerGroups.isWithPermission ())
-                        {
-                            if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
-                            else
-                                accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId ());
-                        }
-                        else accessLevel = true;
-
-                        if (accessLevel)
-                        {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                            answer.put (KeyAnswer.name.name () , stickerGroups.getGroupName ());
-                            answer.put (KeyAnswer.des.name () , stickerGroups.getDescription ());
-                            answer.put (KeyAnswer.img_id.name () , stickerGroups.getGroupImage ().getId ());
-                            answer.put (KeyAnswer.added_at.name () , Time.toString (stickerGroups.getAddedAt ()));
-                            answer.setReqRes (req , res);
-                            l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , gType , false);
-                        }
-                        else
-                        {
-                            answer = AnswerToClient.AccessDenied ();
-                            answer.setReqRes (req , res);
-                            l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , gType , true);
-                        }
-                    }
+                    if (stickerGroups != null) return new AnswerGetAndDelete (stickerGroups , mainAccount);
                     else
                     {
                         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
@@ -472,6 +528,18 @@ public final class RestStickers
         else answer = both.getAnswerToClient ();
 
         return answer;
+    }
+
+    private static class AnswerGetAndDelete
+    {
+        private final StickerGroups stickerGroups;
+        private final MainAccount mainAccount;
+
+        public AnswerGetAndDelete (final StickerGroups _StickerGroups , final MainAccount _MainAccount)
+        {
+            this.stickerGroups = _StickerGroups;
+            this.mainAccount = _MainAccount;
+        }
     }
 
     private enum ValAnswer
