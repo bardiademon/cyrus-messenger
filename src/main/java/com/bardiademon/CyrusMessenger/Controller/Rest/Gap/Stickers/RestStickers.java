@@ -108,8 +108,8 @@ public final class RestStickers
         this.gRouter = Domain.RNGap.STICKERS + "/group";
         this.gType = SubmitRequestType.get_info_one_sticker_group;
 
-        this.dgRouter = Domain.RNGap.STICKERS + "/group";
-        this.dgType = SubmitRequestType.get_info_one_sticker_group;
+        this.dgRouter = Domain.RNGap.STICKERS + "/delete-group";
+        this.dgType = SubmitRequestType.delete_sticker_group;
 
         hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
     }
