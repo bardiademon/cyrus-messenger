@@ -14,7 +14,7 @@ public interface StickerAccessLevelRepository extends JpaRepository <StickerAcce
 
     @Transactional
     @Modifying
-    @Query ("update StickerAccessLevel sal set sal.deleted = true , sal.deletedAt = current_timestamp where sal.stickerGroups.id = :ID_STICKER_GROUP and sal.mainAccount.id = :USER_ID")
-    int delete (@Param ("ID_STICKER_GROUP") long idStickerGroup , @Param ("USER_ID") long userId);
+    @Query ("update StickerAccessLevel sal set sal.deleted = true , sal.deletedAt = current_timestamp where sal.stickerGroups.id = :ID_STICKER_GROUP")
+    int delete (@Param ("ID_STICKER_GROUP") long idStickerGroup);
 
 }

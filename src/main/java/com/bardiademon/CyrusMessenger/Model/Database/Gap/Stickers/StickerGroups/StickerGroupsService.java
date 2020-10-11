@@ -22,7 +22,7 @@ public final class StickerGroupsService
 
     public StickerGroups stickerGroups (long id)
     {
-        return Repository.findById (id);
+        return Repository.findByIdAndDeletedFalse (id);
     }
 
 

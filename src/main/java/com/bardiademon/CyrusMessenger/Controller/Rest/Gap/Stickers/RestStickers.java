@@ -474,8 +474,8 @@ public final class RestStickers
             if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ())
             {
                 stickerGroupsService.Repository.delete (stickerGroups.getId () , mainAccount.getId ());
-                uploadedImagesService.Repository.delete (stickerGroups.getId () , mainAccount.getId ());
-                hasStickerAccessLevel.getService ().delete (stickerGroups.getId () , mainAccount.getId ());
+                uploadedImagesService.Repository.delete (stickerGroups.getGroupImage ().getId () , mainAccount.getId ());
+                hasStickerAccessLevel.getService ().delete (stickerGroups.getId ());
 
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
                 answer.setReqRes (req , res);
@@ -541,7 +541,7 @@ public final class RestStickers
         return answer;
     }
 
-    private static class AnswerGetAndDelete
+    private final static class AnswerGetAndDelete
     {
         private final StickerGroups stickerGroups;
         private final MainAccount mainAccount;

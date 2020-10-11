@@ -19,8 +19,8 @@ public final class StickerAccessLevelService
         return Repository.findByStickerGroupsIdAndMainAccountIdAndDeletedFalse (stickerGroupId , userId) != null;
     }
 
-    public int delete (long idStickerGroup , long userId)
+    public int delete (long idStickerGroup)
     {
-        return Repository.delete (idStickerGroup , userId);
+        return Repository.delete (idStickerGroup);
     }
 }
