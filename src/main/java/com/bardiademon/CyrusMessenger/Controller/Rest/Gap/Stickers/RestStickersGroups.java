@@ -52,8 +52,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping (value = Domain.RNGap.STICKERS, method = RequestMethod.POST)
-public final class RestStickers
+@RequestMapping (value = Domain.RNGap.STICKERS_GROUPS, method = RequestMethod.POST)
+public final class RestStickersGroups
 {
 
     private final StickersService stickersService;
@@ -91,7 +91,7 @@ public final class RestStickers
     private final HasStickerAccessLevel hasStickerAccessLevel;
 
     @Autowired
-    public RestStickers
+    public RestStickersGroups
             (StickersService _StickersService ,
              StickerGroupsService _StickerGroupsService ,
              UserLoginService _UserLoginService ,
@@ -109,16 +109,16 @@ public final class RestStickers
         this.usernamesService = _UsernamesService;
         this.groupsService = _GroupsService;
 
-        this.csgRouter = Domain.RNGap.STICKERS + "/create-sticker-group";
+        this.csgRouter = Domain.RNGap.STICKERS_GROUPS + "/create-sticker-group";
         this.csgType = SubmitRequestType.create_sticker_group;
 
-        this.giRouter = Domain.RNGap.STICKERS + "/groups-ids";
+        this.giRouter = csgRouter + "/groups-ids";
         this.giType = SubmitRequestType.get_groups_ids;
 
-        this.gRouter = Domain.RNGap.STICKERS + "/group";
+        this.gRouter = csgRouter + "/group";
         this.gType = SubmitRequestType.get_info_one_sticker_group;
 
-        this.dgRouter = Domain.RNGap.STICKERS + "/delete-group";
+        this.dgRouter = csgRouter + "/delete-group";
         this.dgType = SubmitRequestType.delete_sticker_group;
 
         hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
@@ -541,7 +541,6 @@ public final class RestStickers
 
         return answer;
     }
-
 
     @RequestMapping (value = { "/group" , "/group/{id_group}" })
     public AnswerToClient stickersGroups
