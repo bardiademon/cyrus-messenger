@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StickerAccessLevelRepository extends JpaRepository <StickerAccessLevel, Long>
 {
-    StickerAccessLevel findByStickerGroupsIdAndMainAccountIdAndDeletedFalse (long stickerGroupId , long userId);
+    StickerAccessLevel findByStickerGroupsIdAndMainAccountIdAndTypeAndDeletedFalse (long stickerGroupId , long userId , StickerAccessLevelType type);
+
+    StickerAccessLevel findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (long stickerGroupId , long userId , StickerAccessLevelType type);
 
     @Transactional
     @Modifying

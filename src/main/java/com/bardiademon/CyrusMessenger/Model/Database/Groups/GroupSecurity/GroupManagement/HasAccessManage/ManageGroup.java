@@ -13,7 +13,8 @@ import com.bardiademon.CyrusMessenger.bardiademon.ID;
 public final class ManageGroup
 {
     private final Service service;
-    private final ID idGroup;
+    private ID idGroup;
+    private String groupname;
     private final MainAccount mainAccount;
     private final AccessLevel accessLevel;
 
@@ -32,6 +33,33 @@ public final class ManageGroup
         can ();
     }
 
+    public ManageGroup (Service _Service , String Groupname , MainAccount _MainAccount , AccessLevel _AccessLevel)
+    {
+        this.service = _Service;
+        this.groupname = Groupname;
+        this.mainAccount = _MainAccount;
+        this.accessLevel = _AccessLevel;
+        can ();
+    }
+
+    public ManageGroup (Service _Service , MainAccount _MainAccount , AccessLevel _AccessLevel)
+    {
+        this.service = _Service;
+        this.mainAccount = _MainAccount;
+        this.accessLevel = _AccessLevel;
+        can ();
+    }
+
+    public void setGroupname (String groupname)
+    {
+        this.groupname = groupname;
+    }
+
+    public void setIdGroup (ID idGroup)
+    {
+        this.idGroup = idGroup;
+    }
+
     private void can ()
     {
         if (checkId ())
@@ -39,7 +67,9 @@ public final class ManageGroup
             if (mainAccount != null)
             {
                 ILUGroup iluGroup = new ILUGroup (service.groupsService);
-                iluGroup.setId (idGroup.getId ());
+                if (idGroup != null) iluGroup.setId (idGroup.getId ());
+                else iluGroup.setUsername (groupname);
+
                 if (iluGroup.isValid ())
                 {
                     manager = new IsManager (mainAccount , service.groupManagementService);

@@ -1,9 +1,9 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups;
 
 import com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation.VUsername;
-import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.Usernames;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import org.springframework.lang.Nullable;
 
@@ -63,7 +63,11 @@ public class ILUGroup
             if (new VUsername (username).check ())
             {
                 Usernames forGroup = usernamesService.findForGroup (username);
-                if (forGroup != null) group = forGroup.getGroups ();
+                if (forGroup != null)
+                {
+                    group = forGroup.getGroups ();
+                    return true;
+                }
                 else return false;
             }
         }

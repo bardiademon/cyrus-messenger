@@ -59,6 +59,12 @@ public class UserProfileAccessLevel
         this.applicant = applicant;
     }
 
+    public boolean hasAccess (Which... which)
+    {
+        for (Which wh : which) if (!hasAccess (wh)) return false;
+        return true;
+    }
+
     public boolean hasAccess (Which which)
     {
         this.which = which;

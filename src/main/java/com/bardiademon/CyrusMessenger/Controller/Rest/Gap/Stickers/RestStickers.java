@@ -6,13 +6,19 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.HasStickerAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Images.UploadedImages;
 import com.bardiademon.CyrusMessenger.Model.Database.Images.UploadedImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
@@ -20,7 +26,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
-import com.bardiademon.CyrusMessenger.bardiademon.Default.Default;
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.GetSize;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
@@ -57,6 +62,7 @@ public final class RestStickers
     private final UploadedImagesService uploadedImagesService;
     private final DefaultService defaultService;
     private final UsernamesService usernamesService;
+    private final GroupsService groupsService;
 
     /**
      * csg => Create Sticker Group
@@ -89,8 +95,11 @@ public final class RestStickers
             (StickersService _StickersService ,
              StickerGroupsService _StickerGroupsService ,
              UserLoginService _UserLoginService ,
-             UploadedImagesService _UploadedImagesService , DefaultService _DefaultService ,
-             StickerAccessLevelService _StickerAccessLevelService , UsernamesService _UsernamesService)
+             UploadedImagesService _UploadedImagesService ,
+             DefaultService _DefaultService ,
+             StickerAccessLevelService _StickerAccessLevelService ,
+             UsernamesService _UsernamesService ,
+             GroupsService _GroupsService)
     {
         this.stickersService = _StickersService;
         this.stickerGroupsService = _StickerGroupsService;
@@ -98,6 +107,7 @@ public final class RestStickers
         this.uploadedImagesService = _UploadedImagesService;
         this.defaultService = _DefaultService;
         this.usernamesService = _UsernamesService;
+        this.groupsService = _GroupsService;
 
         this.csgRouter = Domain.RNGap.STICKERS + "/create-sticker-group";
         this.csgType = SubmitRequestType.create_sticker_group;
@@ -156,8 +166,8 @@ public final class RestStickers
                                     if ((imageWidth >= minWidth && imageWidth <= maxWidth) && (imageHeight >= minHeight && imageHeight <= maxHeight))
                                     {
                                         boolean okUsernames = true;
-                                        List <MainAccount> mainAccounts = null;
-                                        List <String> licensedUsers = null;
+                                        List <RequestCreateStickerGroup.LicensedUsers> users = null;
+                                        List <RequestCreateStickerGroup.LicensedUsers> licensedUsers = null;
 
                                         String with_per = request.getWith_per ();
                                         if (Str.HasBool (with_per))
@@ -167,30 +177,131 @@ public final class RestStickers
                                             request.setWithPermission (withPer);
                                         }
 
+                                        // sabt dastrasi , agar true bashad
                                         if (request.isWithPermission ())
                                         {
-                                            licensedUsers = request.getLicensed_users ();
-
-                                            if (licensedUsers != null && licensedUsers.size () > 0)
+                                            if (request.setLicensedUsers ())
                                             {
-                                                FITD_Username fitd_username = new FITD_Username (usernamesService);
+                                                licensedUsers = request.getLicensedUsers ();
 
-                                                mainAccounts = new ArrayList <> ();
-                                                for (String licensedUser : licensedUsers)
+                                                if (licensedUsers != null && licensedUsers.size () > 0)
                                                 {
-                                                    fitd_username.check (licensedUser);
-                                                    if (!fitd_username.isOk ())
+                                                    String duplicateItems;
+                                                    if ((duplicateItems = (checkForDuplicateItems (licensedUsers))) == null)
                                                     {
-                                                        answer = fitd_username.getAnswer ();
-                                                        answer.setReqRes (req , res);
-                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , ToJson.CreateClass.nj ("username" , licensedUser) , csgType , true);
-                                                        okUsernames = false;
-                                                        break;
+                                                        final FITD_Username fitd_username = new FITD_Username (usernamesService);
+                                                        final ILUGroup iluGroup = new ILUGroup (groupsService , usernamesService);
+
+                                                        users = new ArrayList <> ();
+
+                                                        StickerAccessLevelType type;
+
+                                                        UserProfileAccessLevel userProfileAccessLevel = new UserProfileAccessLevel (mainAccount);
+                                                        for (var licensedUser : licensedUsers)
+                                                        {
+                                                            // type baray in ke in dastrasi baraye group hast ya user
+                                                            type = StickerAccessLevelType.to (licensedUser.getType ());
+                                                            if (type != null)
+                                                            {
+                                                                if (type.equals (StickerAccessLevelType.user))
+                                                                {
+                                                                    // agar user bod , username check mishavad, agar sahih bod , dakhl list users ezaf mishe baraye sabt
+                                                                    fitd_username.check (licensedUser.getUsername ());
+                                                                    if (!fitd_username.isOk ())
+                                                                    {
+                                                                        answer = fitd_username.getAnswer ();
+                                                                        answer.setReqRes (req , res);
+                                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , ToJson.CreateClass.nj ("username" , licensedUser.getUsername ()) , csgType , true);
+                                                                        okUsernames = false;
+                                                                        break;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        /*
+                                                                         * barasi dastresi be user khaste shode
+                                                                         */
+                                                                        userProfileAccessLevel.setUser (fitd_username.getMainAccount ());
+                                                                        if (userProfileAccessLevel.hasAccess (Which.find_me , Which.username))
+                                                                        {
+                                                                            licensedUser.setUsername (null);
+                                                                            licensedUser.setMainAccount (fitd_username.getMainAccount ());
+                                                                            users.add (licensedUser);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                                                                            answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
+                                                                            answer.setReqRes (req , res);
+                                                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , ToJson.CreateClass.nj ("username" , licensedUser.getUsername ()) , csgType , true);
+                                                                            okUsernames = false;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    /*
+                                                                     *  agar group bod ke check mikonam aval groupname va bad in ke karbar login shode modir group hast ya na
+                                                                     */
+                                                                    iluGroup.setUsername (licensedUser.getUsername ());
+                                                                    if (iluGroup.isValid ())
+                                                                    {
+                                                                        final Groups groups = iluGroup.getGroup ();
+                                                                        assert groups != null;
+                                                                        if (groups.getOwner ().getId () == mainAccount.getId ())
+                                                                        {
+                                                                            licensedUser.setUsername (null);
+                                                                            licensedUser.setGroups (groups);
+                                                                            users.add (licensedUser);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_do_not_own_a_group.name ());
+                                                                            answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
+                                                                            answer.setReqRes (req , res);
+                                                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_do_not_own_a_group.name ()) , ToJson.CreateClass.nj ("groupname" , licensedUser.getUsername ()) , csgType , true);
+                                                                            okUsernames = false;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_groupname.name ());
+                                                                        answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
+                                                                        answer.setReqRes (req , res);
+                                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_groupname.name ()) , ToJson.CreateClass.nj ("groupname" , licensedUser.getUsername ()) , csgType , true);
+                                                                        okUsernames = false;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_sticker_access_level_type.name ());
+                                                                l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_sticker_access_level_type.name ()) , ToJson.CreateClass.nj ("type" , licensedUser.getType ()) , csgType , true);
+                                                                break;
+                                                            }
+
+                                                        }
                                                     }
-                                                    else mainAccounts.add (fitd_username.getMainAccount ());
+                                                    else
+                                                    {
+                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.duplicate_item_found.name ());
+                                                        answer.put (KeyAnswer.duplicate_case.name () , duplicateItems);
+                                                        answer.setReqRes (req , res);
+                                                        l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.duplicate_item_found.name ()) , ToJson.CreateClass.nj ("duplicate_items" , duplicateItems) , csgType , true);
+                                                        okUsernames = false;
+                                                    }
                                                 }
                                             }
+                                            else
+                                            {
+                                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.error_licensed_users.name ());
+                                                answer.setReqRes (req , res);
+                                                l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.error_licensed_users.name ()) , null , csgType , true);
+                                            }
                                         }
+
                                         if (okUsernames)
                                         {
                                             int counter = 0;
@@ -251,23 +362,29 @@ public final class RestStickers
                                                             {
                                                                 List <StickerAccessLevel> stickerAccessLevels = new ArrayList <> ();
 
-                                                                try
+
+                                                                assert users != null;
+                                                                for (var user : users)
                                                                 {
-                                                                    assert mainAccounts != null;
-                                                                    for (MainAccount account : mainAccounts)
+                                                                    try
                                                                     {
                                                                         StickerAccessLevel stickerAccessLevel = new StickerAccessLevel ();
-                                                                        stickerAccessLevel.setMainAccount (account);
+
+                                                                        if (user.getType ().equals (StickerAccessLevelType.user.name ()))
+                                                                            stickerAccessLevel.setMainAccount (user.getMainAccount ());
+                                                                        else
+                                                                            stickerAccessLevel.setGroups (user.getGroups ());
+
                                                                         stickerAccessLevel.setStickerGroups (stickerGroups);
                                                                         stickerAccessLevels.add (stickerAccessLevel);
+                                                                        stickerAccessLevel.setType (StickerAccessLevelType.to (user.getType ()));
                                                                     }
-                                                                    hasStickerAccessLevel.getService ().Repository.saveAll (stickerAccessLevels);
+                                                                    catch (NullPointerException e)
+                                                                    {
+                                                                        l.n (Thread.currentThread ().getStackTrace () , e);
+                                                                    }
                                                                 }
-                                                                catch (NullPointerException e)
-                                                                {
-                                                                    l.n (Thread.currentThread ().getStackTrace () , e);
-                                                                }
-
+                                                                hasStickerAccessLevel.getService ().Repository.saveAll (stickerAccessLevels);
                                                             }
 
                                                             answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added_sticker_group.name ());
@@ -319,7 +436,7 @@ public final class RestStickers
                                 {
                                     answer = AnswerToClient.ServerError ();
                                     answer.setReqRes (req , res);
-                                    l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("error" , Default.class.getName ()) , csgType , true);
+                                    l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("error" , DefaultKey.class.getName ()) , csgType , true);
                                 }
                             }
                             else
@@ -376,6 +493,23 @@ public final class RestStickers
         return answer;
     }
 
+    public String checkForDuplicateItems (List <RequestCreateStickerGroup.LicensedUsers> licensedUsers)
+    {
+        RequestCreateStickerGroup.LicensedUsers userI, userJ;
+        for (int i = 0, len = licensedUsers.size (); i < len; i++)
+        {
+            userI = licensedUsers.get (i);
+            for (int j = i + 1, lenJ = licensedUsers.size (); j < lenJ; j++)
+            {
+                userJ = licensedUsers.get (j);
+                if (userI.getUsername ().equals (userJ.getUsername ()) && userI.getType ().equals (userJ.getType ()))
+                    return licensedUsers.get (i).getUsername ();
+            }
+        }
+
+        return null;
+    }
+
     @RequestMapping (value = "/groups-ids")
     public AnswerToClient stickersGroups
             (HttpServletResponse res , HttpServletRequest req ,
@@ -408,6 +542,7 @@ public final class RestStickers
         return answer;
     }
 
+
     @RequestMapping (value = { "/group" , "/group/{id_group}" })
     public AnswerToClient stickersGroups
             (HttpServletResponse res , HttpServletRequest req ,
@@ -432,7 +567,7 @@ public final class RestStickers
             {
                 if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
                 else
-                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId ());
+                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId () , StickerAccessLevelType.user);
             }
             else accessLevel = true;
 
@@ -559,7 +694,8 @@ public final class RestStickers
         error_create_name_group_image, error_write_file, error_save_info_image,
         error_save_info_sticker, added_sticker_group,
         the_size_of_the_image_is_large,
-        invalid_width_or_height
+        invalid_width_or_height, invalid_sticker_access_level_type, invalid_groupname,
+        you_do_not_own_a_group, duplicate_item_found, error_licensed_users
     }
 
     private enum KeyAnswer
@@ -569,7 +705,7 @@ public final class RestStickers
         min_width, min_height,
         max_width, max_height,
         width, height,
-        acceptable_width_height
+        acceptable_width_height, duplicate_case
     }
 
 }

@@ -14,9 +14,14 @@ public final class StickerAccessLevelService
         this.Repository = Repository;
     }
 
-    public boolean hasAccess (long stickerGroupId , long userId)
+    public boolean hasAccessUser (long stickerGroupId , long userId)
     {
-        return Repository.findByStickerGroupsIdAndMainAccountIdAndDeletedFalse (stickerGroupId , userId) != null;
+        return Repository.findByStickerGroupsIdAndMainAccountIdAndTypeAndDeletedFalse (stickerGroupId , userId , StickerAccessLevelType.user) != null;
+    }
+
+    public boolean hasAccessGroup (long stickerGroupId , long groupId)
+    {
+        return Repository.findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (stickerGroupId , groupId , StickerAccessLevelType.group) != null;
     }
 
     public int delete (long idStickerGroup)

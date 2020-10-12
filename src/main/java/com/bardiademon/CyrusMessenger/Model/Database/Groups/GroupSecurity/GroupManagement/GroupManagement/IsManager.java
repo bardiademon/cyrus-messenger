@@ -8,8 +8,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 
 public final class IsManager
 {
-    private MainAccount mainAccount;
-    private GroupManagementService groupManagementService;
+    private final MainAccount mainAccount;
+    private final GroupManagementService groupManagementService;
     private Groups group;
 
     private ThisManagerHaveAccess thisManagerHaveAccess;

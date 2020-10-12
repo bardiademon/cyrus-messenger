@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Security;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
 
 public final class HasStickerAccessLevel
 {
@@ -11,9 +12,17 @@ public final class HasStickerAccessLevel
         this.service = Service;
     }
 
-    public boolean hasAccess (long stickerGroupId , long userId)
+    public boolean hasAccess (long stickerGroupId , long userId , StickerAccessLevelType type)
     {
-        return service.hasAccess (stickerGroupId , userId);
+        switch (type)
+        {
+            case user:
+                return service.hasAccessUser (stickerGroupId , userId);
+            case group:
+                service.hasAccessGroup (stickerGroupId , userId);
+            default:
+                return false;
+        }
     }
 
 
