@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,11 +35,9 @@ public final class ProfilePictures
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private Groups groups;
 
-    private String name;
-
-    private String type;
-
-    private long size;
+    @ManyToOne
+    @JoinColumn (name = "image_id", referencedColumnName = "id")
+    private Images image;
 
     private boolean deleted;
 
@@ -99,24 +98,14 @@ public final class ProfilePictures
         this.groups = groups;
     }
 
-    public String getName ()
+    public Images getImage ()
     {
-        return name;
+        return image;
     }
 
-    public void setName (String name)
+    public void setImage (Images image)
     {
-        this.name = name;
-    }
-
-    public String getType ()
-    {
-        return type;
-    }
-
-    public void setType (String type)
-    {
-        this.type = type;
+        this.image = image;
     }
 
     public boolean isDeleted ()
@@ -146,7 +135,7 @@ public final class ProfilePictures
 
     public void setPlacementNumber (int placementNumber)
     {
-        this.placementNumber = Math.max (placementNumber , 0);
+        this.placementNumber = placementNumber;
     }
 
     public ProfilePicFor getThisPicFor ()
@@ -189,16 +178,6 @@ public final class ProfilePictures
         this.updatedAt = updatedAt;
     }
 
-    public long getSize ()
-    {
-        return size;
-    }
-
-    public void setSize (long size)
-    {
-        this.size = size;
-    }
-
     public boolean isSeparate ()
     {
         return separate;
@@ -208,5 +187,4 @@ public final class ProfilePictures
     {
         this.separate = separate;
     }
-
 }

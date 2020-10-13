@@ -9,6 +9,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.IsJoined;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -19,6 +20,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -77,9 +79,8 @@ public final class RestGetOneProfilePictureGroup
                 ProfilePictures profilePicture = profilePicturesService.Repository.findProfilePictureGroup (idProfilePicture.getId ());
                 if (profilePicture != null)
                 {
-                    String pathProfilePicture = Path.StickTogether (Path.PROFILE_PICTURES_GROUPS ,
-                            String.valueOf (profilePicture.getGroups ().getId ()) ,
-                            String.format ("%s.%s" , profilePicture.getName () , profilePicture.getType ()));
+                    Images image = profilePicture.getImage ();
+                    String pathProfilePicture = Path.StickTogether (image.getType () , Str.toArray (image.getSavedPath () , image.getName ()));
 
                     ID idGroup = new ID (profilePicture.getGroups ().getId ());
 

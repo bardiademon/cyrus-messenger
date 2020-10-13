@@ -4,6 +4,8 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -12,17 +14,16 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping (value = Domain.RNGap.RNProfilePicture.RN_PROFILE_PICTURES_DELETE_USER, method = RequestMethod.POST)
@@ -31,15 +32,20 @@ public final class RestDeleteProfilePictureUser
 
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
+    private final ImagesService imagesService;
 
     @Autowired
-    public RestDeleteProfilePictureUser (UserLoginService _UserLoginService , ProfilePicturesService _ProfilePicturesService)
+    public RestDeleteProfilePictureUser
+            (UserLoginService _UserLoginService ,
+             ProfilePicturesService _ProfilePicturesService ,
+             ImagesService _ImagesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
+        this.imagesService = _ImagesService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{ID_PROFILE_PICTURE}"})
+    @RequestMapping (value = { "" , "/" , "/{ID_PROFILE_PICTURE}" })
     public AnswerToClient delete
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -61,8 +67,13 @@ public final class RestDeleteProfilePictureUser
                 ProfilePictures profilePictures = profilePicturesService.getOneForUser (idProfilePicture.getId () , mainAccount.getId ());
                 if (profilePictures != null)
                 {
+                    Images image = profilePictures.getImage ();
+                    image.setDeleted (true);
+                    image.setDeletedAt (Time.now ());
+                    imagesService.Repository.save (image);
+
                     profilePictures.setDeleted (true);
-                    profilePictures.setDeletedAt (LocalDateTime.now ());
+                    profilePictures.setDeletedAt (Time.now ());
                     profilePicturesService.Repository.save (profilePictures);
 
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted.name ());

@@ -4,16 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class UploadedImagesService
+public final class ImagesService
 {
-    public final UploadedImagesRepository Repository;
+    public final ImagesRepository Repository;
 
     @Autowired
-    public UploadedImagesService (UploadedImagesRepository Repository)
+    public ImagesService (ImagesRepository Repository)
     {
         this.Repository = Repository;
     }
-
-
 
 }

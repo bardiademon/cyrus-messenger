@@ -63,7 +63,12 @@ public abstract class Path
             if (extension == null || extension.equals ("")) NewPath.append (File.separator);
         }
         String replace = NewPath.toString ().replace (File.separator + File.separator , File.separator);
-        if (!Str.IsEmpty (Type)) replace += "." + Type;
+        if (!Str.IsEmpty (Type))
+        {
+            if (replace.substring (replace.length () - 1).equals (File.separator))
+                replace = replace.substring (0 , replace.length () - 1);
+            replace += "." + Type;
+        }
 
         return replace;
     }

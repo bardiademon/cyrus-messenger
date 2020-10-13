@@ -8,10 +8,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UploadedImagesRepository extends JpaRepository <UploadedImages, Long>
+public interface ImagesRepository extends JpaRepository <Images, Long>
 {
     @Transactional
     @Modifying
-    @Query ("update UploadedImages ui set ui.deleted = true , ui.deletedAt = current_timestamp where ui.id = :ID and ui.uploadedBy.id = :USER_ID")
+    @Query ("update Images ui set ui.deleted = true , ui.deletedAt = current_timestamp where ui.id = :ID and ui.uploadedBy.id = :USER_ID")
     int delete (@Param ("ID") long id , @Param ("USER_ID") long userId);
+
+    Images findById (long id);
 }

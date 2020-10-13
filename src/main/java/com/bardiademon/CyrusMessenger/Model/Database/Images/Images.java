@@ -13,7 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table (name = "uploaded_images")
-public final class UploadedImages
+public final class Images
 {
     @Id
     @GeneratedValue
@@ -54,7 +54,7 @@ public final class UploadedImages
     @JoinColumn (name = "uploaded_by", referencedColumnName = "id")
     private MainAccount uploadedBy;
 
-    public UploadedImages ()
+    public Images ()
     {
     }
 

@@ -18,23 +18,23 @@ public abstract class Domain
 
         public static abstract class RNProfilePicture
         {
-            private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile_pictures";
+            private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile-pictures";
 
             private static final String RN_PROFILE_PICTURES_USER = RN_PROFILE_PICTURES + "/user";
             public static final String RN_PROFILE_PICTURES_UPLOAD_USER = RN_PROFILE_PICTURES_USER + "/upload";
-            public static final String RN_PROFILE_PICTURES_GET_ALL_USER = RN_PROFILE_PICTURES_USER + "/get_all";
-            public static final String RN_PROFILE_PICTURES_GET_ONE_USER = RN_PROFILE_PICTURES_USER + "/get_one";
+            public static final String RN_PROFILE_PICTURES_GET_ALL_USER = RN_PROFILE_PICTURES_USER + "/get-all";
+            public static final String RN_PROFILE_PICTURES_GET_ONE_USER = RN_PROFILE_PICTURES_USER + "/get-one";
             public static final String RN_PROFILE_PICTURES_DELETE_USER = RN_PROFILE_PICTURES_USER + "/delete";
 
             private static final String RN_PROFILE_PICTURES_GROUP = RN_PROFILE_PICTURES + "/group";
             public static final String RN_PROFILE_PICTURES_UPLOAD_GROUP = RN_PROFILE_PICTURES_GROUP + "/upload";
-            public static final String RN_PROFILE_PICTURES_GET_ALL_GROUP = RN_PROFILE_PICTURES_GROUP + "/get_all";
-            public static final String RN_PROFILE_PICTURES_GET_ONE_GROUP = RN_PROFILE_PICTURES_GROUP + "/get_one";
+            public static final String RN_PROFILE_PICTURES_GET_ALL_GROUP = RN_PROFILE_PICTURES_GROUP + "/get-all";
+            public static final String RN_PROFILE_PICTURES_GET_ONE_GROUP = RN_PROFILE_PICTURES_GROUP + "/get-one";
             public static final String RN_PROFILE_PICTURES_DELETE_GROUP = RN_PROFILE_PICTURES_GROUP + "/delete";
 
             // PP => Profile Pictures
-            public static final String RN_PP_PLACEMENT_NUMBER_GROUP = RN_PROFILE_PICTURES_GROUP + "/placement_number";
-            public static final String RN_PP_PLACEMENT_NUMBER_USER = RN_PROFILE_PICTURES_USER + "/placement_number";
+            public static final String RN_PP_PLACEMENT_NUMBER_GROUP = RN_PROFILE_PICTURES_GROUP + "/placement-number";
+            public static final String RN_PP_PLACEMENT_NUMBER_USER = RN_PROFILE_PICTURES_USER + "/placement-number";
 
 
         }

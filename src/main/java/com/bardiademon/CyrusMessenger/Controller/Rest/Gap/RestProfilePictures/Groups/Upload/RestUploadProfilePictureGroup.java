@@ -11,6 +11,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupM
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -21,6 +23,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.Hash256;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
+import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -47,6 +50,7 @@ public final class RestUploadProfilePictureGroup
 
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
+    private final ImagesService imagesService;
     private final ManageGroup.Service service;
 
     @Autowired
@@ -55,14 +59,16 @@ public final class RestUploadProfilePictureGroup
              MainAccountService _MainAccountService ,
              GroupsService _GroupsService ,
              GroupManagementService _GroupManagementService ,
-             ProfilePicturesService _ProfilePicturesService)
+             ProfilePicturesService _ProfilePicturesService ,
+             ImagesService _ImagesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
+        this.imagesService = _ImagesService;
         this.service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient upload
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
@@ -148,7 +154,7 @@ public final class RestUploadProfilePictureGroup
 
                                 if (ok)
                                 {
-                                    answerToClient = upload (res , req , request , router , mainAccount , group , oldProfilePicture);
+                                    answerToClient = upload (res , req , request , router , checkRequest.getCheckImage () , mainAccount , group , oldProfilePicture);
                                     l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.uploaded.name ());
                                     r.n (mainAccount , type , false);
                                 }
@@ -190,7 +196,7 @@ public final class RestUploadProfilePictureGroup
 
     private AnswerToClient upload
             (HttpServletResponse res , HttpServletRequest req ,
-             RequestUploadProfilePictureGroup request , String router , MainAccount mainAccount , Groups groups , ProfilePictures oldProfilePicture)
+             RequestUploadProfilePictureGroup request , String router , CheckImage checkImage , MainAccount mainAccount , Groups groups , ProfilePictures oldProfilePicture)
     {
         AnswerToClient answerToClient;
         try
@@ -219,12 +225,21 @@ public final class RestUploadProfilePictureGroup
                     if (request.isMain ())
                         profilePicturesService.disableMainPhotoGroup (groups.getId ());
 
+                    Images image = new Images ();
+                    image.setName (name);
+                    image.setType (type);
+                    image.setSize (picture.getSize ());
+                    image.setWidth (checkImage.getWidth ());
+                    image.setHeight (checkImage.getHeight ());
+                    image.setImageFor (RestUploadProfilePictureGroup.class.getName ());
+                    image.setSavedPath (pathUploadPicture.getParent ());
+                    image.setUploadedBy (mainAccount);
+                    image = imagesService.Repository.save (image);
+
                     ProfilePictures profilePictures = new ProfilePictures ();
                     profilePictures.setGroups (groups);
                     profilePictures.setThisPicFor (ProfilePicFor.group);
-                    profilePictures.setName (name);
-                    profilePictures.setType (type);
-                    profilePictures.setSize (picture.getSize ());
+                    profilePictures.setImage (image);
 
                     if (request.getPlacement_number () > -1)
                         profilePictures.setPlacementNumber (request.getPlacement_number ());

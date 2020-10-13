@@ -1,11 +1,11 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.RestProfilePictures.Users.GetOne;
 
-import com.bardiademon.CyrusMessenger.Controller.Rest.Gap.RestProfilePictures.PathUploadProfilePictures;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
+import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -14,6 +14,7 @@ import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.ProfilePictures
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -74,11 +75,14 @@ public final class RestGetOneProfilePictureUser
                             for (ProfilePictures profilePicture : separateProfilePictures)
                             {
                                 if (profilePicture.getId () == profilePictures.getId ())
-                                    return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
+                                    return toByte (Path.StickTogether (profilePictures.getImage ().getType () , Str.toArray (profilePictures.getImage ().getSavedPath () , profilePictures.getImage ().getName ())));
                             }
                         }
                         else
-                            return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePictures.getName () , profilePictures.getType ()));
+                        {
+                            Images image = profilePictures.getImage ();
+                            return toByte (Path.StickTogether (image.getType () , Str.toArray (image.getSavedPath () , image.getName ())));
+                        }
                     }
                 }
             }
@@ -98,7 +102,6 @@ public final class RestGetOneProfilePictureUser
         String request = ToJson.CreateClass.n ("ID_PROFILE_PICTURE" , id).toJson ();
 
         MainAccount mainAccountUser = null;
-
 
         CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , SubmitRequestType.get_one_profile_picture_user);
 
@@ -123,14 +126,13 @@ public final class RestGetOneProfilePictureUser
                             profilePicture = (new SortProfilePictures (mainAccountUser.getProfilePictures ())).getMainProfilePicture ();
 
                         if (profilePicture != null)
-                            return toByte (PathUploadProfilePictures.User (mainAccountUser.getId () , profilePicture.getName () , profilePicture.getType ()));
+                            return toByte (Path.StickTogether (profilePicture.getImage ().getType () , Str.toArray (profilePicture.getImage ().getSavedPath () , profilePicture.getImage ().getName ())));
 
                     }
                 }
             }
         }
         else return toByte (Path.GetImage (Path.IC_NOT_LOGGED));
-
 
         if (mainAccountUser != null)
         {
