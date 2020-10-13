@@ -14,12 +14,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table (name = "sticker_groups")
 public final class StickerGroups
 {
+    /**
+     * TBNAME => table name
+     */
+    @Transient
+    public static final String TBNAME = "sticker_groups";
+
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)

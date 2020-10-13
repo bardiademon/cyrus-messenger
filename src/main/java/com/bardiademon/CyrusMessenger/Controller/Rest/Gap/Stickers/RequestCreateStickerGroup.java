@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public final class RequestCreateStickerGroup
 {
 
-    private long id;
+    private String id;
 
     private String group_name;
 
@@ -45,6 +45,11 @@ public final class RequestCreateStickerGroup
 
         @JsonIgnore
         private Groups groups;
+
+        /**
+         * for update
+         */
+        private boolean delete;
 
         public LicensedUsers ()
         {
@@ -93,6 +98,16 @@ public final class RequestCreateStickerGroup
         {
             this.groups = groups;
         }
+
+        public boolean isDelete ()
+        {
+            return delete;
+        }
+
+        public void setDelete (boolean delete)
+        {
+            this.delete = delete;
+        }
     }
 
     public RequestCreateStickerGroup ()
@@ -128,19 +143,19 @@ public final class RequestCreateStickerGroup
         }
         return false;
     }
-    
+
     @JsonIgnore
     public List <LicensedUsers> getLicensedUsers ()
     {
         return licensedUsers;
     }
 
-    public long getId ()
+    public String getId ()
     {
         return id;
     }
 
-    public void setId (long id)
+    public void setId (String id)
     {
         this.id = id;
     }

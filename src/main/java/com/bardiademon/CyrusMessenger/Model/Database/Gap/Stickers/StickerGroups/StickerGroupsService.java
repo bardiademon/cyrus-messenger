@@ -20,9 +20,9 @@ public final class StickerGroupsService
         return Repository.getIds (idUser);
     }
 
-    public StickerGroups stickerGroups (long id)
+    public StickerGroups stickerGroups (long id , long userId)
     {
-        return Repository.findByIdAndDeletedFalse (id);
+        return Repository.findByIdAndDeletedFalseAndAddedById (id , userId);
     }
 
 

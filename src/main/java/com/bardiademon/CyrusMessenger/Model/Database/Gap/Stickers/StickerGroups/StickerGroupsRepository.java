@@ -14,7 +14,7 @@ public interface StickerGroupsRepository extends JpaRepository <StickerGroups, L
     @Query ("select sg.id from StickerGroups sg where sg.addedBy.id = :ID_USER and sg.deleted = false")
     List <Long> getIds (@Param ("ID_USER") long idUser);
 
-    StickerGroups findByIdAndDeletedFalse (long id);
+    StickerGroups findByIdAndDeletedFalseAndAddedById (long id , long userId);
 
     @Transactional
     @Modifying

@@ -16,12 +16,20 @@ public final class StickerAccessLevelService
 
     public boolean hasAccessUser (long stickerGroupId , long userId)
     {
-        return Repository.findByStickerGroupsIdAndMainAccountIdAndTypeAndDeletedFalse (stickerGroupId , userId , StickerAccessLevelType.user) != null;
+        return hasAccess (stickerGroupId , userId , StickerAccessLevelType.user);
     }
 
+    /*
+     * groupId => Groups id , Gap Groups
+     */
     public boolean hasAccessGroup (long stickerGroupId , long groupId)
     {
-        return Repository.findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (stickerGroupId , groupId , StickerAccessLevelType.group) != null;
+        return hasAccess (stickerGroupId , groupId , StickerAccessLevelType.group);
+    }
+
+    public boolean hasAccess (long stickerGroupId , long groupId , StickerAccessLevelType type)
+    {
+        return Repository.findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (stickerGroupId , groupId , type) != null;
     }
 
     public int delete (long idStickerGroup)
