@@ -18,7 +18,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessL
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroupsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
@@ -59,7 +58,6 @@ import org.springframework.web.multipart.MultipartFile;
 public final class RestStickersGroups
 {
 
-    private final StickersService stickersService;
     private final StickerGroupsService stickerGroupsService;
     private final UserLoginService userLoginService;
     private final ImagesService imagesService;
@@ -95,18 +93,16 @@ public final class RestStickersGroups
     private final HasStickerAccessLevel hasStickerAccessLevel;
 
     @Autowired
-    public RestStickersGroups
-            (StickersService _StickersService ,
-             StickerGroupsService _StickerGroupsService ,
-             UserLoginService _UserLoginService ,
-             ImagesService _ImagesService ,
-             DefaultService _DefaultService ,
-             StickerAccessLevelService _StickerAccessLevelService ,
-             UsernamesService _UsernamesService ,
-             GroupsService _GroupsService ,
-             DeletedOrEditedService _DeletedOrEditedService)
+    public RestStickersGroups (
+            StickerGroupsService _StickerGroupsService ,
+            UserLoginService _UserLoginService ,
+            ImagesService _ImagesService ,
+            DefaultService _DefaultService ,
+            StickerAccessLevelService _StickerAccessLevelService ,
+            UsernamesService _UsernamesService ,
+            GroupsService _GroupsService ,
+            DeletedOrEditedService _DeletedOrEditedService)
     {
-        this.stickersService = _StickersService;
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
         this.imagesService = _ImagesService;
@@ -487,9 +483,9 @@ public final class RestStickersGroups
                                                         answer = AnswerToClient.ServerError ();
                                                         answer.setReqRes (req , res);
 
-                                                        String saveToPath = null;
+                                                        String saveToPath;
 
-                                                        if (!isNullGroupImage) saveToPath = saveTo.getPath ();
+                                                        saveToPath = saveTo.getPath ();
 
                                                         l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.n ("error" , ValAnswer.error_write_file.name ()).put ("save_to" , saveToPath).toJson () , csgType , true);
                                                     }
@@ -507,15 +503,16 @@ public final class RestStickersGroups
                                             answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_width_or_height.name ());
 
                                             answer.put (KeyAnswer.acceptable_width_height.name () ,
+
                                                     ToJson.CreateClass.n (KeyAnswer.min_width.name () , minWidth)
                                                             .put (KeyAnswer.max_width.name () , maxWidth)
                                                             .put (KeyAnswer.min_width.name () , minWidth)
                                                             .put (KeyAnswer.min_height.name () , minHeight)
-                                                            .put (KeyAnswer.max_height.name () , maxHeight).getCreateClass ());
+                                                            .put (KeyAnswer.max_height.name () , maxHeight).getCreateClass ())
 
-                                            answer.put (KeyAnswer.your_image_width_height.name () ,
-                                                    ToJson.CreateClass.n (KeyAnswer.width.name () , imageWidth)
-                                                            .put (KeyAnswer.height.name () , imageHeight).getCreateClass ());
+                                                    .put (KeyAnswer.your_image_width_height.name () ,
+                                                            ToJson.CreateClass.n (KeyAnswer.width.name () , imageWidth)
+                                                                    .put (KeyAnswer.height.name () , imageHeight).getCreateClass ());
 
                                             answer.setReqRes (req , res);
                                             l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_width_or_height.name ()) , null , csgType , true);

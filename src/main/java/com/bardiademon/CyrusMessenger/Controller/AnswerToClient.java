@@ -172,9 +172,10 @@ public class AnswerToClient
         if (response != null) response.setStatus (getStatusCode ());
     }
 
-    public void put (String key , Object value)
+    public AnswerToClient put (String key , Object value)
     {
         message.put (key , value);
+        return this;
     }
 
     @JsonProperty ("status_code")
