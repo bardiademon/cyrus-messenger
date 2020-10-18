@@ -198,14 +198,18 @@ public class AnswerToClient
     // CUK => Commonly used keys
     public enum CUK
     {
-        answer, id, ids, system, time, limit, which, result
+        answer, id, ids, system, time, limit, which, result, min_width, min_height,
+        max_width, max_height,
+        width, height,
+        acceptable_size, extra_size, acceptable_width_height
     }
 
     // CUK => Commonly used value
     public enum CUV
     {
-        sorry_for_this_error, id_invalid, not_found, user_not_found, access_has_been_disabled, access_denied, found, error,
-        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added, ok
+        sorry_for_this_error, id_invalid, not_found, user_not_found, invalid_width_or_height,
+        access_has_been_disabled, access_denied, found, error, not_found_id,
+        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added, ok,
     }
 
     @JsonIgnore

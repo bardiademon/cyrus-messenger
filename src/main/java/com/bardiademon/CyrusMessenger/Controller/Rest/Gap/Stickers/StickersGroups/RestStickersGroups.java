@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.Stickers;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.Stickers.StickersGroups;
 
 import com.bardiademon.CyrusMessenger.Code;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
@@ -94,14 +94,14 @@ public final class RestStickersGroups
 
     @Autowired
     public RestStickersGroups (
-            StickerGroupsService _StickerGroupsService ,
-            UserLoginService _UserLoginService ,
-            ImagesService _ImagesService ,
-            DefaultService _DefaultService ,
-            StickerAccessLevelService _StickerAccessLevelService ,
-            UsernamesService _UsernamesService ,
-            GroupsService _GroupsService ,
-            DeletedOrEditedService _DeletedOrEditedService)
+            final StickerGroupsService _StickerGroupsService ,
+            final UserLoginService _UserLoginService ,
+            final ImagesService _ImagesService ,
+            final DefaultService _DefaultService ,
+            final StickerAccessLevelService _StickerAccessLevelService ,
+            final UsernamesService _UsernamesService ,
+            final GroupsService _GroupsService ,
+            final DeletedOrEditedService _DeletedOrEditedService)
     {
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
@@ -146,7 +146,7 @@ public final class RestStickersGroups
                 boolean isUpdate = false, okId = true;
                 ID idStickerGroups;
                 StickerGroups stickerGroups = null;
-                if (request.getId () != null)
+                if (!Str.IsEmpty (request.getId ()))
                 {
                     idStickerGroups = new ID (request.getId ());
                     if (!idStickerGroups.isValid ())
@@ -179,6 +179,7 @@ public final class RestStickersGroups
 
                         boolean isNullGroupImage = groupImage == null;
 
+                        System.out.println ((isUpdate || !isNullGroupImage));
                         if (isUpdate || !isNullGroupImage)
                         {
                             CheckImage checkImage = null;
@@ -500,22 +501,22 @@ public final class RestStickersGroups
                                         }
                                         else
                                         {
-                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_width_or_height.name ());
+                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.invalid_width_or_height.name ());
 
-                                            answer.put (KeyAnswer.acceptable_width_height.name () ,
+                                            answer.put (AnswerToClient.CUK.acceptable_width_height.name () ,
 
-                                                    ToJson.CreateClass.n (KeyAnswer.min_width.name () , minWidth)
-                                                            .put (KeyAnswer.max_width.name () , maxWidth)
-                                                            .put (KeyAnswer.min_width.name () , minWidth)
-                                                            .put (KeyAnswer.min_height.name () , minHeight)
-                                                            .put (KeyAnswer.max_height.name () , maxHeight).getCreateClass ())
+                                                    ToJson.CreateClass.n (AnswerToClient.CUK.min_width.name () , minWidth)
+                                                            .put (AnswerToClient.CUK.max_width.name () , maxWidth)
+                                                            .put (AnswerToClient.CUK.min_width.name () , minWidth)
+                                                            .put (AnswerToClient.CUK.min_height.name () , minHeight)
+                                                            .put (AnswerToClient.CUK.max_height.name () , maxHeight).getCreateClass ())
 
                                                     .put (KeyAnswer.your_image_width_height.name () ,
-                                                            ToJson.CreateClass.n (KeyAnswer.width.name () , imageWidth)
-                                                                    .put (KeyAnswer.height.name () , imageHeight).getCreateClass ());
+                                                            ToJson.CreateClass.n (AnswerToClient.CUK.width.name () , imageWidth)
+                                                                    .put (AnswerToClient.CUK.height.name () , imageHeight).getCreateClass ());
 
                                             answer.setReqRes (req , res);
-                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_width_or_height.name ()) , null , csgType , true);
+                                            l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.invalid_width_or_height.name ()) , null , csgType , true);
                                         }
                                     }
                                     else
@@ -536,9 +537,9 @@ public final class RestStickersGroups
                                     else
                                     {
                                         answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_size_of_the_image_is_large.name ());
-                                        answer.put (KeyAnswer.acceptable_size.name () , GetSize.Get (maxSizeSticker));
+                                        answer.put (AnswerToClient.CUK.acceptable_size.name () , GetSize.Get (maxSizeSticker));
                                         answer.put (KeyAnswer.your_image_size.name () , GetSize.Get (imageSize));
-                                        answer.put (KeyAnswer.extra_size.name () , GetSize.Get ((imageSize - maxSizeSticker)));
+                                        answer.put (AnswerToClient.CUK.extra_size.name () , GetSize.Get ((imageSize - maxSizeSticker)));
                                         answer.setReqRes (req , res);
                                         l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.the_size_of_the_image_is_large.name ()) , null , csgType , true);
                                     }
@@ -781,18 +782,15 @@ public final class RestStickersGroups
         error_create_name_group_image, error_write_file, error_save_info_image,
         error_save_info_sticker, added_sticker_group, updated_sticker_group,
         the_size_of_the_image_is_large, invalid_sticker_group_id, not_found_sticker_group_id,
-        invalid_width_or_height, invalid_sticker_access_level_type, invalid_groupname,
+        invalid_sticker_access_level_type, invalid_groupname,
         you_do_not_own_a_group, duplicate_item_found, error_licensed_users
     }
 
     private enum KeyAnswer
     {
-        des, name, img_id, added_at, acceptable_size, your_image_size, extra_size,
+        des, name, img_id, added_at, your_image_size,
         your_image_width_height,
-        min_width, min_height,
-        max_width, max_height,
-        width, height,
-        acceptable_width_height, duplicate_case
+         duplicate_case
     }
 
 }

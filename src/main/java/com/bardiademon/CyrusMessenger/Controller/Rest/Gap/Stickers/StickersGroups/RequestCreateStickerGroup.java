@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.Stickers;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.Stickers.StickersGroups;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;

@@ -45,6 +45,13 @@ public abstract class Path
         return file.getPath ();
     }
 
+    public static String Stickers (long idMainAccount)
+    {
+        File file = new File (StickTogether (STICKERS , String.valueOf (idMainAccount)));
+        if (!file.exists ()) file.mkdirs ();
+        return file.getPath ();
+    }
+
     public static String StickTogether (String... Path)
     {
         return StickTogether (null , Path);

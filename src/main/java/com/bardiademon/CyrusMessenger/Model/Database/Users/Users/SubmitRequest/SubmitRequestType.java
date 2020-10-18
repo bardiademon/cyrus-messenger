@@ -22,6 +22,8 @@ public enum SubmitRequestType
 
     create_sticker_group, get_groups_ids, get_info_one_sticker_group, delete_sticker_group,
 
+    add_stickers,
+
 
     socket
 }

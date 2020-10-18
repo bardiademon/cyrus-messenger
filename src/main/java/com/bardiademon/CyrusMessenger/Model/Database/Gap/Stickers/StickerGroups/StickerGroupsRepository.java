@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StickerGroupsRepository extends JpaRepository <StickerGroups, Long>
 {
-    @Query ("select sg.id from StickerGroups sg where sg.addedBy.id = :ID_USER and sg.deleted = false")
+    @Query ("select sg.id from StickerGroups sg where sg.addedBy.id = :ID_USER and sg.deleted = false and sg.active = true")
     List <Long> getIds (@Param ("ID_USER") long idUser);
 
-    StickerGroups findByIdAndDeletedFalseAndAddedById (long id , long userId);
+    StickerGroups findByIdAndDeletedFalseAndAddedByIdAndActiveTrue (long id , long userId);
 
     @Transactional
     @Modifying

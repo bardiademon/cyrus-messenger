@@ -60,6 +60,9 @@ public final class StickerGroups
     @Column (name = "with_permission", nullable = false)
     private boolean withPermission = false;
 
+    @Column (name = "is_active", nullable = false)
+    private boolean active = true;
+
     public StickerGroups ()
     {
     }
@@ -162,5 +165,15 @@ public final class StickerGroups
     public void setWithPermission (boolean withPermission)
     {
         this.withPermission = withPermission;
+    }
+
+    public boolean isActive ()
+    {
+        return active;
+    }
+
+    public void setActive (boolean active)
+    {
+        this.active = active;
     }
 }
