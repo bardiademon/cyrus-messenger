@@ -31,7 +31,7 @@ public final class Stickers
     @JoinColumn (name = "id_group", referencedColumnName = "id")
     private StickerGroups group;
 
-    private LocalDateTime deleted;
+    private boolean deleted;
 
     @Column (name = "deleted_at", insertable = false)
     private LocalDateTime deletedAt;
@@ -80,12 +80,12 @@ public final class Stickers
         this.group = group;
     }
 
-    public LocalDateTime getDeleted ()
+    public boolean getDeleted ()
     {
         return deleted;
     }
 
-    public void setDeleted (LocalDateTime deleted)
+    public void setDeleted (boolean deleted)
     {
         this.deleted = deleted;
     }

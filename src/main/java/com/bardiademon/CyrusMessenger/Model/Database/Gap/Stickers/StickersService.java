@@ -13,4 +13,9 @@ public final class StickersService
     {
         this.Repository = Repository;
     }
+
+    public Stickers getSticker (long id)
+    {
+        return Repository.findByIdAndDeletedFalseAndGroupDeletedFalseAndGroupActiveTrue (id);
+    }
 }

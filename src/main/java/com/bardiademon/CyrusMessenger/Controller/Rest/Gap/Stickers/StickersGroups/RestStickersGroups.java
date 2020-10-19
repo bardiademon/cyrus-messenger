@@ -655,7 +655,7 @@ public final class RestStickersGroups
             {
                 if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
                 else
-                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups.getId () , mainAccount.getId () , StickerAccessLevelType.user);
+                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups , mainAccount.getId () , StickerAccessLevelType.user);
             }
             else accessLevel = true;
 
