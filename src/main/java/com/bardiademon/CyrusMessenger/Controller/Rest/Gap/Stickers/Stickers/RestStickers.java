@@ -141,6 +141,15 @@ public final class RestStickers
                             answer.setReqRes (req , res);
                             l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_sticker_id.name ()) , idSticker.getIdObj ().toString () , asType , true);
                         }
+                        else
+                        {
+                            if (sticker.getGroup ().getAddedBy ().getId () != mainAccount.getId ())
+                            {
+                                answer = AnswerToClient.AccessDenied ();
+                                answer.setReqRes (req , res);
+                                l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , ToJson.CreateClass.n ("user" , mainAccount.getId ()).put ("sticker" , sticker.getId ()).toJson () , asType , true);
+                            }
+                        }
                     }
                 }
 
