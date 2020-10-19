@@ -5,7 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public final class RequestAddStickers
 {
-    private long id_group;
+    private String id;
+    private String id_group;
     private String name;
 
     @JsonIgnore
@@ -15,12 +16,22 @@ public final class RequestAddStickers
     {
     }
 
-    public long getId_group ()
+    public String getId ()
+    {
+        return id;
+    }
+
+    public void setId (String id)
+    {
+        this.id = id;
+    }
+
+    public String getId_group ()
     {
         return id_group;
     }
 
-    public void setId_group (long id_group)
+    public void setId_group (String id_group)
     {
         this.id_group = id_group;
     }

@@ -24,6 +24,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.io.File;
 import java.io.IOException;
@@ -109,7 +110,7 @@ public final class RestStickers
 
         final String strRequest = ToJson.To (request);
 
-        AnswerToClient answer;
+        AnswerToClient answer = null;
         final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , asRouter , asType);
         if (both.isOk ())
         {
@@ -117,144 +118,198 @@ public final class RestStickers
             final MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
             if (request != null)
             {
-                final ID idGroup = new ID (request.getId_group ());
-                if (idGroup.isValid ())
+                final boolean isUpdated = !(Str.IsEmpty (request.getId ()));
+                boolean isNullImage;
+
+                ID idSticker;
+                Stickers sticker = null;
+                if (isUpdated)
                 {
-                    StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idGroup.getId () , mainAccount.getId ());
-                    if (stickerGroups != null)
+                    idSticker = new ID (request.getId ());
+                    if (!idSticker.isValid ())
                     {
-                        final MultipartFile multipartFile = request.getImage ();
-                        if (multipartFile != null && !multipartFile.isEmpty ())
+                        answer = AnswerToClient.IdInvalid (ValAnswer.invalid_sticker_id.name ());
+                        answer.setReqRes (req , res);
+                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_sticker_id.name ()) , idSticker.getIdObj ().toString () , asType , true);
+                    }
+                    else
+                    {
+                        sticker = stickersService.getSticker (idSticker.getId ());
+                        if (sticker == null)
                         {
-                            CheckImage checkImage = new CheckImage ();
-                            if (checkImage.valid (multipartFile))
+                            answer = AnswerToClient.IdInvalid (ValAnswer.not_found_sticker_id.name ());
+                            answer.setReqRes (req , res);
+                            l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_sticker_id.name ()) , idSticker.getIdObj ().toString () , asType , true);
+                        }
+                    }
+                }
+
+                if (answer == null)
+                {
+                    final ID idGroup = new ID (request.getId_group ());
+                    if (idGroup.isValid ())
+                    {
+                        StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idGroup.getId () , mainAccount.getId ());
+                        if (stickerGroups != null)
+                        {
+                            final MultipartFile multipartFile = request.getImage ();
+
+                            isNullImage = (isUpdated && multipartFile == null);
+
+                            if (isNullImage || (multipartFile != null && !multipartFile.isEmpty ()))
                             {
-                                final Integer maxLenName = defaultService.getInt (DefaultKey.sticker_max_len_name);
-                                if (maxLenName != null)
+                                CheckImage checkImage = null;
+                                if (isNullImage || (checkImage = new CheckImage ()).valid (multipartFile))
                                 {
-                                    if (request.getName ().length () <= maxLenName)
+                                    final Integer maxLenName = defaultService.getInt (DefaultKey.sticker_max_len_name);
+                                    if (maxLenName != null)
                                     {
-                                        if ((answer = checkImage.CSWH (req , res , strRequest , asRouter , mainAccount , asType , DefaultKey.max_size_sticker , DefaultKey.min_w_sticker_image , DefaultKey.max_w_sticker_image , DefaultKey.min_h_sticker_image , DefaultKey.max_h_sticker_image , defaultService)) == null)
+                                        if ((isUpdated && Str.IsEmpty (request.getName ())) || request.getName ().length () <= maxLenName)
                                         {
-                                            boolean ok = false;
-                                            String name = null;
-                                            File file = null;
-                                            List <String> codes = new ArrayList <> ();
-
-                                            final String type = FilenameUtils.getExtension (multipartFile.getOriginalFilename ());
-
-                                            Code code;
-
-                                            int counter = 0;
-
-                                            while ((++counter <= 10))
+                                            if (isNullImage || (answer = checkImage.CSWH (req , res , strRequest , asRouter , mainAccount , asType , DefaultKey.max_size_sticker , DefaultKey.min_w_sticker_image , DefaultKey.max_w_sticker_image , DefaultKey.min_h_sticker_image , DefaultKey.max_h_sticker_image , defaultService)) == null)
                                             {
-                                                code = Code.CreateCodeLong ();
-                                                code.createCode ();
-                                                name = code.getCode ();
-                                                if (!(file = (new File (Path.StickTogether (type , Str.toArray (Path.Stickers (mainAccount.getId ()) , name))))).exists ())
-                                                {
-                                                    ok = true;
-                                                    break;
-                                                }
-                                                else codes.add (name);
-                                            }
-                                            if (ok && !file.exists ())
-                                            {
-                                                try
-                                                {
-                                                    Files.write (file.toPath () , multipartFile.getBytes ());
+                                                boolean ok = false;
+                                                String name = null;
+                                                File file = null;
+                                                List <String> codes = new ArrayList <> ();
+                                                String type = null;
 
-                                                    if (file.exists ())
+                                                if (!isNullImage)
+                                                {
+                                                    type = FilenameUtils.getExtension (multipartFile.getOriginalFilename ());
+                                                    Code code;
+                                                    int counter = 0;
+                                                    while ((++counter <= 10))
                                                     {
-                                                        Images image = new Images ();
-                                                        image.setUploadedBy (mainAccount);
-                                                        image.setSavedPath (file.getParent ());
-                                                        image.setImageFor (Stickers.class.getName ());
-                                                        image.setWidth (checkImage.getWidth ());
-                                                        image.setHeight (checkImage.getHeight ());
-                                                        image.setSize (checkImage.getSize ());
-                                                        image.setName (name);
-                                                        image.setType (type);
-
-                                                        image = imagesService.Repository.save (image);
-                                                        if (image.getId () > 0)
+                                                        code = Code.CreateCodeLong ();
+                                                        code.createCode ();
+                                                        name = code.getCode ();
+                                                        if (!(file = (new File (Path.StickTogether (type , Str.toArray (Path.Stickers (mainAccount.getId ()) , name))))).exists ())
                                                         {
-                                                            Stickers sticker = new Stickers ();
-                                                            sticker.setGroup (stickerGroups);
-                                                            sticker.setName (request.getName ());
-                                                            sticker.setStickerImage (image);
-
-                                                            sticker = stickersService.Repository.save (sticker);
-                                                            if (sticker.getId () > 0)
-                                                            {
-                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.added.name ());
-                                                                answer.put (AnswerToClient.CUK.id.name () , sticker.getId ());
-                                                                answer.setReqRes (req , res);
-                                                                l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.added.name () , asType , false);
-                                                            }
-                                                            else throw new IOException ("Save sticker info error");
+                                                            ok = true;
+                                                            break;
                                                         }
-                                                        else throw new IOException ("Save image info error");
+                                                        else codes.add (name);
                                                     }
-                                                    else throw new IOException ("Write image error");
                                                 }
-                                                catch (IOException e)
+
+                                                if (isNullImage || (ok && !file.exists ()))
+                                                {
+                                                    try
+                                                    {
+                                                        if (!isNullImage)
+                                                            Files.write (file.toPath () , multipartFile.getBytes ());
+
+                                                        if (isNullImage || file.exists ())
+                                                        {
+                                                            Images image = null;
+                                                            if (!isNullImage)
+                                                            {
+                                                                if (isUpdated)
+                                                                {
+                                                                    final Images stickerImage = sticker.getStickerImage ();
+                                                                    stickerImage.setDeleted (true);
+                                                                    stickerImage.setDeletedAt (Time.now ());
+                                                                    imagesService.Repository.save (stickerImage);
+                                                                }
+
+                                                                image = new Images ();
+                                                                image.setUploadedBy (mainAccount);
+                                                                image.setSavedPath (file.getParent ());
+                                                                image.setImageFor (Stickers.class.getName ());
+                                                                image.setWidth (checkImage.getWidth ());
+                                                                image.setHeight (checkImage.getHeight ());
+                                                                image.setSize (checkImage.getSize ());
+                                                                image.setName (name);
+                                                                image.setType (type);
+
+                                                                image = imagesService.Repository.save (image);
+                                                            }
+
+                                                            if (isNullImage || image.getId () > 0)
+                                                            {
+                                                                if (!isUpdated) sticker = new Stickers ();
+
+                                                                sticker.setGroup (stickerGroups);
+                                                                if (!isUpdated || !Str.IsEmpty (request.getName ()))
+                                                                    sticker.setName (request.getName ());
+
+                                                                if (!isNullImage) sticker.setStickerImage (image);
+
+                                                                sticker = stickersService.Repository.save (sticker);
+                                                                if (isUpdated || sticker.getId () > 0)
+                                                                {
+                                                                    final String valAnswer = (isUpdated) ? AnswerToClient.CUV.changed.name () : AnswerToClient.CUV.added.name ();
+
+                                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , valAnswer);
+                                                                    answer.put (AnswerToClient.CUK.id.name () , sticker.getId ());
+                                                                    answer.setReqRes (req , res);
+                                                                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , valAnswer , asType , false);
+                                                                }
+                                                                else throw new IOException ("Save sticker info error");
+                                                            }
+                                                            else throw new IOException ("Save image info error");
+                                                        }
+                                                        else throw new IOException ("Write image error");
+                                                    }
+                                                    catch (IOException e)
+                                                    {
+                                                        answer = AnswerToClient.ServerError ();
+                                                        answer.setReqRes (req , res);
+                                                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("file" , file.getPath ()) , asType , true);
+                                                    }
+                                                }
+                                                else
                                                 {
                                                     answer = AnswerToClient.ServerError ();
                                                     answer.setReqRes (req , res);
-                                                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("file" , file.getPath ()) , asType , true);
+                                                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("codes" , codes.toString ()) , asType , true);
                                                 }
                                             }
-                                            else
-                                            {
-                                                answer = AnswerToClient.ServerError ();
-                                                answer.setReqRes (req , res);
-                                                l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("codes" , codes.toString ()) , asType , true);
-                                            }
+                                        }
+                                        else
+                                        {
+                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_name_is_too_long.name ());
+                                            answer.setReqRes (req , res);
+                                            l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.the_name_is_too_long.name ()) , ToJson.CreateClass.nj ("name" , request.getName ()) , asType , true);
                                         }
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_name_is_too_long.name ());
+                                        answer = AnswerToClient.ServerError ();
                                         answer.setReqRes (req , res);
-                                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.the_name_is_too_long.name ()) , ToJson.CreateClass.nj ("name" , request.getName ()) , asType , true);
+                                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null , asType , true);
                                     }
                                 }
                                 else
                                 {
-                                    answer = AnswerToClient.ServerError ();
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_image.name ());
                                     answer.setReqRes (req , res);
-                                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null , asType , true);
+                                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_image.name ()) , null , asType , true);
                                 }
                             }
                             else
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_image.name ());
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.is_empty_image.name ());
                                 answer.setReqRes (req , res);
-                                l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_image.name ()) , null , asType , true);
+                                l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_empty_image.name ()) , null , asType , true);
                             }
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.is_empty_image.name ());
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found_id.name ());
                             answer.setReqRes (req , res);
-                            l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_empty_image.name ()) , null , asType , true);
+                            l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found_id.name ()) , ToJson.CreateClass.nj ("id_group" , idGroup.getId ()) , asType , true);
                         }
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found_id.name ());
+                        answer = AnswerToClient.IdInvalid ();
                         answer.setReqRes (req , res);
-                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found_id.name ()) , ToJson.CreateClass.nj ("id_group" , idGroup.getId ()) , asType , true);
+                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("id_group" , idGroup.getIdObj ()) , asType , true);
                     }
                 }
-                else
-                {
-                    answer = AnswerToClient.IdInvalid ();
-                    answer.setReqRes (req , res);
-                    l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("id_group" , idGroup.getIdObj ()) , asType , true);
-                }
+
             }
             else
             {
@@ -471,6 +526,6 @@ public final class RestStickers
 
     private enum ValAnswer
     {
-        is_empty_image, invalid_image, the_name_is_too_long, not_found_sticker_id
+        is_empty_image, invalid_image, the_name_is_too_long, not_found_sticker_id, invalid_sticker_id
     }
 }
