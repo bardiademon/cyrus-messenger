@@ -10,11 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table (name = "gap_stickers")
 public final class Stickers
 {
+
+    /**
+     * TBNAME => table name
+     */
+    @Transient
+    public static final String TBNAME = "gap_stickers";
+
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)

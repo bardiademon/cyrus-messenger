@@ -8,6 +8,9 @@ import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.HasStickerAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
+import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEdited;
+import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedService;
+import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
@@ -53,6 +56,7 @@ public final class RestStickers
     private final UserLoginService userLoginService;
     private final DefaultService defaultService;
     private final ImagesService imagesService;
+    private final DeletedOrEditedService deletedOrEditedService;
 
     /**
      * as => AddStickers
@@ -81,13 +85,15 @@ public final class RestStickers
             final UserLoginService _UserLoginService ,
             final DefaultService _DefaultService ,
             final ImagesService _ImagesService ,
-            final StickerAccessLevelService _StickerAccessLevelService)
+            final StickerAccessLevelService _StickerAccessLevelService ,
+            final DeletedOrEditedService _DeletedOrEditedService)
     {
         this.stickersService = _StickersService;
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
         this.defaultService = _DefaultService;
         this.imagesService = _ImagesService;
+        this.deletedOrEditedService = _DeletedOrEditedService;
 
         this.asRouter = Domain.RNGap.STICKERS + "/add-stickers";
         this.asType = SubmitRequestType.add_stickers;
@@ -238,6 +244,17 @@ public final class RestStickers
                                                             if (isNullImage || image.getId () > 0)
                                                             {
                                                                 if (!isUpdated) sticker = new Stickers ();
+                                                                else
+                                                                {
+                                                                    DeletedOrEdited deletedOrEdited = new DeletedOrEdited ();
+                                                                    deletedOrEdited.setTableName (Stickers.TBNAME);
+                                                                    deletedOrEdited.setType (DeletedOrEditedType.edited);
+                                                                    deletedOrEdited.setDeletedByClass (RestStickers.this.getClass ().getName ());
+                                                                    deletedOrEdited.setDeletedBy (mainAccount);
+                                                                    deletedOrEdited.setValue (ToJson.To (sticker));
+                                                                    deletedOrEdited.setIdDeleted (sticker.getId ());
+                                                                    deletedOrEditedService.Repository.save (deletedOrEdited);
+                                                                }
 
                                                                 sticker.setGroup (stickerGroups);
                                                                 if (!isUpdated || !Str.IsEmpty (request.getName ()))
