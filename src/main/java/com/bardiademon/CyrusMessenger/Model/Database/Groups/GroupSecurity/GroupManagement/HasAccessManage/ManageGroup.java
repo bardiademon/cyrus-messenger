@@ -68,7 +68,7 @@ public final class ManageGroup
             {
                 ILUGroup iluGroup = new ILUGroup (service.groupsService);
                 if (idGroup != null) iluGroup.setId (idGroup.getId ());
-                else iluGroup.setUsername (groupname);
+                else iluGroup.setGroupName (groupname);
 
                 if (iluGroup.isValid ())
                 {

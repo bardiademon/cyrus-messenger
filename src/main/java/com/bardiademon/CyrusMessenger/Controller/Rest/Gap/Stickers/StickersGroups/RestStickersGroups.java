@@ -288,7 +288,7 @@ public final class RestStickersGroups
                                                                         /*
                                                                          *  agar group bod ke check mikonam aval groupname va bad in ke karbar login shode modir group hast ya na
                                                                          */
-                                                                        iluGroup.setUsername (licensedUser.getUsername ());
+                                                                        iluGroup.setGroupName (licensedUser.getUsername ());
                                                                         if (iluGroup.isValid ())
                                                                         {
                                                                             final Groups groups = iluGroup.getGroup ();
@@ -637,7 +637,7 @@ public final class RestStickersGroups
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @PathVariable (value = "id_group", required = false) String strIdGroup)
     {
-        AnswerToClient answer;
+        AnswerToClient answer = null;
 
         String request = ToJson.CreateClass.nj ("id_group" , strIdGroup);
         Object getAndDelete = getAndDelete (strIdGroup , res , req , codeLogin , gRouter , gType);
@@ -655,7 +655,7 @@ public final class RestStickersGroups
             {
                 if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ()) accessLevel = true;
                 else
-                    accessLevel = hasStickerAccessLevel.hasAccess (stickerGroups , mainAccount.getId () , StickerAccessLevelType.user);
+                    accessLevel = (answer = hasStickerAccessLevel.hasAccess (stickerGroups , mainAccount , 0 , StickerAccessLevelType.user)) == null;
             }
             else accessLevel = true;
 
@@ -671,7 +671,6 @@ public final class RestStickersGroups
             }
             else
             {
-                answer = AnswerToClient.AccessDenied ();
                 answer.setReqRes (req , res);
                 l.n (request , gRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , gType , true);
             }
@@ -790,7 +789,7 @@ public final class RestStickersGroups
     {
         des, name, img_id, added_at, your_image_size,
         your_image_width_height,
-         duplicate_case
+        duplicate_case
     }
 
 }

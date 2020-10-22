@@ -9,8 +9,8 @@ import com.bardiademon.CyrusMessenger.bardiademon.Str;
 public class IdUsernameMainAccount
 {
     private AnswerToClient answerToClient;
-    private boolean valid;
-    private MainAccountService service;
+    private final boolean valid;
+    private final MainAccountService service;
     private long idUser;
     private String username;
 

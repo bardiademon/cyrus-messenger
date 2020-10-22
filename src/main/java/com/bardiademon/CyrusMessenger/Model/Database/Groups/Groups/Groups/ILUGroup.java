@@ -21,7 +21,7 @@ public class ILUGroup
 
     public ILUGroup ()
     {
-        this (ThisApp.Context ().getBean (GroupsService.class) , ThisApp.Context ().getBean (UsernamesService.class));
+        this ((GroupsService) ThisApp.S ().getService (GroupsService.class) , (UsernamesService) ThisApp.S ().getService (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService)
@@ -35,6 +35,12 @@ public class ILUGroup
         this.usernamesService = _UsernamesService;
     }
 
+    public void setGroupnameOrId (Object groupnameOrId)
+    {
+        if (groupnameOrId instanceof Long) setId ((long) groupnameOrId);
+        else if (groupnameOrId instanceof String) setGroupName ((String) groupnameOrId);
+    }
+
     public void setId (long id)
     {
         this.id = id;
@@ -45,7 +51,7 @@ public class ILUGroup
         this.link = link;
     }
 
-    public void setUsername (String username)
+    public void setGroupName (String username)
     {
         this.username = username;
     }

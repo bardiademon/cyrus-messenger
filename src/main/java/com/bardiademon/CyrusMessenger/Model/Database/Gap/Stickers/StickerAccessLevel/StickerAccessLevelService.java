@@ -16,7 +16,7 @@ public final class StickerAccessLevelService
 
     public boolean hasAccessUser (long stickerGroupId , long userId)
     {
-        return hasAccess (stickerGroupId , userId , StickerAccessLevelType.user);
+        return Repository.findByStickerGroupsIdAndMainAccountIdAndTypeAndDeletedFalse (stickerGroupId , userId , StickerAccessLevelType.user) != null;
     }
 
     /*
@@ -24,13 +24,9 @@ public final class StickerAccessLevelService
      */
     public boolean hasAccessGroup (long stickerGroupId , long groupId)
     {
-        return hasAccess (stickerGroupId , groupId , StickerAccessLevelType.group);
+        return Repository.findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (stickerGroupId , groupId , StickerAccessLevelType.group) != null;
     }
 
-    public boolean hasAccess (long stickerGroupId , long groupId , StickerAccessLevelType type)
-    {
-        return Repository.findByStickerGroupsIdAndGroupsIdAndTypeAndDeletedFalse (stickerGroupId , groupId , type) != null;
-    }
 
     public int delete (long idStickerGroup)
     {

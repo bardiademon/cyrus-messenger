@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup;
 
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 
 public final class IsJoined
@@ -10,6 +11,11 @@ public final class IsJoined
     private final MainAccount mainAccount;
     private final ID idGroup;
     private final JoinGroupService joinGroupService;
+
+    public IsJoined (final MainAccount _MainAccount , final ID IdGroup)
+    {
+        this (((JoinGroupService) ThisApp.S ().getService (JoinGroupService.class)) , _MainAccount , IdGroup);
+    }
 
     public IsJoined (final JoinGroupService _JoinGroupService , final MainAccount _MainAccount , final ID IdGroup)
     {

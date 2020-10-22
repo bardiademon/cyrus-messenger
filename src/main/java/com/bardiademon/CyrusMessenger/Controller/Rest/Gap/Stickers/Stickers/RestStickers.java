@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +77,12 @@ public final class RestStickers
     private final String dRouter;
     private final SubmitRequestType dType;
 
+    /**
+     * si => Stickers Group Ids
+     */
+    private final String siRouter;
+    private final SubmitRequestType siType;
+
     private final HasStickerAccessLevel hasStickerAccessLevel;
 
     @Autowired
@@ -103,6 +110,9 @@ public final class RestStickers
 
         this.dRouter = Domain.RNGap.STICKERS + "/delete";
         this.dType = SubmitRequestType.delete_sticker;
+
+        this.siRouter = Domain.RNGap.STICKERS + "/stickers-ids";
+        this.siType = SubmitRequestType.get_stickers_ids;
 
         this.hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
     }
@@ -365,7 +375,7 @@ public final class RestStickers
             final String request = aCheckRequestGD.getRequest ();
 
             StickerGroups stickerGroup = sticker.getGroup ();
-            if (!stickerGroup.isWithPermission () || hasStickerAccessLevel.hasAccess (stickerGroup , mainAccount.getId () , StickerAccessLevelType.user))
+            if (!stickerGroup.isWithPermission () || (answer = hasStickerAccessLevel.hasAccess (stickerGroup , mainAccount , 0 , StickerAccessLevelType.user)) == null)
             {
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
                 answer.put (KeyAnswer.info.name () , ToJson.CreateClass.n (KeyAnswer.name.name () , sticker.getName ())
@@ -377,7 +387,7 @@ public final class RestStickers
             }
             else
             {
-                answer = AnswerToClient.AccessDenied ();
+                // answer = return from check has access
                 answer.setReqRes (req , res);
                 l.n (request , goiRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , goiType , true);
             }
@@ -486,7 +496,96 @@ public final class RestStickers
         return aCheckRequestGD;
     }
 
-    private static class ACheckRequestGD
+    @RequestMapping (value = "/stickers-ids")
+    public AnswerToClient stickersIds
+            (HttpServletResponse res , HttpServletRequest req ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @RequestBody RequestStickersIds request)
+    {
+        AnswerToClient answer = null;
+
+        final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , siRouter , siType);
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            final MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+
+            if (request != null)
+            {
+                final String strRequest = ToJson.To (request);
+
+                final ID idStickersGroup = new ID (request.getIdStickersGroup ());
+                if (idStickersGroup.isValid ())
+                {
+                    final StickerGroups stickerGroups = stickerGroupsService.stickerGroups (idStickersGroup.getId ());
+                    if (stickerGroups != null)
+                    {
+                        final StickerAccessLevelType type = StickerAccessLevelType.to (request.getType ());
+                        if (type != null)
+                        {
+                            final Object groupnameOrGroupId = (request.getGroupId () > 0) ? request.getGroupId () : request.getGroupname ();
+                            if ((answer = hasStickerAccessLevel.hasAccess (stickerGroups , mainAccount , groupnameOrGroupId , type)) == null)
+                            {
+                                final List <Stickers> stickers = stickerGroups.getStickers ();
+                                if (stickers != null && stickers.size () > 0)
+                                {
+                                    final List <Long> stickersIds = new ArrayList <> ();
+                                    for (Stickers sticker : stickers) stickersIds.add (sticker.getId ());
+
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                                    answer.put (KeyAnswer.stickers_ids.name () , stickersIds);
+                                    answer.setReqRes (req , res);
+                                    l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , siType , false);
+                                }
+                                else
+                                {
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                                    answer.setReqRes (req , res);
+                                    l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , siType , true);
+                                }
+                            }
+                            else
+                            {
+                                // answer = hasStickerAccessLevel.hasAccess ( ... );
+                                answer.setReqRes (req , res);
+                                l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (HasStickerAccessLevel.class.getName ()) , null , siType , true);
+                            }
+                        }
+                        else
+                        {
+                            answer = AnswerToClient.IdInvalid (ValAnswer.invalid_type.name ());
+                            answer.setReqRes (req , res);
+                            l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_type.name ()) , String.valueOf (idStickersGroup.getId ()) , siType , true);
+                        }
+                    }
+                    else
+                    {
+                        answer = AnswerToClient.IdInvalid (AnswerToClient.CUV.not_found_id.name ());
+                        answer.setReqRes (req , res);
+                        l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found_id.name ()) , String.valueOf (idStickersGroup.getId ()) , siType , true);
+                    }
+                }
+                else
+                {
+                    answer = AnswerToClient.IdInvalid ();
+                    answer.setReqRes (req , res);
+                    l.n (strRequest , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , String.valueOf (idStickersGroup.getId ()) , siType , true);
+                }
+            }
+            else
+            {
+                answer = AnswerToClient.RequestIsNull ();
+                answer.setReqRes (req , res);
+                l.n (null , siRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , siType , true);
+            }
+
+        }
+        else both.isOk ();
+
+        return answer;
+    }
+
+    private final static class ACheckRequestGD
     {
         private boolean ok;
         private AnswerToClient answer;
@@ -547,11 +646,13 @@ public final class RestStickers
 
     private enum KeyAnswer
     {
-        info, name, image_id, group_id
+        info, name, image_id, group_id, stickers_ids
     }
 
     private enum ValAnswer
     {
-        is_empty_image, invalid_image, the_name_is_too_long, not_found_sticker_id, invalid_sticker_id
+        is_empty_image, invalid_image, the_name_is_too_long, not_found_sticker_id, invalid_sticker_id,
+
+        invalid_type
     }
 }

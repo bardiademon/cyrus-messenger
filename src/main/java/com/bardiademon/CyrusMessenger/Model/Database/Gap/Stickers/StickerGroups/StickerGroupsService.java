@@ -25,5 +25,10 @@ public final class StickerGroupsService
         return Repository.findByIdAndDeletedFalseAndAddedByIdAndActiveTrue (id , userId);
     }
 
+    public StickerGroups stickerGroups (long id)
+    {
+        return Repository.findByIdAndDeletedFalseAndActiveTrue (id);
+    }
+
 
 }

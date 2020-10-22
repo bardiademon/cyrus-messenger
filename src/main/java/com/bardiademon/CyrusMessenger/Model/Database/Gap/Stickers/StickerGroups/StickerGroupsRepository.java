@@ -16,6 +16,8 @@ public interface StickerGroupsRepository extends JpaRepository <StickerGroups, L
 
     StickerGroups findByIdAndDeletedFalseAndAddedByIdAndActiveTrue (long id , long userId);
 
+    StickerGroups findByIdAndDeletedFalseAndActiveTrue (long id);
+
     @Transactional
     @Modifying
     @Query ("update StickerGroups sg set sg.deleted = true , sg.deletedAt = current_timestamp where sg.id = :ID_STICKER_GROUP and sg.addedBy.id = :USER_ID")
