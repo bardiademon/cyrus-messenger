@@ -25,6 +25,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserL
 import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.IO.CheckImage;
+import com.bardiademon.CyrusMessenger.bardiademon.IO.ToByte;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
@@ -39,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,6 +85,12 @@ public final class RestStickers
     private final String siRouter;
     private final SubmitRequestType siType;
 
+    /**
+     * si => Stickers Group Ids
+     */
+    private final String sRouter;
+    private final SubmitRequestType sType;
+
     private final HasStickerAccessLevel hasStickerAccessLevel;
 
     @Autowired
@@ -113,6 +121,9 @@ public final class RestStickers
 
         this.siRouter = Domain.RNGap.STICKERS + "/stickers-ids";
         this.siType = SubmitRequestType.get_stickers_ids;
+
+        this.sRouter = Domain.RNGap.STICKERS + "/";
+        this.sType = SubmitRequestType.get_one_sticker;
 
         this.hasStickerAccessLevel = new HasStickerAccessLevel (_StickerAccessLevelService);
     }
@@ -642,6 +653,85 @@ public final class RestStickers
         {
             this.stickers = stickers;
         }
+    }
+
+    @RequestMapping (value = "/", produces = { MediaType.IMAGE_JPEG_VALUE , MediaType.IMAGE_GIF_VALUE , MediaType.IMAGE_PNG_VALUE })
+    public byte[] sticker
+            (HttpServletResponse res , HttpServletRequest req ,
+             @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
+             @RequestBody RequestStickersIds request)
+    {
+        byte[] answer;
+
+        final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , sRouter , sType);
+        if (both.isOk ())
+        {
+            assert both.getIsLogin () != null;
+            final MainAccount mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+            if (request != null)
+            {
+                final String strRequest = ToJson.To (request);
+
+                final ID idSticker = new ID (request.getStickerId ());
+                if (idSticker.isValid ())
+                {
+                    final Stickers sticker = stickersService.getSticker (idSticker.getId ());
+                    if (sticker != null)
+                    {
+                        final StickerAccessLevelType type = StickerAccessLevelType.to (request.getType ());
+                        if (type != null)
+                        {
+                            final Object groupnameOrGroupId = (request.getGroupId () > 0) ? request.getGroupId () : request.getGroupname ();
+
+                            final AnswerToClient answerToClient;
+                            if ((answerToClient = hasStickerAccessLevel.hasAccess (sticker.getGroup () , mainAccount , groupnameOrGroupId , type)) == null)
+                            {
+                                final File file = sticker.getStickerImage ().toFile ();
+                                if (file.exists ())
+                                {
+                                    answer = ToByte.to (file.getPath ());
+                                    l.n (strRequest , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.nj ("uploaded_image" , sticker.getStickerImage ().getId ()) , sType , false);
+                                }
+                                else
+                                {
+                                    answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_500));
+                                    l.n (strRequest , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_500)) , sType , true);
+                                }
+                            }
+                            else
+                            {
+                                answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_403));
+                                l.n (strRequest , sRouter , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_403)) , sType , true);
+                            }
+                        }
+                        else
+                        {
+                            answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_400));
+                            l.n (strRequest , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_type.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_400)) , sType , true);
+                        }
+                    }
+                    else
+                    {
+                        answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_400));
+                        l.n (strRequest , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_sticker_id.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_400)) , sType , true);
+                    }
+                }
+                else
+                {
+                    answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_400));
+                    l.n (strRequest , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_sticker_id.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_400)) , sType , true);
+                }
+            }
+            else
+            {
+                answer = ToByte.to (Path.GetDefaultImage (Path.IMAGE_ERROR_400));
+                l.n (null , sRouter , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , ToJson.CreateClass.nj ("answer" , Path.GetDefaultImage (Path.IMAGE_ERROR_400)) , sType , true);
+            }
+        }
+        else answer = ToByte.to (Path.GetDefaultImage (Path.IC_NOT_LOGGED));
+
+
+        return answer;
     }
 
     private enum KeyAnswer

@@ -1,6 +1,9 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Images;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.bardiademon.CyrusMessenger.bardiademon.Default.Path;
+import com.bardiademon.CyrusMessenger.bardiademon.Str;
+import java.io.File;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -53,6 +57,12 @@ public final class Images
     @ManyToOne
     @JoinColumn (name = "uploaded_by", referencedColumnName = "id")
     private MainAccount uploadedBy;
+
+    @Transient
+    public File toFile ()
+    {
+        return new File (Path.StickTogether (getType () , Str.toArray (getSavedPath () , getName ())));
+    }
 
     public Images ()
     {

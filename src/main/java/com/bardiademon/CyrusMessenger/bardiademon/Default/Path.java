@@ -33,7 +33,10 @@ public abstract class Path
 
     public static final String IMAGE_ERROR_500 = "error_500.png";
 
-    public static String GetImage (String Name)
+    public static final String IMAGE_ERROR_400 = "400_bad_request.png";
+    public static final String IMAGE_ERROR_403 = "error_403.png";
+
+    public static String GetDefaultImage (String Name)
     {
         return StickTogether (IMAGES , Name);
     }

@@ -16,6 +16,6 @@ public final class StickersService
 
     public Stickers getSticker (long id)
     {
-        return Repository.findByIdAndDeletedFalseAndGroupDeletedFalseAndGroupActiveTrue (id);
+        return Repository.getSticker (id);
     }
 }

@@ -87,10 +87,10 @@ public final class RestGetOneProfilePictureUser
                 }
             }
         }
-        else return toByte (Path.GetImage (Path.IC_NOT_LOGGED));
+        else return toByte (Path.GetDefaultImage (Path.IC_NOT_LOGGED));
 
 
-        return toByte (Path.GetImage (Path.IMAGE_NOT_FOUND));
+        return toByte (Path.GetDefaultImage (Path.IMAGE_NOT_FOUND));
     }
 
     @RequestMapping (value = { "/id" , "/id/{ID}" }, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -132,7 +132,7 @@ public final class RestGetOneProfilePictureUser
                 }
             }
         }
-        else return toByte (Path.GetImage (Path.IC_NOT_LOGGED));
+        else return toByte (Path.GetDefaultImage (Path.IC_NOT_LOGGED));
 
         if (mainAccountUser != null)
         {
@@ -157,9 +157,9 @@ public final class RestGetOneProfilePictureUser
                     break;
             }
 
-            return toByte (Path.GetImage (pathNoCover));
+            return toByte (Path.GetDefaultImage (pathNoCover));
         }
-        else return toByte (Path.GetImage (Path.IMAGE_NOT_FOUND));
+        else return toByte (Path.GetDefaultImage (Path.IMAGE_NOT_FOUND));
     }
 
     private byte[] toByte (String path)

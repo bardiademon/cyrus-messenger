@@ -9,6 +9,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultType;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.Stickers;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroupService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
@@ -58,6 +60,7 @@ public class Test
     private final GroupsService groupsService;
     private final UserSeparateProfilesService userSeparateProfilesService;
     private final EnumTypesService enumTypesService;
+    private final StickersService stickersService;
 
     @Autowired
     public Test
@@ -76,7 +79,7 @@ public class Test
                     GroupManagementService groupManagementService ,
                     GroupsService groupsService ,
                     UserSeparateProfilesService userSeparateProfilesService ,
-                    EnumTypesService enumTypesService
+                    EnumTypesService enumTypesService , StickersService stickersService
             )
     {
         this.defaultService = defaultService;
@@ -94,6 +97,7 @@ public class Test
         this.groupsService = groupsService;
         this.userSeparateProfilesService = userSeparateProfilesService;
         this.enumTypesService = enumTypesService;
+        this.stickersService = stickersService;
     }
 
     @RequestMapping (value = { "" , "/" , "/{username}/{username2}" })
@@ -211,6 +215,12 @@ public class Test
 
         return String.valueOf (accessLevel.hasAccess (Which.s_message));
 
+    }
+
+    @RequestMapping (value = "get-sticker/{id-sticker}")
+    public Stickers getSticker (@PathVariable ("id-sticker") String strIdSticker)
+    {
+        return stickersService.Repository.getSticker (Long.parseLong (strIdSticker));
     }
 
     public enum TestEnum

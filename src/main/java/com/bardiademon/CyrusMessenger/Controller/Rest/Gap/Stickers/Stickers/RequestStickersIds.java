@@ -8,6 +8,10 @@ public final class RequestStickersIds
     @JsonProperty ("id_stickers_group")
     private long idStickersGroup;
 
+    // for get one sticker => router: /stickers/
+    @JsonProperty ("sticker_id")
+    private long stickerId;
+
     @JsonProperty ("group_id")
     private long groupId;
 
@@ -57,5 +61,15 @@ public final class RequestStickersIds
     public void setType (String type)
     {
         this.type = type;
+    }
+
+    public long getStickerId ()
+    {
+        return stickerId;
+    }
+
+    public void setStickerId (long stickerId)
+    {
+        this.stickerId = stickerId;
     }
 }

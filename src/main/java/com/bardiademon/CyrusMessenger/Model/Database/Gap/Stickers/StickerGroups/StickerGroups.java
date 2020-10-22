@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "sticker_groups")
@@ -42,6 +43,7 @@ public final class StickerGroups
     private String description;
 
     @OneToMany (mappedBy = "group")
+    @Where (clause = "`deleted` = false")
     private List <Stickers> stickers;
 
     @ManyToOne

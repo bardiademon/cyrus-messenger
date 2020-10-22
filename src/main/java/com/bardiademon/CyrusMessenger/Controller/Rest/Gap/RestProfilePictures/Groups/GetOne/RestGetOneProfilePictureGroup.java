@@ -108,9 +108,9 @@ public final class RestGetOneProfilePictureGroup
                                     assert ids != null;
                                     if (ids.get (0) == idProfilePicture.getId ())
                                         return getByteProfilePicture (pathProfilePicture , mainAccount , router , request);
-                                    else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
+                                    else return toByte (Path.GetDefaultImage (Path.IC_COVER_DEFAULT));
                                 }
-                                else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
+                                else return toByte (Path.GetDefaultImage (Path.IC_COVER_DEFAULT));
                             }
                         }
                     }
@@ -119,16 +119,16 @@ public final class RestGetOneProfilePictureGroup
                 else
                 {
                     l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_not_found") , null);
-                    return toByte (Path.GetImage (Path.IMAGE_ERROR_500));
+                    return toByte (Path.GetDefaultImage (Path.IMAGE_ERROR_500));
                 }
             }
             else
             {
                 l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_id_invalid") , null);
-                return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
+                return toByte (Path.GetDefaultImage (Path.IC_COVER_DEFAULT));
             }
         }
-        else return toByte (Path.GetImage (Path.IC_COVER_DEFAULT));
+        else return toByte (Path.GetDefaultImage (Path.IC_COVER_DEFAULT));
     }
 
     private byte[] getByteProfilePicture (String pathProfilePicture , MainAccount mainAccount , String router , String request)
@@ -142,7 +142,7 @@ public final class RestGetOneProfilePictureGroup
         else
         {
             l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_file_not_found") , file.getPath ());
-            return toByte (Path.GetImage (Path.IMAGE_ERROR_500));
+            return toByte (Path.GetDefaultImage (Path.IMAGE_ERROR_500));
         }
     }
 
