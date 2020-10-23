@@ -77,6 +77,10 @@ public class SecurityUserGap
     @Column (name = "can_anonymous_send_message")
     private boolean canAnonymousSendMessage = true;
 
+    @Enumerated (EnumType.STRING)
+    @Column (name = "can_show_is_typing")
+    private AccessLevel canShowIsTyping = AccessLevel.all;
+
     @Column (name = "updated_at", insertable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -243,5 +247,15 @@ public class SecurityUserGap
     public void setCanSendVideo (AccessLevel canSendVideo)
     {
         this.canSendVideo = canSendVideo;
+    }
+
+    public AccessLevel getCanShowIsTyping ()
+    {
+        return canShowIsTyping;
+    }
+
+    public void setCanShowIsTyping (AccessLevel canShowIsTyping)
+    {
+        this.canShowIsTyping = canShowIsTyping;
     }
 }

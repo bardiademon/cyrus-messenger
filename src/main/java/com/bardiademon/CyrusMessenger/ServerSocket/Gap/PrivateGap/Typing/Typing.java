@@ -2,12 +2,18 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
 import java.time.LocalDateTime;
 
@@ -20,6 +26,8 @@ public final class Typing
 
     private Online onlineTo;
 
+    private MainAccount from;
+
     public Typing (final SocketIOClient Client , final ReqTyping Data)
     {
         this.client = Client;
@@ -31,17 +39,19 @@ public final class Typing
 
     private boolean checkRequest ()
     {
-        CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.pvgp_typing.name ());
+        final CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.pvgp_typing.name ());
 
         if (both.isOk ())
         {
-            if (req.checkOnlineCode ())
+            final Online online;
+            if ((online = req.getOnline ()) != null)
             {
-                UsernamesService usernamesService = (UsernamesService) ThisApp.S ().getService (UsernamesService.class);
+                from = online.getMainAccount ();
+                final UsernamesService usernamesService = (UsernamesService) ThisApp.S ().getService (UsernamesService.class);
+                final FITD_Username usernameTO = new FITD_Username (req.getTo () , usernamesService);
+                if (usernameTO.isValid ()) return true;
+                else answer = usernameTO.getAnswer ();
 
-                FITD_Username fitd_username = new FITD_Username (req.getTo () , usernamesService);
-                if (fitd_username.isValid ()) return true;
-                else answer = fitd_username.getAnswer ();
             }
             else answer = req.getAnswer ();
         }
@@ -52,6 +62,7 @@ public final class Typing
 
     private boolean foundTo ()
     {
+        System.out.println (req.getTo ());
         SIServer.LoopOnline ((CodeOnline , _Online) ->
         {
             if (_Online.getMainAccount ().getUsername ().getUsername ().equals (req.getTo ()))
@@ -59,7 +70,6 @@ public final class Typing
                 onlineTo = _Online;
                 onlineTo.setAnnouncementOfPresence (LocalDateTime.now ());
                 SIServer.Onlines.replace (CodeOnline , onlineTo);
-
                 return false;
             }
             return true;
@@ -76,7 +86,7 @@ public final class Typing
 
     private void sendToClient ()
     {
-        Online online = SIServer.Onlines.get (req.getCodeOnline ());
+        final Online online = SIServer.Onlines.get (req.getCodeOnline ());
 
         online.setClient (client);
         online.setAnnouncementOfPresence (LocalDateTime.now ());
@@ -87,7 +97,20 @@ public final class Typing
 
     private void sendToTo ()
     {
-        onlineTo.getClient ().sendEvent (EventName.pvgp_is_typing.name () , req.getFrom ());
+        final UserGapAccessLevel gapAccessLevel = new UserGapAccessLevel (onlineTo.getMainAccount () , from);
+        if (gapAccessLevel.hasAccess (Which.sh_is_typing))
+        {
+            final UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (onlineTo.getMainAccount () , from);
+            if (accessLevel.hasAccess (Which.id))
+            {
+                l.n (Thread.currentThread ().getStackTrace () , "Send typing => " + ToJson.To (req));
+                onlineTo.getClient ().sendEvent (EventName.pvgp_is_typing.name () , from.getUsername ().getId ());
+            }
+            else
+                l.n (Thread.currentThread ().getStackTrace () , new Exception ("access denied (id) Send typing") , String.valueOf (from.getId ()));
+        }
+        else
+            l.n (Thread.currentThread ().getStackTrace () , new Exception ("access denied Send typing => " + ToJson.To (req)));
     }
 
     private enum ValAnswer

@@ -87,6 +87,10 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
                 super.userBlockedType = UserBlocked.Type.cns_invitation.name ();
                 super.desEnumTypes = DesEnumTypes.sug_invitation.name ();
                 return securityUserGap.getCanSendInvitation ();
+            case sh_is_typing:
+                super.userBlockedType = UserBlocked.Type.all.name ();
+                super.desEnumTypes = DesEnumTypes.sug_is_typing.name ();
+                return securityUserGap.getCanShowIsTyping ();
             default:
                 desEnumTypes = null;
                 userBlockedType = null;
@@ -100,7 +104,7 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
 
         public Service ()
         {
-            this._SecurityUserGapService = ThisApp.Context ().getBean (SecurityUserGapService.class);
+            this._SecurityUserGapService = (SecurityUserGapService) ThisApp.S ().getService (SecurityUserGapService.class);
         }
     }
 

@@ -124,7 +124,7 @@ public final class NewPrivateMessage
 
     private AnswerToClient answerAccessDenied ()
     {
-        return AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.access_denied.name ());
+        return AnswerToClient.AccessDenied ();
     }
 
     private boolean checkRequest ()

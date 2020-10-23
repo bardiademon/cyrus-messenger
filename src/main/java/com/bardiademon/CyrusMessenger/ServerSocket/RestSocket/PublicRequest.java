@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.RestSocket;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
@@ -51,6 +52,18 @@ public class PublicRequest
             l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
             answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_online_code.name ());
             return false;
+        }
+    }
+
+    public Online getOnline ()
+    {
+        if ((!Str.IsEmpty (codeOnline) && SIServer.Onlines.containsKey (codeOnline)))
+            return SIServer.Onlines.get (codeOnline);
+        else
+        {
+            l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_online_code.name ());
+            return null;
         }
     }
 
