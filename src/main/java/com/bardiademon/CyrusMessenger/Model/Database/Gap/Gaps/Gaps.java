@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapRead;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgain;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "gaps")
@@ -81,6 +83,10 @@ public final class Gaps
 
     @Column (name = "send_at", updatable = false, nullable = false)
     private LocalDateTime sendAt;
+
+    @OneToMany (mappedBy = "gap")
+    @Where (clause = "`deleted` = false")
+    private List <GapsPostedAgain> gapsPostedAgain;
 
     public Gaps ()
     {
@@ -244,5 +250,15 @@ public final class Gaps
     public void setSendAt (LocalDateTime sendAt)
     {
         this.sendAt = sendAt;
+    }
+
+    public List <GapsPostedAgain> getGapsPostedAgain ()
+    {
+        return gapsPostedAgain;
+    }
+
+    public void setGapsPostedAgain (List <GapsPostedAgain> gapsPostedAgain)
+    {
+        this.gapsPostedAgain = gapsPostedAgain;
     }
 }

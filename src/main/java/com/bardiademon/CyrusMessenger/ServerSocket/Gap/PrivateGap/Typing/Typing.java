@@ -62,7 +62,6 @@ public final class Typing
 
     private boolean foundTo ()
     {
-        System.out.println (req.getTo ());
         SIServer.LoopOnline ((CodeOnline , _Online) ->
         {
             if (_Online.getMainAccount ().getUsername ().getUsername ().equals (req.getTo ()))

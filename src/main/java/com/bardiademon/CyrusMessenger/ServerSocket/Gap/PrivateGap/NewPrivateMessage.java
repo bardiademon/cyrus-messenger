@@ -63,7 +63,7 @@ public final class NewPrivateMessage
         {
             if ((!request.isHasFile () || Str.IsEmpty (securityUserGap.getCanSendFileTypes ()) || checkAccessType ()))
             {
-                GapReadService gapReadService = (GapReadService) ThisApp.S ().getService (GapReadService.class);
+                GapReadService gapReadService = ThisApp.S ().getService (GapReadService.class);
 
                 if (to.getId () == mainAccount.getId () || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
@@ -140,7 +140,7 @@ public final class NewPrivateMessage
                 Online online = SIServer.Onlines.get (request.getCodeOnline ());
                 if (online != null)
                 {
-                    FITD_Username fitd_username = new FITD_Username (request.getTo () , (UsernamesService) ThisApp.S ().getService (UsernamesService.class));
+                    FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
                     if (fitd_username.isValid ())
                     {
                         to = fitd_username.getMainAccount ();
@@ -172,7 +172,7 @@ public final class NewPrivateMessage
                                             ID idReply = new ID (request.getIdStrReplyChat ());
                                             if (idReply.isValid ())
                                             {
-                                                gapReply = ((GapsService) ThisApp.S ().getService (GapsService.class)).Repository.findById (idReply.getId ());
+                                                gapReply = ThisApp.S ().getService (GapsService.class).Repository.findById (idReply.getId ());
                                                 if (gapReply == null)
                                                 {
                                                     answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_not_found.name ());
@@ -248,8 +248,8 @@ public final class NewPrivateMessage
         if (gapReply != null) gap.setReply (gapReply);
         gap.setGapFor (GapFor.sec_gprivate);
 
-        GapTypesService gapTypesService = (GapTypesService) ThisApp.S ().getService (GapTypesService.class);
-        GapsService gapsService = (GapsService) ThisApp.S ().getService (GapsService.class);
+        GapTypesService gapTypesService = ThisApp.S ().getService (GapTypesService.class);
+        GapsService gapsService = ThisApp.S ().getService (GapsService.class);
 
         gap = gapsService.Repository.save (gap);
 
@@ -278,7 +278,7 @@ public final class NewPrivateMessage
     {
         if (request.getFileCode () == null) return true;
 
-        GapFilesService gapFilesService = (GapFilesService) ThisApp.S ().getService (GapFilesService.class);
+        GapFilesService gapFilesService = ThisApp.S ().getService (GapFilesService.class);
 
         if (!Str.IsEmpty (request.getText ()))
             gapTypes.add (GapType.text);
