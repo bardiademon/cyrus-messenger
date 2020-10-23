@@ -47,7 +47,7 @@ public final class Typing
             if ((online = req.getOnline ()) != null)
             {
                 from = online.getMainAccount ();
-                final UsernamesService usernamesService = (UsernamesService) ThisApp.S ().getService (UsernamesService.class);
+                final UsernamesService usernamesService = ThisApp.S ().getService (UsernamesService.class);
                 final FITD_Username usernameTO = new FITD_Username (req.getTo () , usernamesService);
                 if (usernameTO.isValid ()) return true;
                 else answer = usernameTO.getAnswer ();

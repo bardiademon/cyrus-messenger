@@ -8,13 +8,14 @@ public final class Services
 {
     private final Map <String, Object> Services = new LinkedHashMap <> ();
 
-    public Object getService (Class <?> aClass)
+    @SuppressWarnings ("unchecked")
+    public <T> T getService (Class <T> aClass)
     {
         if (aClass == null) return null;
 
         String packageName = String.format ("%s.%s" , aClass.getPackageName () , aClass.getName ());
         if (Services.containsKey (packageName))
-            return Services.get (packageName);
+            return ((T) (Services.get (packageName)));
         else
         {
             Services.put (packageName , ThisApp.Context ().getBean (aClass));
