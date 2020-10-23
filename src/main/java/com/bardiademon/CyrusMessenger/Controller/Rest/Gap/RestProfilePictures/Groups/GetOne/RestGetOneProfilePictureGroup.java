@@ -3,13 +3,13 @@ package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.RestProfilePictures.G
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.IsManager;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.IsJoined;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -79,7 +79,7 @@ public final class RestGetOneProfilePictureGroup
                 ProfilePictures profilePicture = profilePicturesService.Repository.findProfilePictureGroup (idProfilePicture.getId ());
                 if (profilePicture != null)
                 {
-                    Images image = profilePicture.getImage ();
+                    UploadedFiles image = profilePicture.getImage ();
                     String pathProfilePicture = Path.StickTogether (image.getType () , Str.toArray (image.getSavedPath () , image.getName ()));
 
                     ID idGroup = new ID (profilePicture.getGroups ().getId ());

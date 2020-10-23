@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Model.Database.Images;
+package com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles;
 
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ImagesRepository extends JpaRepository <Images, Long>
+public interface UploadedFilesRepository extends JpaRepository <UploadedFiles, Long>
 {
     @Transactional
     @Modifying
-    @Query ("update Images ui set ui.deleted = true , ui.deletedAt = current_timestamp where ui.id = :ID and ui.uploadedBy.id = :USER_ID")
+    @Query ("update UploadedFiles file set file.deleted = true , file.deletedAt = current_timestamp where file.id = :ID and file.uploadedBy.id = :USER_ID")
     int delete (@Param ("ID") long id , @Param ("USER_ID") long userId);
 
-    Images findById (long id);
+    UploadedFiles findById (long id);
 }

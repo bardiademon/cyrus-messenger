@@ -6,13 +6,13 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Gap.RestProfilePictures.Ch
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagementService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.AccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.HasAccessManage.ManageGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -50,7 +50,7 @@ public final class RestUploadProfilePictureGroup
 
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
-    private final ImagesService imagesService;
+    private final UploadedFilesService uploadedFilesService;
     private final ManageGroup.Service service;
 
     @Autowired
@@ -60,11 +60,11 @@ public final class RestUploadProfilePictureGroup
              GroupsService _GroupsService ,
              GroupManagementService _GroupManagementService ,
              ProfilePicturesService _ProfilePicturesService ,
-             ImagesService _ImagesService)
+             UploadedFilesService _UploadedFilesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
-        this.imagesService = _ImagesService;
+        this.uploadedFilesService = _UploadedFilesService;
         this.service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
@@ -225,16 +225,16 @@ public final class RestUploadProfilePictureGroup
                     if (request.isMain ())
                         profilePicturesService.disableMainPhotoGroup (groups.getId ());
 
-                    Images image = new Images ();
+                    UploadedFiles image = new UploadedFiles ();
                     image.setName (name);
                     image.setType (type);
                     image.setSize (picture.getSize ());
                     image.setWidth (checkImage.getWidth ());
                     image.setHeight (checkImage.getHeight ());
-                    image.setImageFor (RestUploadProfilePictureGroup.class.getName ());
+                    image.setFileFor (RestUploadProfilePictureGroup.class.getName ());
                     image.setSavedPath (pathUploadPicture.getParent ());
                     image.setUploadedBy (mainAccount);
-                    image = imagesService.Repository.save (image);
+                    image = uploadedFilesService.Repository.save (image);
 
                     ProfilePictures profilePictures = new ProfilePictures ();
                     profilePictures.setGroups (groups);

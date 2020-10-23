@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures;
 
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,7 +37,7 @@ public final class ProfilePictures
 
     @ManyToOne
     @JoinColumn (name = "image_id", referencedColumnName = "id")
-    private Images image;
+    private UploadedFiles image;
 
     private boolean deleted;
 
@@ -98,12 +98,12 @@ public final class ProfilePictures
         this.groups = groups;
     }
 
-    public Images getImage ()
+    public UploadedFiles getImage ()
     {
         return image;
     }
 
-    public void setImage (Images image)
+    public void setImage (UploadedFiles image)
     {
         this.image = image;
     }

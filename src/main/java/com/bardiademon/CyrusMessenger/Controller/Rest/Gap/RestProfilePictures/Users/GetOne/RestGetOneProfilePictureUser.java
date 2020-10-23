@@ -5,7 +5,7 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -80,7 +80,7 @@ public final class RestGetOneProfilePictureUser
                         }
                         else
                         {
-                            Images image = profilePictures.getImage ();
+                            UploadedFiles image = profilePictures.getImage ();
                             return toByte (Path.StickTogether (image.getType () , Str.toArray (image.getSavedPath () , image.getName ())));
                         }
                     }

@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers;
 
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public final class Stickers
 
     @ManyToOne
     @JoinColumn (name = "sticker_image", referencedColumnName = "id")
-    private Images stickerImage;
+    private UploadedFiles stickerImage;
 
     @ManyToOne
     @JoinColumn (name = "id_group", referencedColumnName = "id")
@@ -68,12 +68,12 @@ public final class Stickers
         this.name = name;
     }
 
-    public Images getStickerImage ()
+    public UploadedFiles getStickerImage ()
     {
         return stickerImage;
     }
 
-    public void setStickerImage (Images stickerImage)
+    public void setStickerImage (UploadedFiles stickerImage)
     {
         this.stickerImage = stickerImage;
     }

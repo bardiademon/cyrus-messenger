@@ -6,6 +6,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -17,7 +18,8 @@ public final class Emojis
     @Column (unique = true, nullable = false)
     private long id;
 
-    @Column (name = "emoji_code", nullable = false, unique = true, length = 50000)
+    @Lob
+    @Column (name = "emoji_code", nullable = false, unique = true)
     private String emojiCode;
 
     /**
@@ -30,7 +32,8 @@ public final class Emojis
     @Enumerated (EnumType.STRING)
     private EmojiGroups emojiGroup;
 
-    @Column (name = "emoji_name", nullable = false, length = 50000)
+    @Lob
+    @Column (name = "emoji_name", nullable = false)
     private String name;
 
     @Column (name = "group_color")

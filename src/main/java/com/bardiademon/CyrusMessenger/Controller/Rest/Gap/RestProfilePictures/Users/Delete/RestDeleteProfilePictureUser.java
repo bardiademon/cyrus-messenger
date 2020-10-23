@@ -4,8 +4,8 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -32,17 +32,17 @@ public final class RestDeleteProfilePictureUser
 
     private final UserLoginService userLoginService;
     private final ProfilePicturesService profilePicturesService;
-    private final ImagesService imagesService;
+    private final UploadedFilesService uploadedFilesService;
 
     @Autowired
     public RestDeleteProfilePictureUser
             (UserLoginService _UserLoginService ,
              ProfilePicturesService _ProfilePicturesService ,
-             ImagesService _ImagesService)
+             UploadedFilesService _UploadedFilesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
-        this.imagesService = _ImagesService;
+        this.uploadedFilesService = _UploadedFilesService;
     }
 
     @RequestMapping (value = { "" , "/" , "/{ID_PROFILE_PICTURE}" })
@@ -67,10 +67,10 @@ public final class RestDeleteProfilePictureUser
                 ProfilePictures profilePictures = profilePicturesService.getOneForUser (idProfilePicture.getId () , mainAccount.getId ());
                 if (profilePictures != null)
                 {
-                    Images image = profilePictures.getImage ();
+                    UploadedFiles image = profilePictures.getImage ();
                     image.setDeleted (true);
                     image.setDeletedAt (Time.now ());
-                    imagesService.Repository.save (image);
+                    uploadedFilesService.Repository.save (image);
 
                     profilePictures.setDeleted (true);
                     profilePictures.setDeletedAt (Time.now ());

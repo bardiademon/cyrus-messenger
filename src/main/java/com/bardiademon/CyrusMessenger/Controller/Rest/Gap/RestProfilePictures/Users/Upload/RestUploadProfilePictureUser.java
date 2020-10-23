@@ -9,8 +9,8 @@ import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicFor;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePictures;
 import com.bardiademon.CyrusMessenger.Model.Database.ProfilePictures.ProfilePicturesService;
@@ -50,19 +50,19 @@ public final class RestUploadProfilePictureUser
     private final ProfilePicturesService profilePicturesService;
     private final SecurityUserProfileService securityUserProfileService;
     private final EnumTypesService enumTypesService;
-    private final ImagesService imagesService;
+    private final UploadedFilesService uploadedFilesService;
 
     @Autowired
     public RestUploadProfilePictureUser
             (UserLoginService _UserLoginService , ProfilePicturesService _ProfilePicturesService ,
              SecurityUserProfileService _SecurityUserProfileService , EnumTypesService _EnumTypesService ,
-             ImagesService _ImagesService)
+             UploadedFilesService _UploadedFilesService)
     {
         this.userLoginService = _UserLoginService;
         this.profilePicturesService = _ProfilePicturesService;
         this.securityUserProfileService = _SecurityUserProfileService;
         this.enumTypesService = _EnumTypesService;
-        this.imagesService = _ImagesService;
+        this.uploadedFilesService = _UploadedFilesService;
     }
 
     @RequestMapping (value = { "" , "/" })
@@ -187,16 +187,16 @@ public final class RestUploadProfilePictureUser
 
                 if (request.getPlacement_number () < 0) request.setPlacement_number (0);
 
-                Images images = new Images ();
+                UploadedFiles images = new UploadedFiles ();
                 images.setType (type);
                 images.setName (name);
                 images.setSize (request.getPicture ().getSize ());
                 images.setSavedPath (file.getParent ());
-                images.setImageFor (RestUploadProfilePictureUser.class.getName ());
+                images.setFileFor (RestUploadProfilePictureUser.class.getName ());
                 images.setUploadedBy (mainAccount);
                 images.setWidth (checkImage.getWidth ());
                 images.setHeight (checkImage.getHeight ());
-                images = imagesService.Repository.save (images);
+                images = uploadedFilesService.Repository.save (images);
 
                 ProfilePictures newProfilePictures = new ProfilePictures ();
                 newProfilePictures.setImage (images);

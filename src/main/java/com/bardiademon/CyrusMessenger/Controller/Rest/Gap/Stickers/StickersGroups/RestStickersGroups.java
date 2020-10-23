@@ -13,6 +13,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEdited;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedService;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedType;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevel;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
@@ -21,8 +23,6 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.GroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
@@ -60,7 +60,7 @@ public final class RestStickersGroups
 
     private final StickerGroupsService stickerGroupsService;
     private final UserLoginService userLoginService;
-    private final ImagesService imagesService;
+    private final UploadedFilesService uploadedFilesService;
     private final DefaultService defaultService;
     private final UsernamesService usernamesService;
     private final GroupsService groupsService;
@@ -96,7 +96,7 @@ public final class RestStickersGroups
     public RestStickersGroups (
             final StickerGroupsService _StickerGroupsService ,
             final UserLoginService _UserLoginService ,
-            final ImagesService _ImagesService ,
+            final UploadedFilesService _UploadedFilesService ,
             final DefaultService _DefaultService ,
             final StickerAccessLevelService _StickerAccessLevelService ,
             final UsernamesService _UsernamesService ,
@@ -105,7 +105,7 @@ public final class RestStickersGroups
     {
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
-        this.imagesService = _ImagesService;
+        this.uploadedFilesService = _UploadedFilesService;
         this.defaultService = _DefaultService;
         this.usernamesService = _UsernamesService;
         this.groupsService = _GroupsService;
@@ -381,15 +381,15 @@ public final class RestStickersGroups
                                                     try
                                                     {
                                                         if (isUpdate && !isNullGroupImage)
-                                                            imagesService.Repository.delete (stickerGroups.getGroupImage ().getId () , mainAccount.getId ());
+                                                            uploadedFilesService.Repository.delete (stickerGroups.getGroupImage ().getId () , mainAccount.getId ());
                                                         if (!isNullGroupImage)
                                                             Files.write (saveTo.toPath () , groupImage.getBytes ());
 
-                                                        Images images = null;
+                                                        UploadedFiles images = null;
                                                         if (!isNullGroupImage)
                                                         {
-                                                            images = new Images ();
-                                                            images.setImageFor (StickerGroups.class.getName ());
+                                                            images = new UploadedFiles ();
+                                                            images.setFileFor (StickerGroups.class.getName ());
                                                             images.setName (codeStr);
 
                                                             images.setType (typeFile);
@@ -399,7 +399,7 @@ public final class RestStickersGroups
                                                             images.setSize (groupImage.getSize ());
                                                             images.setUploadedBy (mainAccount);
 
-                                                            images = imagesService.Repository.save (images);
+                                                            images = uploadedFilesService.Repository.save (images);
                                                         }
 
                                                         if (isNullGroupImage || images.getId () > 0)
@@ -696,7 +696,7 @@ public final class RestStickersGroups
             if (stickerGroups.getAddedBy ().getId () == mainAccount.getId ())
             {
                 stickerGroupsService.Repository.delete (stickerGroups.getId () , mainAccount.getId ());
-                imagesService.Repository.delete (stickerGroups.getGroupImage ().getId () , mainAccount.getId ());
+                uploadedFilesService.Repository.delete (stickerGroups.getGroupImage ().getId () , mainAccount.getId ());
                 hasStickerAccessLevel.getService ().delete (stickerGroups.getId ());
 
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());

@@ -11,14 +11,14 @@ import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEdited;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedService;
 import com.bardiademon.CyrusMessenger.Model.Database.DeletedOrEdited.DeletedOrEditedType;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.UploadedFiles.UploadedFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerAccessLevel.StickerAccessLevelType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroups;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickerGroups.StickerGroupsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.Stickers;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.Images;
-import com.bardiademon.CyrusMessenger.Model.Database.Images.ImagesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
@@ -58,7 +58,7 @@ public final class RestStickers
     private final StickerGroupsService stickerGroupsService;
     private final UserLoginService userLoginService;
     private final DefaultService defaultService;
-    private final ImagesService imagesService;
+    private final UploadedFilesService uploadedFilesService;
     private final DeletedOrEditedService deletedOrEditedService;
 
     /**
@@ -99,7 +99,7 @@ public final class RestStickers
             final StickerGroupsService _StickerGroupsService ,
             final UserLoginService _UserLoginService ,
             final DefaultService _DefaultService ,
-            final ImagesService _ImagesService ,
+            final UploadedFilesService _UploadedFilesService ,
             final StickerAccessLevelService _StickerAccessLevelService ,
             final DeletedOrEditedService _DeletedOrEditedService)
     {
@@ -107,7 +107,7 @@ public final class RestStickers
         this.stickerGroupsService = _StickerGroupsService;
         this.userLoginService = _UserLoginService;
         this.defaultService = _DefaultService;
-        this.imagesService = _ImagesService;
+        this.uploadedFilesService = _UploadedFilesService;
         this.deletedOrEditedService = _DeletedOrEditedService;
 
         this.asRouter = Domain.RNGap.STICKERS + "/add-stickers";
@@ -238,28 +238,28 @@ public final class RestStickers
 
                                                         if (isNullImage || file.exists ())
                                                         {
-                                                            Images image = null;
+                                                            UploadedFiles image = null;
                                                             if (!isNullImage)
                                                             {
                                                                 if (isUpdated)
                                                                 {
-                                                                    final Images stickerImage = sticker.getStickerImage ();
+                                                                    final UploadedFiles stickerImage = sticker.getStickerImage ();
                                                                     stickerImage.setDeleted (true);
                                                                     stickerImage.setDeletedAt (Time.now ());
-                                                                    imagesService.Repository.save (stickerImage);
+                                                                    uploadedFilesService.Repository.save (stickerImage);
                                                                 }
 
-                                                                image = new Images ();
+                                                                image = new UploadedFiles ();
                                                                 image.setUploadedBy (mainAccount);
                                                                 image.setSavedPath (file.getParent ());
-                                                                image.setImageFor (Stickers.class.getName ());
+                                                                image.setFileFor (Stickers.class.getName ());
                                                                 image.setWidth (checkImage.getWidth ());
                                                                 image.setHeight (checkImage.getHeight ());
                                                                 image.setSize (checkImage.getSize ());
                                                                 image.setName (name);
                                                                 image.setType (type);
 
-                                                                image = imagesService.Repository.save (image);
+                                                                image = uploadedFilesService.Repository.save (image);
                                                             }
 
                                                             if (isNullImage || image.getId () > 0)
@@ -431,11 +431,11 @@ public final class RestStickers
 
                 stickersService.Repository.save (sticker);
 
-                Images stickerImage = sticker.getStickerImage ();
+                UploadedFiles stickerImage = sticker.getStickerImage ();
 
                 stickerImage.setDeleted (true);
                 stickerImage.setDeletedAt (LocalDateTime.now ());
-                imagesService.Repository.save (stickerImage);
+                uploadedFilesService.Repository.save (stickerImage);
 
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
                 answer.setReqRes (req , res);
