@@ -4,6 +4,8 @@ import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.PrivateGap;
 
 public class Server
 {
+    private PrivateGap privateGap;
+
     private Server ()
     {
         firstConnection ();
@@ -22,11 +24,16 @@ public class Server
 
     private void privateGap ()
     {
-        new PrivateGap ();
+        privateGap = new PrivateGap ();
     }
 
-    public static void Run ()
+    public PrivateGap getPrivateGap ()
     {
-        new Server ();
+        return privateGap;
+    }
+
+    public static Server Run ()
+    {
+        return new Server ();
     }
 }

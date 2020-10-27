@@ -17,6 +17,8 @@ public abstract class Domain
         public static final String STICKERS_GROUPS = RN_MAIN_GAP + "/stickers-groups";
         public static final String STICKERS = RN_MAIN_GAP + "/stickers";
 
+        public static final String PERSONAL_GAP = RN_MAIN_GAP + "/personal-gap";
+
         public static abstract class RNProfilePicture
         {
             private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile-pictures";

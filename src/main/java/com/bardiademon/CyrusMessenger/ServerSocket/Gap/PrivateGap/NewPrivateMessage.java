@@ -13,6 +13,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypesService
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGap;
@@ -54,6 +56,10 @@ public final class NewPrivateMessage
 
     private Gaps gapReply;
 
+    private PersonalGaps personalGaps;
+
+    private PersonalGapsService personalGapsService;
+
     public NewPrivateMessage (final SocketIOClient Client , final RequestPrivateGap Request)
     {
         this.client = Client;
@@ -63,7 +69,7 @@ public final class NewPrivateMessage
         {
             if ((!request.isHasFile () || Str.IsEmpty (securityUserGap.getCanSendFileTypes ()) || checkAccessType ()))
             {
-                GapReadService gapReadService = ThisApp.S ().getService (GapReadService.class);
+                final GapReadService gapReadService = ThisApp.S ().getService (GapReadService.class);
 
                 if (to.getId () == mainAccount.getId () || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
@@ -129,7 +135,7 @@ public final class NewPrivateMessage
 
     private boolean checkRequest ()
     {
-        CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.pvgp_send_message.name ());
+        final CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.pvgp_send_message.name ());
         if (both.isOk ())
         {
             assert both.getIsLogin () != null;
@@ -137,76 +143,93 @@ public final class NewPrivateMessage
 
             if (!Str.IsEmpty (request.getCodeOnline ()))
             {
-                Online online = SIServer.Onlines.get (request.getCodeOnline ());
+                final Online online = SIServer.Onlines.get (request.getCodeOnline ());
                 if (online != null)
                 {
-                    FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
-                    if (fitd_username.isValid ())
+                    final ID idPersonalGap = new ID (request.getPersonalGapId ());
+                    if (idPersonalGap.isValid ())
                     {
-                        to = fitd_username.getMainAccount ();
-
-                        UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccount , to);
-
-                        if (accessLevel.hasAccess (Which.profile) && accessLevel.hasAccess (Which.find_me))
+                        if ((personalGaps = ((personalGapsService = ThisApp.S ().getService (PersonalGapsService.class))).byId (idPersonalGap.getId () , mainAccount.getId ())) != null)
                         {
-                            gapAccessLevel = new UserGapAccessLevel (mainAccount , to);
-
-                            if (gapAccessLevel.hasAccess (Which.s_message) && (!request.isHasFile () || gapAccessLevel.hasAccess (Which.s_file)))
+                            final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
+                            if (fitd_username.isValid ())
                             {
-                                online.setAnnouncementOfPresence (LocalDateTime.now ());
-                                online.setClient (client);
+                                to = fitd_username.getMainAccount ();
 
-                                SIServer.Onlines.replace (request.getCodeOnline () , online);
+                                final UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccount , to);
 
-                                if (Str.IsEmpty (request.getText ()) && !request.isHasFile ())
+                                if (accessLevel.hasAccess (Which.profile) && accessLevel.hasAccess (Which.find_me))
                                 {
-                                    answer = AnswerToClient.RequestIsNull ();
-                                    l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                                    gapAccessLevel = new UserGapAccessLevel (mainAccount , to);
+
+                                    if (gapAccessLevel.hasAccess (Which.s_message) && (!request.isHasFile () || gapAccessLevel.hasAccess (Which.s_file)))
+                                    {
+                                        online.setAnnouncementOfPresence (LocalDateTime.now ());
+                                        online.setClient (client);
+
+                                        SIServer.Onlines.replace (request.getCodeOnline () , online);
+
+                                        if (Str.IsEmpty (request.getText ()) && !request.isHasFile ())
+                                        {
+                                            answer = AnswerToClient.RequestIsNull ();
+                                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                                        }
+                                        else
+                                        {
+                                            if (determineTheType ())
+                                            {
+                                                if (!Str.IsEmpty (request.getIdStrReplyChat ()))
+                                                {
+                                                    final ID idReply = new ID (request.getIdStrReplyChat ());
+                                                    if (idReply.isValid ())
+                                                    {
+                                                        gapReply = ThisApp.S ().getService (GapsService.class).Repository.findById (idReply.getId ());
+                                                        if (gapReply == null)
+                                                        {
+                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_not_found.name ());
+                                                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_not_found.name ()) , null);
+                                                            return false;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_invalid.name ());
+                                                        l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_invalid.name ()) , null);
+                                                        return false;
+                                                    }
+                                                }
+
+                                                this.securityUserGap = gapAccessLevel.getSecurityUserGap ();
+                                                return true;
+                                            }
+                                            else return false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.access_denied.name ());
+                                        l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null);
+                                    }
                                 }
                                 else
                                 {
-                                    if (determineTheType ())
-                                    {
-                                        if (!Str.IsEmpty (request.getIdStrReplyChat ()))
-                                        {
-                                            ID idReply = new ID (request.getIdStrReplyChat ());
-                                            if (idReply.isValid ())
-                                            {
-                                                gapReply = ThisApp.S ().getService (GapsService.class).Repository.findById (idReply.getId ());
-                                                if (gapReply == null)
-                                                {
-                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_not_found.name ());
-                                                    l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_not_found.name ()) , null);
-                                                    return false;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_invalid.name ());
-                                                l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_invalid.name ()) , null);
-                                                return false;
-                                            }
-                                        }
-
-                                        this.securityUserGap = gapAccessLevel.getSecurityUserGap ();
-                                        return true;
-                                    }
-                                    else return false;
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                                    l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
                                 }
                             }
-                            else
-                            {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.access_denied.name ());
-                                l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null);
-                            }
+                            else answer = fitd_username.getAnswer ();
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
-                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gap_id.name ());
+                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null);
                         }
                     }
-                    else answer = fitd_username.getAnswer ();
+                    else
+                    {
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_personal_gap_id.name ());
+                        l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gap_id.name ()) , null);
+                    }
                 }
                 else
                 {
@@ -240,20 +263,25 @@ public final class NewPrivateMessage
     {
         Gaps gap = new Gaps ();
 
+        final long lastIndex = ((personalGaps.getLastIndex ()) + 1);
+
         gap.setText (request.getText ());
         gap.setFrom (mainAccount);
         gap.setToUser (to);
         gap.setSendAt (Time.localDateTime (request.getTimeSend ()));
         gap.setFilesGaps (gapFiles);
+        gap.setIndexGap (lastIndex);
+        gap.setPersonalGaps (personalGaps);
+
         if (gapReply != null) gap.setReply (gapReply);
         gap.setGapFor (GapFor.sec_gprivate);
 
-        GapTypesService gapTypesService = ThisApp.S ().getService (GapTypesService.class);
-        GapsService gapsService = ThisApp.S ().getService (GapsService.class);
+        final GapTypesService gapTypesService = ThisApp.S ().getService (GapTypesService.class);
+        final GapsService gapsService = ThisApp.S ().getService (GapsService.class);
 
         gap = gapsService.Repository.save (gap);
 
-        List <GapTypes> gapTypes = new ArrayList <> ();
+        final List <GapTypes> gapTypes = new ArrayList <> ();
 
         for (GapType gapType : this.gapTypes)
         {
@@ -270,6 +298,9 @@ public final class NewPrivateMessage
 
         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
         answer.put (KeyAnswer.was_send.name () , true);
+
+        personalGaps.setLastIndex (lastIndex);
+        personalGapsService.Repository.save (personalGaps);
 
         return gap;
     }
@@ -331,7 +362,7 @@ public final class NewPrivateMessage
     private enum ValAnswer
     {
         file_code_invalid, online_code_empty, online_code_invalid, unacceptable_file_type,
-        ceiling_to_send_unread_messages, sticker, emoji, link, id_reply_invalid, id_reply_not_found
+        ceiling_to_send_unread_messages, sticker, emoji, link, id_reply_invalid, id_reply_not_found, invalid_personal_gap_id, not_found_personal_gap_id
     }
 
     private enum KeyAnswer

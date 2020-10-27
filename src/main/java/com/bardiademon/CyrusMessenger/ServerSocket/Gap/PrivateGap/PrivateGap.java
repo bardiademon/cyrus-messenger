@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.Typing;
@@ -30,6 +31,12 @@ public final class PrivateGap implements SIServer.Client
         _SIServer.Server.addEventListener (EventName.pvgp_typing.name () , ReqTyping.class , (client , data , ackSender) ->
                 new Typing (client , data));
     }
+
+    public void deletePersonalGap (MainAccount mainAccount)
+    {
+        // ersale dastore hazf be device karbar digar ke tavasot karbar dighar in gofego hazf shode
+    }
+
 
     @Override
     public void Connect (SocketIOClient Client)

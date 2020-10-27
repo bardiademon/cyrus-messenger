@@ -15,6 +15,8 @@ public class ThisApp
 
     public static ConfigurableApplicationContext Context;
 
+    private static Server server;
+
     public static void main (String[] args)
     {
         Context = SpringApplication.run (ThisApp.class , args);
@@ -22,7 +24,7 @@ public class ThisApp
         l.ns ();
         r.ns ();
 
-        Server.Run ();
+        server = Server.Run ();
     }
 
     public static ConfigurableApplicationContext Context ()
@@ -30,6 +32,11 @@ public class ThisApp
         return Context;
     }
 
+
+    public static Server getServer ()
+    {
+        return server;
+    }
 
     // S => Services
     public static Services S ()

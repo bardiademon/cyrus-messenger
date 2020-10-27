@@ -54,6 +54,11 @@ public class UserProfileAccessLevel
         this.user = user;
     }
 
+    public MainAccount getUser ()
+    {
+        return user;
+    }
+
     public void setApplicant (MainAccount applicant)
     {
         this.applicant = applicant;

@@ -25,5 +25,7 @@ public enum EventName
 
     pvgp_receive_message,
 
-    pvgp_typing, e_pvgp_typing, pvgp_is_typing
+    pvgp_typing, e_pvgp_typing, pvgp_is_typing,
+
+    get_messages, e_get_messages
 }

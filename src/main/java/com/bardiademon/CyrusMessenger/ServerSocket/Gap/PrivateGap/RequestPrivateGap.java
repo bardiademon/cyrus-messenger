@@ -6,6 +6,9 @@ import java.util.List;
 
 public final class RequestPrivateGap extends PublicRequest
 {
+    @JsonProperty ("personal_gap_id")
+    private long personalGapId;
+
     // to => username
     private String to;
 
@@ -26,6 +29,16 @@ public final class RequestPrivateGap extends PublicRequest
 
     public RequestPrivateGap ()
     {
+    }
+
+    public long getPersonalGapId ()
+    {
+        return personalGapId;
+    }
+
+    public void setPersonalGapId (long personalGapId)
+    {
+        this.personalGapId = personalGapId;
     }
 
     public String getTo ()

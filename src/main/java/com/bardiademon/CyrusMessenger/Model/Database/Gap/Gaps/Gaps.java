@@ -4,6 +4,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapRead;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgain;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import java.time.LocalDateTime;
@@ -55,17 +56,21 @@ public final class Gaps
     @JoinColumn (name = "gap_to_group", referencedColumnName = "id")
     private Groups toGroup;
 
-    private boolean deleted;
+    @Column (name = "deleted_for_from_user")
+    private boolean deletedByFromUser;
 
-    @Column (name = "deleted_at", insertable = false)
-    private LocalDateTime deletedAt;
+    @Column (name = "deleted_for_to_user")
+    private boolean deletedForToUser;
 
-    @Column (name = "deleted_both")
-    private boolean deletedBoth;
+    @Column (name = "deleted_at_from_user", insertable = false)
+    private LocalDateTime deletedAt_FromUser;
+
+    @Column (name = "deleted_at_to_user", insertable = false)
+    private LocalDateTime deletedAt_ToUser;
 
     @ManyToOne
-    @JoinColumn (name = "deleted_by", referencedColumnName = "id")
-    private MainAccount deletedBy;
+    @JoinColumn (name = "deleted_both_by", referencedColumnName = "id")
+    private MainAccount deletedBothBy;
 
     @OneToMany (mappedBy = "gaps")
     private List <GapRead> gapRead;
@@ -87,6 +92,14 @@ public final class Gaps
     @OneToMany (mappedBy = "gap")
     @Where (clause = "`deleted` = false")
     private List <GapsPostedAgain> gapsPostedAgain;
+
+    @Column (name = "index_gap", nullable = false)
+    private long indexGap = 0;
+
+    // For private gap , One user = One user
+    @ManyToOne
+    @JoinColumn (name = "personal_gap", referencedColumnName = "id")
+    private PersonalGaps personalGaps;
 
     public Gaps ()
     {
@@ -162,44 +175,54 @@ public final class Gaps
         this.toGroup = toGroup;
     }
 
-    public boolean isDeleted ()
+    public boolean isDeletedByFromUser ()
     {
-        return deleted;
+        return deletedByFromUser;
     }
 
-    public void setDeleted (boolean deleted)
+    public void setDeletedByFromUser (boolean deletedByFromUser)
     {
-        this.deleted = deleted;
+        this.deletedByFromUser = deletedByFromUser;
     }
 
-    public LocalDateTime getDeletedAt ()
+    public boolean isDeletedForToUser ()
     {
-        return deletedAt;
+        return deletedForToUser;
     }
 
-    public void setDeletedAt (LocalDateTime deletedAt)
+    public void setDeletedForToUser (boolean deletedForToUser)
     {
-        this.deletedAt = deletedAt;
+        this.deletedForToUser = deletedForToUser;
     }
 
-    public boolean isDeletedBoth ()
+    public LocalDateTime getDeletedAt_FromUser ()
     {
-        return deletedBoth;
+        return deletedAt_FromUser;
     }
 
-    public void setDeletedBoth (boolean deletedBoth)
+    public void setDeletedAt_FromUser (LocalDateTime deletedAt_FromUser)
     {
-        this.deletedBoth = deletedBoth;
+        this.deletedAt_FromUser = deletedAt_FromUser;
     }
 
-    public MainAccount getDeletedBy ()
+    public LocalDateTime getDeletedAt_ToUser ()
     {
-        return deletedBy;
+        return deletedAt_ToUser;
     }
 
-    public void setDeletedBy (MainAccount deletedBy)
+    public void setDeletedAt_ToUser (LocalDateTime deletedAt_ToUser)
     {
-        this.deletedBy = deletedBy;
+        this.deletedAt_ToUser = deletedAt_ToUser;
+    }
+
+    public MainAccount getDeletedBothBy ()
+    {
+        return deletedBothBy;
+    }
+
+    public void setDeletedBothBy (MainAccount deletedBothBy)
+    {
+        this.deletedBothBy = deletedBothBy;
     }
 
     public List <GapRead> getGapRead ()
@@ -260,5 +283,25 @@ public final class Gaps
     public void setGapsPostedAgain (List <GapsPostedAgain> gapsPostedAgain)
     {
         this.gapsPostedAgain = gapsPostedAgain;
+    }
+
+    public long getIndexGap ()
+    {
+        return indexGap;
+    }
+
+    public void setIndexGap (long indexGap)
+    {
+        this.indexGap = indexGap;
+    }
+
+    public PersonalGaps getPersonalGaps ()
+    {
+        return personalGaps;
+    }
+
+    public void setPersonalGaps (PersonalGaps personalGaps)
+    {
+        this.personalGaps = personalGaps;
     }
 }
