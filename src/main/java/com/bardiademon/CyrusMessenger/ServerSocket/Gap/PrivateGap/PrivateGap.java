@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
@@ -7,6 +8,7 @@ import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.Typing;
 import com.bardiademon.CyrusMessenger.ServerSocket.HostPort;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
 
@@ -32,11 +34,28 @@ public final class PrivateGap implements SIServer.Client
                 new Typing (client , data));
     }
 
-    public void deletePersonalGap (MainAccount mainAccount)
+    public void deletePersonalGap (MainAccount mainAccount , long personalGapId)
     {
         // ersale dastore hazf be device karbar digar ke tavasot karbar dighar in gofego hazf shode
+
+        SIServer.LoopOnline ((CodeOnline , _Online) ->
+        {
+            // chon momkene chan ta online vojod dashte bashe baraye hamin ta akhar loop ro donbal mikonal ,
+            // chan ta online => chan ta device
+            if (_Online.getMainAccount ().getId () == mainAccount.getId ())
+                sendDeletePersonalGap (CodeOnline , _Online , personalGapId);
+
+            return true;
+        });
+
     }
 
+    private void sendDeletePersonalGap (String codeOnline , Online online , long personalGapId)
+    {
+        online.getClient ().sendEvent (EventName.delete_personal_gap.name () , personalGapId);
+        online.setAnnouncementOfPresence (Time.now ());
+        SIServer.Onlines.replace (codeOnline , online);
+    }
 
     @Override
     public void Connect (SocketIOClient Client)

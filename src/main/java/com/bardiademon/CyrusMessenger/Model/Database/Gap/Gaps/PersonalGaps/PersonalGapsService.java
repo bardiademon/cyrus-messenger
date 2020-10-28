@@ -31,18 +31,17 @@ public final class PersonalGapsService
         return Repository.personalGaps (applicant , userId);
     }
 
+    @SuppressWarnings (value = "unchecked")
     public List <PersonalGaps> getPersonalGaps (long userId , int start , int end)
     {
-        return (List <PersonalGaps>) entityManager
+        return ((List <PersonalGaps>) entityManager
                 .createQuery ("select pg from PersonalGaps pg where " +
                         "((pg.createdBy.id = :USER_ID and pg.deletedByCreatedBy = false) or (pg.gapWith.id = :USER_ID and pg.deletedForGapWith = false))" +
                         " order by pg.lastMessage desc")
                 .setParameter ("USER_ID" , userId)
                 .setFirstResult (start)
                 .setMaxResults (end)
-                .getResultList ();
-
-//        return Repository.personalGaps (userId);
+                .getResultList ());
     }
 
     public long getCountPersonalGaps (long userId)

@@ -72,6 +72,12 @@ public final class Gaps
     @JoinColumn (name = "deleted_both_by", referencedColumnName = "id")
     private MainAccount deletedBothBy;
 
+    @Column (name = "deleted_both_at")
+    private LocalDateTime deletedBothAt;
+
+    @Column (name = "deleted_both")
+    private boolean deletedBoth;
+
     @OneToMany (mappedBy = "gaps")
     private List <GapRead> gapRead;
 
@@ -223,6 +229,26 @@ public final class Gaps
     public void setDeletedBothBy (MainAccount deletedBothBy)
     {
         this.deletedBothBy = deletedBothBy;
+    }
+
+    public LocalDateTime getDeletedBothAt ()
+    {
+        return deletedBothAt;
+    }
+
+    public void setDeletedBothAt (LocalDateTime deletedBothAt)
+    {
+        this.deletedBothAt = deletedBothAt;
+    }
+
+    public boolean isDeletedBoth ()
+    {
+        return deletedBoth;
+    }
+
+    public void setDeletedBoth (boolean deletedBoth)
+    {
+        this.deletedBoth = deletedBoth;
     }
 
     public List <GapRead> getGapRead ()

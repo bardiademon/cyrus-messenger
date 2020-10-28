@@ -27,5 +27,7 @@ public enum EventName
 
     pvgp_typing, e_pvgp_typing, pvgp_is_typing,
 
-    get_messages, e_get_messages
+    get_messages, e_get_messages,
+
+    delete_personal_gap
 }

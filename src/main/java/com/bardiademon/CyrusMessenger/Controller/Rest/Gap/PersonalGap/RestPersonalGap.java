@@ -334,7 +334,7 @@ public final class RestPersonalGap
                                 personalGaps.setDeletedForGapWith (true);
                                 personalGaps.setDeletedAt_GapWith (Time.now ());
 
-                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getGapWith ());
+                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getGapWith () , personalGaps.getId ());
                             }
                         }
                         else
@@ -347,7 +347,7 @@ public final class RestPersonalGap
                                 personalGaps.setDeletedByCreatedBy (true);
                                 personalGaps.setDeletedAt_CreatedBy (Time.now ());
 
-                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getCreatedBy ());
+                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getCreatedBy () , personalGaps.getId ());
                             }
                         }
                         if (deleteBoth)

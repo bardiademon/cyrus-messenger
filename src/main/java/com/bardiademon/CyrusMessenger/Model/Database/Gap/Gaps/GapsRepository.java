@@ -28,12 +28,13 @@ public interface GapsRepository extends JpaRepository <Gaps, Long>
     @Transactional
     @Modifying
     @Query ("update Gaps g set g.deletedForToUser = true , g.deletedAt_ToUser = current_timestamp " +
-            ", g.deletedByFromUser = true , g.deletedAt_FromUser = current_timestamp , g.deletedBothBy = :DELETED_BY" +
+            ", g.deletedByFromUser = true , g.deletedAt_FromUser = current_timestamp , g.deletedBothBy = :DELETED_BY ," +
+            " g.deletedBoth = true , g.deletedBothAt = current_timestamp " +
             " where ((g.toUser.id = :USER_ID and g.toUser.id = :USER_ID_2) or" +
             " (g.toUser.id = :USER_ID_2 and g.toUser.id = :USER_ID)) " +
             "and g.personalGaps.id = :PERSONAL_GAP_ID")
     void deleteAllBoth (@Param ("USER_ID") long userId ,
-                     @Param ("USER_ID_2") long userId2 ,
-                     @Param ("DELETED_BY") MainAccount deletedBy ,
-                     @Param ("PERSONAL_GAP_ID") long personalGapId);
+                        @Param ("USER_ID_2") long userId2 ,
+                        @Param ("DELETED_BY") MainAccount deletedBy ,
+                        @Param ("PERSONAL_GAP_ID") long personalGapId);
 }
