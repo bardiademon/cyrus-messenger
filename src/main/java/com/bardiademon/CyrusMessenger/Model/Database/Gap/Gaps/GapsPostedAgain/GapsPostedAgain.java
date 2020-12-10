@@ -29,6 +29,10 @@ public final class GapsPostedAgain
     @JoinColumn (name = "to_user_id", referencedColumnName = "id")
     private MainAccount to;
 
+    @ManyToOne
+    @JoinColumn (name = "message_from", referencedColumnName = "id")
+    private MainAccount messageFrom;
+
     @Column (name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -100,5 +104,15 @@ public final class GapsPostedAgain
     public void setDeleted (boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public MainAccount getMessageFrom ()
+    {
+        return messageFrom;
+    }
+
+    public void setMessageFrom (MainAccount messageFrom)
+    {
+        this.messageFrom = messageFrom;
     }
 }

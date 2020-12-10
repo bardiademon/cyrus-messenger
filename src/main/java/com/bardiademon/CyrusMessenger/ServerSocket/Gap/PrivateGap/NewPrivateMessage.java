@@ -71,7 +71,7 @@ public final class NewPrivateMessage
             {
                 final GapReadService gapReadService = ThisApp.S ().getService (GapReadService.class);
 
-                if (to.getId () == mainAccount.getId () || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
+                if ((to != null && to.getId () == mainAccount.getId ()) || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
                     if (checkText ())
                         new SendPrivateMessage (saveMessage ());
@@ -149,12 +149,17 @@ public final class NewPrivateMessage
                     final ID idPersonalGap = new ID (request.getPersonalGapId ());
                     if (idPersonalGap.isValid ())
                     {
-                        if ((personalGaps = ((personalGapsService = ThisApp.S ().getService (PersonalGapsService.class))).byId (idPersonalGap.getId () , mainAccount.getId ())) != null)
+                        final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
+                        if (fitd_username.isValid ())
                         {
-                            final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
-                            if (fitd_username.isValid ())
+                            to = fitd_username.getMainAccount ();
+
+                            if ((personalGaps = ((personalGapsService = ThisApp.S ().getService (PersonalGapsService.class))).getPersonalGap (mainAccount.getId () , to.getId ())) != null)
                             {
-                                to = fitd_username.getMainAccount ();
+
+                                // agar karbar dare dakhel save massage payam mide va key to ro karbar dige gozashte bod modiriyat shode to nanide gerfte beshe
+                                if (to != null && mainAccount.getId () == personalGaps.getCreatedBy ().getId () && mainAccount.getId () == personalGaps.getGapWith ().getId ())
+                                    to = mainAccount;
 
                                 final UserProfileAccessLevel accessLevel = new UserProfileAccessLevel (mainAccount , to);
 
@@ -217,13 +222,13 @@ public final class NewPrivateMessage
                                     l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
                                 }
                             }
-                            else answer = fitd_username.getAnswer ();
+                            else
+                            {
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gap_id.name ());
+                                l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null);
+                            }
                         }
-                        else
-                        {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gap_id.name ());
-                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null);
-                        }
+                        else answer = fitd_username.getAnswer ();
                     }
                     else
                     {
@@ -274,7 +279,7 @@ public final class NewPrivateMessage
         gap.setPersonalGaps (personalGaps);
 
         if (gapReply != null) gap.setReply (gapReply);
-        gap.setGapFor (GapFor.sec_gprivate);
+        gap.setGapFor (GapFor.gprivate);
 
         final GapTypesService gapTypesService = ThisApp.S ().getService (GapTypesService.class);
         final GapsService gapsService = ThisApp.S ().getService (GapsService.class);

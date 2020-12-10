@@ -37,4 +37,9 @@ public interface GapsRepository extends JpaRepository <Gaps, Long>
                         @Param ("USER_ID_2") long userId2 ,
                         @Param ("DELETED_BY") MainAccount deletedBy ,
                         @Param ("PERSONAL_GAP_ID") long personalGapId);
+
+    @Query ("select count(gps) from Gaps gps where gps.personalGaps.id = :PERSONAL_GAPS_ID" +
+            " and gps.deletedBoth = false and ((gps.from.id = :USER_ID and gps.deletedByFromUser = false) " +
+            "or (gps.toUser.id = :USER_ID and gps.deletedForToUser = false)) order by gps.sendAt desc")
+    long countGaps (@Param ("PERSONAL_GAPS_ID") long personalGapsId , @Param ("USER_ID") long idUser);
 }

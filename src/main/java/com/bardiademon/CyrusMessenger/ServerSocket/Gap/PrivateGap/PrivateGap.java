@@ -3,10 +3,13 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.GetMessages;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.RequestGetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.Typing;
 import com.bardiademon.CyrusMessenger.ServerSocket.HostPort;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
+import com.bardiademon.CyrusMessenger.bardiademon.Pagination;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -15,6 +18,8 @@ import com.corundumstudio.socketio.SocketIOClient;
 public final class PrivateGap implements SIServer.Client
 {
     private final SIServer _SIServer = new SIServer (HostPort.PORT_PRIVATE_CHAT , this);
+
+    private final Pagination pagination = new Pagination ();
 
     public PrivateGap ()
     {
@@ -32,6 +37,9 @@ public final class PrivateGap implements SIServer.Client
 
         _SIServer.Server.addEventListener (EventName.pvgp_typing.name () , ReqTyping.class , (client , data , ackSender) ->
                 new Typing (client , data));
+
+        _SIServer.Server.addEventListener (EventName.get_messages.name () , RequestGetMessages.class , (client , data , ackSender) ->
+                new GetMessages (client , data));
     }
 
     public void deletePersonalGap (MainAccount mainAccount , long personalGapId)
@@ -61,5 +69,10 @@ public final class PrivateGap implements SIServer.Client
     public void Connect (SocketIOClient Client)
     {
         l.n (Thread.currentThread ().getStackTrace () , ToJson.CreateClass.nj ("private_chat_connect" , Client.getSessionId ().toString ()));
+    }
+
+    public Pagination getPagination ()
+    {
+        return pagination;
     }
 }

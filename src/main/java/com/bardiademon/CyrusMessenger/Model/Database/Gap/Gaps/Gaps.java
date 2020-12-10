@@ -7,6 +7,9 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.Ga
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -44,44 +47,56 @@ public final class Gaps
 
     @OneToOne
     @JoinColumn (name = "gap_from", referencedColumnName = "id", nullable = false)
+    @JsonManagedReference
     private MainAccount from;
 
     // if private gap else is null
     @ManyToOne
     @JoinColumn (name = "gap_to_user", referencedColumnName = "id")
+    @JsonManagedReference
     private MainAccount toUser;
 
     // if group gap else is null
     @ManyToOne
     @JoinColumn (name = "gap_to_group", referencedColumnName = "id")
+    @JsonInclude (JsonInclude.Include.NON_NULL)
     private Groups toGroup;
 
     @Column (name = "deleted_for_from_user")
+    @JsonIgnore
     private boolean deletedByFromUser;
 
     @Column (name = "deleted_for_to_user")
+    @JsonIgnore
     private boolean deletedForToUser;
 
     @Column (name = "deleted_at_from_user", insertable = false)
+    @JsonIgnore
     private LocalDateTime deletedAt_FromUser;
 
     @Column (name = "deleted_at_to_user", insertable = false)
+    @JsonIgnore
     private LocalDateTime deletedAt_ToUser;
 
     @ManyToOne
     @JoinColumn (name = "deleted_both_by", referencedColumnName = "id")
+    @JsonIgnore
     private MainAccount deletedBothBy;
 
     @Column (name = "deleted_both_at")
+    @JsonIgnore
     private LocalDateTime deletedBothAt;
 
     @Column (name = "deleted_both")
+    @JsonIgnore
     private boolean deletedBoth;
 
     @OneToMany (mappedBy = "gaps")
+    @JsonIgnore
     private List <GapRead> gapRead;
 
     @OneToMany (mappedBy = "gaps")
+    @JsonIgnore
     private List <GapFiles> filesGaps;
 
     @OneToOne
@@ -95,9 +110,22 @@ public final class Gaps
     @Column (name = "send_at", updatable = false, nullable = false)
     private LocalDateTime sendAt;
 
+    /**
+     * tedad forward shode haye yek gaps ro migire
+     */
     @OneToMany (mappedBy = "gap")
     @Where (clause = "`deleted` = false")
     private List <GapsPostedAgain> gapsPostedAgain;
+
+    /*
+     * in mige in gap forward shode hast az ye gap dige
+     */
+    @ManyToOne
+    @JoinColumn (name = "forwarded_id", referencedColumnName = "id")
+    private GapsPostedAgain forwarded;
+
+    @Column (name = "id_forwarded")
+    private boolean isForwarded;
 
     @Column (name = "index_gap", nullable = false)
     private long indexGap = 0;
@@ -309,6 +337,26 @@ public final class Gaps
     public void setGapsPostedAgain (List <GapsPostedAgain> gapsPostedAgain)
     {
         this.gapsPostedAgain = gapsPostedAgain;
+    }
+
+    public GapsPostedAgain getForwarded ()
+    {
+        return forwarded;
+    }
+
+    public void setForwarded (GapsPostedAgain forwarded)
+    {
+        this.forwarded = forwarded;
+    }
+
+    public boolean isForwarded ()
+    {
+        return isForwarded;
+    }
+
+    public void setForwarded (boolean forwarded)
+    {
+        isForwarded = forwarded;
     }
 
     public long getIndexGap ()

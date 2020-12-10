@@ -2,6 +2,8 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.ILUGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
@@ -46,6 +48,7 @@ public final class GetMessages
 
             assert both.getIsLogin () != null;
             mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
+
             final RequestGetMessages.Type type = RequestGetMessages.Type.to (request.getType ());
             if (type != null)
             {
@@ -55,7 +58,7 @@ public final class GetMessages
                         checkGroup ();
                         break;
                     case user:
-                        checkUser ();
+                        checkUser (mainAccount);
                         break;
                 }
             }
@@ -73,7 +76,7 @@ public final class GetMessages
         ILUGroup iluGroup = new ILUGroup ();
         iluGroup.setId (request.getId ());
         if (iluGroup.isValid ())
-            new GroupGetMessages (iluGroup.getGroup () , request.getLastGetId () , answerGetMessages);
+            new GroupGetMessages (iluGroup.getGroup () , request.getPage () , answerGetMessages);
         else
         {
             answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_id_group.name ());
@@ -81,20 +84,41 @@ public final class GetMessages
         }
     }
 
-    private void checkUser ()
+    private void checkUser (MainAccount mainAccount)
     {
         ID idUser = new ID (request.getId ());
         if (idUser.isValid ())
         {
-            final MainAccountService mainAccountService = ThisApp.S ().getService (MainAccountService.class);
-            final MainAccount user = mainAccountService.findId (idUser.getId ());
-            if (user != null)
-                new UserGetMessages (user , request.getLastGetId () , answerGetMessages);
+            ID personalGapsId = new ID (request.getPersonalGapsId ());
+
+            if (personalGapsId.isValid ())
+            {
+                PersonalGaps personalGaps = ((ThisApp.S ().getService (PersonalGapsService.class))
+                        .byId (personalGapsId.getId () , mainAccount.getId ()));
+                if (personalGaps != null)
+                {
+                    final MainAccountService mainAccountService = ThisApp.S ().getService (MainAccountService.class);
+                    final MainAccount user = mainAccountService.findId (idUser.getId ());
+                    if (user != null)
+                        new UserGetMessages (client , user , personalGaps , request.getPage () , answerGetMessages , request);
+                    else
+                    {
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_user.name ());
+                        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
+                    }
+                }
+                else
+                {
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gaps_id.name ());
+                    l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
+                }
+            }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_user.name ());
-                l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
+                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_personal_gaps_id.name ());
+                l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
             }
+
         }
         else
         {
@@ -105,12 +129,13 @@ public final class GetMessages
 
     private void answerToClient ()
     {
-
+        client.sendEvent (EventName.e_get_messages.name () , ToJson.To (answer));
+        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , "send to client" , SubmitRequestType.socket , true);
     }
 
     private enum ValAnswer
     {
-        invalid_type, invalid_id_group, invalid_id_user, not_found_user
+        invalid_type, invalid_id_group, invalid_id_user, not_found_user, invalid_personal_gaps_id, not_found_personal_gaps_id
     }
 
 }

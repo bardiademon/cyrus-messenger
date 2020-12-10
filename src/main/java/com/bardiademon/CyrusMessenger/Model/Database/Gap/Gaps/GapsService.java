@@ -41,17 +41,21 @@ public final class GapsService
     @SuppressWarnings ("unchecked")
     public List <Gaps> getPrivateGaps (final long userId , final PersonalGaps personalGaps , final Pagination.Answer paginationAnswer)
     {
+        final GapFor gapFor = GapFor.gprivate;
+
         return ((List <Gaps>) entityManager.createQuery (
                 "select gps from Gaps gps where gps.personalGaps.id = :PERSONAL_GAPS_ID" +
                         " and gps.deletedBoth = false and ((gps.from.id = :USER_ID and gps.deletedByFromUser = false) " +
-                        "or (gps.toUser.id = :USER_ID and gps.deletedForToUser = false)) order by gps.sendAt desc")
+                        "or (gps.toUser.id = :USER_ID and gps.deletedForToUser = false)) and gps.gapFor = :GAP_FOR order by gps.sendAt desc")
 
                 .setParameter ("USER_ID" , userId)
                 .setParameter ("PERSONAL_GAPS_ID" , personalGaps.getId ())
+                .setParameter ("GAP_FOR" , gapFor)
 
                 .setFirstResult (paginationAnswer.Start)
                 .setMaxResults (paginationAnswer.End)
 
                 .getResultList ());
     }
+
 }

@@ -168,7 +168,7 @@ public final class SIServer
 
     public interface LoopOnline
     {
-        // bool => continue ? yes : now;
+        // bool => continue ? yes : no;
         boolean doing (String CodeOnline , Online _Online);
     }
 

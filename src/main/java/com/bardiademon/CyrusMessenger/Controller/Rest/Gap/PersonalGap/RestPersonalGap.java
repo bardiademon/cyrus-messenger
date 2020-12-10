@@ -94,6 +94,10 @@ public final class RestPersonalGap
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody R_IDUsername request)
     {
+        /*
+         *  CreatedBy => kasi ke login shode , GapWith => mishe hamin request ke kasi ke login shode id ya username ro mifreste
+         */
+
         AnswerToClient answer;
 
         final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , cRouter , cType);
@@ -177,15 +181,17 @@ public final class RestPersonalGap
         return answer;
     }
 
-    @RequestMapping (value = "/{last_get}")
+    @RequestMapping (value = { "/" , "/{last_get}" })
     public AnswerToClient getPersonalGaps
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
-             @PathVariable (value = "last_get") String strLastPage)
+             @PathVariable (value = "last_get", required = false) String strLastPage)
     {
         AnswerToClient answer;
 
-        final CBSIL both = CBSIL.Both (null , req , res , codeLogin , userLoginService , gpgRouter , gpgType);
+        String request = ToJson.CreateClass.nj ("last_get" , strLastPage);
+
+        final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , gpgRouter , gpgType);
         if (both.isOk ())
         {
             assert both.getIsLogin () != null;
@@ -253,34 +259,34 @@ public final class RestPersonalGap
                             answer.put (KeyAnswer.all_page.name () , answerPagination.AllPage);
                             answer.put (KeyAnswer.this_page.name () , thisPage);
                             answer.setReqRes (req , res);
-                            l.n (null , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gpgType , false);
+                            l.n (request , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gpgType , false);
                         }
                         else
                         {
                             answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
                             answer.setReqRes (req , res);
-                            l.n (null , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gpgType , true);
+                            l.n (request , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , gpgType , true);
                         }
                     }
                     else
                     {
                         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
                         answer.setReqRes (req , res);
-                        l.n (null , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , String.valueOf (thisPage) , gpgType , true);
+                        l.n (request , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , String.valueOf (thisPage) , gpgType , true);
                     }
                 }
                 else
                 {
                     answer = AnswerToClient.ServerError ();
                     answer.setReqRes (req , res);
-                    l.n (null , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , DefaultKey.max_get_personal_gaps.name () , gpgType , true);
+                    l.n (request , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , DefaultKey.max_get_personal_gaps.name () , gpgType , true);
                 }
             }
             else
             {
                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.invalid_last_page.name ());
                 answer.setReqRes (req , res);
-                l.n (null , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_last_page.name ()) , idLastPage.getIdObj ().toString () , gpgType , true);
+                l.n (request , gpgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_last_page.name ()) , null , gpgType , true);
             }
 
 

@@ -11,8 +11,11 @@ public final class RequestGetMessages extends PublicRequest
 
     private String type;
 
-    @JsonProperty ("last_get_id")
-    private long lastGetId;
+    @JsonProperty ("page")
+    private int page;
+
+    @JsonProperty ("personal_gaps_id")
+    private long personalGapsId;
 
     public enum Type
     {
@@ -56,13 +59,23 @@ public final class RequestGetMessages extends PublicRequest
         this.type = type;
     }
 
-    public long getLastGetId ()
+    public int getPage ()
     {
-        return lastGetId;
+        return page;
     }
 
-    public void setLastGetId (long lastGetId)
+    public void setPage (int page)
     {
-        this.lastGetId = lastGetId;
+        this.page = page;
+    }
+
+    public long getPersonalGapsId ()
+    {
+        return personalGapsId;
+    }
+
+    public void setPersonalGapsId (long personalGapsId)
+    {
+        this.personalGapsId = personalGapsId;
     }
 }
