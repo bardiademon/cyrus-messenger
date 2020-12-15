@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapRead;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgain;
@@ -19,6 +19,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -95,9 +97,10 @@ public final class Gaps
     @JsonIgnore
     private List <GapRead> gapRead;
 
-    @OneToMany (mappedBy = "gaps")
+    @ManyToMany
+    @JoinTable (name = "gaps_files", joinColumns = @JoinColumn (name = "gaps_files", referencedColumnName = "id"))
     @JsonIgnore
-    private List <GapFiles> filesGaps;
+    private List <GapsFiles> filesGaps;
 
     @OneToOne
     @JoinColumn (name = "reply_gap", referencedColumnName = "id")
@@ -289,12 +292,12 @@ public final class Gaps
         this.gapRead = gapRead;
     }
 
-    public List <GapFiles> getFilesGaps ()
+    public List <GapsFiles> getFilesGaps ()
     {
         return filesGaps;
     }
 
-    public void setFilesGaps (List <GapFiles> filesGaps)
+    public void setFilesGaps (List <GapsFiles> filesGaps)
     {
         this.filesGaps = filesGaps;
     }

@@ -2,7 +2,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
@@ -49,7 +49,7 @@ public final class SendPrivateMessage extends Thread implements Runnable
         if (gaps.getFilesGaps () != null)
         {
             List <String> codeFiles = new ArrayList <> ();
-            for (GapFiles filesGap : gaps.getFilesGaps ()) codeFiles.add (filesGap.getCode ());
+            for (GapsFiles filesGap : gaps.getFilesGaps ()) codeFiles.add (filesGap.getCode ());
             message.put (KeyAnswer.files.name () , codeFiles);
         }
 

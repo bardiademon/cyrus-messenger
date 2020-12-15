@@ -19,6 +19,8 @@ public abstract class Domain
 
         public static final String PERSONAL_GAP = RN_MAIN_GAP + "/personal-gap";
 
+        public static final String GAPS_FILES = RN_MAIN_GAP + "/files";
+
         public static abstract class RNProfilePicture
         {
             private static final String RN_PROFILE_PICTURES = RN_MAIN_GAP + "/profile-pictures";

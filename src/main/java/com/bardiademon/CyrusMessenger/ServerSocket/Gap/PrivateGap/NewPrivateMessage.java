@@ -5,8 +5,8 @@ import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFilesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapReadService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypesService;
@@ -44,7 +44,7 @@ public final class NewPrivateMessage
     private AnswerToClient answer;
 
     private final List <GapType> gapTypes = new ArrayList <> ();
-    private final List <GapFiles> gapFiles = new ArrayList <> ();
+    private final List <GapsFiles> gapsFiles = new ArrayList <> ();
 
     private MainAccount mainAccount, to;
 
@@ -257,7 +257,8 @@ public final class NewPrivateMessage
     {
         List <String> accessType = Arrays.asList (securityUserGap.getCanSendFileTypes ().split (","));
         if (accessType.size () > 0)
-            for (GapFiles gapFile : gapFiles) if (!accessType.contains (gapFile.getFileExtension ())) return false;
+            for (GapsFiles gapFile : gapsFiles)
+                if (!accessType.contains (gapFile.getUploadedFiles ().getType ())) return false;
 
         for (Which wh : which) if (!gapAccessLevel.hasAccess (wh)) return false;
 
@@ -274,7 +275,7 @@ public final class NewPrivateMessage
         gap.setFrom (mainAccount);
         gap.setToUser (to);
         gap.setSendAt (Time.localDateTime (request.getTimeSend ()));
-        gap.setFilesGaps (gapFiles);
+        gap.setFilesGaps (gapsFiles);
         gap.setIndexGap (lastIndex);
         gap.setPersonalGaps (personalGaps);
 
@@ -314,7 +315,7 @@ public final class NewPrivateMessage
     {
         if (request.getFileCode () == null) return true;
 
-        GapFilesService gapFilesService = ThisApp.S ().getService (GapFilesService.class);
+        GapsFilesService gapsFilesService = ThisApp.S ().getService (GapsFilesService.class);
 
         if (!Str.IsEmpty (request.getText ()))
             gapTypes.add (GapType.text);
@@ -322,10 +323,10 @@ public final class NewPrivateMessage
         which = new ArrayList <> ();
         for (String code : request.getFileCode ())
         {
-            GapFiles gapFile = gapFilesService.byCode (code);
+            GapsFiles gapFile = gapsFilesService.byCode (code);
             if (gapFile != null)
             {
-                switch (gapFile.getTypes ())
+                switch (gapFile.getType ())
                 {
                     case gif:
                         which.add (Which.s_gif);
@@ -349,14 +350,14 @@ public final class NewPrivateMessage
                         break;
                 }
 
-                gapFiles.add (gapFile);
+                gapsFiles.add (gapFile);
             }
             else
             {
                 answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.file_code_invalid.name ());
                 answer.put (KeyAnswer.code.name () , code);
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.file_code_invalid.name ()) , ToJson.CreateClass.nj (KeyAnswer.code.name () , code));
-                gapFiles.clear ();
+                gapsFiles.clear ();
                 gapTypes.clear ();
                 return false;
             }

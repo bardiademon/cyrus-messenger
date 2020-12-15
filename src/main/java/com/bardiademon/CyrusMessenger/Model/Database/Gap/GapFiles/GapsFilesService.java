@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class GapFilesService
+public final class GapsFilesService
 {
-    public final GapFilesRepository Repository;
+    public final GapsFilesRepository Repository;
 
     @Autowired
-    public GapFilesService (GapFilesRepository Repository)
+    public GapsFilesService (GapsFilesRepository Repository)
     {
         this.Repository = Repository;
     }
 
-    public GapFiles byCode (String code)
+    public GapsFiles byCode (String code)
     {
         return Repository.findByCodeAndDeletedFalse (code);
     }

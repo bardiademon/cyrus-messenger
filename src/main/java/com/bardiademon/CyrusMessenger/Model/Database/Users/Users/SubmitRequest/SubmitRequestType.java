@@ -25,6 +25,8 @@ public enum SubmitRequestType
     add_stickers, get_one_info_sticker, delete_sticker, get_stickers_ids, get_one_sticker,
     create_personal_gap, get_personal_gap, delete_personal_gap,
 
+    new_gaps_files,
+
 
     socket
 }

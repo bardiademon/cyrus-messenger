@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GapFilesRepository extends JpaRepository <GapFiles, Long>
+public interface GapsFilesRepository extends JpaRepository <GapsFiles, Long>
 {
-    GapFiles findByCodeAndDeletedFalse (String code);
+    GapsFiles findByCodeAndDeletedFalse (String code);
 }

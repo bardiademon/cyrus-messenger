@@ -3,7 +3,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
@@ -106,11 +106,11 @@ public final class UserGetMessages
             if (messageForwardedFor != null)
                 createClass.put (KeyAnswer.forwarded.name () , messageForwardedFor.getId ());
 
-            List <GapFiles> filesGaps = gap.getFilesGaps ();
+            List <GapsFiles> filesGaps = gap.getFilesGaps ();
             if (filesGaps != null && filesGaps.size () > 0)
             {
                 List <String> filesGapsCode = new ArrayList <> ();
-                for (GapFiles filesGap : filesGaps) filesGapsCode.add (filesGap.getCode ());
+                for (GapsFiles filesGap : filesGaps) filesGapsCode.add (filesGap.getCode ());
                 createClass.put (KeyAnswer.files.name () , filesGapsCode);
             }
 

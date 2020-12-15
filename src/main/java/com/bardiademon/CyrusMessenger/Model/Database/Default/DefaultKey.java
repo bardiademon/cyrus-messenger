@@ -15,7 +15,7 @@ public enum DefaultKey
      */
     min_w_sticker_image, min_h_sticker_image, max_w_sticker_image, max_h_sticker_image,
 
-    max_get_personal_gaps,max_get_gaps,
+    max_get_personal_gaps, max_get_gaps, max_gaps_files_size,
 
     max_size_sticker, sticker_max_len_name;
 

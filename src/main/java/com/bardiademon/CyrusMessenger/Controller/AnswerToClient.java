@@ -209,7 +209,8 @@ public class AnswerToClient
     {
         sorry_for_this_error, id_invalid, not_found, user_not_found, invalid_width_or_height,
         access_has_been_disabled, access_denied, found, error, not_found_id,
-        request_is_null, account_deactive, please_try_again, username_invalid, removed, id, changed, added, ok, anonymous
+        request_is_null, account_deactive, please_try_again, username_invalid,
+        removed, id, changed, added, ok, anonymous, mkdirs_error
     }
 
     @JsonIgnore

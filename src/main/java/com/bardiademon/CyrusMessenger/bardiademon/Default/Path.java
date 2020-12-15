@@ -12,7 +12,7 @@ public abstract class Path
     public static final String IMAGES = StickTogether (FILES , "Default" , "Images");
 
     public static final String PROFILE_PICTURES = StickTogether (FILES , "ProfilePictures");
-    public static final String GAP_FILES = StickTogether (FILES , "GapFiles");
+    public static final String GAPS_FILES = StickTogether (FILES , "GapsFiles");
     public static final String STICKERS = StickTogether (FILES , "Stickers");
     public static final String STICKERS_GROUPS = StickTogether (STICKERS , "Groups");
     public static final String PROFILE_PICTURES_USERS = StickTogether (PROFILE_PICTURES , "Users");
