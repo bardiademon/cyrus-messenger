@@ -67,6 +67,9 @@ public final class UploadedFiles
     @Column (name = "img_height")
     private int height;
 
+    @Column (name = "original_filename")
+    private String filename;
+
     @Transient
     public File toFile ()
     {
@@ -215,5 +218,15 @@ public final class UploadedFiles
     public void setHeight (int height)
     {
         this.height = height;
+    }
+
+    public String getFilename ()
+    {
+        return filename;
+    }
+
+    public void setFilename (String filename)
+    {
+        this.filename = filename;
     }
 }

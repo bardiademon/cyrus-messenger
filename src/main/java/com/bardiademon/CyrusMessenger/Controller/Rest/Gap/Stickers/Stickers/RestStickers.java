@@ -197,10 +197,10 @@ public final class RestStickers
                                 CheckImage checkImage = null;
                                 if (isNullImage || (checkImage = new CheckImage ()).valid (multipartFile))
                                 {
-                                    final Integer maxLenName = defaultService.getInt (DefaultKey.sticker_max_len_name);
-                                    if (maxLenName != null)
+                                    final DefaultService.Value <Integer> maxLenName = defaultService.integerValue (DefaultKey.sticker_max_len_name);
+                                    if (maxLenName.ok)
                                     {
-                                        if ((isUpdated && Str.IsEmpty (request.getName ())) || request.getName ().length () <= maxLenName)
+                                        if ((isUpdated && Str.IsEmpty (request.getName ())) || request.getName ().length () <= maxLenName.value)
                                         {
                                             if (isNullImage || (answer = checkImage.CSWH (req , res , strRequest , asRouter , mainAccount , asType , DefaultKey.max_size_sticker , DefaultKey.min_w_sticker_image , DefaultKey.max_w_sticker_image , DefaultKey.min_h_sticker_image , DefaultKey.max_h_sticker_image , defaultService)) == null)
                                             {
@@ -323,9 +323,8 @@ public final class RestStickers
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.ServerError ();
+                                        answer = maxLenName.answer;
                                         answer.setReqRes (req , res);
-                                        l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null , asType , true);
                                     }
                                 }
                                 else

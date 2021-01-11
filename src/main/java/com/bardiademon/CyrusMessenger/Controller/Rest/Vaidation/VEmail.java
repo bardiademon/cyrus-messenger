@@ -1,9 +1,9 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Vaidation;
 
-public class VEmail implements Validation
+public final class VEmail implements Validation
 {
 
-    private String email;
+    private final String email;
 
     public VEmail (String Email)
     {
@@ -16,7 +16,7 @@ public class VEmail implements Validation
         if (email == null || email.equals ("")) return false;
         else
         {
-            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+            final String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                     "[a-zA-Z0-9_+&*-]+)*@" +
                     "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                     "A-Z]{2,7}$";

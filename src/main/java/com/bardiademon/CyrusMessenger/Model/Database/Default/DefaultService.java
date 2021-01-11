@@ -1,5 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Default;
 
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ public final class DefaultService
         this.Repository = Repository;
     }
 
+    @Deprecated
     public Integer getInt (DefaultKey key)
     {
         Default aDefault = getDefault (key);
@@ -34,6 +37,31 @@ public final class DefaultService
         {
         }
         return null;
+    }
+
+    public Value <Integer> integerValue (DefaultKey key)
+    {
+        final Default aDefault = getDefault (key);
+        try
+        {
+            if (aDefault != null)
+            {
+                if (aDefault.getTypeValue ().equals (DefaultType.integer))
+                {
+                    int value = Integer.parseInt (aDefault.getValue ());
+                    return new Value <> (value , null);
+                }
+                else
+                    throw new DefaultException (aDefault.toString ());
+            }
+            else
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+        }
+        catch (DefaultException e)
+        {
+            l.n (Thread.currentThread ().getStackTrace () , e , key.name ());
+        }
+        return new Value <> (null , AnswerToClient.ServerError ());
     }
 
     public Long getLong (DefaultKey key)
@@ -114,8 +142,9 @@ public final class DefaultService
             else
                 throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
         }
-        catch (DefaultException ignored)
+        catch (DefaultException e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e);
         }
         return null;
     }
@@ -125,4 +154,18 @@ public final class DefaultService
         return Repository.findByKey (key);
     }
 
+    public final static class Value<T>
+    {
+        public final T value;
+        public final AnswerToClient answer;
+
+        public final boolean ok;
+
+        public Value (final T value , final AnswerToClient answer)
+        {
+            this.value = value;
+            this.answer = answer;
+            ok = (answer == null);
+        }
+    }
 }

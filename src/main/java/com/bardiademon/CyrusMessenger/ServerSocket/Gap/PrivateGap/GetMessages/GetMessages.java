@@ -73,7 +73,7 @@ public final class GetMessages
 
     private void checkGroup ()
     {
-        ILUGroup iluGroup = new ILUGroup ();
+        final ILUGroup iluGroup = new ILUGroup ();
         iluGroup.setId (request.getId ());
         if (iluGroup.isValid ())
             new GroupGetMessages (iluGroup.getGroup () , request.getPage () , answerGetMessages);
@@ -86,14 +86,14 @@ public final class GetMessages
 
     private void checkUser (MainAccount mainAccount)
     {
-        ID idUser = new ID (request.getId ());
+        final ID idUser = new ID (request.getId ());
         if (idUser.isValid ())
         {
-            ID personalGapsId = new ID (request.getPersonalGapsId ());
+            final ID personalGapsId = new ID (request.getPersonalGapsId ());
 
             if (personalGapsId.isValid ())
             {
-                PersonalGaps personalGaps = ((ThisApp.S ().getService (PersonalGapsService.class))
+                final PersonalGaps personalGaps = ((ThisApp.S ().getService (PersonalGapsService.class))
                         .byId (personalGapsId.getId () , mainAccount.getId ()));
                 if (personalGaps != null)
                 {
