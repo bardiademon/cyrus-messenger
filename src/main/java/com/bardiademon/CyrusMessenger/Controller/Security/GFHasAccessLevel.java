@@ -56,7 +56,7 @@ public final class GFHasAccessLevel
             }
 
         }
-        return false;
+        return true;
     }
 
     public enum Which

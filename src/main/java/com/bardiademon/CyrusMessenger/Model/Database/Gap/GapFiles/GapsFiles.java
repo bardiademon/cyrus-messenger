@@ -40,7 +40,7 @@ public final class GapsFiles
     @Column (name = "gap_file_type", nullable = false)
     private GapFilesTypes type;
 
-    @OneToOne
+    @OneToOne (mappedBy = "gapsFiles")
     private GapsFilesSecurity security;
 
     @OneToMany (mappedBy = "gapsFiles")

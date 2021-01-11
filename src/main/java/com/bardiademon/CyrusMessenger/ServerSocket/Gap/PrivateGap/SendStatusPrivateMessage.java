@@ -32,7 +32,7 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
             {
                 if (gaps.getFrom ().getId () == _Online.getMainAccount ().getId ())
                 {
-                    JSONObject statusMessage = new JSONObject ();
+                    final JSONObject statusMessage = new JSONObject ();
                     statusMessage.put (KeyAnswer.id.name () , gaps.getId ());
                     statusMessage.put (KeyAnswer.status.name () , type.name ());
                     _Online.getClient ().sendEvent (EventName.pvgp_status_message.name () , ToJson.To (statusMessage));

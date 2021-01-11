@@ -3,10 +3,13 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesUsageReport.GapsFilesUsageReportService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesUsageReport.WhatDidDo;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
+import com.bardiademon.CyrusMessenger.ThisApp;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
     private void send (String onlineCode , Online online)
     {
-        JSONObject message = new JSONObject ();
+        final JSONObject message = new JSONObject ();
 
         message.put (KeyAnswer.id.name () , gaps.getId ());
         message.put (KeyAnswer.text.name () , gaps.getText ());
@@ -48,8 +51,13 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
         if (gaps.getFilesGaps () != null)
         {
-            List <String> codeFiles = new ArrayList <> ();
-            for (GapsFiles filesGap : gaps.getFilesGaps ()) codeFiles.add (filesGap.getCode ());
+            final List <String> codeFiles = new ArrayList <> ();
+            final GapsFilesUsageReportService gapsFilesUsageReportService = ThisApp.S ().getService (GapsFilesUsageReportService.class);
+            for (final GapsFiles filesGap : gaps.getFilesGaps ())
+            {
+                gapsFilesUsageReportService.used (filesGap , gaps.getToUser () , WhatDidDo.get_link);
+                codeFiles.add (filesGap.getCode ());
+            }
             message.put (KeyAnswer.files.name () , codeFiles);
         }
 

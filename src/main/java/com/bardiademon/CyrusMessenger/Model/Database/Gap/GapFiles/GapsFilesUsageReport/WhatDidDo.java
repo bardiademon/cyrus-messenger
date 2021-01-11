@@ -2,5 +2,5 @@ package com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesUsag
 
 public enum WhatDidDo
 {
-    download, forward, visit, showing, before_download
+    download, forward, visit, showing, before_download, get_link
 }
