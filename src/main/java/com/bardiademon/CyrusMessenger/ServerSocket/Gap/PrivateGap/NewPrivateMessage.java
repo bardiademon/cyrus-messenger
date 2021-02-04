@@ -7,6 +7,7 @@ import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserPr
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesToService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapReadService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypesService;
@@ -88,6 +89,8 @@ public final class NewPrivateMessage
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unacceptable_file_type.name ()) , null);
             }
         }
+
+        System.out.println (ToJson.To (answer));
 
         client.sendEvent (EventName.e_pvgp_send_message.name () , ToJson.To (answer));
     }
@@ -180,7 +183,7 @@ public final class NewPrivateMessage
                                         }
                                         else
                                         {
-                                            if (determineTheType ())
+                                            if (determineTheType (mainAccount.getId ()))
                                             {
                                                 if (!Str.IsEmpty (request.getIdStrReplyChat ()))
                                                 {
@@ -310,20 +313,23 @@ public final class NewPrivateMessage
         return gap;
     }
 
-    public boolean determineTheType ()
+    public boolean determineTheType (final long userId)
     {
         if (request.getFileCode () == null) return true;
 
-        GapsFilesService gapsFilesService = ThisApp.Services ().Get (GapsFilesService.class);
+        final GapsFilesService gapsFilesService = ThisApp.Services ().Get (GapsFilesService.class);
 
         if (!Str.IsEmpty (request.getText ()))
             gapTypes.add (GapType.text);
 
         which = new ArrayList <> ();
+
+        final SendGapsFilesToService sendGapsFilesToService = ThisApp.Services ().Get (SendGapsFilesToService.class);
+
         for (String code : request.getFileCode ())
         {
             GapsFiles gapFile = gapsFilesService.byCode (code);
-            if (gapFile != null)
+            if (gapFile != null && ((gapFile.getUploadedFiles ().getUploadedBy ().getId () == userId) || (sendGapsFilesToService.sendTo (userId , gapFile.getCode ()) != null)))
             {
                 switch (gapFile.getType ())
                 {

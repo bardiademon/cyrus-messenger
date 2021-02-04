@@ -34,4 +34,9 @@ public final class SendGapsFilesToService
         sendGapsFilesTo.setGapsFiles (gapsFiles);
         Repository.save (sendGapsFilesTo);
     }
+
+    public SendGapsFilesTo sendTo (final long userId , final String fileCode)
+    {
+        return Repository.findByMainAccountIdAndGapsFilesCodeAndDeletedFalse (userId , fileCode);
+    }
 }

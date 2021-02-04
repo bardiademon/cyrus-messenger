@@ -2,6 +2,9 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesTo;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesToService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapRead;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapReadService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
@@ -22,6 +25,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public final class StatusOfSentMessage
 {
@@ -81,6 +85,27 @@ public final class StatusOfSentMessage
                                         gapRead.setReceived (true);
                                         gapRead.setReadAt (Time.now ());
                                         gapRead.setReadBy (mainAccount);
+                                }
+
+                                /*
+                                 * amani ke message ro daryaft mikone karbar file ha ro dakhele table SendGapsFilesTo zakhire mikonam
+                                 */
+                                final List <GapsFiles> filesGaps = gap.getFilesGaps ();
+                                if (filesGaps != null)
+                                {
+                                    final SendGapsFilesToService sendGapsFilesToService = ThisApp.Services ().Get (SendGapsFilesToService.class);
+
+                                    for (final GapsFiles filesGap : filesGaps)
+                                    {
+                                        if (sendGapsFilesToService.sendTo (mainAccount.getId () , filesGap.getCode ()) == null)
+                                        {
+                                            final SendGapsFilesTo sendGapsFilesTo = new SendGapsFilesTo ();
+                                            sendGapsFilesTo.setGapsFiles (filesGap);
+                                            sendGapsFilesTo.setMainAccount (mainAccount);
+                                            sendGapsFilesTo.setSendAt (gap.getSendAt ());
+                                            sendGapsFilesToService.Repository.save (sendGapsFilesTo);
+                                        }
+                                    }
                                 }
                                 gapReadService.Repository.save (gapRead);
 
