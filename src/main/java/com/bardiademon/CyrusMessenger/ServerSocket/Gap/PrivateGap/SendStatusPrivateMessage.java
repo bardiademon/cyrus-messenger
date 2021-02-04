@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.json.JSONObject;
 
@@ -50,6 +51,19 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
 
     public enum Type
     {
-        delivered, read, send
+        delivered, read, send;
+
+        public static Type to (final String name)
+        {
+            try
+            {
+                return valueOf (name);
+            }
+            catch (Exception e)
+            {
+                l.n (Thread.currentThread ().getStackTrace () , new Exception (name));
+                return null;
+            }
+        }
     }
 }

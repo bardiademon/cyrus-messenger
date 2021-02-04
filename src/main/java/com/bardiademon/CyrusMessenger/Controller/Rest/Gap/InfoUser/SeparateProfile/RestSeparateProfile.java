@@ -378,7 +378,7 @@ public final class RestSeparateProfile
         {
             if (!Str.IsEmpty (request.getGender ()) && UserGender.to (request.getGender ()) == null)
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.gender_invalid.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , tChange , true);
             }
@@ -434,7 +434,7 @@ public final class RestSeparateProfile
                     {
                         if (!Str.IsEmpty (request.getMylink ()) && !taotl.isLink (request.getMylink ()))
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
                             r.n (mainAccount , tChange , true);
@@ -471,7 +471,7 @@ public final class RestSeparateProfile
                         UserGender gender = null;
                         if (!Str.IsEmpty (request.getGender ()) && (gender = (UserGender.to (request.getGender ()))) == null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.gender_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , tAdd , false);
                         }
@@ -515,7 +515,7 @@ public final class RestSeparateProfile
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_found.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_found.name ());
                                         answerToClient.put (AnswerToClient.CUV.found.name () , found);
                                         answerToClient.setReqRes (req , res);
                                         l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_found.name ()) , null);
@@ -525,7 +525,7 @@ public final class RestSeparateProfile
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_invalid.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_invalid.name ());
                                     answerToClient.setReqRes (req , res);
                                     l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_invalid.name ()) , null);
                                     r.n (mainAccount , tAdd , true);
@@ -533,7 +533,7 @@ public final class RestSeparateProfile
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
                                 r.n (mainAccount , tAdd , true);
@@ -542,7 +542,7 @@ public final class RestSeparateProfile
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_is_empty.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_is_empty.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_is_empty.name ()) , null);
                         r.n (mainAccount , tAdd , true);
@@ -550,7 +550,7 @@ public final class RestSeparateProfile
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.empty.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.empty.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.empty.name ()) , null);
                     r.n (mainAccount , tAdd , true);

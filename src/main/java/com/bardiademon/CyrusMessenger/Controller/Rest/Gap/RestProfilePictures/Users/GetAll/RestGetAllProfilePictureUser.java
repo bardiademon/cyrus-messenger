@@ -89,7 +89,7 @@ public final class RestGetAllProfilePictureUser
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
                                 r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
@@ -97,7 +97,7 @@ public final class RestGetAllProfilePictureUser
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
                             r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
@@ -105,7 +105,7 @@ public final class RestGetAllProfilePictureUser
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
                         r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);

@@ -34,7 +34,7 @@ public final class FirstRequest
 
     private void online ()
     {
-        UserLoginService userLoginService = (UserLoginService) ThisApp.S ().getService (UserLoginService.class);
+        UserLoginService userLoginService = (UserLoginService) ThisApp.Services ().Get (UserLoginService.class);
         if (userLoginService != null)
         {
             CBSIL cbsil = CBSIL.Both (request , null , null , codeLogin , userLoginService , null , SubmitRequestType.socket);
@@ -72,7 +72,7 @@ public final class FirstRequest
         {
             if (online.getMainAccount ().getUsername ().getUsername ().equals (username))
             {
-                OnlineService onlineService = (OnlineService) ThisApp.S ().getService (OnlineService.class);
+                OnlineService onlineService = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
                 if (onlineService != null)
                 {
                     onlineService.setOffline (online);

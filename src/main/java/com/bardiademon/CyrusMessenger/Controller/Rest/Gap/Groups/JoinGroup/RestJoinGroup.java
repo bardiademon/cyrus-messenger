@@ -98,7 +98,7 @@ public final class RestJoinGroup
                                                         Integer maxMember = group.getGroupSecurityProfile ().getMaxMember ();
                                                         if (group.getMembers ().size () >= maxMember)
                                                         {
-                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.group_members_have_been_completed.name ());
+                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_members_have_been_completed.name ());
                                                             answerToClient.setReqRes (req , res);
                                                             l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_members_have_been_completed.name ()) , null);
                                                             r.n (mainAccount , SubmitRequestType.join_group , true);
@@ -136,7 +136,7 @@ public final class RestJoinGroup
                                                 }
                                                 else
                                                 {
-                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.joining_has_been_disabled.name ());
+                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.joining_has_been_disabled.name ());
                                                     answerToClient.setReqRes (req , res);
                                                     l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.joining_has_been_disabled.name ()) , null);
                                                     r.n (mainAccount , SubmitRequestType.join_group , true);
@@ -204,7 +204,7 @@ public final class RestJoinGroup
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.group_not_found.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
                                     answerToClient.setReqRes (req , res);
                                     l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , null);
                                     r.n (req.getRemoteAddr () , SubmitRequestType.join_group , true);
@@ -224,7 +224,7 @@ public final class RestJoinGroup
                     {
                         if (e.getMessage () != null && e.getMessage ().matches (AnswerToClient.CUV.id_invalid.name ()))
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.id_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.id_invalid.name ());
                             r.n (req.getRemoteAddr () , SubmitRequestType.join_group , false);

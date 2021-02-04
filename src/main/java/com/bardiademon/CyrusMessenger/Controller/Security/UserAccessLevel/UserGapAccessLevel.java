@@ -104,7 +104,7 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
 
         public Service ()
         {
-            this._SecurityUserGapService = (SecurityUserGapService) ThisApp.S ().getService (SecurityUserGapService.class);
+            this._SecurityUserGapService = (SecurityUserGapService) ThisApp.Services ().Get (SecurityUserGapService.class);
         }
     }
 

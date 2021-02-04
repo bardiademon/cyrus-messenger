@@ -344,14 +344,14 @@ public class UserProfileAccessLevel
 
         public Service ()
         {
-            this.mainAccountService = (MainAccountService) ThisApp.S ().getService (MainAccountService.class);
-            this.enumTypesService = (EnumTypesService) ThisApp.S ().getService (EnumTypesService.class);
-            this.userListService = (UserListService) ThisApp.S ().getService (UserListService.class);
-            this.userFriendsService = (UserFriendsService) ThisApp.S ().getService (UserFriendsService.class);
-            this.userContactsService = (UserContactsService) ThisApp.S ().getService (UserContactsService.class);
-            this.userSeparateProfilesService = (UserSeparateProfilesService) ThisApp.S ().getService (UserSeparateProfilesService.class);
-            this.userBlockedService = (UserBlockedService) ThisApp.S ().getService (UserBlockedService.class);
-            this.profilePicturesService = (ProfilePicturesService) ThisApp.S ().getService (ProfilePicturesService.class);
+            this.mainAccountService = (MainAccountService) ThisApp.Services ().Get (MainAccountService.class);
+            this.enumTypesService = (EnumTypesService) ThisApp.Services ().Get (EnumTypesService.class);
+            this.userListService = (UserListService) ThisApp.Services ().Get (UserListService.class);
+            this.userFriendsService = (UserFriendsService) ThisApp.Services ().Get (UserFriendsService.class);
+            this.userContactsService = (UserContactsService) ThisApp.Services ().Get (UserContactsService.class);
+            this.userSeparateProfilesService = (UserSeparateProfilesService) ThisApp.Services ().Get (UserSeparateProfilesService.class);
+            this.userBlockedService = (UserBlockedService) ThisApp.Services ().Get (UserBlockedService.class);
+            this.profilePicturesService = (ProfilePicturesService) ThisApp.Services ().Get (ProfilePicturesService.class);
         }
     }
 

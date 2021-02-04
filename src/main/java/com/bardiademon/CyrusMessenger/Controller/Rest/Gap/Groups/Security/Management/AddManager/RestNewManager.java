@@ -130,7 +130,7 @@ public final class RestNewManager
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_user_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_invalid.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error from CanManageGroup") , cookieJson);
                             r.n (mainAccount , SubmitRequestType.group_members , true);

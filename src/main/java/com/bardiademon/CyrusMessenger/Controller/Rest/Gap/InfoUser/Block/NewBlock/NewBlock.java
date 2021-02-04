@@ -74,7 +74,7 @@ public final class NewBlock
                         MainAccount username = idUsernameMainAccount.getMainAccount ();
                         if (mainAccount.getId () == username.getId ())
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_cannot_block_yourself.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_cannot_block_yourself.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_cannot_block_yourself.name ()) , null);
                             r.n (mainAccount , type , true);
@@ -90,14 +90,14 @@ public final class NewBlock
 
                             if (request.isBlock () && plusUpTo == null)
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.plus_up_to_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.plus_up_to_invalid.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.plus_up_to_invalid.name ()) , null);
                                 r.n (mainAccount , type , true);
                             }
                             else if (typeBlock == null)
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.type_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.type_invalid.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.type_invalid.name ()) , null);
                                 r.n (mainAccount , type , true);
@@ -144,7 +144,7 @@ public final class NewBlock
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.already_blocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.already_blocked.name ());
                                         answerToClient.setReqRes (req , res);
                                         l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.already_blocked.name ()) , null);
                                         r.n (mainAccount , type , true);
@@ -154,7 +154,7 @@ public final class NewBlock
                                 {
                                     if (blocked == null)
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_blocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_blocked.name ());
                                         answerToClient.setReqRes (req , res);
                                         l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_blocked.name ()) , null);
                                     }
@@ -163,7 +163,7 @@ public final class NewBlock
                                         blocked.setUnblocked (true);
                                         blocked.setUnblockedAt (LocalDateTime.now ());
                                         userBlockedService.Repository.save (blocked);
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.unblocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.unblocked.name ());
                                         answerToClient.setReqRes (req , res);
                                         l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unblocked.name ()) , null);
                                     }

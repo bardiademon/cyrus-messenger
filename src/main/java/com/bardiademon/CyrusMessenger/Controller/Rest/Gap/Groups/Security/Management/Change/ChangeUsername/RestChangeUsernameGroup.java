@@ -160,7 +160,7 @@ public final class RestChangeUsernameGroup
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.username_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , null);
                     r.n (mainAccount , type , true);

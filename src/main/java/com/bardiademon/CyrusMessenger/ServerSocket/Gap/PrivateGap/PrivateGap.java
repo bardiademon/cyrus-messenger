@@ -21,10 +21,13 @@ public final class PrivateGap implements SIServer.Client
 
     private final Pagination pagination = new Pagination ();
 
+    private final StatusOfSentMessage statusOfSentMessage;
+
     public PrivateGap ()
     {
         on ();
         _SIServer.startServer ();
+        statusOfSentMessage = new StatusOfSentMessage ();
     }
 
     private void on ()
@@ -40,6 +43,9 @@ public final class PrivateGap implements SIServer.Client
 
         _SIServer.Server.addEventListener (EventName.get_messages.name () , RequestGetMessages.class , (client , data , ackSender) ->
                 new GetMessages (client , data));
+
+        _SIServer.Server.addEventListener (EventName.status_of_sent_message.name () , StatusOfSentMessage.Request.class , (client , data , ackSender) ->
+                statusOfSentMessage.status (data , client));
     }
 
     public void deletePersonalGap (MainAccount mainAccount , long personalGapId)
@@ -49,7 +55,7 @@ public final class PrivateGap implements SIServer.Client
         SIServer.LoopOnline ((CodeOnline , _Online) ->
         {
             // chon momkene chan ta online vojod dashte bashe baraye hamin ta akhar loop ro donbal mikonal ,
-            // chan ta online => chan ta device
+            // chan ta online => ba yek account
             if (_Online.getMainAccount ().getId () == mainAccount.getId ())
                 sendDeletePersonalGap (CodeOnline , _Online , personalGapId);
 

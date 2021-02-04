@@ -21,7 +21,7 @@ public class ILUGroup
 
     public ILUGroup ()
     {
-        this (ThisApp.S ().getService (GroupsService.class) , ThisApp.S ().getService (UsernamesService.class));
+        this (ThisApp.Services ().Get (GroupsService.class) , ThisApp.Services ().Get (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService)

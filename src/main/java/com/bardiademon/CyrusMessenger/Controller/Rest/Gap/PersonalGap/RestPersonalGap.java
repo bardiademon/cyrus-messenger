@@ -149,7 +149,7 @@ public final class RestPersonalGap
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found.name ());
                             answer.setReqRes (req , res);
                             l.n (strRequest , cRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , "UserProfileAccessLevel => !Which.find_me || !((request.getId () > 0)) ? Which.id : Which.username)" , cType , true);
                         }
@@ -377,7 +377,7 @@ public final class RestPersonalGap
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_delete_both.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_delete_both.name ());
                     answer.setReqRes (req , res);
                     l.n (request , dRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_delete_both.name ()) , strDeleteBoth , dType , true);
                 }

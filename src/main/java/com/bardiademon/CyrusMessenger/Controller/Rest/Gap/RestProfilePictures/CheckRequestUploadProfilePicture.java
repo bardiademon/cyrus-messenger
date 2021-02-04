@@ -57,7 +57,7 @@ public class CheckRequestUploadProfilePicture
                 {
                     if (request.getPlacement_number () < -1)
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.placement_number_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.placement_number_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.placement_number_invalid.name ()) , null);
                         r.n (mainAccount , submitRequestType , true);
@@ -66,7 +66,7 @@ public class CheckRequestUploadProfilePicture
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.picture_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.picture_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.picture_invalid.name ()) , null);
                     r.n (mainAccount , submitRequestType , true);
@@ -74,7 +74,7 @@ public class CheckRequestUploadProfilePicture
             }
             else
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.picture_is_null.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.picture_is_null.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.picture_is_null.name ()) , null);
                 r.n (mainAccount , submitRequestType , true);
@@ -96,7 +96,7 @@ public class CheckRequestUploadProfilePicture
         long size = request.getPicture ().getSize ();
         if (size > DSize.SIZE_PROFILE_PICTURE)
         {
-            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.image_size_is_larger_than_allowed.name ());
+            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.image_size_is_larger_than_allowed.name ());
             answerToClient.put (KeyAnswer.image_size.name () , GetSize.Get (size));
             answerToClient.put (KeyAnswer.allowed_size.name () , GetSize.Get (DSize.SIZE_PROFILE_PICTURE));
             answerToClient.put (KeyAnswer.extra_size.name () , GetSize.Get ((Math.abs ((size - DSize.SIZE_PROFILE_PICTURE)))));

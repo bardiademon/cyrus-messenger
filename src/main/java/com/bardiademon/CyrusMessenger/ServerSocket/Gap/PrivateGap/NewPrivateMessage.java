@@ -69,7 +69,7 @@ public final class NewPrivateMessage
         {
             if ((!request.isHasFile () || Str.IsEmpty (securityUserGap.getCanSendFileTypes ()) || checkAccessType ()))
             {
-                final GapReadService gapReadService = ThisApp.S ().getService (GapReadService.class);
+                final GapReadService gapReadService = ThisApp.Services ().Get (GapReadService.class);
 
                 if ((to != null && to.getId () == mainAccount.getId ()) || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
@@ -78,13 +78,13 @@ public final class NewPrivateMessage
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.ceiling_to_send_unread_messages.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.ceiling_to_send_unread_messages.name ());
                     l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.ceiling_to_send_unread_messages.name ()) , null);
                 }
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.unacceptable_file_type.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.unacceptable_file_type.name ());
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unacceptable_file_type.name ()) , null);
             }
         }
@@ -96,8 +96,8 @@ public final class NewPrivateMessage
     {
         if (Str.IsEmpty (request.getText ())) return true;
 
-        FoundStkrEmjLnk foundStkrEmjLnk = new FoundStkrEmjLnk (request.getText ());
-        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.access_denied.name ());
+        final FoundStkrEmjLnk foundStkrEmjLnk = new FoundStkrEmjLnk (request.getText ());
+        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.access_denied.name ());
         if ((!foundStkrEmjLnk.isFoundEmoji () || gapAccessLevel.hasAccess (Which.s_emoji)))
         {
             if (!foundStkrEmjLnk.isFoundSticker () || gapAccessLevel.hasAccess (Which.s_sticker))
@@ -149,14 +149,13 @@ public final class NewPrivateMessage
                     final ID idPersonalGap = new ID (request.getPersonalGapId ());
                     if (idPersonalGap.isValid ())
                     {
-                        final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.S ().getService (UsernamesService.class));
+                        final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.Services ().Get (UsernamesService.class));
                         if (fitd_username.isValid ())
                         {
                             to = fitd_username.getMainAccount ();
 
-                            if ((personalGaps = ((personalGapsService = ThisApp.S ().getService (PersonalGapsService.class))).getPersonalGap (mainAccount.getId () , to.getId ())) != null)
+                            if ((personalGaps = ((personalGapsService = ThisApp.Services ().Get (PersonalGapsService.class))).getPersonalGap (mainAccount.getId () , to.getId () , request.getPersonalGapId ())) != null)
                             {
-
                                 // agar karbar dare dakhel save massage payam mide va key to ro karbar dige gozashte bod modiriyat shode to nanide gerfte beshe
                                 if (to != null && mainAccount.getId () == personalGaps.getCreatedBy ().getId () && mainAccount.getId () == personalGaps.getGapWith ().getId ())
                                     to = mainAccount;
@@ -188,17 +187,17 @@ public final class NewPrivateMessage
                                                     final ID idReply = new ID (request.getIdStrReplyChat ());
                                                     if (idReply.isValid ())
                                                     {
-                                                        gapReply = ThisApp.S ().getService (GapsService.class).Repository.findById (idReply.getId ());
+                                                        gapReply = ThisApp.Services ().Get (GapsService.class).Repository.findById (idReply.getId ());
                                                         if (gapReply == null)
                                                         {
-                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_not_found.name ());
+                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_reply_not_found.name ());
                                                             l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_not_found.name ()) , null);
                                                             return false;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_reply_invalid.name ());
+                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_reply_invalid.name ());
                                                         l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_reply_invalid.name ()) , null);
                                                         return false;
                                                     }
@@ -212,19 +211,19 @@ public final class NewPrivateMessage
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.access_denied.name ());
+                                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.access_denied.name ());
                                         l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null);
                                     }
                                 }
                                 else
                                 {
-                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found.name ());
                                     l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
                                 }
                             }
                             else
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gap_id.name ());
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gap_id.name ());
                                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null);
                             }
                         }
@@ -232,19 +231,19 @@ public final class NewPrivateMessage
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_personal_gap_id.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gap_id.name ());
                         l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gap_id.name ()) , null);
                     }
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.online_code_invalid.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.online_code_invalid.name ());
                     l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.online_code_invalid.name ()) , null);
                 }
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.online_code_empty.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.online_code_empty.name ());
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.online_code_empty.name ()) , null);
             }
         }
@@ -282,8 +281,8 @@ public final class NewPrivateMessage
         if (gapReply != null) gap.setReply (gapReply);
         gap.setGapFor (GapFor.gprivate);
 
-        final GapTypesService gapTypesService = ThisApp.S ().getService (GapTypesService.class);
-        final GapsService gapsService = ThisApp.S ().getService (GapsService.class);
+        final GapTypesService gapTypesService = ThisApp.Services ().Get (GapTypesService.class);
+        final GapsService gapsService = ThisApp.Services ().Get (GapsService.class);
 
         gap = gapsService.Repository.save (gap);
 
@@ -315,7 +314,7 @@ public final class NewPrivateMessage
     {
         if (request.getFileCode () == null) return true;
 
-        GapsFilesService gapsFilesService = ThisApp.S ().getService (GapsFilesService.class);
+        GapsFilesService gapsFilesService = ThisApp.Services ().Get (GapsFilesService.class);
 
         if (!Str.IsEmpty (request.getText ()))
             gapTypes.add (GapType.text);
@@ -354,7 +353,7 @@ public final class NewPrivateMessage
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.file_code_invalid.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.file_code_invalid.name ());
                 answer.put (KeyAnswer.code.name () , code);
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.file_code_invalid.name ()) , ToJson.CreateClass.nj (KeyAnswer.code.name () , code));
                 gapsFiles.clear ();

@@ -37,7 +37,7 @@ public class AnswerToClient
     }
 
     @JsonIgnore
-    public static AnswerToClient error400 ()
+    public static AnswerToClient BadRequest ()
     {
         return new AnswerToClient (400 , false);
     }
@@ -70,7 +70,7 @@ public class AnswerToClient
     @JsonIgnore
     public static AnswerToClient RequestIsNull ()
     {
-        AnswerToClient answerToClient = error400 ();
+        AnswerToClient answerToClient = BadRequest ();
         answerToClient.put (CUK.answer.name () , CUV.request_is_null.name ());
         return answerToClient;
     }
@@ -107,13 +107,13 @@ public class AnswerToClient
     @JsonIgnore
     public static AnswerToClient IdInvalid (String ValAnswer)
     {
-        return AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer);
+        return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer);
     }
 
     @JsonIgnore
     public static AnswerToClient NotLoggedIn ()
     {
-        AnswerToClient answerToClient = AnswerToClient.error400 ();
+        AnswerToClient answerToClient = AnswerToClient.BadRequest ();
         answerToClient.put (CUK.answer.name () , "not_logged_in");
         return answerToClient;
     }

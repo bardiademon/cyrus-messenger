@@ -9,7 +9,7 @@ public final class Services
     private final Map <String, Object> Services = new LinkedHashMap <> ();
 
     @SuppressWarnings ("unchecked")
-    public <T> T getService (Class <T> aClass)
+    public <T> T Get (Class <T> aClass)
     {
         if (aClass == null) return null;
 
@@ -19,7 +19,7 @@ public final class Services
         else
         {
             Services.put (packageName , ThisApp.Context ().getBean (aClass));
-            return getService (aClass);
+            return Get (aClass);
         }
     }
 }

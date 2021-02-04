@@ -152,7 +152,7 @@ public final class RestStickersGroups
                     if (!idStickerGroups.isValid ())
                     {
                         okId = false;
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_sticker_group_id.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_sticker_group_id.name ());
                         answer.setReqRes (req , res);
                         l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_sticker_group_id.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , csgType , true);
                     }
@@ -164,7 +164,7 @@ public final class RestStickersGroups
                         else
                         {
                             okId = false;
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_sticker_group_id.name ());
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_sticker_group_id.name ());
                             answer.setReqRes (req , res);
                             l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_sticker_group_id.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , csgType , true);
                         }
@@ -274,7 +274,7 @@ public final class RestStickersGroups
                                                                             }
                                                                             else
                                                                             {
-                                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.user_not_found.name ());
+                                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found.name ());
                                                                                 answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
                                                                                 answer.setReqRes (req , res);
                                                                                 l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , ToJson.CreateClass.nj ("username" , licensedUser.getUsername ()) , csgType , true);
@@ -301,7 +301,7 @@ public final class RestStickersGroups
                                                                             }
                                                                             else
                                                                             {
-                                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_do_not_own_a_group.name ());
+                                                                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_do_not_own_a_group.name ());
                                                                                 answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
                                                                                 answer.setReqRes (req , res);
                                                                                 l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_do_not_own_a_group.name ()) , ToJson.CreateClass.nj ("groupname" , licensedUser.getUsername ()) , csgType , true);
@@ -311,7 +311,7 @@ public final class RestStickersGroups
                                                                         }
                                                                         else
                                                                         {
-                                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_groupname.name ());
+                                                                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_groupname.name ());
                                                                             answer.put (AnswerToClient.CUK.which.name () , licensedUser.getUsername ());
                                                                             answer.setReqRes (req , res);
                                                                             l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_groupname.name ()) , ToJson.CreateClass.nj ("groupname" , licensedUser.getUsername ()) , csgType , true);
@@ -322,7 +322,7 @@ public final class RestStickersGroups
                                                                 }
                                                                 else
                                                                 {
-                                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_sticker_access_level_type.name ());
+                                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_sticker_access_level_type.name ());
                                                                     l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_sticker_access_level_type.name ()) , ToJson.CreateClass.nj ("type" , licensedUser.getType ()) , csgType , true);
                                                                     break;
                                                                 }
@@ -341,7 +341,7 @@ public final class RestStickersGroups
                                                 }
                                                 else
                                                 {
-                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.error_licensed_users.name ());
+                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.error_licensed_users.name ());
                                                     answer.setReqRes (req , res);
                                                     l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.error_licensed_users.name ()) , null , csgType , true);
                                                 }
@@ -501,7 +501,7 @@ public final class RestStickersGroups
                                         }
                                         else
                                         {
-                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.invalid_width_or_height.name ());
+                                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.invalid_width_or_height.name ());
 
                                             answer.put (AnswerToClient.CUK.acceptable_width_height.name () ,
 
@@ -536,7 +536,7 @@ public final class RestStickersGroups
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_size_of_the_image_is_large.name ());
+                                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.the_size_of_the_image_is_large.name ());
                                         answer.put (AnswerToClient.CUK.acceptable_size.name () , GetSize.Get (maxSizeSticker));
                                         answer.put (KeyAnswer.your_image_size.name () , GetSize.Get (imageSize));
                                         answer.put (AnswerToClient.CUK.extra_size.name () , GetSize.Get ((imageSize - maxSizeSticker)));
@@ -548,21 +548,21 @@ public final class RestStickersGroups
                             }
                             else
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_group_image.name ());
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_group_image.name ());
                                 answer.setReqRes (req , res);
                                 l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_group_image.name ()) , null , csgType , true);
                             }
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.is_empty_group_image.name ());
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.is_empty_group_image.name ());
                             answer.setReqRes (req , res);
                             l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_empty_group_image.name ()) , null , csgType , true);
                         }
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.is_empty_group_name.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.is_empty_group_name.name ());
                         answer.setReqRes (req , res);
                         l.n (reqStr , csgRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_empty_group_name.name ()) , null , csgType , true);
                     }

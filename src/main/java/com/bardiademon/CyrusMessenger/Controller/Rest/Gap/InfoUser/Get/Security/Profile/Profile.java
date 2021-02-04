@@ -109,7 +109,7 @@ public class Profile
                 }
                 else answerToClient = AnswerToClient.ServerError ();
             }
-            else answerToClient = AnswerToClient.error400 ();
+            else answerToClient = AnswerToClient.BadRequest ();
         }
         else answerToClient = isLogin.getAnswerToClient ();
 

@@ -50,7 +50,7 @@ public class PublicRequest
         else
         {
             l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
-            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_online_code.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code.name ());
             return false;
         }
     }
@@ -62,7 +62,7 @@ public class PublicRequest
         else
         {
             l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
-            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_online_code.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code.name ());
             return null;
         }
     }

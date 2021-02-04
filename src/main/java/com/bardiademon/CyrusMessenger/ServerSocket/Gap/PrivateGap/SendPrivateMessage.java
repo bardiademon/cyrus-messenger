@@ -52,7 +52,7 @@ public final class SendPrivateMessage extends Thread implements Runnable
         if (gaps.getFilesGaps () != null)
         {
             final List <String> codeFiles = new ArrayList <> ();
-            final GapsFilesUsageReportService gapsFilesUsageReportService = ThisApp.S ().getService (GapsFilesUsageReportService.class);
+            final GapsFilesUsageReportService gapsFilesUsageReportService = ThisApp.Services ().Get (GapsFilesUsageReportService.class);
             for (final GapsFiles filesGap : gaps.getFilesGaps ())
             {
                 gapsFilesUsageReportService.used (filesGap , gaps.getToUser () , WhatDidDo.get_link);

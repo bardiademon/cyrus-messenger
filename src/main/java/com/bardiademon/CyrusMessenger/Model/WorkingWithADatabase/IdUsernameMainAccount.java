@@ -79,7 +79,7 @@ public class IdUsernameMainAccount
 
     private void setAnswerToClient (ValAnswer valAnswer)
     {
-        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , valAnswer.name ());
+        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , valAnswer.name ());
     }
 
     public long getIdUser ()

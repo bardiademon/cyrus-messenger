@@ -95,7 +95,7 @@ public final class CBSIL
 
     public static CBSIL Both (Object request , String CodeLogin , String Router)
     {
-        return Both (request , null , null , CodeLogin , (UserLoginService) ThisApp.S ().getService (UserLoginService.class) , Router , SubmitRequestType.socket);
+        return Both (request , null , null , CodeLogin , (UserLoginService) ThisApp.Services ().Get (UserLoginService.class) , Router , SubmitRequestType.socket);
     }
 
     public static CBSIL Both

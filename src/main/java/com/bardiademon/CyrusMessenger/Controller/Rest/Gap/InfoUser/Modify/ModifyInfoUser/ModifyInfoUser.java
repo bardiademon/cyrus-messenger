@@ -73,7 +73,7 @@ public final class ModifyInfoUser
                 {
                     if (!IsEmpty (requestMIU.getGender ()) && (UserGender.to (requestMIU.getGender ())) == null)
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.gender_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , type , true);
                     }

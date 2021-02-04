@@ -135,7 +135,7 @@ public final class RestUploadProfilePictureGroup
                                             }
                                             else
                                             {
-                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_profile_picture_not_found.name ());
+                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found.name ());
                                                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
                                                 r.n (mainAccount , type , false);
                                             }

@@ -148,7 +148,7 @@ public class RestLogin
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , KeyAnswer.password_is_valid.name () , false);
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , KeyAnswer.password_is_valid.name () , false);
 
                     answerToClient.setReqRes (req , res);
 

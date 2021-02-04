@@ -95,7 +95,7 @@ public class GetGeneral
                     answerToClient.put (KeyAnswer.gender.name () , mainAccount.getGender ().name ());
 
             }
-            else answerToClient = AnswerToClient.error400 ();
+            else answerToClient = AnswerToClient.BadRequest ();
         }
         else answerToClient = isLogin.getAnswerToClient ();
 

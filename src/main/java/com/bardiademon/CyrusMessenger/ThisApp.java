@@ -39,7 +39,7 @@ public class ThisApp
     }
 
     // S => Services
-    public static Services S ()
+    public static Services Services ()
     {
         return SERVICES;
     }

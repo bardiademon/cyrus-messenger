@@ -316,7 +316,7 @@ public final class RestStickers
                                         }
                                         else
                                         {
-                                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_name_is_too_long.name ());
+                                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.the_name_is_too_long.name ());
                                             answer.setReqRes (req , res);
                                             l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.the_name_is_too_long.name ()) , ToJson.CreateClass.nj ("name" , request.getName ()) , asType , true);
                                         }
@@ -329,21 +329,21 @@ public final class RestStickers
                                 }
                                 else
                                 {
-                                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_image.name ());
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_image.name ());
                                     answer.setReqRes (req , res);
                                     l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_image.name ()) , null , asType , true);
                                 }
                             }
                             else
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.is_empty_image.name ());
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.is_empty_image.name ());
                                 answer.setReqRes (req , res);
                                 l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_empty_image.name ()) , null , asType , true);
                             }
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.not_found_id.name ());
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found_id.name ());
                             answer.setReqRes (req , res);
                             l.n (strRequest , asRouter , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found_id.name ()) , ToJson.CreateClass.nj ("id_group" , idGroup.getId ()) , asType , true);
                         }

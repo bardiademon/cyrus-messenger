@@ -61,7 +61,7 @@ public final class CheckPlacementNumber
 
             if (numberMain >= 2)
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ErrAnswer.just_one_main.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ErrAnswer.just_one_main.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.To (placementNumbers) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ErrAnswer.just_one_main.name ()) , null);
                 r.n (mainAccount , type , true);
@@ -118,7 +118,7 @@ public final class CheckPlacementNumber
 
         if (errors.size () > 0)
         {
-            answer.answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.error.name ());
+            answer.answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.error.name ());
             answer.answerToClient.put (KeyAnswer.result.name () , errors);
             answer.answerToClient.setReqRes (req , res);
             l.n (ToJson.To (placementNumbers) , router , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ErrAnswer.just_one_main.name ()) , null);

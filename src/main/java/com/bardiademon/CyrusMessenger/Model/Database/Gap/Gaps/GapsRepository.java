@@ -25,6 +25,10 @@ public interface GapsRepository extends JpaRepository <Gaps, Long>
             "where g.toUser.id = :USER_ID and g.personalGaps.id = :PERSONAL_GAP_ID")
     void deleteAllTo (@Param ("USER_ID") long userId , @Param ("PERSONAL_GAP_ID") long personalGapId);
 
+    @Query ("select g from Gaps g where g.id = :GAP_ID and g.personalGaps.id = :PERSONAL_GAP_ID and" +
+            " ((g.from.id = :USER_ID and g.deletedByFromUser = false) or (g.toUser.id = :USER_ID and g.deletedForToUser = false)) and g.deletedBoth = false")
+    Gaps byId (@Param ("GAP_ID") final long gapId , @Param ("PERSONAL_GAP_ID") final long personalGapId , @Param ("USER_ID") final long userId);
+
     @Transactional
     @Modifying
     @Query ("update Gaps g set g.deletedForToUser = true , g.deletedAt_ToUser = current_timestamp " +

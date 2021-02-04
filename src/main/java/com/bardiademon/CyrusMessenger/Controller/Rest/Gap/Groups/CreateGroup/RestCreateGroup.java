@@ -82,7 +82,7 @@ public final class RestCreateGroup
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.you_have_made_too_many_groups.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_have_made_too_many_groups.name ());
                         answerToClient.put (KeyAnswer.construction_limit.name () , Groups.MAX_CREATE_GROUP);
                         answerToClient.setReqRes (req , res);
                         l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("limit create group") , null);
@@ -119,7 +119,7 @@ public final class RestCreateGroup
 
         if (Str.IsEmpty (request.getName ()))
         {
-            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_empty.name ());
+            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_empty.name ());
             answerToClient.setReqRes (req , res);
             l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
             r.n (mainAccount , SubmitRequestType.create_group , true);
@@ -128,7 +128,7 @@ public final class RestCreateGroup
         {
             if (Str.IsEmpty (request.getGroupname ()) && !request.isCreateLinkJoin ())
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_and_link_join_empty.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_and_link_join_empty.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_and_link_join_empty.name ()) , null);
                 r.n (mainAccount , SubmitRequestType.create_group , true);
@@ -140,7 +140,7 @@ public final class RestCreateGroup
                     VUsername vUsername = new VUsername (request.getGroupname ());
                     if (!vUsername.check ())
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_invalid.name ()) , null);
                         r.n (mainAccount , SubmitRequestType.create_group , true);
@@ -150,7 +150,7 @@ public final class RestCreateGroup
                         Usernames forGroup = usernamesService.findForGroup (request.getGroupname ());
                         if (forGroup != null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.groupname_is_exists.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_is_exists.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_is_exists.name ()) , null);
                             r.n (mainAccount , SubmitRequestType.create_group , true);

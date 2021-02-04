@@ -88,7 +88,7 @@ public final class SIServer
                     if (Time.Bigger (online.getAnnouncementOfPresence () , 15))
                     {
                         if (onlineService == null)
-                            onlineService = (OnlineService) ThisApp.S ().getService (OnlineService.class);
+                            onlineService = ThisApp.Services ().Get (OnlineService.class);
 
                         onlineService.setOffline (online);
                         Onlines.remove (codeOnline);
@@ -152,6 +152,11 @@ public final class SIServer
     {
         for (Map.Entry <String, Online> entry : Onlines.entrySet ())
             if (!loopOnline.doing (entry.getKey () , entry.getValue ())) break;
+    }
+
+    public static Online GetOnline (final String OnlineCode)
+    {
+        return Onlines.getOrDefault (OnlineCode , null);
     }
 
     private static void OnlineStatus (SocketIOServer Server)

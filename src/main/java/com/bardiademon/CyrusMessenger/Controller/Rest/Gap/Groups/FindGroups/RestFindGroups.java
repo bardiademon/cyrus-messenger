@@ -68,7 +68,7 @@ public final class RestFindGroups
                         answerToClient = getInfoGroup (req , res , forGroup.getGroups () , ValAnswer.groupname.name () , username);
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNGap.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found.name ()) , null);
                         r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
@@ -76,7 +76,7 @@ public final class RestFindGroups
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNGap.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null);
                     r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
@@ -84,7 +84,7 @@ public final class RestFindGroups
             }
             else
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_is_empty.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_is_empty.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.CreateClass.n ("username" , username).toJson () , Domain.RNGap.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
                 r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
@@ -112,7 +112,7 @@ public final class RestFindGroups
                     answerToClient = getInfoGroup (req , res , groupsService.hasLink (link) , ValAnswer.link.name () , link);
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNGap.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
                     r.n (req.getRemoteAddr () , SubmitRequestType.find_groups , true);
@@ -120,7 +120,7 @@ public final class RestFindGroups
             }
             else
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.link_is_empty.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_is_empty.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.CreateClass.n ("link" , link).toJson () , Domain.RNGap.RNGroups.RN_FIND_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_is_empty.name ()) , null);
             }

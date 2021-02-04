@@ -31,6 +31,11 @@ public final class PersonalGapsService
         return Repository.personalGaps (applicant , userId);
     }
 
+    public PersonalGaps getPersonalGap (final long applicant , final long userId , final long personalGapId)
+    {
+        return Repository.personalGaps (applicant , userId , personalGapId);
+    }
+
     @SuppressWarnings (value = "unchecked")
     public List <PersonalGaps> getPersonalGaps (long userId , int start , int end)
     {

@@ -19,4 +19,19 @@ public final class GapReadService
     {
         return Repository.findByGapsToUserIdAndGapsFromIdAndReadIsFalse (to , from);
     }
+
+    public GapRead isRead (final long idGap , final long userId)
+    {
+        return Repository.findByGapsIdAndReadByIdAndReadTrue (idGap , userId);
+    }
+
+    public GapRead isReceived (final long idGap , final long userId)
+    {
+        return Repository.findByGapsIdAndReadByIdAndReceivedTrue (idGap , userId);
+    }
+
+    public GapRead getGapRead (final long idGap , final long userId)
+    {
+        return Repository.findByGapsIdAndReadById (idGap , userId);
+    }
 }

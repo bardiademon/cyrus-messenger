@@ -53,7 +53,7 @@ public final class OnlineStatus
                 assert both.getIsLogin () != null;
                 mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
 
-                FITD_Username fitd_username = new FITD_Username (request.getUsername () , (UsernamesService) ThisApp.S ().getService (UsernamesService.class));
+                FITD_Username fitd_username = new FITD_Username (request.getUsername () , (UsernamesService) ThisApp.Services ().Get (UsernamesService.class));
 
                 if (fitd_username.isValid ())
                 {
@@ -78,7 +78,7 @@ public final class OnlineStatus
 
                             if (!ok.get ())
                             {
-                                OnlineService onlineService = (OnlineService) ThisApp.S ().getService (OnlineService.class);
+                                OnlineService onlineService = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
                                 LocalDateTime lastSeen = onlineService.lastSeen (fitd_username.getMainAccount ().getId ());
                                 if (lastSeen != null)
                                 {
@@ -103,7 +103,7 @@ public final class OnlineStatus
                     else
                     {
                         // chon age gheire faal bashe namaesh profile va peyda kardan pas nabayad begam hamchin useri vojod dare
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_not_found.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_not_found.name ());
                         l.n (strReq , EventName.last_seen.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null);
                     }
                 }

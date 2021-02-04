@@ -27,5 +27,11 @@ public interface PersonalGapsRepository extends JpaRepository <PersonalGaps, Lon
             "and pg.createdBy.id = :USER_ID and pg.deletedForGapWith = false))")
     PersonalGaps personalGaps (@Param ("APPLICANT") long applicant , @Param ("USER_ID") long userId2);
 
+    @Query ("select pg from PersonalGaps pg where ((pg.createdBy.id = :APPLICANT " +
+            "and pg.gapWith.id = :USER_ID and pg.deletedByCreatedBy = false)" +
+            "or (pg.gapWith.id = :APPLICANT " +
+            "and pg.createdBy.id = :USER_ID and pg.deletedForGapWith = false)) and pg.id = :PERSONAL_GAP_ID")
+    PersonalGaps personalGaps (@Param ("APPLICANT") long applicant , @Param ("USER_ID") long userId2 , @Param ("PERSONAL_GAP_ID") final long personalGapId);
+
 
 }

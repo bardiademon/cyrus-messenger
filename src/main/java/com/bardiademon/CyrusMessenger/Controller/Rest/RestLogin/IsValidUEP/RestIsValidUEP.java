@@ -134,7 +134,7 @@ public class RestIsValidUEP
     private AnswerToClient valid (boolean valid , HttpServletRequest servletRequest , boolean loginReq , IsValidUEPRequest request)
     {
         AnswerToClient answerToClient;
-        answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.error400 ());
+        answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.BadRequest ());
 
         answerToClient.put (KeyAnswer.uep.name () , request.getValueUEP ());
         answerToClient.put (KeyAnswer.is_valid.name () , valid);

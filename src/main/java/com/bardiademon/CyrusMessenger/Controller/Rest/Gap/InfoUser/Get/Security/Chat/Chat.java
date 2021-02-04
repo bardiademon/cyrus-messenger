@@ -70,7 +70,7 @@ public class Chat
                     answerToClient.put (KeyAnswer.sec_send_voice.name () , securityUserGap.getCanSendVoice ().name ());
 
             }
-            else answerToClient = AnswerToClient.error400 ();
+            else answerToClient = AnswerToClient.BadRequest ();
         }
         else answerToClient = isLogin.getAnswerToClient ();
 

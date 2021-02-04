@@ -98,7 +98,7 @@ public final class RestFriends
                     {
                         if (user.getId () == friend.getId ())
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.username_belongs_to_you.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_belongs_to_you.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_belongs_to_you.name ()) , null , tAdd , true);
                         }
@@ -123,7 +123,7 @@ public final class RestFriends
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.error400 ();
+                        answerToClient = AnswerToClient.BadRequest ();
                         answerToClient.put (answer.name () , ValAnswer.username_not_found.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null , tAdd , true);
@@ -131,7 +131,7 @@ public final class RestFriends
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.error400 ();
+                    answerToClient = AnswerToClient.BadRequest ();
                     answerToClient.put (answer.name () , ValAnswer.username_not_found.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null , tAdd , true);
@@ -139,7 +139,7 @@ public final class RestFriends
             }
             else
             {
-                answerToClient = AnswerToClient.error400 ();
+                answerToClient = AnswerToClient.BadRequest ();
                 answerToClient.put (answer.name () , ValAnswer.username_invalid.name ());
                 answerToClient.setReqRes (req , res);
                 l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null , tAdd , true);
@@ -152,7 +152,7 @@ public final class RestFriends
 
     private AnswerToClient confirmationMethod (MainAccount user , MainAccount friend)
     {
-        AnswerToClient answerToClient = AnswerToClient.error400 ();
+        AnswerToClient answerToClient = AnswerToClient.BadRequest ();
         StatusFriends.ApprovalMethod friendConfirmationMethod = friend.getFriendConfirmationMethod ();
 
         if (friendConfirmationMethod.equals (StatusFriends.ApprovalMethod.reject))
@@ -227,7 +227,7 @@ public final class RestFriends
 
         if (both.isOk ())
         {
-            if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.error400 ();
+            if (status == null || status.isEmpty ()) answerToClient = AnswerToClient.BadRequest ();
             else
             {
                 assert both.getIsLogin () != null;
@@ -297,7 +297,7 @@ public final class RestFriends
                     }
                     catch (IllegalArgumentException e)
                     {
-                        answerToClient = AnswerToClient.error400 ();
+                        answerToClient = AnswerToClient.BadRequest ();
                         answerToClient.setReqRes (req , res);
                         l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.error.name () , tList , true);
                     }

@@ -47,7 +47,7 @@ public class SetOffline
                     online = SIServer.Onlines.get (request.getCodeOnline ());
                     SIServer.Onlines.remove (request.getCodeOnline ());
 
-                    final OnlineService service = (OnlineService) ThisApp.S ().getService (OnlineService.class);
+                    final OnlineService service = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
 
                     service.setOffline (online);
 
@@ -58,7 +58,7 @@ public class SetOffline
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_online_invalid.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_online_invalid.name ());
                     l.n (ToJson.To (request) , EventName.set_offline.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_online_invalid.name ()) , null);
                 }
             }

@@ -64,7 +64,7 @@ public final class GetMessages
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_type.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_type.name ());
                 l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_type.name ()) , ToJson.CreateClass.nj ("type" , request.getType ()) , SubmitRequestType.socket , true);
             }
         }
@@ -79,7 +79,7 @@ public final class GetMessages
             new GroupGetMessages (iluGroup.getGroup () , request.getPage () , answerGetMessages);
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_id_group.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_group.name ());
             l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_id_group.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
         }
     }
@@ -93,36 +93,36 @@ public final class GetMessages
 
             if (personalGapsId.isValid ())
             {
-                final PersonalGaps personalGaps = ((ThisApp.S ().getService (PersonalGapsService.class))
+                final PersonalGaps personalGaps = ((ThisApp.Services ().Get (PersonalGapsService.class))
                         .byId (personalGapsId.getId () , mainAccount.getId ()));
                 if (personalGaps != null)
                 {
-                    final MainAccountService mainAccountService = ThisApp.S ().getService (MainAccountService.class);
+                    final MainAccountService mainAccountService = ThisApp.Services ().Get (MainAccountService.class);
                     final MainAccount user = mainAccountService.findId (idUser.getId ());
                     if (user != null)
                         new UserGetMessages (client , user , personalGaps , request.getPage () , answerGetMessages , request);
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_user.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_user.name ());
                         l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
                     }
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.not_found_personal_gaps_id.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gaps_id.name ());
                     l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
                 }
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_personal_gaps_id.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gaps_id.name ());
                 l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
             }
 
         }
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_id_user.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_user.name ());
             l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_id_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
         }
     }

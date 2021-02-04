@@ -81,7 +81,7 @@ public class ConfirmPhone
                 if (lstFindCode == null || lstFindCode.size () == 0 || (findCode = lstFindCode.get (0)) == null)
                 {
                     if (isExistsPhone (this.phone))
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_phone_has_account.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_phone_has_account.name ());
                     else
                     {
                         new Thread (() -> Code.CreateCodeIsNotExists (Code.GetCodeNumber () , 10 , (code , last) ->
@@ -141,7 +141,7 @@ public class ConfirmPhone
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.error400 () ,
+                    answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.BadRequest () ,
                             CUK.answer.name () , ValAnswer.the_code_has_been_sent.name () ,
                             KeyAnswer.to.name () , findCode.getSendCodeTo () ,
                             KeyAnswer.id.name () , findCode.getId () ,
@@ -150,7 +150,7 @@ public class ConfirmPhone
                 }
             }
             else
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.phone_invalid.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.phone_invalid.name ());
         }
         answerToClient.setResponse (res);
         return answerToClient;
@@ -187,7 +187,7 @@ public class ConfirmPhone
                     confirmed (findCode);
                     if (this.code != null)
                     {
-                        answerToClient = AnswerToClient.error400 ();
+                        answerToClient = AnswerToClient.BadRequest ();
                         answerToClient.put (CUK.answer.name () , ValAnswer.confirmed.name ());
                         answerToClient.put (KeyAnswer.phone.name () , this.phone);
                         answerToClient.put (KeyAnswer.code_confirmed_phone.name () , this.code);
@@ -197,13 +197,13 @@ public class ConfirmPhone
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.error400 ();
+                    answerToClient = AnswerToClient.BadRequest ();
                     answerToClient.put (CUK.answer.name () , ValAnswer.code_invalid.name ());
                 }
             }
             else
             {
-                answerToClient = AnswerToClient.error400 ();
+                answerToClient = AnswerToClient.BadRequest ();
                 answerToClient.put (CUK.answer.name () , ValAnswer.phone_invalid.name ());
             }
         }

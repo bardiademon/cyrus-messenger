@@ -111,7 +111,7 @@ public final class CheckImage
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.invalid_width_or_height.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.invalid_width_or_height.name ());
 
                         answer.put (AnswerToClient.CUK.acceptable_width_height.name () ,
 
@@ -138,7 +138,7 @@ public final class CheckImage
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.the_size_of_the_image_is_large.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.the_size_of_the_image_is_large.name ());
                 answer.put (AnswerToClient.CUK.acceptable_size.name () , GetSize.Get (maxSize));
                 answer.put (KeyAnswer.your_image_size.name () , GetSize.Get (this.getSize ()));
                 answer.put (AnswerToClient.CUK.extra_size.name () , GetSize.Get ((this.getSize () - maxSize)));

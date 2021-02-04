@@ -6,6 +6,7 @@ public class Server
 {
     private PrivateGap privateGap;
 
+
     private Server ()
     {
         firstConnection ();
@@ -36,4 +37,5 @@ public class Server
     {
         return new Server ();
     }
+
 }

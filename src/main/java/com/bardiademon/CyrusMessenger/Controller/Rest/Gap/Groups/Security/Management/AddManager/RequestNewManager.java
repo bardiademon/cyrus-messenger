@@ -342,7 +342,7 @@ public final class RequestNewManager
     @NotNull
     private AnswerToClient notBool (String which)
     {
-        AnswerToClient answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , RestNewManager.ValAnswer.invalid_request);
+        AnswerToClient answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , RestNewManager.ValAnswer.invalid_request);
         answerToClient.put (AnswerToClient.CUK.which.name () , which);
         return answerToClient;
     }

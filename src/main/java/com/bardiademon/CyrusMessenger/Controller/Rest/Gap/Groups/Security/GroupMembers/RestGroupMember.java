@@ -89,7 +89,7 @@ public final class RestGroupMember
                     }
                     catch (Exception e)
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , AnswerToClient.CUV.id_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                         r.n (mainAccount , SubmitRequestType.group_members , true);
@@ -101,7 +101,7 @@ public final class RestGroupMember
                         Groups group = groupsService.hasGroup (idGroup);
                         if (group == null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.group_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                             r.n (mainAccount , SubmitRequestType.group_members , true);

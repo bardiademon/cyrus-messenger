@@ -17,6 +17,8 @@ public enum EventName
     // pvgp => private gap
     pvgp_send_message, e_pvgp_send_message,
 
+    status_of_sent_message, e_status_of_sent_message,
+
     // baraye payam haye daryafti > private gaps
     pvgp_new_message, e_pvgp_new_message,
 

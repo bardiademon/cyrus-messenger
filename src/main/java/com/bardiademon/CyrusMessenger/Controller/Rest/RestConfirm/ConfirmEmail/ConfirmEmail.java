@@ -88,9 +88,9 @@ public final class ConfirmEmail
     {
         AnswerToClient answerToClient;
 
-        String request = ToJson.CreateClass.nj ("email" , email);
+        final String request = ToJson.CreateClass.nj ("email" , email);
 
-        CBSIL cbsil = CBSIL.BSubmitRequest (request , routerSC , req , res , typeSC , codeLogin , userLoginService);
+        final CBSIL cbsil = CBSIL.BSubmitRequest (request , routerSC , req , res , typeSC , codeLogin , userLoginService);
 
         if (cbsil.isOk ())
         {
@@ -99,12 +99,12 @@ public final class ConfirmEmail
 
             if (!Str.IsEmpty (email))
             {
-                VEmail vEmail = new VEmail (email);
+                final VEmail vEmail = new VEmail (email);
                 if (vEmail.check ())
                 {
                     if (!userEmailsService.find ())
                     {
-                        Integer min = defaultService.getInt (DefaultKey.ce_min_valid);
+                        final Integer min = defaultService.getInt (DefaultKey.ce_min_valid);
                         if (min != null)
                         {
                             ConfirmCode sendCode = confirmCodeService.Repository.findCode (LocalDateTime.now () , LocalDateTime.now ().plusMinutes (min));
@@ -201,7 +201,7 @@ public final class ConfirmEmail
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.was_send.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.was_send.name ());
                                 answerToClient.put (KeyAnswer.shipping_time.name () , Time.toString (sendCode.getTimeToSendCode ()));
                                 answerToClient.put (KeyAnswer.validity_time.name () , Time.toString (sendCode.getTimeToBeOutdated ()));
                                 answerToClient.setReqRes (req , res);
@@ -219,7 +219,7 @@ public final class ConfirmEmail
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.email_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_found.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_found.name ()) , null);
                         r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
@@ -227,7 +227,7 @@ public final class ConfirmEmail
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.email_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid.name ());
                     answerToClient.setReqRes (req , res);
                     l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_invalid.name ()) , null);
                     r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
@@ -313,7 +313,7 @@ public final class ConfirmEmail
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid.name ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid.name ()) , null);
                                 r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
@@ -321,7 +321,7 @@ public final class ConfirmEmail
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.email_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_invalid.name ()) , null);
                             r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
@@ -329,7 +329,7 @@ public final class ConfirmEmail
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.code_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_invalid.name ());
                         answerToClient.setReqRes (req , res);
                         l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_invalid.name ()) , null);
                         r.nim (req.getRemoteAddr () , mainAccount , typeC , true);

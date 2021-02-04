@@ -90,7 +90,7 @@ public final class RestDeleteProfilePictureGroup
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_profile_picture_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
                             r.n (mainAccount , type , true);

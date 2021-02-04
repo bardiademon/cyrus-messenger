@@ -89,7 +89,7 @@ public final class ManageGroup
 
     private void setAnswerToClient (ValAnswer answer)
     {
-        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , answer.name ());
+        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , answer.name ());
     }
 
     private boolean checkId ()

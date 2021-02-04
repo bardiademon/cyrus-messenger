@@ -58,7 +58,7 @@ public final class HasStickerAccessLevel
             }
             else return AnswerToClient.AccessDenied ();
         }
-        else return AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.invalid_group.name ());
+        else return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_group.name ());
     }
 
     private enum ValAnswer

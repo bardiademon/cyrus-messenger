@@ -23,7 +23,7 @@ public final class GFHasAccessLevel
         if (applicant.getId () == gapsFiles.getUploadedFiles ().getUploadedBy ().getId ()) return true;
         else
         {
-            final SendGapsFilesToService sendGapsFilesToService = ThisApp.S ().getService (SendGapsFilesToService.class);
+            final SendGapsFilesToService sendGapsFilesToService = ThisApp.Services ().Get (SendGapsFilesToService.class);
             long numberOfSubmissions = sendGapsFilesToService.numberOfSubmissions (applicant.getId ());
             if (numberOfSubmissions == 0)
                 return false;
@@ -43,7 +43,7 @@ public final class GFHasAccessLevel
             {
                 if (security.isCanSendToGroups ())
                 {
-                    final JoinGroupService joinGroupService = ThisApp.S ().getService (JoinGroupService.class);
+                    final JoinGroupService joinGroupService = ThisApp.Services ().Get (JoinGroupService.class);
                     return joinGroupService.isJoined (groups.getId () , applicant.getId ()) != null;
                 }
                 else return false;

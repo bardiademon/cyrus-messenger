@@ -101,7 +101,7 @@ public final class RestChangeManagerAccessLevel
                                         }
                                         else
                                         {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_user_owns_the_group.name ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_owns_the_group.name ());
                                             answerToClient.setReqRes (req , res);
                                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_owns_the_group.name ()) , null);
                                             r.n (mainAccount , SubmitRequestType.change_manager , true);
@@ -109,7 +109,7 @@ public final class RestChangeManagerAccessLevel
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_id_belongs_to_you.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_id_belongs_to_you.name ());
                                         answerToClient.setReqRes (req , res);
                                         l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_id_belongs_to_you.name ()) , null);
                                         r.n (mainAccount , SubmitRequestType.change_manager , true);
@@ -117,7 +117,7 @@ public final class RestChangeManagerAccessLevel
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.this_user_is_not_a_manager.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_is_not_a_manager.name ());
                                     answerToClient.setReqRes (req , res);
                                     l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_a_manager.name ()) , null);
                                     r.n (mainAccount , SubmitRequestType.change_manager , true);
@@ -127,7 +127,7 @@ public final class RestChangeManagerAccessLevel
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.id_user_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_not_found.name ());
                             answerToClient.setReqRes (req , res);
                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_not_found.name ()) , null);
                             r.n (mainAccount , SubmitRequestType.change_manager , true);

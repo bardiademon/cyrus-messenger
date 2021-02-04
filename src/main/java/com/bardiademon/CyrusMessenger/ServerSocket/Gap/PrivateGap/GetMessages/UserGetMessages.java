@@ -47,8 +47,8 @@ public final class UserGetMessages
         this.page = Page;
         this.answerGetMessages = _AnswerGetMessages;
         this.request = _RequestGetMessages;
-        this.gapsService = ThisApp.S ().getService (GapsService.class);
-        this.personalGapsService = ThisApp.S ().getService (PersonalGapsService.class);
+        this.gapsService = ThisApp.Services ().Get (GapsService.class);
+        this.personalGapsService = ThisApp.Services ().Get (PersonalGapsService.class);
         get ();
         answer ();
     }
@@ -59,7 +59,7 @@ public final class UserGetMessages
 
         if (size > 0)
         {
-            final Integer maxGet = (ThisApp.S ().getService (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
+            final Integer maxGet = (ThisApp.Services ().Get (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
             if (maxGet != null)
             {
                 final Pagination.Answer paginationAnswer = ThisApp.getServer ().getPrivateGap ().getPagination ().computing (page , size , maxGet);
