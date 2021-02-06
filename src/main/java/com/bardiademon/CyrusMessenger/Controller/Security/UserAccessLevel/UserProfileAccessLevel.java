@@ -345,14 +345,14 @@ public class UserProfileAccessLevel
 
         public Service ()
         {
-            this.mainAccountService = (MainAccountService) ThisApp.Services ().Get (MainAccountService.class);
-            this.enumTypesService = (EnumTypesService) ThisApp.Services ().Get (EnumTypesService.class);
-            this.userListService = (UserListService) ThisApp.Services ().Get (UserListService.class);
-            this.userFriendsService = (UserFriendsService) ThisApp.Services ().Get (UserFriendsService.class);
-            this.userContactsService = (UserContactsService) ThisApp.Services ().Get (UserContactsService.class);
-            this.userSeparateProfilesService = (UserSeparateProfilesService) ThisApp.Services ().Get (UserSeparateProfilesService.class);
-            this.userBlockedService = (UserBlockedService) ThisApp.Services ().Get (UserBlockedService.class);
-            this.profilePicturesService = (ProfilePicturesService) ThisApp.Services ().Get (ProfilePicturesService.class);
+            this.mainAccountService = ThisApp.GetService (MainAccountService.class);
+            this.enumTypesService = ThisApp.GetService (EnumTypesService.class);
+            this.userListService = ThisApp.GetService (UserListService.class);
+            this.userFriendsService = ThisApp.GetService (UserFriendsService.class);
+            this.userContactsService = ThisApp.GetService (UserContactsService.class);
+            this.userSeparateProfilesService = ThisApp.GetService (UserSeparateProfilesService.class);
+            this.userBlockedService = ThisApp.GetService (UserBlockedService.class);
+            this.profilePicturesService = ThisApp.GetService (ProfilePicturesService.class);
         }
     }
 

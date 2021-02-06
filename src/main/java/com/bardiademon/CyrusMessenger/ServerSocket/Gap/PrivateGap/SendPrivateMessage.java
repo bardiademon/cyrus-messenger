@@ -1,10 +1,13 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesUsageReport.GapsFilesUsageReportService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFilesUsageReport.WhatDidDo;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.ThisApp;
@@ -49,7 +52,10 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
         message.put (KeyAnswer.text.name () , forSendToClient.gap.getText ());
         message.put (KeyAnswer.send_at.name () , Time.timestamp (forSendToClient.gap.getSendAt ()).getTime ());
-        message.put (KeyAnswer.from.name () , forSendToClient.from.getUsername ().getUsername ());
+
+        final MainAccount from = forSendToClient.from;
+
+        message.put (KeyAnswer.from.name () , from.getUsername ().getUsername ());
         message.put (KeyAnswer.forward_from.name () , forSendToClient.gap.getFrom ().getUsername ().getUsername ());
 
         final List <GapTypes> gapTypes = forSendToClient.gap.getGapTypes ();
@@ -62,6 +68,8 @@ public final class SendPrivateMessage extends Thread implements Runnable
         }
 
         final List <GapsFiles> filesGaps = forSendToClient.gap.getFilesGaps ();
+        final MainAccount to = forSendToClient.to;
+
         if (filesGaps != null && filesGaps.size () > 0)
         {
             final List <String> codeFiles = new ArrayList <> ();
@@ -69,7 +77,7 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
             for (final GapsFiles filesGap : filesGaps)
             {
-                gapsFilesUsageReportService.used (filesGap , forSendToClient.to , WhatDidDo.get_link);
+                gapsFilesUsageReportService.used (filesGap , to , WhatDidDo.get_link);
                 codeFiles.add (filesGap.getCode ());
             }
             message.put (KeyAnswer.files.name () , codeFiles);
@@ -81,9 +89,11 @@ public final class SendPrivateMessage extends Thread implements Runnable
         online.getClient ().sendEvent (EventName.pvgp_new_message.name () , message.toString ());
 
         /*
-         * baraye ye tick khordan payam ke ersal shode niyaz be check kardan sath dastresi nist
+         * ba aks hast chon from mikhad bebine payami ke ersal karde to khondash ya na
+         * pas agar tanzimar to seen_message baraye from baz bashe ersal mishe be from ke to khonde
          */
-        new SendStatusPrivateMessage (forSendToClient , SendStatusPrivateMessage.Type.send);
+        if ((new UserProfileAccessLevel (to , from)).hasAccess (Which.seen_message))
+            new SendStatusPrivateMessage (forSendToClient , SendStatusPrivateMessage.Type.send);
     }
 
     private enum KeyAnswer

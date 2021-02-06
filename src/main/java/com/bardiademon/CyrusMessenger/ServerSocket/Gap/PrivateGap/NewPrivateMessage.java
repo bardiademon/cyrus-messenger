@@ -344,6 +344,7 @@ public final class NewPrivateMessage
             emptyGap.setFrom (gapsPostedAgain.getMessageFrom ());
             emptyGap.setToUser (gapsPostedAgain.getTo ());
             emptyGap.setIndexGap (lastIndex);
+            emptyGap.setForwarded (true);
             emptyGap.setPersonalGaps (personalGaps);
             emptyGap.setPostedAgain (gapsPostedAgain);
 

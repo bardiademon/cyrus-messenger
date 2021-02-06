@@ -2,7 +2,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
-import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesTo;
@@ -115,8 +115,7 @@ public final class StatusOfSentMessage
                                  * ba aks hast chon from mikhad bebine payami ke ersal karde to khondash ya na
                                  * pas agar tanzimar to seen_message baraye from baz bashe ersal mishe be from ke to khonde
                                  */
-                                final UserGapAccessLevel gapAccessLevel = new UserGapAccessLevel (gap.getToUser () , mainAccount);
-                                if (gapAccessLevel.hasAccess (Which.seen_message))
+                                if ((new UserProfileAccessLevel (gap.getToUser () , mainAccount)).hasAccess (Which.seen_message))
                                     new SendStatusPrivateMessage (new NewPrivateMessage.ForSendToClient (gap.getFrom () , gap.getToUser () , gap) , type);
                             }
                             else

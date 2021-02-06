@@ -10,8 +10,6 @@ import com.bardiademon.CyrusMessenger.ThisApp;
 
 public final class UserGapAccessLevel extends UserProfileAccessLevel
 {
-    public final static Service _Service = new Service ();
-
     private SecurityUserGap securityUserGap;
 
 //    public UserGapAccessLevel (MainAccount Applicant)
@@ -33,12 +31,12 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
         {
             super.which = which;
 
-            this.securityUserGap = _Service._SecurityUserGapService.Repository.findByMainAccount (user);
+            this.securityUserGap = ThisApp.GetService (SecurityUserGapService.class).Repository.findByMainAccount (user);
             final AccessLevel accessLevel = getAccessLevel ();
 
             if (accessLevel != null && accessLevel.equals (AccessLevel.nobody)) return false;
 
-            return (securityUserGap != null && accessLevel != null) && (!isBlock () && hasAccess (accessLevel , securityUserGap.isCanAnonymousSendMessage ()));
+            return (securityUserGap != null && accessLevel != null) && (!super.isBlock () && hasAccess (accessLevel , securityUserGap.isCanAnonymousSendMessage ()));
         }
         else return false;
     }
@@ -95,16 +93,6 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
                 desEnumTypes = null;
                 userBlockedType = null;
                 return null;
-        }
-    }
-
-    public static class Service
-    {
-        public final SecurityUserGapService _SecurityUserGapService;
-
-        public Service ()
-        {
-            this._SecurityUserGapService = (SecurityUserGapService) ThisApp.Services ().Get (SecurityUserGapService.class);
         }
     }
 

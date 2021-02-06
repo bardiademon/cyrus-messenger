@@ -10,7 +10,7 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
     private final Type type;
     private final NewPrivateMessage.ForSendToClient forSendToClient;
 
-    public SendStatusPrivateMessage (NewPrivateMessage.ForSendToClient _ForSendToClient , Type _Type)
+    public SendStatusPrivateMessage (final NewPrivateMessage.ForSendToClient _ForSendToClient , final Type _Type)
     {
         forSendToClient = _ForSendToClient;
         this.type = _Type;
@@ -32,8 +32,8 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
                 if (forSendToClient.from.getId () == _Online.getMainAccount ().getId ())
                 {
                     final JSONObject statusMessage = new JSONObject ();
-                    statusMessage.put (KeyAnswer.id.name () , forSendToClient.gap.getId ());
                     statusMessage.put (KeyAnswer.personal_gap_id.name () , forSendToClient.gap.getPersonalGaps ().getId ());
+                    statusMessage.put (KeyAnswer.gap_id.name () , forSendToClient.gap.getId ());
                     statusMessage.put (KeyAnswer.status.name () , type.name ());
                     _Online.getClient ().sendEvent (EventName.pvgp_status_message.name () , statusMessage.toString ());
                     return false;
@@ -45,7 +45,7 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
 
     private enum KeyAnswer
     {
-        id, status, personal_gap_id
+        gap_id, status, personal_gap_id
     }
 
     public enum Type
