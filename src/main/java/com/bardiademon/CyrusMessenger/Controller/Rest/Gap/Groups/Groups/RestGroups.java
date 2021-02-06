@@ -108,7 +108,6 @@ public final class RestGroups
                                     }
                                     catch (Exception e)
                                     {
-                                        System.out.println (e.getMessage ());
                                         l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , e , ToJson.To (group));
                                     }
                                 }

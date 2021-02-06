@@ -102,6 +102,7 @@ public final class UserGetMessages
             createClass.put (KeyAnswer.text.name () , gap.getText ());
             createClass.put (KeyAnswer.from.name () , gap.getFrom ().getId ());
             createClass.put (KeyAnswer.to.name () , gap.getToUser ().getId ());
+            createClass.put (KeyAnswer.gap_types.name () , gap.getGapTypes ());
 
             if (messageForwardedFor != null)
                 createClass.put (KeyAnswer.forwarded.name () , messageForwardedFor.getId ());
@@ -131,7 +132,7 @@ public final class UserGetMessages
 
     private enum KeyAnswer
     {
-        id, text, from, to, forwarded, has_file, files, reply,
+        id, text, from, to, forwarded, has_file, files, reply, gap_types,
 
         gaps
     }

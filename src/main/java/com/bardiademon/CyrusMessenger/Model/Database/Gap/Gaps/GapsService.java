@@ -31,6 +31,16 @@ public final class GapsService
         return Repository.byId (gapId , personalGapId , userId);
     }
 
+    public Gaps byId (final long gapId , final long userId)
+    {
+        return Repository.byId (gapId , userId);
+    }
+
+    public Gaps byId (final long gapId)
+    {
+        return Repository.byId (gapId);
+    }
+
     public void deleteTo (long userId , long personalGapId)
     {
         Repository.deleteAllTo (userId , personalGapId);

@@ -10,7 +10,7 @@ public final class GetOneProfilePicture
 
     private ProfilePictures profilePicture;
 
-    private boolean wasGet;
+    private final boolean wasGet;
 
     public GetOneProfilePicture (List<ProfilePictures> _ProfilePictures)
     {

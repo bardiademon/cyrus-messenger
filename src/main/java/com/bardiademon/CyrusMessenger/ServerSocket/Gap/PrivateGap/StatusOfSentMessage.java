@@ -2,6 +2,8 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
+import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.Which;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesTo;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesTo.SendGapsFilesToService;
@@ -97,14 +99,11 @@ public final class StatusOfSentMessage
 
                                     for (final GapsFiles filesGap : filesGaps)
                                     {
-                                        if (sendGapsFilesToService.sendTo (mainAccount.getId () , filesGap.getCode ()) == null)
-                                        {
-                                            final SendGapsFilesTo sendGapsFilesTo = new SendGapsFilesTo ();
-                                            sendGapsFilesTo.setGapsFiles (filesGap);
-                                            sendGapsFilesTo.setMainAccount (mainAccount);
-                                            sendGapsFilesTo.setSendAt (gap.getSendAt ());
-                                            sendGapsFilesToService.Repository.save (sendGapsFilesTo);
-                                        }
+                                        final SendGapsFilesTo sendGapsFilesTo = new SendGapsFilesTo ();
+                                        sendGapsFilesTo.setGapsFiles (filesGap);
+                                        sendGapsFilesTo.setMainAccount (mainAccount);
+                                        sendGapsFilesTo.setSendAt (gap.getSendAt ());
+                                        sendGapsFilesToService.Repository.save (sendGapsFilesTo);
                                     }
                                 }
                                 gapReadService.Repository.save (gapRead);
@@ -112,7 +111,13 @@ public final class StatusOfSentMessage
                                 answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
                                 l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name () , SubmitRequestType.socket , false);
 
-                                new SendStatusPrivateMessage (gap , type);
+                                /*
+                                 * ba aks hast chon from mikhad bebine payami ke ersal karde to khondash ya na
+                                 * pas agar tanzimar to seen_message baraye from baz bashe ersal mishe be from ke to khonde
+                                 */
+                                final UserGapAccessLevel gapAccessLevel = new UserGapAccessLevel (gap.getToUser () , mainAccount);
+                                if (gapAccessLevel.hasAccess (Which.seen_message))
+                                    new SendStatusPrivateMessage (new NewPrivateMessage.ForSendToClient (gap.getFrom () , gap.getToUser () , gap) , type);
                             }
                             else
                             {

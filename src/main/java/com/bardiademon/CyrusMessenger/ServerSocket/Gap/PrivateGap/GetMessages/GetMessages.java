@@ -130,7 +130,7 @@ public final class GetMessages
     private void answerToClient ()
     {
         client.sendEvent (EventName.e_get_messages.name () , ToJson.To (answer));
-        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , "send to client" , SubmitRequestType.socket , true);
+        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , "send to client" , SubmitRequestType.socket , false);
     }
 
     private enum ValAnswer

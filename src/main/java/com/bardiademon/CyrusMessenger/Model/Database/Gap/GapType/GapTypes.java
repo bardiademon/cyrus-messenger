@@ -2,6 +2,7 @@ package com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GapType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,10 +17,10 @@ import javax.persistence.Table;
 @Table (name = "gap_types")
 public final class GapTypes
 {
-
     @Id
     @GeneratedValue
     @Column (unique = true, nullable = false)
+    @JsonIgnore
     private long id;
 
     @Column (name = "gap_type", nullable = false)
@@ -28,6 +29,7 @@ public final class GapTypes
 
     @ManyToOne
     @JoinColumn (name = "id_gap", referencedColumnName = "id")
+    @JsonIgnore
     private Gaps gaps;
 
     public GapTypes ()

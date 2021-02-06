@@ -50,6 +50,8 @@ public abstract class Domain
             public static final String RN_MAIN = RN_MAIN_INFO_USER + "/get";
             public static final String RN_GENERAL = RN_MAIN + "/general";
 
+            public static final String RN_FIND_USER_ID = RN_MAIN + "/find_user_id";
+
             public static abstract class Modify
             {
                 public static final String RN_MODIFY = RN_MAIN_INFO_USER + "/modify";
@@ -122,7 +124,6 @@ public abstract class Domain
                 public static final String RN_SEPARATE_PROFILE_REMOVE = RN_SEPARATE_PROFILE + "/remove";
                 public static final String RN_SEPARATE_PROFILE_CHANGE = RN_SEPARATE_PROFILE + "/change";
             }
-
 
             public static abstract class RNFriends
             {

@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckForward;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.GetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.RequestGetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
@@ -22,6 +23,8 @@ public final class PrivateGap implements SIServer.Client
     private final Pagination pagination = new Pagination ();
 
     private final StatusOfSentMessage statusOfSentMessage;
+
+    static final CheckForward CheckForward = new CheckForward ();
 
     public PrivateGap ()
     {

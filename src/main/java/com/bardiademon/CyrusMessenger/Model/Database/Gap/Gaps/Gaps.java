@@ -26,10 +26,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "gaps")
+
 public final class Gaps
 {
     @Id
@@ -41,14 +44,15 @@ public final class Gaps
     private String text;
 
     @OneToMany (mappedBy = "gaps")
+    @LazyCollection (LazyCollectionOption.FALSE)
     private List <GapTypes> gapTypes;
 
     @Enumerated (EnumType.STRING)
-    @Column (name = "gap_for", nullable = false)
+    @Column (name = "gap_for")
     private GapFor gapFor;
 
     @OneToOne
-    @JoinColumn (name = "gap_from", referencedColumnName = "id", nullable = false)
+    @JoinColumn (name = "gap_from", referencedColumnName = "id")
     @JsonManagedReference
     private MainAccount from;
 
@@ -98,6 +102,7 @@ public final class Gaps
     private List <GapRead> gapRead;
 
     @ManyToMany
+    @LazyCollection (LazyCollectionOption.FALSE)
     @JoinTable (name = "gaps_files", joinColumns = @JoinColumn (name = "gaps_files", referencedColumnName = "id"))
     @JsonIgnore
     private List <GapsFiles> filesGaps;
@@ -119,6 +124,19 @@ public final class Gaps
     @OneToMany (mappedBy = "gap")
     @Where (clause = "`deleted` = false")
     private List <GapsPostedAgain> gapsPostedAgain;
+
+    /**
+     * <p>
+     * ye gap khali misazam baraye gap forward shode va id gap asli dakhele class GapsPostedAgain mimone
+     * inja faghat id GapsPostedAgain ro mizaram
+     * </p>
+     * <p>
+     * in karo baraye in mikonam ke toye tartib gap haei ke mikham begiram moshkeli pish nayad
+     * </p>
+     */
+    @OneToOne
+    @JoinColumn (name = "gaps_posted_again", referencedColumnName = "id")
+    private GapsPostedAgain postedAgain;
 
     /*
      * in mige in gap forward shode hast az ye gap dige
@@ -380,5 +398,15 @@ public final class Gaps
     public void setPersonalGaps (PersonalGaps personalGaps)
     {
         this.personalGaps = personalGaps;
+    }
+
+    public GapsPostedAgain getPostedAgain ()
+    {
+        return postedAgain;
+    }
+
+    public void setPostedAgain (GapsPostedAgain postedAgain)
+    {
+        this.postedAgain = postedAgain;
     }
 }

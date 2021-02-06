@@ -38,9 +38,15 @@ public class ThisApp
         return server;
     }
 
+    @Deprecated
     // S => Services
     public static Services Services ()
     {
         return SERVICES;
+    }   // S => Services
+
+    public static <T> T GetService (Class <T> aClass)
+    {
+        return Services ().Get (aClass);
     }
 }

@@ -13,15 +13,19 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapFor;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgain;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgainService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
-import com.bardiademon.CyrusMessenger.Model.Database.Usernames.UsernamesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserGap.SecurityUserGap;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
+import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckForward;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.FoundStkrEmjLnk;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GapType;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
@@ -60,6 +64,7 @@ public final class NewPrivateMessage
     private PersonalGaps personalGaps;
 
     private PersonalGapsService personalGapsService;
+    private CheckForward.CheckRequestGapAnswer forward;
 
     public NewPrivateMessage (final SocketIOClient Client , final RequestPrivateGap Request)
     {
@@ -70,12 +75,21 @@ public final class NewPrivateMessage
         {
             if ((!request.isHasFile () || Str.IsEmpty (securityUserGap.getCanSendFileTypes ()) || checkAccessType ()))
             {
-                final GapReadService gapReadService = ThisApp.Services ().Get (GapReadService.class);
+                final GapReadService gapReadService = ThisApp.GetService (GapReadService.class);
 
                 if ((to != null && to.getId () == mainAccount.getId ()) || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
-                    if (checkText ())
+                    forward = PrivateGap.CheckForward.forward (request , mainAccount);
+                    if ((forward == null && checkText ()) || (forward != null && forward.ok))
                         new SendPrivateMessage (saveMessage ());
+                    else
+                    {
+                        if (forward != null)
+                        {
+                            answer = forward.answerToClient;
+                            l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (forward.getClass ().getName ()) , null , SubmitRequestType.socket , true);
+                        }
+                    }
                 }
                 else
                 {
@@ -89,8 +103,6 @@ public final class NewPrivateMessage
                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unacceptable_file_type.name ()) , null);
             }
         }
-
-        System.out.println (ToJson.To (answer));
 
         client.sendEvent (EventName.e_pvgp_send_message.name () , ToJson.To (answer));
     }
@@ -152,7 +164,7 @@ public final class NewPrivateMessage
                     final ID idPersonalGap = new ID (request.getPersonalGapId ());
                     if (idPersonalGap.isValid ())
                     {
-                        final FITD_Username fitd_username = new FITD_Username (request.getTo () , ThisApp.Services ().Get (UsernamesService.class));
+                        final IdUsernameMainAccount fitd_username = new IdUsernameMainAccount (ThisApp.GetService (MainAccountService.class) , request.getTo () , null);
                         if (fitd_username.isValid ())
                         {
                             to = fitd_username.getMainAccount ();
@@ -230,7 +242,7 @@ public final class NewPrivateMessage
                                 l.n (ToJson.To (request) , EventName.pvgp_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null);
                             }
                         }
-                        else answer = fitd_username.getAnswer ();
+                        else answer = fitd_username.getAnswerToClient ();
                     }
                     else
                     {
@@ -267,42 +279,84 @@ public final class NewPrivateMessage
         return true;
     }
 
-    private Gaps saveMessage ()
+    private ForSendToClient saveMessage ()
     {
-        Gaps gap = new Gaps ();
-
+        Gaps gap;
         final long lastIndex = ((personalGaps.getLastIndex ()) + 1);
 
-        gap.setText (request.getText ());
-        gap.setFrom (mainAccount);
-        gap.setToUser (to);
-        gap.setSendAt (Time.localDateTime (request.getTimeSend ()));
-        gap.setFilesGaps (gapsFiles);
-        gap.setIndexGap (lastIndex);
-        gap.setPersonalGaps (personalGaps);
+        final GapsService gapsService = ThisApp.GetService (GapsService.class);
 
-        if (gapReply != null) gap.setReply (gapReply);
-        gap.setGapFor (GapFor.gprivate);
+        /*
+         * forward info
+         */
+        Gaps emptyGap = null;
 
-        final GapTypesService gapTypesService = ThisApp.Services ().Get (GapTypesService.class);
-        final GapsService gapsService = ThisApp.Services ().Get (GapsService.class);
-
-        gap = gapsService.Repository.save (gap);
-
-        final List <GapTypes> gapTypes = new ArrayList <> ();
-
-        for (GapType gapType : this.gapTypes)
+        if (forward == null)
         {
-            GapTypes types = new GapTypes ();
-            types.setGaps (gap);
-            types.setGapType (gapType);
-            gapTypes.add (types);
+            gap = new Gaps ();
+
+            gap.setText (request.getText ());
+            gap.setFrom (mainAccount);
+            gap.setToUser (to);
+            gap.setSendAt (Time.localDateTime (request.getTimeSend ()));
+            gap.setFilesGaps (gapsFiles);
+            gap.setIndexGap (lastIndex);
+            gap.setPersonalGaps (personalGaps);
+
+            if (gapReply != null) gap.setReply (gapReply);
+            gap.setGapFor (GapFor.gprivate);
+
+            final GapTypesService gapTypesService = ThisApp.Services ().Get (GapTypesService.class);
+
+
+            gap = gapsService.Repository.save (gap);
+
+            final List <GapTypes> gapTypes = new ArrayList <> ();
+
+            for (final GapType gapType : this.gapTypes)
+            {
+                GapTypes types = new GapTypes ();
+                types.setGaps (gap);
+                types.setGapType (gapType);
+                gapTypes.add (types);
+            }
+            gapTypesService.Repository.saveAll (gapTypes);
+
+            gap.setGapTypes (gapTypes);
+            gapsService.Repository.save (gap);
+        }
+        else
+        {
+            gap = forward.gaps;
+
+            GapsPostedAgain gapsPostedAgain = new GapsPostedAgain ();
+            gapsPostedAgain.setGap (gap);
+            gapsPostedAgain.setMessageFrom (mainAccount);
+            gapsPostedAgain.setTo (to);
+            gapsPostedAgain = ThisApp.GetService (GapsPostedAgainService.class).Repository.save (gapsPostedAgain);
+
+            emptyGap = new Gaps ();
+            emptyGap.setSendAt (gap.getSendAt ());
+
+            /*
+             * from va to va personalGap ro baraye search kardan gap set mikonam
+             */
+            emptyGap.setFrom (gapsPostedAgain.getMessageFrom ());
+            emptyGap.setToUser (gapsPostedAgain.getTo ());
+            emptyGap.setIndexGap (lastIndex);
+            emptyGap.setPersonalGaps (personalGaps);
+            emptyGap.setPostedAgain (gapsPostedAgain);
+
+            emptyGap = gapsService.Repository.save (emptyGap);
+
+            gap = emptyGap.getPostedAgain ().getGap ();
+
+//            /*
+//             * chon forward shode gap asli daron table GapPostedAgain hast
+//             */
+//            gap = gap.getPostedAgain ().getGap ();
         }
 
-        gapTypesService.Repository.saveAll (gapTypes);
-
-        gap.setGapTypes (gapTypes);
-        gapsService.Repository.save (gap);
 
         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
         answer.put (KeyAnswer.was_send.name () , true);
@@ -310,7 +364,7 @@ public final class NewPrivateMessage
         personalGaps.setLastIndex (lastIndex);
         personalGapsService.Repository.save (personalGaps);
 
-        return gap;
+        return new ForSendToClient (mainAccount , to , gap , emptyGap);
     }
 
     public boolean determineTheType (final long userId)
@@ -381,4 +435,36 @@ public final class NewPrivateMessage
         code, which, was_send
     }
 
+    /*
+     * vaghti payam forward shode miyad , ye gap asli darim , ye GapsPostedAgain ba ye gap empty darim pas vakhti payam forward beshe
+     * baraye jologiri az in ke payam be hamon kasi ke aval payamo arsal karde nare in class ro misazam ke ,
+     *  From , To , Gap ro dakhele in bezaram
+     * ke az from va to ke dakhele table gap asli hast estefade nashe
+     */
+    public static final class ForSendToClient
+    {
+        public final MainAccount from, to;
+        public final Gaps gap;
+
+        public final boolean isForward;
+
+        /*
+         * gap forwardi , khaliye va faghat eshare be gap asli dare
+         */
+        public final Gaps emptyGap;
+
+        public ForSendToClient (final MainAccount From , final MainAccount To , final Gaps Gap)
+        {
+            this (From , To , Gap , null);
+        }
+
+        public ForSendToClient (final MainAccount From , final MainAccount To , final Gaps Gap , final Gaps EmptyGap)
+        {
+            this.from = From;
+            this.to = To;
+            this.gap = Gap;
+            this.emptyGap = EmptyGap;
+            this.isForward = (emptyGap != null);
+        }
+    }
 }

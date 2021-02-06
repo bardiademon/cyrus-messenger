@@ -1,20 +1,18 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
-import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import org.json.JSONObject;
 
 public final class SendStatusPrivateMessage extends Thread implements Runnable
 {
     private final Type type;
-    private final Gaps gaps;
+    private final NewPrivateMessage.ForSendToClient forSendToClient;
 
-    public SendStatusPrivateMessage (Gaps _Gaps , Type _Type)
+    public SendStatusPrivateMessage (NewPrivateMessage.ForSendToClient _ForSendToClient , Type _Type)
     {
-        this.gaps = _Gaps;
+        forSendToClient = _ForSendToClient;
         this.type = _Type;
         start ();
     }
@@ -27,16 +25,17 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
 
     private void send ()
     {
-        if (gaps != null && type != null)
+        if (forSendToClient.gap != null && type != null)
         {
             SIServer.LoopOnline ((CodeOnline , _Online) ->
             {
-                if (gaps.getFrom ().getId () == _Online.getMainAccount ().getId ())
+                if (forSendToClient.from.getId () == _Online.getMainAccount ().getId ())
                 {
                     final JSONObject statusMessage = new JSONObject ();
-                    statusMessage.put (KeyAnswer.id.name () , gaps.getId ());
+                    statusMessage.put (KeyAnswer.id.name () , forSendToClient.gap.getId ());
+                    statusMessage.put (KeyAnswer.personal_gap_id.name () , forSendToClient.gap.getPersonalGaps ().getId ());
                     statusMessage.put (KeyAnswer.status.name () , type.name ());
-                    _Online.getClient ().sendEvent (EventName.pvgp_status_message.name () , ToJson.To (statusMessage));
+                    _Online.getClient ().sendEvent (EventName.pvgp_status_message.name () , statusMessage.toString ());
                     return false;
                 }
                 else return true;
@@ -46,7 +45,7 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
 
     private enum KeyAnswer
     {
-        id, status
+        id, status, personal_gap_id
     }
 
     public enum Type

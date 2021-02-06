@@ -11,5 +11,5 @@ public interface SendGapsFilesToRepository extends JpaRepository <SendGapsFilesT
 
     long countByMainAccountIdAndDeletedFalse (final long userId);
 
-    SendGapsFilesTo findByMainAccountIdAndGapsFilesCodeAndDeletedFalse (final long userId , final String fileCode);
+    List <SendGapsFilesTo> findByMainAccountIdAndGapsFilesCodeAndDeletedFalse (final long userId , final String fileCode);
 }
