@@ -17,7 +17,10 @@ public enum DefaultKey
 
     max_get_personal_gaps, max_get_gaps, max_gaps_files_size, max_get_gaps_files,
 
-    max_size_sticker, sticker_max_len_name;
+    max_size_sticker, sticker_max_len_name,
+
+
+    ;
 
     public static DefaultKey to (String val)
     {

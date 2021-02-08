@@ -85,6 +85,10 @@ public class SecurityUserGap
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Enumerated (EnumType.STRING)
+    @Column (name = "can_send_question_text")
+    private AccessLevel canSendQuestionText = AccessLevel.all;
+
     public SecurityUserGap ()
     {
     }
@@ -257,5 +261,15 @@ public class SecurityUserGap
     public void setCanShowIsTyping (AccessLevel canShowIsTyping)
     {
         this.canShowIsTyping = canShowIsTyping;
+    }
+
+    public AccessLevel getCanSendQuestionText ()
+    {
+        return canSendQuestionText;
+    }
+
+    public void setCanSendQuestionText (AccessLevel canSendQuestionText)
+    {
+        this.canSendQuestionText = canSendQuestionText;
     }
 }

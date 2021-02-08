@@ -129,7 +129,7 @@ public class UserProfileAccessLevel
                         List <EnumTypes> byId2AndDeletedFalse;
                         if (separate != null && separate.size () > 0)
                         {
-                            for (ProfilePictures pictures : separate)
+                            for (final ProfilePictures pictures : separate)
                             {
                                 byId2AndDeletedFalse = _Service.enumTypesService.Repository.findById2AndDeletedFalse (pictures.getId ());
                                 if (byId2AndDeletedFalse != null && checkEnumTypesCheck (byId2AndDeletedFalse))
@@ -170,6 +170,11 @@ public class UserProfileAccessLevel
         }
     }
 
+    /**
+     * EnumTypes ye table ke listi az type haye table haye dige ro dakhelesh mirizam
+     * betor mesal, ProfilePicture joda sakhtam hala mikham begam baraye family va contacts bashe , pas do ta row
+     * dakhele table EnumTypes mire ba id ProfilePicture bad inja list EnumTypes to migiram va barasi mokonam
+     */
     protected boolean checkEnumTypesCheck (List <EnumTypes> enumTypes)
     {
         String strEnumType;
@@ -369,6 +374,11 @@ public class UserProfileAccessLevel
     public List <ProfilePictures> getProfilePictures ()
     {
         return profilePictures;
+    }
+
+    public MainAccount getApplicant ()
+    {
+        return applicant;
     }
 
     public boolean isSeparateProfilePictures ()

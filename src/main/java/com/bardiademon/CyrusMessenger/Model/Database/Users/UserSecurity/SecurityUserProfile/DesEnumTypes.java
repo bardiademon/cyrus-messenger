@@ -11,5 +11,5 @@ public enum DesEnumTypes
 
     // sug_ => Security User Gap
     sug_send_message, sug_gif, sug_sticker, sug_file,
-    sug_image, sug_emoji, sug_link, sug_invitation, sug_voice, sug_video, sug_is_typing
+    sug_image, sug_emoji, sug_link, sug_invitation, sug_voice, sug_video, sug_is_typing, sug_question_text
 }

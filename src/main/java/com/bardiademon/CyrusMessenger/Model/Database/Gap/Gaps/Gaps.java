@@ -156,6 +156,10 @@ public final class Gaps
     @JoinColumn (name = "personal_gap", referencedColumnName = "id")
     private PersonalGaps personalGaps;
 
+    @Column (name = "text_type")
+    @Enumerated (value = EnumType.STRING)
+    private GapTextType textType;
+
     public Gaps ()
     {
     }
@@ -408,5 +412,15 @@ public final class Gaps
     public void setPostedAgain (GapsPostedAgain postedAgain)
     {
         this.postedAgain = postedAgain;
+    }
+
+    public GapTextType getTextType ()
+    {
+        return textType;
+    }
+
+    public void setTextType (GapTextType textType)
+    {
+        this.textType = textType;
     }
 }

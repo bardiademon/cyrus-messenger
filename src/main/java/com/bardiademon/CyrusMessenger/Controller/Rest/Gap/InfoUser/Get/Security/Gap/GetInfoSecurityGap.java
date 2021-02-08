@@ -1,4 +1,4 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Get.Security.Chat;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Get.Security.Gap;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
@@ -12,62 +12,65 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping (value = Domain.RNGap.RNInfoUser.RNSecurity.RN_CHAT, method = RequestMethod.POST)
-public class Chat
+public class GetInfoSecurityGap
 {
     private final UserLoginService userLoginService;
     private final SecurityUserGapService securityUserGapService;
 
     @Autowired
-    public Chat (UserLoginService _UserLoginService , SecurityUserGapService _SecurityUserProfileService)
+    public GetInfoSecurityGap (UserLoginService _UserLoginService , SecurityUserGapService _SecurityUserProfileService)
     {
         this.userLoginService = _UserLoginService;
         this.securityUserGapService = _SecurityUserProfileService;
     }
 
-    @RequestMapping ({"/" , ""})
+    @RequestMapping ({ "/" , "" })
     public AnswerToClient getInfoSecurityUserChar
-            (@RequestBody RequestChat requestChat ,
+            (@RequestBody RequestGetInfoSecurityGap requestGap ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
         AnswerToClient answerToClient;
         IsLogin isLogin = new IsLogin (codeLogin , userLoginService.Repository);
         if (isLogin.isValid ())
         {
-            if (requestChat.thereIsAtLeastOneTrue ())
+            if (requestGap.thereIsAtLeastOneTrue ())
             {
                 SecurityUserGap securityUserGap
                         = securityUserGapService.Repository.findByMainAccount (isLogin.getVCodeLogin ().getMainAccount ());
 
                 answerToClient = AnswerToClient.OK ();
-                if (requestChat.secSendEmoji)
+                if (requestGap.secSendEmoji)
                     answerToClient.put (KeyAnswer.sec_send_emoji.name () , securityUserGap.getCanSendEmoji ().name ());
 
-                if (requestChat.isSecSendFileType ())
+                if (requestGap.isSecSendFileType ())
                     answerToClient.put (KeyAnswer.sec_send_file.name () , securityUserGap.getCanSendFile ().name ());
 
-                if (requestChat.isSecSendGif ())
+                if (requestGap.isSecSendGif ())
                     answerToClient.put (KeyAnswer.sec_send_gif.name () , securityUserGap.getCanSendGif ().name ());
 
-                if (requestChat.isSecSendInvitation ())
+                if (requestGap.isSecSendInvitation ())
                     answerToClient.put (KeyAnswer.sec_send_invitation.name () , securityUserGap.getCanSendInvitation ().name ());
 
-                if (requestChat.isSecSendMessage ())
+                if (requestGap.isSecSendMessage ())
                     answerToClient.put (KeyAnswer.sec_send_message.name () , securityUserGap.getCanSendMessage ().name ());
 
-                if (requestChat.isSecSendLink ())
+                if (requestGap.isSecSendLink ())
                     answerToClient.put (KeyAnswer.sec_send_link.name () , securityUserGap.getCanSendLink ().name ());
 
-                if (requestChat.isSecSendFileType ())
+                if (requestGap.isSecSendFileType ())
                     answerToClient.put (KeyAnswer.sec_send_file_type.name () , securityUserGap.getCanSendFileTypes ());
 
-                if (requestChat.isSecSendNumberOfMessageUnread ())
+                if (requestGap.isSecSendNumberOfMessageUnread ())
                     answerToClient.put (KeyAnswer.sec_send_number_of_message_unread.name () , securityUserGap.getCanSendNumberOfMessageUnread ());
 
-                if (requestChat.isSecSendSticker ())
+                if (requestGap.isSecSendSticker ())
                     answerToClient.put (KeyAnswer.sec_send_sticker.name () , securityUserGap.getCanSendSticker ().name ());
 
-                if (requestChat.isSecSendVoice ())
+                if (requestGap.isSecSendVoice ())
                     answerToClient.put (KeyAnswer.sec_send_voice.name () , securityUserGap.getCanSendVoice ().name ());
+
+                if (requestGap.isSecSendQuestionText ())
+                    answerToClient.put (KeyAnswer.sec_send_question_text.name () , securityUserGap.getCanSendQuestionText ().name ());
 
             }
             else answerToClient = AnswerToClient.BadRequest ();
@@ -81,7 +84,7 @@ public class Chat
     {
         sec_send_emoji, sec_send_file, sec_send_gif, sec_send_invitation, sec_send_link,
         sec_send_message, sec_send_file_type, sec_send_number_of_message_unread,
-        sec_send_sticker, sec_send_voice
+        sec_send_sticker, sec_send_voice, sec_send_question_text
     }
 
 }

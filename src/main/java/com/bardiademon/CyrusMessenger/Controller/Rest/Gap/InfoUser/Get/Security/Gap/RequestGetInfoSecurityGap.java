@@ -1,8 +1,8 @@
-package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Get.Security.Chat;
+package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Get.Security.Gap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RequestChat
+public class RequestGetInfoSecurityGap
 {
     @JsonProperty ("sec_send_emoji")
     public boolean secSendEmoji;
@@ -34,11 +34,14 @@ public class RequestChat
     @JsonProperty ("sec_send_voice")
     public boolean secSendVoice;
 
-    public RequestChat ()
+    @JsonProperty ("sec_send_question_text")
+    public boolean secSendQuestionText;
+
+    public RequestGetInfoSecurityGap ()
     {
     }
 
-    public RequestChat (boolean secSendEmoji , boolean secSendfile , boolean secSendGif , boolean secSendInvitation , boolean secSendLink , boolean secSendMessage , boolean secSendFileType , boolean secSendNumberOfMessageUnread , boolean secSendSticker , boolean secSendVoice)
+    public RequestGetInfoSecurityGap (boolean secSendEmoji , boolean secSendfile , boolean secSendGif , boolean secSendInvitation , boolean secSendLink , boolean secSendMessage , boolean secSendFileType , boolean secSendNumberOfMessageUnread , boolean secSendSticker , boolean secSendVoice)
     {
         this.secSendEmoji = secSendEmoji;
         this.secSendfile = secSendfile;
@@ -147,6 +150,16 @@ public class RequestChat
         return secSendVoice;
     }
 
+    public boolean isSecSendQuestionText ()
+    {
+        return secSendQuestionText;
+    }
+
+    public void setSecSendQuestionText (boolean secSendQuestionText)
+    {
+        this.secSendQuestionText = secSendQuestionText;
+    }
+
     public void setSecSendVoice (boolean secSendVoice)
     {
         this.secSendVoice = secSendVoice;
@@ -164,7 +177,8 @@ public class RequestChat
                         isSecSendMessage () ||
                         isSecSendNumberOfMessageUnread () ||
                         isSecSendSticker () ||
-                        isSecSendVoice ()
+                        isSecSendVoice () ||
+                        isSecSendQuestionText ()
         );
     }
 }

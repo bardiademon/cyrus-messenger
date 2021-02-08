@@ -26,6 +26,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.S
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckForward;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckGapText;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.FoundStkrEmjLnk;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GapType;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
@@ -66,6 +67,8 @@ public final class NewPrivateMessage
     private PersonalGapsService personalGapsService;
     private CheckForward.CheckRequestGapAnswer forward;
 
+    private CheckGapText checkGapText;
+
     public NewPrivateMessage (final SocketIOClient Client , final RequestPrivateGap Request)
     {
         this.client = Client;
@@ -80,7 +83,8 @@ public final class NewPrivateMessage
                 if ((to != null && to.getId () == mainAccount.getId ()) || (securityUserGap.getCanSendNumberOfMessageUnread ().equals (0) || securityUserGap.getCanSendNumberOfMessageUnread () > gapReadService.findUnRead (to.getId () , mainAccount.getId ()).size ()))
                 {
                     forward = PrivateGap.CheckForward.forward (request , mainAccount);
-                    if ((forward == null && checkText ()) || (forward != null && forward.ok))
+                    checkGapText = new CheckGapText (request.getText () , request.getGapTextType () , gapAccessLevel);
+                    if ((forward == null && (checkGapText.idValid () && checkText ())) || (forward != null && forward.ok))
                         new SendPrivateMessage (saveMessage ());
                     else
                     {
@@ -111,7 +115,7 @@ public final class NewPrivateMessage
     {
         if (Str.IsEmpty (request.getText ())) return true;
 
-        final FoundStkrEmjLnk foundStkrEmjLnk = new FoundStkrEmjLnk (request.getText ());
+        final FoundStkrEmjLnk foundStkrEmjLnk = new FoundStkrEmjLnk (checkGapText.getTextOrQuestion ());
         answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.access_denied.name ());
         if ((!foundStkrEmjLnk.isFoundEmoji () || gapAccessLevel.hasAccess (Which.s_emoji)))
         {
@@ -315,7 +319,7 @@ public final class NewPrivateMessage
 
             for (final GapType gapType : this.gapTypes)
             {
-                GapTypes types = new GapTypes ();
+                final GapTypes types = new GapTypes ();
                 types.setGaps (gap);
                 types.setGapType (gapType);
                 gapTypes.add (types);

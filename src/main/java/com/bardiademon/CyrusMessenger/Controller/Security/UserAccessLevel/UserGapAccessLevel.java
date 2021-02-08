@@ -89,6 +89,10 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
                 super.userBlockedType = UserBlocked.Type.all.name ();
                 super.desEnumTypes = DesEnumTypes.sug_is_typing.name ();
                 return securityUserGap.getCanShowIsTyping ();
+            case s_question_text:
+                super.userBlockedType = UserBlocked.Type.all.name ();
+                super.desEnumTypes = DesEnumTypes.sug_question_text.name ();
+                return securityUserGap.getCanSendQuestionText ();
             default:
                 desEnumTypes = null;
                 userBlockedType = null;

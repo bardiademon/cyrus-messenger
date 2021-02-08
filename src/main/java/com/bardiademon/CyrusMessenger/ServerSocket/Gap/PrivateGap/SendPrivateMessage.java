@@ -46,9 +46,9 @@ public final class SendPrivateMessage extends Thread implements Runnable
         final JSONObject message = new JSONObject ();
 
         if (forSendToClient.isForward)
-            message.put (KeyAnswer.id.name () , forSendToClient.emptyGap.getId ());
+            message.put (KeyAnswer.gap_id.name () , forSendToClient.emptyGap.getId ());
         else
-            message.put (KeyAnswer.id.name () , forSendToClient.gap.getId ());
+            message.put (KeyAnswer.gap_id.name () , forSendToClient.gap.getId ());
 
         message.put (KeyAnswer.text.name () , forSendToClient.gap.getText ());
         message.put (KeyAnswer.send_at.name () , Time.timestamp (forSendToClient.gap.getSendAt ()).getTime ());
@@ -98,6 +98,6 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
     private enum KeyAnswer
     {
-        id, text, send_at, from, files, gap_types, forward_from;
+        gap_id, text, send_at, from, files, gap_types, forward_from;
     }
 }
