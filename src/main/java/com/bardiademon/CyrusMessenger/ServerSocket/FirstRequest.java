@@ -7,7 +7,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.OnlineService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -34,7 +34,7 @@ public final class FirstRequest
 
     private void online ()
     {
-        UserLoginService userLoginService = (UserLoginService) ThisApp.Services ().Get (UserLoginService.class);
+        UserLoginService userLoginService = (UserLoginService) This.Services ().Get (UserLoginService.class);
         if (userLoginService != null)
         {
             CBSIL cbsil = CBSIL.Both (request , null , null , codeLogin , userLoginService , null , SubmitRequestType.socket);
@@ -72,7 +72,7 @@ public final class FirstRequest
         {
             if (online.getMainAccount ().getUsername ().getUsername ().equals (username))
             {
-                OnlineService onlineService = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
+                OnlineService onlineService = (OnlineService) This.Services ().Get (OnlineService.class);
                 if (onlineService != null)
                 {
                     onlineService.setOffline (online);

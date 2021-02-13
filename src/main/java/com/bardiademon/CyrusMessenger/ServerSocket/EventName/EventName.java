@@ -14,22 +14,24 @@ public enum EventName
 
     set_offline, e_set_offline,
 
-    // pvgp => private gap
-    pvgp_send_message, e_pvgp_send_message,
+    // ssg => Server Socket Gap
+    ssg_send_message, e_ssg_send_message,
 
     status_of_sent_message, e_status_of_sent_message,
 
     // baraye payam haye daryafti > private gaps
-    pvgp_new_message, e_pvgp_new_message,
+    ssg_new_message, e_ssg_new_message,
 
     // baraye vaseyat payam > khande shode , daryaft shode , ...
-    pvgp_status_message, e_pvgp_status_message,
+    ssg_status_message, e_ssg_status_message,
+    ssg_answer_question_text, e_ssg_answer_question_text,
 
-    pvgp_receive_message,
+    ssg_receive_message,
 
-    pvgp_typing, e_pvgp_typing, pvgp_is_typing,
+    ssg_typing, e_ssg_typing, ssg_is_typing,
 
     get_messages, e_get_messages,
 
     delete_personal_gap
+
 }

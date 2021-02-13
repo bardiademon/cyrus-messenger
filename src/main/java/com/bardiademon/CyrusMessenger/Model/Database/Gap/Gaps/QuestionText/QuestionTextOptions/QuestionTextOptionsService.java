@@ -13,4 +13,9 @@ public final class QuestionTextOptionsService
     {
         this.Repository = Repository;
     }
+
+    public QuestionTextOptions byId (final long questionTextId , final long optionId)
+    {
+        return Repository.findByIdAndQuestionTextId (questionTextId , optionId);
+    }
 }

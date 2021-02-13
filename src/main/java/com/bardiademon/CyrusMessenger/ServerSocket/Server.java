@@ -1,11 +1,10 @@
 package com.bardiademon.CyrusMessenger.ServerSocket;
 
-import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.PrivateGap;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.ServerSocketGap;
 
 public class Server
 {
-    private PrivateGap privateGap;
-
+    private ServerSocketGap serverSocketGap;
 
     private Server ()
     {
@@ -25,12 +24,12 @@ public class Server
 
     private void privateGap ()
     {
-        privateGap = new PrivateGap ();
+        serverSocketGap = new ServerSocketGap ();
     }
 
-    public PrivateGap getPrivateGap ()
+    public ServerSocketGap getServerSocketGap ()
     {
-        return privateGap;
+        return serverSocketGap;
     }
 
     public static Server Run ()

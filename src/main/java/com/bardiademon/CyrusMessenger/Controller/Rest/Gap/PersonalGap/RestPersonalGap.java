@@ -18,7 +18,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.Pagination;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -340,7 +340,7 @@ public final class RestPersonalGap
                                 personalGaps.setDeletedForGapWith (true);
                                 personalGaps.setDeletedAt_GapWith (Time.now ());
 
-                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getGapWith () , personalGaps.getId ());
+                                This.getServer ().getServerSocketGap ().deletePersonalGap (personalGaps.getGapWith () , personalGaps.getId ());
                             }
                         }
                         else
@@ -353,7 +353,7 @@ public final class RestPersonalGap
                                 personalGaps.setDeletedByCreatedBy (true);
                                 personalGaps.setDeletedAt_CreatedBy (Time.now ());
 
-                                ThisApp.getServer ().getPrivateGap ().deletePersonalGap (personalGaps.getCreatedBy () , personalGaps.getId ());
+                                This.getServer ().getServerSocketGap ().deletePersonalGap (personalGaps.getCreatedBy () , personalGaps.getId ());
                             }
                         }
                         if (deleteBoth)

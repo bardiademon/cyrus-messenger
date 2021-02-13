@@ -35,7 +35,7 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
                     statusMessage.put (KeyAnswer.personal_gap_id.name () , forSendToClient.gap.getPersonalGaps ().getId ());
                     statusMessage.put (KeyAnswer.gap_id.name () , forSendToClient.gap.getId ());
                     statusMessage.put (KeyAnswer.status.name () , type.name ());
-                    _Online.getClient ().sendEvent (EventName.pvgp_status_message.name () , statusMessage.toString ());
+                    _Online.getClient ().sendEvent (EventName.ssg_status_message.name () , statusMessage.toString ());
                     return false;
                 }
                 else return true;

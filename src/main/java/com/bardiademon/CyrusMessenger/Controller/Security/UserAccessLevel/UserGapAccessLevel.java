@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.Security
 import com.bardiademon.CyrusMessenger.Model.Database.Users.UserSecurity.SecurityUserProfile.DesEnumTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserBlocked.UserBlocked;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 
 public final class UserGapAccessLevel extends UserProfileAccessLevel
 {
@@ -31,7 +31,7 @@ public final class UserGapAccessLevel extends UserProfileAccessLevel
         {
             super.which = which;
 
-            this.securityUserGap = ThisApp.GetService (SecurityUserGapService.class).Repository.findByMainAccount (user);
+            this.securityUserGap = This.GetService (SecurityUserGapService.class).Repository.findByMainAccount (user);
             final AccessLevel accessLevel = getAccessLevel ();
 
             if (accessLevel != null && accessLevel.equals (AccessLevel.nobody)) return false;

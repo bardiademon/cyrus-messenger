@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.Log;
 import com.bardiademon.CyrusMessenger.Model.Database.Log.LogService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
@@ -27,7 +27,7 @@ public final class l extends Thread implements Runnable
     // ns => new Service
     public static void ns ()
     {
-        Service = ThisApp.Context ().getBean (LogService.class);
+        Service = This.GetService (LogService.class);
     }
 
     private l (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)

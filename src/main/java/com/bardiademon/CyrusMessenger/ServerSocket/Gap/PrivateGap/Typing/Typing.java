@@ -11,7 +11,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -39,7 +39,7 @@ public final class Typing
 
     private boolean checkRequest ()
     {
-        final CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.pvgp_typing.name ());
+        final CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.ssg_typing.name ());
 
         if (both.isOk ())
         {
@@ -47,7 +47,7 @@ public final class Typing
             if ((online = req.getOnline ()) != null)
             {
                 from = online.getMainAccount ();
-                final UsernamesService usernamesService = ThisApp.Services ().Get (UsernamesService.class);
+                final UsernamesService usernamesService = This.Services ().Get (UsernamesService.class);
                 final FITD_Username usernameTO = new FITD_Username (req.getTo () , usernamesService);
                 if (usernameTO.isValid ()) return true;
                 else answer = usernameTO.getAnswer ();
@@ -91,7 +91,7 @@ public final class Typing
         online.setAnnouncementOfPresence (LocalDateTime.now ());
         SIServer.Onlines.replace (req.getCodeOnline () , online);
 
-        client.sendEvent (EventName.e_pvgp_typing.name () , answer);
+        client.sendEvent (EventName.e_ssg_typing.name () , answer);
     }
 
     private void sendToTo ()
@@ -103,7 +103,7 @@ public final class Typing
             if (accessLevel.hasAccess (Which.id))
             {
                 l.n (Thread.currentThread ().getStackTrace () , "Send typing => " + ToJson.To (req));
-                onlineTo.getClient ().sendEvent (EventName.pvgp_is_typing.name () , from.getUsername ().getId ());
+                onlineTo.getClient ().sendEvent (EventName.ssg_is_typing.name () , from.getUsername ().getId ());
             }
             else
                 l.n (Thread.currentThread ().getStackTrace () , new Exception ("access denied (id) Send typing") , String.valueOf (from.getId ()));

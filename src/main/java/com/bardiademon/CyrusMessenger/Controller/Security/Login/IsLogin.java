@@ -1,7 +1,7 @@
 package com.bardiademon.CyrusMessenger.Controller.Security.Login;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginRepository;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.VCodeLogin;
@@ -20,7 +20,7 @@ public final class IsLogin
 
     public IsLogin (String CodeLogin)
     {
-        this (CodeLogin , (ThisApp.Context ().getBean (UserLoginService.class)).Repository);
+        this (CodeLogin , (This.Context ().getBean (UserLoginService.class)).Repository);
     }
 
     public IsLogin (String CodeLogin , UserLoginRepository _UserLoginRepository)

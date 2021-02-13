@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class ThisApp
+public class This
 {
     private static final Services SERVICES = new Services ();
 
@@ -17,9 +17,9 @@ public class ThisApp
 
     private static Server server;
 
-    public static void main (String[] args)
+    public static void main (final String[] args)
     {
-        Context = SpringApplication.run (ThisApp.class , args);
+        Context = SpringApplication.run (This.class , args);
 
         l.ns ();
         r.ns ();

@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
@@ -53,7 +53,7 @@ public final class OnlineStatus
                 assert both.getIsLogin () != null;
                 mainAccount = both.getIsLogin ().getVCodeLogin ().getMainAccount ();
 
-                FITD_Username fitd_username = new FITD_Username (request.getUsername () , (UsernamesService) ThisApp.Services ().Get (UsernamesService.class));
+                FITD_Username fitd_username = new FITD_Username (request.getUsername () , (UsernamesService) This.Services ().Get (UsernamesService.class));
 
                 if (fitd_username.isValid ())
                 {
@@ -78,7 +78,7 @@ public final class OnlineStatus
 
                             if (!ok.get ())
                             {
-                                OnlineService onlineService = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
+                                OnlineService onlineService = (OnlineService) This.Services ().Get (OnlineService.class);
                                 LocalDateTime lastSeen = onlineService.lastSeen (fitd_username.getMainAccount ().getId ());
                                 if (lastSeen != null)
                                 {

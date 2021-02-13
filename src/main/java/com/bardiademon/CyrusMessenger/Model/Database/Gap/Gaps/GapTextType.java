@@ -4,7 +4,7 @@ import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 
 public enum GapTextType
 {
-    question_yes_no, question, normal;
+    question_yes_no, question_options, normal;
 
     public static GapTextType to (final String name)
     {

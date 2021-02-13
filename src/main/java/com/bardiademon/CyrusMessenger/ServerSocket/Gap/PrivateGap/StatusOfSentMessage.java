@@ -20,7 +20,7 @@ import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.SendStatusPrivateMessage.Type;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.PublicRequest;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
@@ -55,17 +55,17 @@ public final class StatusOfSentMessage
                     final Type type = Type.to (request.getType ());
                     if (type != null)
                     {
-                        final PersonalGapsService personalGapsService = ThisApp.Services ().Get (PersonalGapsService.class);
+                        final PersonalGapsService personalGapsService = This.Services ().Get (PersonalGapsService.class);
                         final PersonalGaps personalGaps = personalGapsService.byId (personalGapId.getId () , mainAccount.getId ());
 
                         if (personalGaps != null)
                         {
-                            final GapsService gapsService = ThisApp.Services ().Get (GapsService.class);
+                            final GapsService gapsService = This.Services ().Get (GapsService.class);
                             final Gaps gap = gapsService.Repository.byId (gapId.getId () , personalGaps.getId () , mainAccount.getId ());
 
                             if (gap != null)
                             {
-                                final GapReadService gapReadService = ThisApp.Services ().Get (GapReadService.class);
+                                final GapReadService gapReadService = This.Services ().Get (GapReadService.class);
 
                                 GapRead gapRead = gapReadService.getGapRead (gapId.getId () , mainAccount.getId ());
                                 if (gapRead == null)
@@ -95,7 +95,7 @@ public final class StatusOfSentMessage
                                 final List <GapsFiles> filesGaps = gap.getFilesGaps ();
                                 if (filesGaps != null)
                                 {
-                                    final SendGapsFilesToService sendGapsFilesToService = ThisApp.Services ().Get (SendGapsFilesToService.class);
+                                    final SendGapsFilesToService sendGapsFilesToService = This.Services ().Get (SendGapsFilesToService.class);
 
                                     for (final GapsFiles filesGap : filesGaps)
                                     {

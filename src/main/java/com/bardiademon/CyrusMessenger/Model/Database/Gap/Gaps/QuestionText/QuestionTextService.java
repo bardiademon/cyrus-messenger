@@ -13,4 +13,10 @@ public final class QuestionTextService
     {
         this.Repository = Repository;
     }
+
+
+    public QuestionText byId (final long questionTextId , final long gapId)
+    {
+        return Repository.findByIdAndGapsId (questionTextId , gapId);
+    }
 }

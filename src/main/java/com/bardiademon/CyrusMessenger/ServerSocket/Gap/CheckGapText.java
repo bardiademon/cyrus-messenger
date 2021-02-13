@@ -54,7 +54,7 @@ public final class CheckGapText
             if (gapAccessLevel.hasAccess (Which.s_question_text))
             {
                 checkQuestionTextYesNo ();
-                if (textType.equals (GapTextType.question)) checkQuestionText ();
+                if (textType.equals (GapTextType.question_options)) checkQuestionText ();
 
                 /*
                  * age answer != null bashe yani khataei rokh dade pas dige nabayad bagiye code ejra beshe
@@ -96,7 +96,7 @@ public final class CheckGapText
             untilThe = new Timestamp (jsonQuestionText.getLong ("until_the")).toLocalDateTime ();
 
             /*
-             * lim => Mahdodiyat (Pinglish)
+             * lim => Mahdodiyat (Finglish)
              * baraye ke afrade sherkat konande ro mahdod konam , maslan 20 nafar faghat mitinan sherkat konan
              */
             lim = jsonQuestionText.getLong ("lim");
@@ -180,6 +180,11 @@ public final class CheckGapText
     public List <QuestionTextOptions> getOptions ()
     {
         return options;
+    }
+
+    public boolean isQuestionText ()
+    {
+        return (getQuestionText () != null);
     }
 
     private enum ValAnswer

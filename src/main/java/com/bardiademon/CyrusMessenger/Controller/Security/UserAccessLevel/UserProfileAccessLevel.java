@@ -19,7 +19,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserList.UserListType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfiles;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserSeparateProfiles.UserSeparateProfilesService;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import java.util.List;
 import java.util.Objects;
 
@@ -350,14 +350,14 @@ public class UserProfileAccessLevel
 
         public Service ()
         {
-            this.mainAccountService = ThisApp.GetService (MainAccountService.class);
-            this.enumTypesService = ThisApp.GetService (EnumTypesService.class);
-            this.userListService = ThisApp.GetService (UserListService.class);
-            this.userFriendsService = ThisApp.GetService (UserFriendsService.class);
-            this.userContactsService = ThisApp.GetService (UserContactsService.class);
-            this.userSeparateProfilesService = ThisApp.GetService (UserSeparateProfilesService.class);
-            this.userBlockedService = ThisApp.GetService (UserBlockedService.class);
-            this.profilePicturesService = ThisApp.GetService (ProfilePicturesService.class);
+            this.mainAccountService = This.GetService (MainAccountService.class);
+            this.enumTypesService = This.GetService (EnumTypesService.class);
+            this.userListService = This.GetService (UserListService.class);
+            this.userFriendsService = This.GetService (UserFriendsService.class);
+            this.userContactsService = This.GetService (UserContactsService.class);
+            this.userSeparateProfilesService = This.GetService (UserSeparateProfilesService.class);
+            this.userBlockedService = This.GetService (UserBlockedService.class);
+            this.profilePicturesService = This.GetService (ProfilePicturesService.class);
         }
     }
 

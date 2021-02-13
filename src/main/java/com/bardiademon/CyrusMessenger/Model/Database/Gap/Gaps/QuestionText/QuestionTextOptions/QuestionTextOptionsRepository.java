@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionTextOptionsRepository extends JpaRepository <QuestionTextOptions, Long>
 {
+    QuestionTextOptions findByIdAndQuestionTextId (final long optionId , final long questionTextId);
 }

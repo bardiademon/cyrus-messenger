@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.Perso
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.Pagination;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -47,8 +47,8 @@ public final class UserGetMessages
         this.page = Page;
         this.answerGetMessages = _AnswerGetMessages;
         this.request = _RequestGetMessages;
-        this.gapsService = ThisApp.Services ().Get (GapsService.class);
-        this.personalGapsService = ThisApp.Services ().Get (PersonalGapsService.class);
+        this.gapsService = This.Services ().Get (GapsService.class);
+        this.personalGapsService = This.Services ().Get (PersonalGapsService.class);
         get ();
         answer ();
     }
@@ -59,10 +59,10 @@ public final class UserGetMessages
 
         if (size > 0)
         {
-            final Integer maxGet = (ThisApp.Services ().Get (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
+            final Integer maxGet = (This.Services ().Get (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
             if (maxGet != null)
             {
-                final Pagination.Answer paginationAnswer = ThisApp.getServer ().getPrivateGap ().getPagination ().computing (page , size , maxGet);
+                final Pagination.Answer paginationAnswer = This.getServer ().getServerSocketGap ().getPagination ().computing (page , size , maxGet);
                 final List <Gaps> privateGaps = gapsService.getPrivateGaps (user.getId () , personalGaps , paginationAnswer);
                 if (privateGaps != null && privateGaps.size () > 0)
                 {

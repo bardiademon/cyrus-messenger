@@ -4,6 +4,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.Online;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckForward;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswerQuestionText;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswerQuestionTextRequest;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.GetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.RequestGetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
@@ -16,9 +18,9 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import com.corundumstudio.socketio.SocketIOClient;
 
-public final class PrivateGap implements SIServer.Client
+public final class ServerSocketGap implements SIServer.Client
 {
-    private final SIServer _SIServer = new SIServer (HostPort.PORT_PRIVATE_CHAT , this);
+    private final SIServer _SIServer = new SIServer (HostPort.PORT_SERVER_SOCKET_GAP , this);
 
     private final Pagination pagination = new Pagination ();
 
@@ -26,22 +28,28 @@ public final class PrivateGap implements SIServer.Client
 
     static final CheckForward CheckForward = new CheckForward ();
 
-    public PrivateGap ()
+    private final GetAnswerQuestionText getAnswerQuestionText;
+
+    public CheckPublicRequest checkPublicRequest;
+
+    public ServerSocketGap ()
     {
         on ();
         _SIServer.startServer ();
         statusOfSentMessage = new StatusOfSentMessage ();
+        getAnswerQuestionText = new GetAnswerQuestionText ();
+        checkPublicRequest = new CheckPublicRequest ();
     }
 
     private void on ()
     {
         SIServer.CreateFirstConnection (_SIServer.Server);
-        _SIServer.Server.addEventListener (EventName.pvgp_send_message.name () , RequestPrivateGap.class , (client , data , ackSender) ->
+        _SIServer.Server.addEventListener (EventName.ssg_send_message.name () , RequestPrivateGap.class , (client , data , ackSender) ->
                 new NewPrivateMessage (client , data));
 
         SIServer.SetOffline (_SIServer.Server);
 
-        _SIServer.Server.addEventListener (EventName.pvgp_typing.name () , ReqTyping.class , (client , data , ackSender) ->
+        _SIServer.Server.addEventListener (EventName.ssg_typing.name () , ReqTyping.class , (client , data , ackSender) ->
                 new Typing (client , data));
 
         _SIServer.Server.addEventListener (EventName.get_messages.name () , RequestGetMessages.class , (client , data , ackSender) ->
@@ -49,6 +57,9 @@ public final class PrivateGap implements SIServer.Client
 
         _SIServer.Server.addEventListener (EventName.status_of_sent_message.name () , StatusOfSentMessage.Request.class , (client , data , ackSender) ->
                 statusOfSentMessage.status (data , client));
+
+        _SIServer.Server.addEventListener (EventName.ssg_answer_question_text.name () , GetAnswerQuestionTextRequest.class , (client , data , ackSender) ->
+                getAnswerQuestionText.answerQuestionText (data , checkPublicRequest.check (data , client , EventName.ssg_answer_question_text)));
     }
 
     public void deletePersonalGap (MainAccount mainAccount , long personalGapId)

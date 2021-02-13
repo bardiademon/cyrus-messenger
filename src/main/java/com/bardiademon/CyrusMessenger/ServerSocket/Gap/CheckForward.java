@@ -12,7 +12,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -23,7 +23,7 @@ public final class CheckForward
 
     public CheckForward ()
     {
-        this.gapsService = ThisApp.Services ().Get (GapsService.class);
+        this.gapsService = This.Services ().Get (GapsService.class);
     }
 
     public CheckRequestGapAnswer forward (final RequestGap requestGap , final MainAccount mainAccount)
@@ -43,10 +43,10 @@ public final class CheckForward
                         final Gaps gaps = gapsService.byId (gapId.getId () , mainAccount.getId ());
                         if (gaps != null)
                         {
-                            final IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (ThisApp.GetService (MainAccountService.class) , requestGap.getTo () , null);
+                            final IdUsernameMainAccount idUsernameMainAccount = new IdUsernameMainAccount (This.GetService (MainAccountService.class) , requestGap.getTo () , null);
                             if (idUsernameMainAccount.isValid ())
                             {
-                                final PersonalGaps personalGap = (ThisApp.GetService (PersonalGapsService.class)).getPersonalGap (mainAccount.getId () , idUsernameMainAccount.getIdUser () , personalGapId.getId ());
+                                final PersonalGaps personalGap = (This.GetService (PersonalGapsService.class)).getPersonalGap (mainAccount.getId () , idUsernameMainAccount.getIdUser () , personalGapId.getId ());
                                 if (personalGap != null)
                                 {
                                     answer = new CheckRequestGapAnswer (gaps);

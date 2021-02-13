@@ -9,7 +9,7 @@ import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.OnlineStatus.Onlin
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.OnlineStatus.RequestOnlineStatus;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.PublicRequest;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.SetOffline;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -88,7 +88,7 @@ public final class SIServer
                     if (Time.Bigger (online.getAnnouncementOfPresence () , 15))
                     {
                         if (onlineService == null)
-                            onlineService = ThisApp.Services ().Get (OnlineService.class);
+                            onlineService = This.Services ().Get (OnlineService.class);
 
                         onlineService.setOffline (online);
                         Onlines.remove (codeOnline);

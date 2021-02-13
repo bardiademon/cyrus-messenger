@@ -1,6 +1,6 @@
 package com.bardiademon.CyrusMessenger.ServerSocket;
 
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ public final class Services
             return ((T) (Services.get (packageName)));
         else
         {
-            Services.put (packageName , ThisApp.Context ().getBean (aClass));
+            Services.put (packageName , This.Context ().getBean (aClass));
             return Get (aClass);
         }
     }

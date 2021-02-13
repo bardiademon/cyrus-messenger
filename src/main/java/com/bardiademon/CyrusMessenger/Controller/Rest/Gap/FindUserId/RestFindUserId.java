@@ -11,7 +11,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +54,7 @@ public final class RestFindUserId
         final CBSIL both = CBSIL.Both (request , req , res , codeLogin , userLoginService , router , type);
         if (both.isOk ())
         {
-            final IdUsernameMainAccount account = new IdUsernameMainAccount (ThisApp.GetService (MainAccountService.class) , 0 , username);
+            final IdUsernameMainAccount account = new IdUsernameMainAccount (This.GetService (MainAccountService.class) , 0 , username);
             if (account.isValid ())
             {
                 assert both.getIsLogin () != null;

@@ -9,7 +9,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccountService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -93,11 +93,11 @@ public final class GetMessages
 
             if (personalGapsId.isValid ())
             {
-                final PersonalGaps personalGaps = ((ThisApp.Services ().Get (PersonalGapsService.class))
+                final PersonalGaps personalGaps = ((This.Services ().Get (PersonalGapsService.class))
                         .byId (personalGapsId.getId () , mainAccount.getId ()));
                 if (personalGaps != null)
                 {
-                    final MainAccountService mainAccountService = ThisApp.Services ().Get (MainAccountService.class);
+                    final MainAccountService mainAccountService = This.Services ().Get (MainAccountService.class);
                     final MainAccount user = mainAccountService.findId (idUser.getId ());
                     if (user != null)
                         new UserGetMessages (client , user , personalGaps , request.getPage () , answerGetMessages , request);

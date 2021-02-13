@@ -33,7 +33,7 @@ public final class QuestionText
      */
     @OneToMany (mappedBy = "questionText")
     @Column (name = "options_question")
-    private List <QuestionTextOptions> oprions;
+    private List <QuestionTextOptions> options;
 
     /*
      * yani beshe chanta gozine entekhab kard
@@ -90,14 +90,14 @@ public final class QuestionText
         this.yesNo = yesNo;
     }
 
-    public List <QuestionTextOptions> getOprions ()
+    public List <QuestionTextOptions> getOptions ()
     {
-        return oprions;
+        return options;
     }
 
-    public void setOprions (List <QuestionTextOptions> oprions)
+    public void setOptions (List <QuestionTextOptions> oprions)
     {
-        this.oprions = oprions;
+        this.options = oprions;
     }
 
     public boolean isMultipleChoices ()

@@ -6,7 +6,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.SendGapsFilesT
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups.Groups;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroupService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 
@@ -23,7 +23,7 @@ public final class GFHasAccessLevel
         if (applicant.getId () == gapsFiles.getUploadedFiles ().getUploadedBy ().getId ()) return true;
         else
         {
-            final SendGapsFilesToService sendGapsFilesToService = ThisApp.Services ().Get (SendGapsFilesToService.class);
+            final SendGapsFilesToService sendGapsFilesToService = This.Services ().Get (SendGapsFilesToService.class);
             long numberOfSubmissions = sendGapsFilesToService.numberOfSubmissions (applicant.getId ());
             if (numberOfSubmissions == 0)
                 return false;
@@ -43,7 +43,7 @@ public final class GFHasAccessLevel
             {
                 if (security.isCanSendToGroups ())
                 {
-                    final JoinGroupService joinGroupService = ThisApp.Services ().Get (JoinGroupService.class);
+                    final JoinGroupService joinGroupService = This.Services ().Get (JoinGroupService.class);
                     return joinGroupService.isJoined (groups.getId () , applicant.getId ()) != null;
                 }
                 else return false;

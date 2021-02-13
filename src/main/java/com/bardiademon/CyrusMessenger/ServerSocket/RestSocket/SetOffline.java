@@ -7,7 +7,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Online.OnlineService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
-import com.bardiademon.CyrusMessenger.ThisApp;
+import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -47,7 +47,7 @@ public class SetOffline
                     online = SIServer.Onlines.get (request.getCodeOnline ());
                     SIServer.Onlines.remove (request.getCodeOnline ());
 
-                    final OnlineService service = (OnlineService) ThisApp.Services ().Get (OnlineService.class);
+                    final OnlineService service = (OnlineService) This.Services ().Get (OnlineService.class);
 
                     service.setOffline (online);
 
