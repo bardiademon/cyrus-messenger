@@ -47,13 +47,9 @@ public final class ToJson
     {
         try
         {
-            ObjectMapper objectMapper = new ObjectMapper ();
-            String result = objectMapper.writeValueAsString (obj);
+            final String result = (new ObjectMapper ()).writeValueAsString (obj);
             if (obj instanceof CreateClass)
-            {
-                JSONObject jsonObject = new JSONObject (result);
-                return jsonObject.getJSONObject ("create_class").toString ();
-            }
+                return (new JSONObject (result)).getJSONObject ("create_class").toString ();
             else return result;
         }
         catch (JsonProcessingException e)

@@ -301,11 +301,11 @@ public final class NewPrivateMessage
          */
         Gaps emptyGap = null;
 
-
         if (forward == null)
         {
             gap = new Gaps ();
 
+            gap.setTextType (checkGapText.getTextType ());
             gap.setFrom (mainAccount);
             gap.setToUser (to);
             gap.setSendAt (Time.localDateTime (request.getTimeSend ()));
@@ -343,6 +343,8 @@ public final class NewPrivateMessage
         else
         {
             gap = forward.gaps;
+
+            gap.setTextType (checkGapText.getTextType ());
 
             GapsPostedAgain gapsPostedAgain = new GapsPostedAgain ();
             gapsPostedAgain.setGap (gap);

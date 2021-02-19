@@ -80,6 +80,11 @@ public final class CheckGapText
         }
     }
 
+    public GapTextType getTextType ()
+    {
+        return textType;
+    }
+
     private void checkQuestionTextYesNo ()
     {
         try
