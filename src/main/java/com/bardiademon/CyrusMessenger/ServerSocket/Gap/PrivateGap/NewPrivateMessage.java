@@ -373,17 +373,32 @@ public final class NewPrivateMessage
 //            gap = gap.getPostedAgain ().getGap ();
         }
 
-
+        /**
+         * Question text daron CheckGapText barasi shode va vaghti is question text == true bashe
+         *  yani in gap ye text soal hast
+         *
+         * @see CheckGapText
+         * @see CheckGapText#isQuestionText()
+         */
         if (checkGapText.isQuestionText ())
         {
             final QuestionText questionText = checkGapText.getQuestionText ();
             questionText.setGaps (gap);
 
+            (This.GetService (QuestionTextService.class)).Repository.save (questionText);
+
+            /**
+             * bad az zakhire shodan question text options ha zakhire mishe
+             *  chone question text baraye sabt dar table options ha id begire
+             *
+             * @see QuestionTextOptions
+             */
             final List <QuestionTextOptions> options = checkGapText.getOptions ();
             if (options != null)
+            {
+                for (final QuestionTextOptions option : options) option.setQuestionText (questionText);
                 questionText.setOptions ((This.GetService (QuestionTextOptionsService.class)).Repository.saveAll (options));
-
-            (This.GetService (QuestionTextService.class)).Repository.save (questionText);
+            }
         }
 
         answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
@@ -392,7 +407,8 @@ public final class NewPrivateMessage
         personalGaps.setLastIndex (lastIndex);
         personalGapsService.Repository.save (personalGaps);
 
-        return new ForSendToClient (mainAccount , to , gap , emptyGap , checkGapText.getQuestionText ());
+        return new ForSendToClient (mainAccount , to , gap , emptyGap ,
+                (checkGapText.isQuestionText ()) ? checkGapText.getQuestionText () : null);
     }
 
     public boolean determineTheType (final long userId)

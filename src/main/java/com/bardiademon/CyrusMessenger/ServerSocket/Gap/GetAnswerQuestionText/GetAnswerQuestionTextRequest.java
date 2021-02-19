@@ -3,7 +3,6 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsText;
 import com.bardiademon.CyrusMessenger.ServerSocket.RestSocket.PublicRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
 public final class GetAnswerQuestionTextRequest extends PublicRequest
 {
@@ -29,7 +28,7 @@ public final class GetAnswerQuestionTextRequest extends PublicRequest
      * @see AnswerQuestionsText
      */
     @JsonProperty ("option_id")
-    private List <Long> optionId;
+    private String optionId;
 
     public GetAnswerQuestionTextRequest ()
     {
@@ -76,12 +75,12 @@ public final class GetAnswerQuestionTextRequest extends PublicRequest
         this.yes = yes;
     }
 
-    public List <Long> getOptionId ()
+    public String getOptionId ()
     {
         return optionId;
     }
 
-    public void setOptionId (List <Long> optionId)
+    public void setOptionId (String optionId)
     {
         this.optionId = optionId;
     }

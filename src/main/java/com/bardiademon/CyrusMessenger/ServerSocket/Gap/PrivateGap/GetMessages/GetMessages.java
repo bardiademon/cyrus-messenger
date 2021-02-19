@@ -100,7 +100,7 @@ public final class GetMessages
                     final MainAccountService mainAccountService = This.Services ().Get (MainAccountService.class);
                     final MainAccount user = mainAccountService.findId (idUser.getId ());
                     if (user != null)
-                        new UserGetMessages (client , user , personalGaps , request.getPage () , answerGetMessages , request);
+                        new UserGetMessages (user , personalGaps , request.getPage () , answerGetMessages , request);
                     else
                     {
                         answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_user.name ());

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface QuestionTextRepository extends JpaRepository <QuestionText, Long>
 {
     QuestionText findByIdAndGapsId (final long questionTextId , final long gapId);
+
+    QuestionText findByGapsId (final long gapId);
 }

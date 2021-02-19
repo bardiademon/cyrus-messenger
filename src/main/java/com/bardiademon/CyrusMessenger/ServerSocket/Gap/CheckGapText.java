@@ -147,7 +147,7 @@ public final class CheckGapText
         }
         catch (Exception e)
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_yes_no.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_options.name ());
             l.n (null , null , null , answer , Thread.currentThread ().getStackTrace () , e , ValAnswer.invalid_text_question_yes_no.name ());
         }
     }
@@ -189,7 +189,7 @@ public final class CheckGapText
 
     private enum ValAnswer
     {
-        invalid_text_type, invalid_text_question_yes_no, link, access_denied_question_text
+        invalid_text_type, invalid_text_question_yes_no, invalid_text_question_options, link, access_denied_question_text
     }
 
     public String getTextOrQuestion ()

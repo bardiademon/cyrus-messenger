@@ -4,17 +4,21 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapFiles.GapsFiles;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapTextType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGaps;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.PersonalGaps.PersonalGapsService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsText;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionText;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionTextService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.This;
 import com.bardiademon.CyrusMessenger.bardiademon.Pagination;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
+import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
-import com.corundumstudio.socketio.SocketIOClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +27,6 @@ public final class UserGetMessages
 {
 
     private final GapsService gapsService;
-    private final PersonalGapsService personalGapsService;
-    private final SocketIOClient client;
     private final MainAccount user;
     private final PersonalGaps personalGaps;
     private final int page;
@@ -34,21 +36,18 @@ public final class UserGetMessages
     private AnswerToClient answer;
 
     public UserGetMessages
-            (final SocketIOClient Client ,
-             final MainAccount User ,
+            (final MainAccount User ,
              final PersonalGaps _PersonalGaps ,
              final int Page ,
              final AnswerGetMessages _AnswerGetMessages ,
              final RequestGetMessages _RequestGetMessages)
     {
-        this.client = Client;
         this.user = User;
         this.personalGaps = _PersonalGaps;
         this.page = Page;
         this.answerGetMessages = _AnswerGetMessages;
         this.request = _RequestGetMessages;
         this.gapsService = This.Services ().Get (GapsService.class);
-        this.personalGapsService = This.Services ().Get (PersonalGapsService.class);
         get ();
         answer ();
     }
@@ -59,7 +58,7 @@ public final class UserGetMessages
 
         if (size > 0)
         {
-            final Integer maxGet = (This.Services ().Get (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
+            final Integer maxGet = (This.GetService (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
             if (maxGet != null)
             {
                 final Pagination.Answer paginationAnswer = This.getServer ().getServerSocketGap ().getPagination ().computing (page , size , maxGet);
@@ -97,7 +96,58 @@ public final class UserGetMessages
     {
         if (!gap.isForwarded ())
         {
-            ToJson.CreateClass createClass = new ToJson.CreateClass ();
+            final ToJson.CreateClass createClass = new ToJson.CreateClass ();
+
+            /*
+             * question text ro migirim
+             */
+            final QuestionText questionText = (This.GetService (QuestionTextService.class)).Repository.findByGapsId (gap.getId ());
+
+            /*
+             * age != null bashe yani in gap ye question text hast
+             */
+            if (questionText != null)
+            {
+                createClass.put (KeyAnswer.is_question_text.name () , true);
+
+                ToJson.CreateClass questionTextInfo = new ToJson.CreateClass ();
+
+                questionTextInfo.put (KeyAnswer.question.name () , questionText.getQuestion ());
+                questionTextInfo.put (KeyAnswer.is_yes_no.name () , questionText.isYesNo ());
+
+                if (!questionText.isYesNo ())
+                    questionTextInfo.put (KeyAnswer.question_text_options.name () , questionText.getOptions ());
+
+                questionTextInfo.put (KeyAnswer.is_multiple_choices.name () , questionText.isMultipleChoices ());
+
+                AnswerQuestionsTextService answerQuestionsTextService = This.GetService (AnswerQuestionsTextService.class);
+
+                long lim = answerQuestionsTextService.limCount (questionText.getId ());
+
+                questionTextInfo.put (KeyAnswer.lim.name () , questionText.getLim ());
+                questionTextInfo.put (KeyAnswer.number_of_answers.name () , lim);
+                questionTextInfo.put (KeyAnswer.time_end.name () , questionText.getUntilThe ());
+
+                /**
+                 * barasi mikonam bebinam baste shode ya na
+                 * zamani baste hast ke lim >= lim taeen shode bashe , ya zamane pasokh tamom shode bashe
+                 *
+                 * @see QuestionText
+                 * @see AnswerQuestionsText
+                 */
+                questionTextInfo.put (KeyAnswer.closed.name () , (lim >= questionText.getLim () || Time.BiggerNow (questionText.getUntilThe ())));
+
+                if (questionText.isYesNo ())
+                    createClass.put (KeyAnswer.answers.name () , answerQuestionsTextService.getAnswersYesNo (questionText.getId ()));
+                else
+                {
+                    if (gap.getTextType ().equals (GapTextType.question_options))
+                        createClass.put (KeyAnswer.answers.name () , ToJson.To (answerQuestionsTextService.countQuestionTextOptions (questionText.getId ())));
+                }
+
+                createClass.put (KeyAnswer.question_text.name () , questionTextInfo);
+            }
+
             createClass.put (KeyAnswer.id.name () , gap.getId ());
             createClass.put (KeyAnswer.text.name () , gap.getText ());
             createClass.put (KeyAnswer.from.name () , gap.getFrom ().getId ());
@@ -107,7 +157,7 @@ public final class UserGetMessages
             if (messageForwardedFor != null)
                 createClass.put (KeyAnswer.forwarded.name () , messageForwardedFor.getId ());
 
-            List <GapsFiles> filesGaps = gap.getFilesGaps ();
+            final List <GapsFiles> filesGaps = gap.getFilesGaps ();
             if (filesGaps != null && filesGaps.size () > 0)
             {
                 List <String> filesGapsCode = new ArrayList <> ();
@@ -121,6 +171,7 @@ public final class UserGetMessages
 
                 ToJson.CreateClass gapReply = new ToJson.CreateClass ();
                 gapReply.put (KeyAnswer.text.name () , reply.getText ());
+                gapReply.put (KeyAnswer.reply_id.name () , reply.getId ());
                 gapReply.put (KeyAnswer.has_file.name () , (reply.getFilesGaps () != null));
 
                 createClass.put (KeyAnswer.reply.name () , gapReply);
@@ -134,7 +185,13 @@ public final class UserGetMessages
     {
         id, text, from, to, forwarded, has_file, files, reply, gap_types,
 
-        gaps
+        gaps, reply_id,
+
+        /*
+         * for question text
+         */
+        is_question_text, question_text,
+        is_yes_no, question_text_options, question, is_multiple_choices, closed, time_end, lim, number_of_answers, answers
     }
 
     private void answer ()

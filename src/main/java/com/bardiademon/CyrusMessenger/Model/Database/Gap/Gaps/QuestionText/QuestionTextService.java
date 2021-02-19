@@ -19,4 +19,9 @@ public final class QuestionTextService
     {
         return Repository.findByIdAndGapsId (questionTextId , gapId);
     }
+
+    public QuestionText byId ( final long gapId)
+    {
+        return Repository.findByGapsId (gapId);
+    }
 }

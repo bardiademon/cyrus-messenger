@@ -4,5 +4,5 @@ import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 
 public interface AnswerGetMessages
 {
-    void Answer (AnswerToClient Answer);
+    void Answer (final AnswerToClient Answer);
 }

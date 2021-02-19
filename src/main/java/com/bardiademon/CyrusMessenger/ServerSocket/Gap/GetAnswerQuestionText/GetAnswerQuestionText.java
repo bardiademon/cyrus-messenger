@@ -3,6 +3,7 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUV;
 import static com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUV.recorded;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapTextType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsText;
@@ -20,13 +21,14 @@ import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
 
 public final class GetAnswerQuestionText
 {
 
     public void answerQuestionText (final GetAnswerQuestionTextRequest request , final Client client)
     {
-        AnswerToClient answer;
+        AnswerToClient answer = null;
         if (client.ok)
         {
             /**
@@ -72,12 +74,14 @@ public final class GetAnswerQuestionText
                             final QuestionText questionText = questionTextService.byId (questionTextId.getId () , gaps.getId ());
                             if (questionText != null)
                             {
+                                final JSONArray optionsIdArray = new JSONArray (request.getOptionId ());
+
                                 /*
                                  * agar type soal yes va no bashe , request options id ha != null bod darkhast moshkel dare
                                  *
                                  * yani ke vaghti type yes o no hast bayad option id az request == null ya size == 0 bashe
                                  */
-                                if (questionText.isYesNo () && (request.getOptionId () != null && request.getOptionId ().size () > 0))
+                                if (questionText.isYesNo () && (request.getOptionId () != null && request.getOptionId ().length () > 0))
                                 {
                                     answer = AnswerToClient.BadRequest ();
                                     l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception ("see description") , "if (questionText.isYesNo () && (questionText.getOptions () != null && questionText.getOptions ().size () > 0))");
@@ -117,6 +121,7 @@ public final class GetAnswerQuestionText
                                                     answerQuestionsText.setYes (true);
                                                     answerQuestionsText.setMainAccount (client.getMainAccount ());
                                                     answerQuestionsText.setQuestionText (questionText);
+                                                    answerQuestionsText.setType (GapTextType.question_yes_no);
                                                     answerQuestionsTextService.Repository.save (answerQuestionsText);
                                                     answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , recorded.name ());
                                                     l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (recorded.name ()) , null);
@@ -139,43 +144,54 @@ public final class GetAnswerQuestionText
                                                 }
                                                 else
                                                 {
-                                                    final List <Long> optionsId = request.getOptionId ();
+//                                                    final List <Long> optionsId = request.getOptionId ();
                                                     final QuestionTextOptionsService questionTextOptionsService = This.GetService (QuestionTextOptionsService.class);
 
                                                     final List <QuestionTextOptions> options = new ArrayList <> ();
-                                                    for (final long optionId : optionsId)
+
+                                                    /*
+                                                     * dakhel for age khataee pish omad edame code ejra nabad beshe
+                                                     * edame code bad az for
+                                                     */
+                                                    boolean ok = true;
+                                                    for (int i = 0, len = optionsIdArray.length (); i < len; i++)
                                                     {
+                                                        final long optionId = optionsIdArray.getLong (i);
                                                         final QuestionTextOptions option;
+
                                                         if ((option = questionTextOptionsService.byId (questionText.getId () , optionId)) == null)
                                                         {
                                                             /*
                                                              * inja ke miyad yani yeki az option id ha peyda nashode
                                                              */
-                                                            answer = AnswerToClient.IdInvalid ();
+                                                            answer = AnswerToClient.IdInvalid (ValAnswer.invalid_option_id.name ());
                                                             answer.put (AnswerToClient.CUK.which.name () , optionId);
                                                             l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (CUV.id_invalid.name ()) , "option_id");
 
-                                                            /**
-                                                             * @return chon ke niyaz be ejraye bad az for nist
-                                                             */
-                                                            return;
+                                                            ok = false;
+                                                            break;
                                                         }
                                                         else options.add (option);
                                                     }
 
-                                                    /*
-                                                     * inja hamechiz doroste va amade zakhire kardan answer hast
-                                                     */
-                                                    for (final QuestionTextOptions option : options)
+                                                    if (ok)
                                                     {
-                                                        final AnswerQuestionsText answerQuestionsText = new AnswerQuestionsText ();
-                                                        answerQuestionsText.setQuestionText (questionText);
-                                                        answerQuestionsText.setMainAccount (client.getMainAccount ());
-                                                        answerQuestionsText.setOption (option);
-                                                        answerQuestionsTextService.Repository.save (answerQuestionsText);
+                                                        /*
+                                                         * inja hamechiz doroste va amade zakhire kardan answer hast
+                                                         */
+
+                                                        for (final QuestionTextOptions option : options)
+                                                        {
+                                                            final AnswerQuestionsText answerQuestionsText = new AnswerQuestionsText ();
+                                                            answerQuestionsText.setQuestionText (questionText);
+                                                            answerQuestionsText.setMainAccount (client.getMainAccount ());
+                                                            answerQuestionsText.setOption (option);
+                                                            answerQuestionsText.setType (GapTextType.question_options);
+                                                            answerQuestionsTextService.Repository.save (answerQuestionsText);
+                                                        }
+                                                        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , recorded.name ());
+                                                        l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (recorded.name ()) , null);
                                                     }
-                                                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , recorded.name ());
-                                                    l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (recorded.name ()) , null);
                                                 }
                                             }
                                         }
@@ -240,7 +256,7 @@ public final class GetAnswerQuestionText
 
     private enum ValAnswer
     {
-        gap_id, personal_gap_id, question_text_id, not_found_gap_or_personal_gap, not_found_question_text, found_answer, the_response_time_has_passed,
+        gap_id, invalid_option_id, personal_gap_id, question_text_id, not_found_gap_or_personal_gap, not_found_question_text, found_answer, the_response_time_has_passed,
 
         /*
          * in ro vaghti mifrestam ke lim (tedad afradi ke motonan pasokh bedan be question text) por shode bashe

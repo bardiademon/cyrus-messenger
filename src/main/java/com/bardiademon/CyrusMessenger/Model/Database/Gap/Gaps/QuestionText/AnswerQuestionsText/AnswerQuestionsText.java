@@ -1,11 +1,14 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText;
 
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapTextType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionText;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionTextOptions.QuestionTextOptions;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -40,6 +43,7 @@ public final class AnswerQuestionsText
      * baraye soal haye yes no , null hast baraye digar soal ha
      * agar true bashe yani yes entekhab shode
      */
+    @Column (name = "yes_no")
     private boolean yes;
 
     /*
@@ -56,6 +60,15 @@ public final class AnswerQuestionsText
     @Column (name = "created_at", updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    /*
+     * in ro baraye in mizaram ke betonam tashkhis bedam type haro az ham
+     *
+     * masal benotam question haye yes no ro tedad ro begiram
+     */
+    @Column (name = "question_text_type")
+    @Enumerated (EnumType.STRING)
+    private GapTextType type = GapTextType.normal;
 
     public AnswerQuestionsText ()
     {
@@ -119,5 +132,15 @@ public final class AnswerQuestionsText
     public void setCreatedAt (LocalDateTime createdAt)
     {
         this.createdAt = createdAt;
+    }
+
+    public GapTextType getType ()
+    {
+        return type;
+    }
+
+    public void setType (GapTextType type)
+    {
+        this.type = type;
     }
 }

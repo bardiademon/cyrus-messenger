@@ -51,6 +51,8 @@ public class RequestGap extends PublicRequest
      * baraye in gozashtam inja ke be service gap faghat in class (RequestGap) ro baraye zakhire midam ,
      * va vazife barasi in darkhast (RequestGap) ro be class dige midam
      * </p>
+     *
+     * @see Gaps
      */
     @JsonIgnore
     private Gaps gaps;

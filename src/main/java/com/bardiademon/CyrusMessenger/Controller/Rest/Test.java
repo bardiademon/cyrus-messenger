@@ -9,6 +9,8 @@ import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultKey;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultType;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService.AnswersOptions;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.Stickers;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
@@ -30,6 +32,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestService;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
+import com.bardiademon.CyrusMessenger.This;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -215,6 +218,17 @@ public class Test
 
         return String.valueOf (accessLevel.hasAccess (Which.s_message));
 
+    }
+
+    @RequestMapping (value = "/test-answer-question-text-options")
+    public String textAnswerQuestionTextOptions ()
+    {
+        final List <AnswersOptions> objects = This.GetService (AnswerQuestionsTextService.class).countQuestionTextOptions (10760);
+
+        final StringBuilder result = new StringBuilder ();
+        if (objects != null) for (AnswersOptions answersOptions : objects) result.append (answersOptions.toString ());
+
+        return result.toString ();
     }
 
     @RequestMapping (value = "get-sticker/{id-sticker}")

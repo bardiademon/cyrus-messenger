@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionTextOptions;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.QuestionText;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ public final class QuestionTextOptions
     @Id
     @GeneratedValue
     @Column (nullable = false, unique = true)
+    @JsonIgnore
     private long id;
 
     @Column (name = "option_text")
@@ -30,6 +32,7 @@ public final class QuestionTextOptions
 
     @ManyToOne
     @JoinColumn (name = "question_text_id", referencedColumnName = "id")
+    @JsonIgnore
     private QuestionText questionText;
 
     public QuestionTextOptions ()

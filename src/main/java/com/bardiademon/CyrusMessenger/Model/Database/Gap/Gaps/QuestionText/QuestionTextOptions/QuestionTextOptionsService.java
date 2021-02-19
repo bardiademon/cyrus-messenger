@@ -16,6 +16,6 @@ public final class QuestionTextOptionsService
 
     public QuestionTextOptions byId (final long questionTextId , final long optionId)
     {
-        return Repository.findByIdAndQuestionTextId (questionTextId , optionId);
+        return Repository.findByIdAndQuestionTextId (optionId , questionTextId);
     }
 }
