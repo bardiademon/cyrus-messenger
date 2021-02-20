@@ -23,6 +23,20 @@ public final class AnswerQuestionsTextService
         return Repository.findByMainAccountIdAndQuestionTextId (userId , questionTextId);
     }
 
+    /**
+     * in javabe tekrari baraye ine ke ye option entekhab shode ama dobare darkhast baraye on option entekhabi miyad
+     * <p>
+     * ya user ye option entekhab karde bad dobare hamon user hamon option entekhabi ghabli ro entekhab mikone
+     * </p>
+     * barasi mikonim bebinim vojod dare ya na
+     *
+     * @see AnswerQuestionsTextRepository#findByMainAccountIdAndQuestionTextIdAndOptionId(long , long , long)
+     */
+    public AnswerQuestionsText duplicateAnswer (final long userId , final long questionTextId , final long optionId)
+    {
+        return Repository.findByMainAccountIdAndQuestionTextIdAndOptionId (userId , questionTextId , optionId);
+    }
+
     public long limCount (final long questionTextId)
     {
         return Repository.countByQuestionTextId (questionTextId);
@@ -50,7 +64,7 @@ public final class AnswerQuestionsTextService
 
             List <AnswersOptions> answersOptions = new ArrayList <> ();
             for (final Object[] object : objects)
-                answersOptions.add (new AnswersOptions ((long) object[INDEX_OPTION_ID] , (int) object[INDEX_COUNT]));
+                answersOptions.add (new AnswersOptions ((long) object[INDEX_OPTION_ID] , (long) object[INDEX_COUNT]));
 
             objects.clear ();
             System.gc ();

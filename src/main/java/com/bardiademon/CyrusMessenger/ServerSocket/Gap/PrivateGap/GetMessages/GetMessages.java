@@ -93,11 +93,11 @@ public final class GetMessages
 
             if (personalGapsId.isValid ())
             {
-                final PersonalGaps personalGaps = ((This.Services ().Get (PersonalGapsService.class))
+                final PersonalGaps personalGaps = ((This.GetService (PersonalGapsService.class))
                         .byId (personalGapsId.getId () , mainAccount.getId ()));
                 if (personalGaps != null)
                 {
-                    final MainAccountService mainAccountService = This.Services ().Get (MainAccountService.class);
+                    final MainAccountService mainAccountService = This.GetService (MainAccountService.class);
                     final MainAccount user = mainAccountService.findId (idUser.getId ());
                     if (user != null)
                         new UserGetMessages (user , personalGaps , request.getPage () , answerGetMessages , request);

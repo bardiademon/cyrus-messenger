@@ -17,7 +17,7 @@ public final class ID
     private boolean valid;
 
     @JsonCreator
-    public ID (Object ID)
+    public ID (final Object ID)
     {
         this.idObj = ID;
         validation ();
@@ -30,7 +30,7 @@ public final class ID
         else if (idObj instanceof Integer || idObj instanceof Long) toLong ();
         else
         {
-            String idStr = idObj.toString ();
+            final String idStr = idObj.toString ();
             if (!Str.IsEmpty (idStr) && idStr.matches ("[0-9]*")) toLong ();
         }
     }

@@ -12,6 +12,8 @@ public interface AnswerQuestionsTextRepository extends JpaRepository <AnswerQues
 {
     List <AnswerQuestionsText> findByMainAccountIdAndQuestionTextId (final long userId , final long questionTextId);
 
+    AnswerQuestionsText findByMainAccountIdAndQuestionTextIdAndOptionId (final long userId , final long questionTextId , final long optionId);
+
     long countByQuestionTextId (final long questionTextId);
 
 

@@ -144,6 +144,8 @@ public final class GetAnswerQuestionText
                                                 }
                                                 else
                                                 {
+
+
 //                                                    final List <Long> optionsId = request.getOptionId ();
                                                     final QuestionTextOptionsService questionTextOptionsService = This.GetService (QuestionTextOptionsService.class);
 
@@ -154,6 +156,8 @@ public final class GetAnswerQuestionText
                                                      * edame code bad az for
                                                      */
                                                     boolean ok = true;
+
+                                                    final boolean checkDuplicateAnswer = answerQuestionsTexts.size () > 0;
                                                     for (int i = 0, len = optionsIdArray.length (); i < len; i++)
                                                     {
                                                         final long optionId = optionsIdArray.getLong (i);
@@ -166,12 +170,27 @@ public final class GetAnswerQuestionText
                                                              */
                                                             answer = AnswerToClient.IdInvalid (ValAnswer.invalid_option_id.name ());
                                                             answer.put (AnswerToClient.CUK.which.name () , optionId);
-                                                            l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (CUV.id_invalid.name ()) , "option_id");
+                                                            l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("option_id" , optionId));
 
                                                             ok = false;
                                                             break;
                                                         }
-                                                        else options.add (option);
+                                                        else
+                                                        {
+                                                            /**
+                                                             * @see AnswerQuestionsTextService#duplicateAnswer(long , long , long)
+                                                             */
+                                                            if (checkDuplicateAnswer && answerQuestionsTextService.duplicateAnswer (client.getMainAccount ().getId () , questionText.getId () , optionId) != null)
+                                                            {
+                                                                answer = AnswerToClient.IdInvalid (ValAnswer.duplicate_answer.name ());
+                                                                answer.put (AnswerToClient.CUK.which.name () , optionId);
+                                                                l.n (ToJson.To (request) , EventName.ssg_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (CUV.id_invalid.name ()) , ToJson.CreateClass.nj ("option_id" , optionId));
+
+                                                                ok = false;
+                                                                break;
+                                                            }
+                                                            else options.add (option);
+                                                        }
                                                     }
 
                                                     if (ok)
@@ -257,6 +276,11 @@ public final class GetAnswerQuestionText
     private enum ValAnswer
     {
         gap_id, invalid_option_id, personal_gap_id, question_text_id, not_found_gap_or_personal_gap, not_found_question_text, found_answer, the_response_time_has_passed,
+
+        /**
+         * @see AnswerQuestionsTextService#duplicateAnswer(long , long , long)
+         */
+        duplicate_answer,
 
         /*
          * in ro vaghti mifrestam ke lim (tedad afradi ke motonan pasokh bedan be question text) por shode bashe
