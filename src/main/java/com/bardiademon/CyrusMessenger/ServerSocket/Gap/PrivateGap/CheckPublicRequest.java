@@ -76,6 +76,11 @@ public final class CheckPublicRequest
 
         private MainAccount mainAccount;
 
+        private Client ()
+        {
+            this (null , null , null , false);
+        }
+
         /*
          * private hast chon niyaz nist classi az in class new kone faghat az variable ha estefade bayad beshe
          * variable ha ham final hast va niyazi be taghir nist

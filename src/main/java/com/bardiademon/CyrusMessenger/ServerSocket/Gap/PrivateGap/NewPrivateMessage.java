@@ -12,6 +12,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapRead.GapReadService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypes;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.GapType.GapTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapFor;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapTextType;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.Gaps;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgain;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapsPostedAgain.GapsPostedAgainService;
@@ -198,7 +199,7 @@ public final class NewPrivateMessage
 
                                         SIServer.Onlines.replace (request.getCodeOnline () , online);
 
-                                        if (Str.IsEmpty (request.getText ()) && !request.isHasFile ())
+                                        if ((request.getGapId () == 0 && Str.IsEmpty (request.getText ())) && !request.isHasFile ())
                                         {
                                             answer = AnswerToClient.RequestIsNull ();
                                             l.n (ToJson.To (request) , EventName.ssg_send_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
@@ -344,7 +345,7 @@ public final class NewPrivateMessage
         {
             gap = forward.gaps;
 
-            gap.setTextType (checkGapText.getTextType ());
+//            gap.setTextType (checkGapText.getTextType ());
 
             GapsPostedAgain gapsPostedAgain = new GapsPostedAgain ();
             gapsPostedAgain.setGap (gap);
@@ -367,7 +368,7 @@ public final class NewPrivateMessage
 
             emptyGap = gapsService.Repository.save (emptyGap);
 
-            gap = emptyGap.getPostedAgain ().getGap ();
+//            gap = emptyGap.getPostedAgain ().getGap ();
 
 //            /*
 //             * chon forward shode gap asli daron table GapPostedAgain hast
@@ -409,8 +410,21 @@ public final class NewPrivateMessage
         personalGaps.setLastIndex (lastIndex);
         personalGapsService.Repository.save (personalGaps);
 
-        return new ForSendToClient (mainAccount , to , gap , emptyGap ,
-                (checkGapText.isQuestionText ()) ? checkGapText.getQuestionText () : null);
+        QuestionText questionText = null;
+        if (forward != null)
+        {
+            if (gap.getTextType () != null && !gap.getTextType ().equals (GapTextType.normal))
+            {
+                final QuestionTextService questionTextService = This.GetService (QuestionTextService.class);
+                questionText = questionTextService.byId (gap.getId ());
+            }
+        }
+        else
+        {
+            if (checkGapText.isQuestionText ()) questionText = checkGapText.getQuestionText ();
+        }
+
+        return new ForSendToClient (mainAccount , to , gap , emptyGap , questionText);
     }
 
     public boolean determineTheType (final long userId)

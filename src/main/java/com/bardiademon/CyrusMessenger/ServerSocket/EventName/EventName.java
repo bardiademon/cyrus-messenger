@@ -26,7 +26,7 @@ public enum EventName
     ssg_status_message, e_ssg_status_message,
     ssg_answer_question_text, e_ssg_answer_question_text,
 
-    ssg_receive_message,
+    ssg_receive_message, ssg_get_all_answer_question_text, e_ssg_get_all_answer_question_text,
 
     ssg_typing, e_ssg_typing, ssg_is_typing,
 

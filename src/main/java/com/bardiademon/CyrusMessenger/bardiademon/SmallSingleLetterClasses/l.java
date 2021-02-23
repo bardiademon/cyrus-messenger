@@ -14,6 +14,8 @@ import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 public final class l extends Thread implements Runnable
 {
 
+    public static final String SEND_TO_CLIENT = "sent_to_client";
+
     private final String Request;
     private final String Route;
     private final MainAccount _MainAccount;

@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.GapTextType;
+import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,11 @@ public final class AnswerQuestionsTextService
                 Repository.countByIdAndYesIsFalseAndType (questionTextId , GapTextType.question_yes_no));
     }
 
-    public List <AnswersOptions> countQuestionTextOptions (final long questionTextId)
+    public List <AnswersCountOptions> countQuestionTextOptions (final long questionTextId)
     {
         final List <Object[]> objects = Repository.countQuestionTextOptions (questionTextId);
+
+        final List <AnswersCountOptions> answersCountOptions = new ArrayList <> ();
 
         if (objects != null && objects.size () > 0)
         {
@@ -62,20 +65,93 @@ public final class AnswerQuestionsTextService
              */
             final int INDEX_COUNT = 0, INDEX_OPTION_ID = 1;
 
-            List <AnswersOptions> answersOptions = new ArrayList <> ();
             for (final Object[] object : objects)
-                answersOptions.add (new AnswersOptions ((long) object[INDEX_OPTION_ID] , (long) object[INDEX_COUNT]));
+                answersCountOptions.add (new AnswersCountOptions ((long) object[INDEX_OPTION_ID] , (long) object[INDEX_COUNT]));
 
             objects.clear ();
             System.gc ();
 
-            return answersOptions;
+            return answersCountOptions;
         }
 
         /*
          * inja biyad yani ke (objects == null || objects.size () == 0)
          */
-        return null;
+        return answersCountOptions;
+    }
+
+
+    public List <AnswersYesNo> answersYesNo (final long questionTextId)
+    {
+        /**
+         * bar asa selecti ke dakhel Repository shode meghdar dehi shodan
+         *
+         * @see AnswerQuestionsTextRepository
+         * @see AnswerQuestionsTextRepository#findAnswerYesNo(long , GapTextType)
+         */
+        final int INDEX_MAIN_ACCOUNT = 0, INDEX_YES = 1;
+        List <Object[]> answerYesNo = Repository.findAnswerYesNo (questionTextId , GapTextType.question_yes_no);
+
+        final List <AnswersYesNo> answersYesNo = new ArrayList <> ();
+
+        if (answerYesNo != null && answerYesNo.size () > 0)
+        {
+            for (final Object[] objects : answerYesNo)
+                answersYesNo.add (new AnswersYesNo ((MainAccount) objects[INDEX_MAIN_ACCOUNT] , (boolean) objects[INDEX_YES]));
+        }
+
+        return answersYesNo;
+    }
+
+    public AnswersOption answersOptions (final long questionTextId , final long optionId)
+    {
+        final List <MainAccount> answerOption = Repository.findAnswerOption (questionTextId , GapTextType.question_options , optionId);
+        return ((answerOption != null && answerOption.size () > 0) ? (new AnswersOption (answerOption , optionId)) : null);
+    }
+
+    public static class AnswersYesNo
+    {
+        public final MainAccount mainAccount;
+
+        @JsonProperty ("no")
+        public final boolean yes;
+
+        /*
+         * baraye ke khatej in class new nashe
+         */
+        private AnswersYesNo ()
+        {
+            this (null , false);
+        }
+
+        public AnswersYesNo (MainAccount mainAccount , boolean yes)
+        {
+            this.mainAccount = mainAccount;
+            this.yes = yes;
+        }
+    }
+
+    public static class AnswersOption
+    {
+        public final List <MainAccount> mainAccount;
+
+        @JsonProperty ("option_id")
+        public final long optionId;
+
+        /*
+         * baraye ke khatej in class new nashe
+         */
+        private AnswersOption ()
+        {
+            this (null , 0);
+        }
+
+        public AnswersOption (final List <MainAccount> mainAccount , final long optionId)
+        {
+            this.mainAccount = mainAccount;
+            this.optionId = optionId;
+        }
+
     }
 
     public static class AnswersCountYesNo
@@ -101,7 +177,7 @@ public final class AnswerQuestionsTextService
         }
     }
 
-    public static class AnswersOptions
+    public static class AnswersCountOptions
     {
         @JsonProperty ("option_id")
         private long optionId;
@@ -109,11 +185,11 @@ public final class AnswerQuestionsTextService
         @JsonProperty ("count")
         private long count;
 
-        private AnswersOptions ()
+        private AnswersCountOptions ()
         {
         }
 
-        private AnswersOptions (final long OptionId , final long Count)
+        private AnswersCountOptions (final long OptionId , final long Count)
         {
             this.optionId = OptionId;
             this.count = Count;

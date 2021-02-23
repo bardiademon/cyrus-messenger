@@ -6,6 +6,8 @@ import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.CheckForward;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswerQuestionText;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswerQuestionTextRequest;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswersQuestionText.GetAnswersQuestionText;
+import com.bardiademon.CyrusMessenger.ServerSocket.Gap.GetAnswerQuestionText.GetAnswersQuestionText.GetAnswersQuestionTextRequest;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.GetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.GetMessages.RequestGetMessages;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.Typing.ReqTyping;
@@ -32,6 +34,8 @@ public final class ServerSocketGap implements SIServer.Client
 
     public CheckPublicRequest checkPublicRequest;
 
+    private final GetAnswersQuestionText getAnswersQuestionText;
+
     public ServerSocketGap ()
     {
         on ();
@@ -39,6 +43,7 @@ public final class ServerSocketGap implements SIServer.Client
         statusOfSentMessage = new StatusOfSentMessage ();
         getAnswerQuestionText = new GetAnswerQuestionText ();
         checkPublicRequest = new CheckPublicRequest ();
+        getAnswersQuestionText = new GetAnswersQuestionText ();
     }
 
     private void on ()
@@ -60,6 +65,9 @@ public final class ServerSocketGap implements SIServer.Client
 
         _SIServer.Server.addEventListener (EventName.ssg_answer_question_text.name () , GetAnswerQuestionTextRequest.class , (client , data , ackSender) ->
                 getAnswerQuestionText.answerQuestionText (data , checkPublicRequest.check (data , client , EventName.ssg_answer_question_text)));
+
+        _SIServer.Server.addEventListener (EventName.ssg_get_all_answer_question_text.name () , GetAnswersQuestionTextRequest.class , (client , data , ackSender) ->
+                getAnswersQuestionText.get (data , checkPublicRequest.check (data , client , EventName.ssg_get_all_answer_question_text)));
     }
 
     public void deletePersonalGap (MainAccount mainAccount , long personalGapId)

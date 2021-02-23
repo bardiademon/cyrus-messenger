@@ -10,7 +10,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultService;
 import com.bardiademon.CyrusMessenger.Model.Database.Default.DefaultType;
 import com.bardiademon.CyrusMessenger.Model.Database.EnumTypes.EnumTypesService;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService;
-import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService.AnswersOptions;
+import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.AnswerQuestionsText.AnswerQuestionsTextService.AnswersCountOptions;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.Stickers;
 import com.bardiademon.CyrusMessenger.Model.Database.Gap.Stickers.StickersService;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.FiredFromGroup.FiredFromGroup;
@@ -223,10 +223,10 @@ public class Test
     @RequestMapping (value = "/test-answer-question-text-options")
     public String textAnswerQuestionTextOptions ()
     {
-        final List <AnswersOptions> objects = This.GetService (AnswerQuestionsTextService.class).countQuestionTextOptions (10760);
+        final List <AnswersCountOptions> objects = This.GetService (AnswerQuestionsTextService.class).countQuestionTextOptions (10760);
 
         final StringBuilder result = new StringBuilder ();
-        if (objects != null) for (AnswersOptions answersOptions : objects) result.append (answersOptions.toString ());
+        if (objects != null) for (AnswersCountOptions answersCountOptions : objects) result.append (answersCountOptions.toString ());
 
         return result.toString ();
     }

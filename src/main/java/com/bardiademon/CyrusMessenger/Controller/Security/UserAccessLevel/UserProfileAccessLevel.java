@@ -385,4 +385,19 @@ public class UserProfileAccessLevel
     {
         return (profilePictures != null);
     }
+
+    @Override
+    public String toString ()
+    {
+        return "UserProfileAccessLevel{" +
+                "applicant=" + applicant.getId () +
+                ", user=" + user.getUsername () +
+                ", which=" + which.name () +
+                ", desEnumTypes='" + desEnumTypes + '\'' +
+                ", userBlockedType='" + userBlockedType + '\'' +
+                ", separateProfile=" + separateProfile +
+                ", profilePictures=" + profilePictures +
+                ", isAnonymous=" + isAnonymous +
+                '}';
+    }
 }

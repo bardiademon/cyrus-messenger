@@ -145,8 +145,6 @@ public final class GetAnswerQuestionText
                                                 else
                                                 {
 
-
-//                                                    final List <Long> optionsId = request.getOptionId ();
                                                     final QuestionTextOptionsService questionTextOptionsService = This.GetService (QuestionTextOptionsService.class);
 
                                                     final List <QuestionTextOptions> options = new ArrayList <> ();
