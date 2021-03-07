@@ -133,7 +133,11 @@ public final class l extends Thread implements Runnable
 
         if (Request != null) log.setRequest (Request);
         if (Description != null) log.setDescription (Description);
-        Service.Repository.save (log);
+        log = Service.Repository.save (log);
+
+        if (log.isError ()) System.err.println (log.toString ());
+        else System.out.println (log.toString ());
 
     }
+
 }

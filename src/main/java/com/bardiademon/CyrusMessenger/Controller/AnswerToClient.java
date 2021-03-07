@@ -42,14 +42,36 @@ public class AnswerToClient
         return new AnswerToClient (400 , false);
     }
 
+
     @JsonIgnore
-    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , Object Answer)
+    public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Answer)
+    {
+        return OneAnswer (_AnswerToClient , CUK.answer.name () , Answer.name ());
+    }
+
+    @JsonIgnore
+    public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Object Answer)
     {
         return OneAnswer (_AnswerToClient , CUK.answer.name () , Answer);
     }
 
     @JsonIgnore
-    public static AnswerToClient OneAnswer (AnswerToClient _AnswerToClient , String Key , Object Answer)
+    public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Key , final Enum <?> Answer)
+    {
+        _AnswerToClient.put (Key.name () , Answer.name ());
+        return _AnswerToClient;
+    }
+
+    @JsonIgnore
+    public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Key , final Object Answer)
+    {
+        _AnswerToClient.put (Key.name () , Answer);
+        return _AnswerToClient;
+    }
+
+    @Deprecated
+    @JsonIgnore
+    public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final String Key , final Object Answer)
     {
         _AnswerToClient.put (Key , Answer);
         return _AnswerToClient;
@@ -59,7 +81,7 @@ public class AnswerToClient
      * KeyAnswer => Key => KeyAnswer[0] , Answer => KeyAnswer[1] | Key => KeyAnswer[2] , Answer => KeyAnswer[3] ,....
      */
     @JsonIgnore
-    public static AnswerToClient KeyAnswer (AnswerToClient _AnswerToClient , Object... KeyAnswer)
+    public static AnswerToClient KeyAnswer (final AnswerToClient _AnswerToClient , final Object... KeyAnswer)
     {
         for (int i = 0, len = ((KeyAnswer.length) - 1); i < len; i += 2)
             _AnswerToClient.put (String.valueOf (KeyAnswer[i]) , KeyAnswer[(i + 1)]);
@@ -71,21 +93,21 @@ public class AnswerToClient
     public static AnswerToClient RequestIsNull ()
     {
         AnswerToClient answerToClient = BadRequest ();
-        answerToClient.put (CUK.answer.name () , CUV.request_is_null.name ());
+        answerToClient.put (CUK.answer , CUV.request_is_null);
         return answerToClient;
     }
 
     @JsonIgnore
     public static AnswerToClient AccessDenied ()
     {
-        return OneAnswer (AnswerToClient.New (HttpServletResponse.SC_FORBIDDEN) , CUV.access_denied.name ());
+        return OneAnswer (AnswerToClient.New (HttpServletResponse.SC_FORBIDDEN) , CUV.access_denied);
     }
 
     @JsonIgnore
     public static AnswerToClient AccountDeactive ()
     {
         AnswerToClient answerToClient = New (HttpServletResponse.SC_FORBIDDEN);
-        answerToClient.put (CUK.answer.name () , CUV.account_deactive.name ());
+        answerToClient.put (CUK.answer , CUV.account_deactive);
         return answerToClient;
     }
 
@@ -93,7 +115,7 @@ public class AnswerToClient
     public static AnswerToClient ServerError ()
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);
-        answerToClient.put (CUK.answer.name () , CUV.please_try_again.name ());
+        answerToClient.put (CUK.answer , CUV.please_try_again);
         answerToClient.put (AnswerToClient.CUK.system.name () , AnswerToClient.CUV.sorry_for_this_error.name ());
         return answerToClient;
     }
@@ -101,11 +123,18 @@ public class AnswerToClient
     @JsonIgnore
     public static AnswerToClient IdInvalid ()
     {
-        return IdInvalid (CUV.id_invalid.name ());
+        return IdInvalid (CUV.id_invalid);
     }
 
     @JsonIgnore
-    public static AnswerToClient IdInvalid (String ValAnswer)
+    public static AnswerToClient IdInvalid (final Enum <?> ValAnswer)
+    {
+        return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name ());
+    }
+
+    @Deprecated
+    @JsonIgnore
+    public static AnswerToClient IdInvalid (final String ValAnswer)
     {
         return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer);
     }
@@ -114,18 +143,18 @@ public class AnswerToClient
     public static AnswerToClient NotLoggedIn ()
     {
         AnswerToClient answerToClient = AnswerToClient.BadRequest ();
-        answerToClient.put (CUK.answer.name () , "not_logged_in");
+        answerToClient.put (CUK.answer , CUV.not_logged_in);
         return answerToClient;
     }
 
     @JsonIgnore
-    public static AnswerToClient New (int StatusCode , boolean Ok)
+    public static AnswerToClient New (final int StatusCode , final boolean Ok)
     {
         return new AnswerToClient (StatusCode , Ok);
     }
 
     @JsonIgnore
-    public static AnswerToClient New (int StatusCode)
+    public static AnswerToClient New (final int StatusCode)
     {
         return New (StatusCode , false);
     }
@@ -137,7 +166,7 @@ public class AnswerToClient
         setStatusCode ();
     }
 
-    public void setMessage (Map <String, Object> message)
+    public void setMessage (final Map <String, Object> message)
     {
         this.message = message;
     }
@@ -155,13 +184,13 @@ public class AnswerToClient
     }
 
     @JsonIgnore
-    public void setRequest (HttpServletRequest request)
+    public void setRequest (final HttpServletRequest request)
     {
         this.request = request;
     }
 
     @JsonIgnore
-    public void setReqRes (HttpServletRequest request , HttpServletResponse response)
+    public void setReqRes (final HttpServletRequest request , final HttpServletResponse response)
     {
         if (getRequest () == null) setRequest (request);
         if (getResponse () == null) setResponse (response);
@@ -172,7 +201,20 @@ public class AnswerToClient
         if (response != null) response.setStatus (getStatusCode ());
     }
 
-    public AnswerToClient put (String key , Object value)
+    public AnswerToClient put (final Enum <?> key , final Enum <?> value)
+    {
+        message.put (key.name () , value.name ());
+        return this;
+    }
+
+    public AnswerToClient put (final Enum <?> key , final Object value)
+    {
+        message.put (key.name () , value);
+        return this;
+    }
+
+    @Deprecated
+    public AnswerToClient put (final String key , final Object value)
     {
         message.put (key , value);
         return this;
@@ -210,7 +252,7 @@ public class AnswerToClient
         sorry_for_this_error, id_invalid, not_found, user_not_found, invalid_width_or_height,
         access_has_been_disabled, access_denied, found, error, not_found_id,
         request_is_null, account_deactive, please_try_again, username_invalid,
-        removed, id, changed, added, ok, anonymous, mkdirs_error, recorded
+        removed, id, changed, added, ok, anonymous, mkdirs_error, not_logged_in, recorded
     }
 
     @JsonIgnore

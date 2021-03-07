@@ -43,10 +43,10 @@ public final class GetAnswersQuestionText
             final ID questionTextId = new ID (request.getQuestionTextId ());
             if (questionTextId.isValid ())
             {
-                final ID gapId = new ID (request.getQuestionTextId ());
+                final ID gapId = new ID (request.getGapId ());
                 if (gapId.isValid ())
                 {
-                    final ID personalGapId = new ID (request.getQuestionTextId ());
+                    final ID personalGapId = new ID (request.getPersonalGapId ());
                     if (personalGapId.isValid ())
                     {
                         final Gaps gaps = This.GetService (GapsService.class).byId (gapId.getId () , personalGapId.getId () , client.getMainAccount ().getId ());
@@ -90,7 +90,6 @@ public final class GetAnswersQuestionText
                                                         usersIdsYes.put (answerYesNo.mainAccount.getId ());
                                                     else
                                                         usersIdsNo.put (answerYesNo.mainAccount.getId ());
-
                                                 }
                                             }
 

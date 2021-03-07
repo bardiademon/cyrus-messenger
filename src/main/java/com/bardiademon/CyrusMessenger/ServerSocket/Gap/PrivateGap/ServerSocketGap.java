@@ -50,7 +50,7 @@ public final class ServerSocketGap implements SIServer.Client
     {
         SIServer.CreateFirstConnection (_SIServer.Server);
         _SIServer.Server.addEventListener (EventName.ssg_send_message.name () , RequestPrivateGap.class , (client , data , ackSender) ->
-                new NewPrivateMessage (client , data));
+                new NewPrivateMessage (client , data).doing ());
 
         SIServer.SetOffline (_SIServer.Server);
 

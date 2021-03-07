@@ -11,7 +11,7 @@ public final class GetAnswersQuestionTextRequest extends PublicRequest
     @JsonProperty ("gap_id")
     private long gapId;
 
-    @JsonProperty ("personalGapId")
+    @JsonProperty ("personal_gap_id")
     private long personalGapId;
 
     public GetAnswersQuestionTextRequest ()

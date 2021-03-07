@@ -1,16 +1,15 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Log;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
-import org.hibernate.annotations.CreationTimestamp;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table (name = "log")
@@ -176,5 +175,24 @@ public class Log
     public void setHttpServletResponse (String httpServletResponse)
     {
         this.httpServletResponse = httpServletResponse;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return "Log{" +
+                "id=" + id +
+                ", mainAccount=" + ((mainAccount == null) ? "is null" : String.valueOf (mainAccount.getId ())) +
+                ", time=" + time.toString () +
+                ", error=" + error +
+                ", infoLine='" + ((infoLine == null) ? "is null" : infoLine) + '\'' +
+                ", answerToClient='" + ((answerToClient == null) ? "is null" : answerToClient) + '\'' +
+                ", request='" + ((request == null) ? "is null" : request) + '\'' +
+                ", description='" + ((httpServletRequest == null) ? "is null" : httpServletRequest) + '\'' +
+                ", ip='" + ((ip == null) ? "is null" : ip) + '\'' +
+                ", route='" + ((route == null) ? "is null" : route) + '\'' +
+                ", httpServletRequest='" + ((httpServletRequest == null) ? "is null" : httpServletRequest) + '\'' +
+                ", httpServletResponse='" + ((httpServletResponse == null) ? "is null" : httpServletResponse) + '\'' +
+                '}';
     }
 }

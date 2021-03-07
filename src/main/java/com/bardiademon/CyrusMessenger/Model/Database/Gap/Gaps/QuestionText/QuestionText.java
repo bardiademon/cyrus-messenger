@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,8 +32,7 @@ public final class QuestionText
     /*
      * dar sorati ke soal yes no nabashe , listi az gozine ha hast
      */
-    @OneToMany (mappedBy = "questionText")
-    @Column (name = "options_question")
+    @OneToMany (mappedBy = "questionText", fetch = FetchType.EAGER)
     private List <QuestionTextOptions> options;
 
     /*

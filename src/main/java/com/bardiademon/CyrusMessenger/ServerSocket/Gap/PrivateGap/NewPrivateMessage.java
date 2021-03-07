@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class NewPrivateMessage
+public class NewPrivateMessage
 {
     private final SocketIOClient client;
     private final RequestPrivateGap request;
@@ -72,13 +72,16 @@ public final class NewPrivateMessage
     private PersonalGapsService personalGapsService;
     private CheckForward.CheckRequestGapAnswer forward;
 
-    private CheckGapText checkGapText;
+    protected CheckGapText checkGapText;
 
     public NewPrivateMessage (final SocketIOClient Client , final RequestPrivateGap Request)
     {
         this.client = Client;
         this.request = Request;
+    }
 
+    public void doing ()
+    {
         if (checkRequest ())
         {
             if ((!request.isHasFile () || Str.IsEmpty (securityUserGap.getCanSendFileTypes ()) || checkAccessType ()))
@@ -118,7 +121,7 @@ public final class NewPrivateMessage
         client.sendEvent (EventName.e_ssg_send_message.name () , ToJson.To (answer));
     }
 
-    private boolean checkText ()
+    protected boolean checkText ()
     {
         if (Str.IsEmpty (request.getText ())) return true;
 
@@ -154,7 +157,7 @@ public final class NewPrivateMessage
         return false;
     }
 
-    private AnswerToClient answerAccessDenied ()
+    protected AnswerToClient answerAccessDenied ()
     {
         return AnswerToClient.AccessDenied ();
     }
@@ -278,7 +281,7 @@ public final class NewPrivateMessage
         return false;
     }
 
-    private boolean checkAccessType ()
+    protected boolean checkAccessType ()
     {
         final List <String> accessType = Arrays.asList (securityUserGap.getCanSendFileTypes ().split (","));
         if (accessType.size () > 0)
@@ -368,12 +371,6 @@ public final class NewPrivateMessage
 
             emptyGap = gapsService.Repository.save (emptyGap);
 
-//            gap = emptyGap.getPostedAgain ().getGap ();
-
-//            /*
-//             * chon forward shode gap asli daron table GapPostedAgain hast
-//             */
-//            gap = gap.getPostedAgain ().getGap ();
         }
 
         /**
@@ -427,7 +424,7 @@ public final class NewPrivateMessage
         return new ForSendToClient (mainAccount , to , gap , emptyGap , questionText);
     }
 
-    public boolean determineTheType (final long userId)
+    protected boolean determineTheType (final long userId)
     {
         if (request.getFileCode () == null) return true;
 
@@ -440,9 +437,9 @@ public final class NewPrivateMessage
 
         final SendGapsFilesToService sendGapsFilesToService = This.GetService (SendGapsFilesToService.class);
 
-        for (String code : request.getFileCode ())
+        for (final String code : request.getFileCode ())
         {
-            GapsFiles gapFile = gapsFilesService.byCode (code);
+            final GapsFiles gapFile = gapsFilesService.byCode (code);
             if (gapFile != null && ((gapFile.getUploadedFiles ().getUploadedBy ().getId () == userId) || (sendGapsFilesToService.sendTo (userId , gapFile.getCode ()) != null)))
             {
                 switch (gapFile.getType ())

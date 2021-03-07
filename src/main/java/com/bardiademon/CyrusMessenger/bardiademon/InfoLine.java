@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger.bardiademon;
 
+import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,9 +21,9 @@ public final class InfoLine
     @JsonIgnore
     private boolean wasGet;
 
-    private Exception e;
+    private final Exception e;
 
-    private Map<String, String> exception;
+    private Map <String, String> exception;
 
     public InfoLine (Exception E , StackTraceElement[] StackTrace)
     {
@@ -47,20 +48,22 @@ public final class InfoLine
 
             if (e != null)
             {
-                exception = new LinkedHashMap<> ();
+                exception = new LinkedHashMap <> ();
                 exception.put ("message" , e.getMessage ());
                 try
                 {
                     exception.put ("stack_trace_element" , new InfoLine (null , e.getStackTrace ()[0]).toString ());
                 }
-                catch (NullPointerException | ArrayIndexOutOfBoundsException ignored)
+                catch (NullPointerException | ArrayIndexOutOfBoundsException e)
                 {
+                    l.n (Thread.currentThread ().getStackTrace () , e , InfoLine.class.getName ());
                 }
                 exception.put ("localized_message" , e.getLocalizedMessage ());
             }
         }
-        catch (NullPointerException | ArrayIndexOutOfBoundsException ignored)
+        catch (NullPointerException | ArrayIndexOutOfBoundsException e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e , InfoLine.class.getName ());
             wasGet = false;
         }
     }
@@ -87,12 +90,13 @@ public final class InfoLine
         }
         catch (JsonProcessingException e)
         {
+            l.n (Thread.currentThread ().getStackTrace () , e , InfoLine.class.getName ());
             return null;
         }
     }
 
     @JsonProperty ("exception")
-    public Map<String, String> getException ()
+    public Map <String, String> getException ()
     {
         return exception;
     }
