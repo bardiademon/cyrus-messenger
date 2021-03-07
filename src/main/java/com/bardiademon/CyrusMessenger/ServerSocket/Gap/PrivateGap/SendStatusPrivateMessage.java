@@ -2,8 +2,8 @@ package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusJSON;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
-import org.json.JSONObject;
 
 public final class SendStatusPrivateMessage extends Thread implements Runnable
 {
@@ -31,10 +31,10 @@ public final class SendStatusPrivateMessage extends Thread implements Runnable
             {
                 if (forSendToClient.from.getId () == _Online.getMainAccount ().getId ())
                 {
-                    final JSONObject statusMessage = new JSONObject ();
-                    statusMessage.put (KeyAnswer.personal_gap_id.name () , forSendToClient.gap.getPersonalGaps ().getId ());
-                    statusMessage.put (KeyAnswer.gap_id.name () , forSendToClient.gap.getId ());
-                    statusMessage.put (KeyAnswer.status.name () , type.name ());
+                    final CyrusJSON statusMessage = new CyrusJSON ();
+                    statusMessage.put (KeyAnswer.personal_gap_id , forSendToClient.gap.getPersonalGaps ().getId ());
+                    statusMessage.put (KeyAnswer.gap_id , forSendToClient.gap.getId ());
+                    statusMessage.put (KeyAnswer.status , type);
                     _Online.getClient ().sendEvent (EventName.ssg_status_message.name () , statusMessage.toString ());
                     return false;
                 }

@@ -1,10 +1,10 @@
 package com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Contacts;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
-import static com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Contacts.RequestContacts.MAX_PHONE;
-import static com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Contacts.RequestContacts.MIN_PHONE;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Cookie.MCookie;
 import com.bardiademon.CyrusMessenger.Controller.Rest.Domain;
+import static com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Contacts.RequestContacts.MAX_PHONE;
+import static com.bardiademon.CyrusMessenger.Controller.Rest.Gap.InfoUser.Contacts.RequestContacts.MIN_PHONE;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
 import static com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel._Service;
@@ -13,13 +13,13 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.UserContacts.UserContacts;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusMap;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Str;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +81,7 @@ public final class RestContacts
                 answerToClient = AnswerToClient.OK ();
                 answerToClient.setReqRes (req , res);
 
-                Map <String, Object> result;
+                CyrusMap <String, Object> result;
 
                 List <Map <String, Object>> allResult = new ArrayList <> ();
                 boolean added = false;
@@ -89,7 +89,7 @@ public final class RestContacts
                 {
                     if ((result = checkRequestAdd (request , mainAccount)) == null)
                     {
-                        result = new LinkedHashMap <> ();
+                        result = new CyrusMap <> ();
                         if (_Service.userContactsService.hasPhoneForUser (mainAccount.getId () , request.getPhone ()) == null)
                         {
                             UserContacts contacts = new UserContacts ();
@@ -106,18 +106,18 @@ public final class RestContacts
 
                             added = true;
 
-                            l.n (ToJson.To (request) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.added.name () , tAdd , true);
+                            l.n (ToJson.To (request) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.added , tAdd , true);
                         }
                         else
                         {
-                            result.put (KeyAnswer.message.name () , AnswerToClient.CUV.found.name ());
+                            result.put (KeyAnswer.message , AnswerToClient.CUV.found);
                             added = false;
-                            l.n (ToJson.To (request) , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null , tAdd , true);
+                            l.n (ToJson.To (request) , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.found) , tAdd , true);
                         }
                     }
 
-                    result.put (AnswerToClient.CUV.added.name () , added);
-                    result.put (KeyAnswer.phone.name () , request.getPhone ());
+                    result.put (AnswerToClient.CUV.added , added);
+                    result.put (KeyAnswer.phone , request.getPhone ());
 
                     allResult.add (result);
 
@@ -128,20 +128,20 @@ public final class RestContacts
                 {
                     answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , allResult);
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (req) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null , tAdd , false);
+                    l.n (ToJson.To (req) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.found) , tAdd , false);
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.please_try_again.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.please_try_again);
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (req) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null , tAdd , true);
+                    l.n (ToJson.To (req) , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.found) , tAdd , true);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , tAdd , true);
+                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , tAdd , true);
             }
         }
         else answerToClient = both.getAnswerToClient ();
@@ -150,28 +150,28 @@ public final class RestContacts
         return answerToClient;
     }
 
-    private Map <String, Object> checkRequestAdd (RequestContacts request , MainAccount mainAccount)
+    private CyrusMap <String, Object> checkRequestAdd (RequestContacts request , MainAccount mainAccount)
     {
-        Map <String, Object> result = null;
+        CyrusMap <String, Object> result = null;
 
         if (Str.IsEmpty (request.getName ()))
         {
-            result = new LinkedHashMap <> ();
-            result.put (KeyAnswer.message.name () , ValAnswer.name_is_empty.name ());
-            l.n (null , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_is_empty.name ()) , null , tAdd , true);
+            result = new CyrusMap <> ();
+            result.put (KeyAnswer.message , ValAnswer.name_is_empty);
+            l.n (null , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.name_is_empty) , tAdd , true);
         }
         else
         {
             int lengthPhone = request.getPhone ().length ();
             if (lengthPhone < MIN_PHONE || lengthPhone > MAX_PHONE)
             {
-                result = new LinkedHashMap <> ();
-                result.put (KeyAnswer.message.name () , ValAnswer.name_is_empty.name ());
+                result = new CyrusMap <> ();
+//                result.put (KeyAnswer.message.name () , ValAnswer.name_is_empty.name ());
 
-                result.put (KeyAnswer.message.name () , ValAnswer.phone_number_invalid.name ());
-                result.put (KeyAnswer.len_phone.name () , lengthPhone);
-                result.put (KeyAnswer.message.name () , String.format ("%s >= PHONE <= %s" , MIN_PHONE , MAX_PHONE));
-                l.n (null , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_number_invalid.name ()) , null , tAdd , true);
+//                result.put (KeyAnswer.message.name () , ValAnswer.phone_number_invalid.name ());
+                result.put (KeyAnswer.len_phone , lengthPhone);
+                result.put (KeyAnswer.message , String.format ("%s >= PHONE <= %s" , MIN_PHONE , MAX_PHONE));
+                l.n (null , rAdd , mainAccount , null , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.phone_number_invalid) , tAdd , true);
             }
         }
         System.gc ();
@@ -210,29 +210,29 @@ public final class RestContacts
                         contacts.setDeletedAt (LocalDateTime.now ());
                         _Service.userContactsService.Repository.save (contacts);
 
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , tRemoveWithPhone , false);
+                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed , tRemoveWithPhone , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tRemoveWithPhone , true);
+                        l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , tRemoveWithPhone , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.phone_number_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.phone_number_invalid);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.phone_number_invalid.name ()) , null , tRemoveWithPhone , true);
+                    l.n (request , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.phone_number_invalid) , tRemoveWithPhone , true);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , tRemoveWithPhone , true);
+                l.n (null , rRemoveWithPhone , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , tRemoveWithPhone , true);
             }
         }
         else answerToClient = both.getAnswerToClient ();
@@ -269,29 +269,29 @@ public final class RestContacts
                         contacts.setDeletedAt (LocalDateTime.now ());
                         _Service.userContactsService.Repository.save (contacts);
 
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name () , tRemove , false);
+                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed , tRemove , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tRemove , true);
+                        l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , tRemove , true);
                     }
                 }
                 else
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null , tRemove , true);
+                    l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid) , tRemove , true);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , tRemove , true);
+                l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , tRemove , true);
             }
         }
         else answerToClient = both.getAnswerToClient ();
@@ -348,15 +348,15 @@ public final class RestContacts
                     listContacts.add (reqContacts);
                 }
 
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                answerToClient.put (KeyAnswer.contacts.name () , listContacts);
-                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                answerToClient.put (KeyAnswer.contacts , listContacts);
+                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found , tList , false);
             }
             else
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
                 answerToClient.setReqRes (req , res);
-                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+                l.n (null , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , tList , true);
             }
 
         }

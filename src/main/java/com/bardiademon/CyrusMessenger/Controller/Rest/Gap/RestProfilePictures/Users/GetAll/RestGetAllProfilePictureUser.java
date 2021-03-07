@@ -35,10 +35,13 @@ public final class RestGetAllProfilePictureUser
     private final UserLoginService userLoginService;
     private final MainAccountService mainAccountService;
 
+    private final SubmitRequestType type;
+
     public RestGetAllProfilePictureUser (MainAccountService _MainAccountService , UserLoginService _UserLoginService)
     {
         this.userLoginService = _UserLoginService;
         this.mainAccountService = _MainAccountService;
+        this.type = SubmitRequestType.get_all_profile_pictures_user;
     }
 
     @RequestMapping (value = { "" , "/" , "/{id_user}" })
@@ -81,33 +84,32 @@ public final class RestGetAllProfilePictureUser
                                 for (ProfilePictures profilePicture : profilePictures)
                                     ids.add (profilePicture.getId ());
 
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                                answerToClient.put (AnswerToClient.CUK.ids.name () , ids);
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                                answerToClient.put (AnswerToClient.CUK.ids , ids);
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name ());
+                                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found);
                                 r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , false);
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
-                                r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
+                                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , type , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+                            l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found), type , true);
                             r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.user_not_found.name ()) , null);
+                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.user_not_found) ,type , true);
                         r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
                     }
                 }
@@ -115,16 +117,14 @@ public final class RestGetAllProfilePictureUser
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id invalid") , null);
-                    r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
+                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("id invalid") , type , true);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Request is null") , null);
-                r.n (mainAccount , SubmitRequestType.get_all_profile_pictures_user , true);
+                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("Request is null") , type , true);
             }
         }
         else answerToClient = both.getAnswerToClient ();

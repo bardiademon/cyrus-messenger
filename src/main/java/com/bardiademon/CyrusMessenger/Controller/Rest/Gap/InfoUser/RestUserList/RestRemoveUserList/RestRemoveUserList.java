@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping (value = Domain.RNGap.RNInfoUser.RNUserList.RN_USER_LIST_REMOVE, method = RequestMethod.POST)
 public final class RestRemoveUserList
 {
-    private UserListService userListService;
-    private UserLoginService userLoginService;
-    private MainAccountService mainAccountService;
+    private final UserListService userListService;
+    private final UserLoginService userLoginService;
+    private final MainAccountService mainAccountService;
 
     @Autowired
     public RestRemoveUserList (UserListService _UserListService , UserLoginService _UserLoginService , MainAccountService _MainAccountService)
@@ -65,16 +65,16 @@ public final class RestRemoveUserList
                     if (userList != null)
                     {
                         userListService.remove (userList);
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name ());
+                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed);
                         r.n (mainAccount , type , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.this_user_is_not_in_your_list.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.this_user_is_not_in_your_list);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_in_your_list.name ()) , null);
+                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_in_your_list));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -82,7 +82,7 @@ public final class RestRemoveUserList
                 {
                     answerToClient = idUsernameMainAccount.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -90,7 +90,7 @@ public final class RestRemoveUserList
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
         }

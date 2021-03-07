@@ -64,16 +64,16 @@ public final class RestFindUserId
                 accessLevel.setUser (account.getMainAccount ());
                 if (accessLevel.hasAccess (Which.find_me , Which.username , Which.id))
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
-                    answer.put (AnswerToClient.CUK.id.name () , account.getMainAccount ().getId ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok);
+                    answer.put (AnswerToClient.CUK.id , account.getMainAccount ().getId ());
                     answer.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.ok.name () , type , false);
+                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.ok , type , false);
                 }
                 else
                 {
                     answer = AnswerToClient.AccessDenied ();
                     answer.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , null , type , true);
+                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied) , type , true);
                 }
             }
             else

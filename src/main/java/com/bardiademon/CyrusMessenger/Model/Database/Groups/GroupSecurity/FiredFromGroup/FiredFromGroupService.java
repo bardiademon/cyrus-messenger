@@ -38,9 +38,9 @@ public final class FiredFromGroupService
     public AnswerToClient createAnswerToClient (FiredFromGroup firedFromGroup)
     {
         return AnswerToClient.KeyAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) ,
-                AnswerToClient.CUK.answer.name () , ValKeyAnswer.fired.name () ,
-                ValKeyAnswer.why.name () , firedFromGroup.getWhy () ,
-                ValKeyAnswer.validity_time.name () , Time.toString (firedFromGroup.getValidityTime ())
+                AnswerToClient.CUK.answer , ValKeyAnswer.fired ,
+                ValKeyAnswer.why , firedFromGroup.getWhy () ,
+                ValKeyAnswer.validity_time , Time.toString (firedFromGroup.getValidityTime ())
         );
     }
 

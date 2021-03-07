@@ -46,7 +46,7 @@ public final class StatusOfSentMessage
             Online online = null;
             if (request != null && (online = SIServer.GetOnline (request.getCodeOnline ())) != null && (request.getType () != null && !request.getType ().isEmpty ()) && (gapId = new ID (request.gapId)).isValid () && (personalGapId = new ID (request.personalGapId)).isValid ())
             {
-                final CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.status_of_sent_message.name ());
+                final CBSIL both = CBSIL.Both (request , request.getCodeLogin () , ValAnswer.not_found_gap.name ());
                 if (both.isOk ())
                 {
                     assert both.getIsLogin () != null;
@@ -55,17 +55,17 @@ public final class StatusOfSentMessage
                     final Type type = Type.to (request.getType ());
                     if (type != null)
                     {
-                        final PersonalGapsService personalGapsService = This.Services ().Get (PersonalGapsService.class);
+                        final PersonalGapsService personalGapsService = This.GetService (PersonalGapsService.class);
                         final PersonalGaps personalGaps = personalGapsService.byId (personalGapId.getId () , mainAccount.getId ());
 
                         if (personalGaps != null)
                         {
-                            final GapsService gapsService = This.Services ().Get (GapsService.class);
+                            final GapsService gapsService = This.GetService (GapsService.class);
                             final Gaps gap = gapsService.Repository.byId (gapId.getId () , personalGaps.getId () , mainAccount.getId ());
 
                             if (gap != null)
                             {
-                                final GapReadService gapReadService = This.Services ().Get (GapReadService.class);
+                                final GapReadService gapReadService = This.GetService (GapReadService.class);
 
                                 GapRead gapRead = gapReadService.getGapRead (gapId.getId () , mainAccount.getId ());
                                 if (gapRead == null)
@@ -95,7 +95,7 @@ public final class StatusOfSentMessage
                                 final List <GapsFiles> filesGaps = gap.getFilesGaps ();
                                 if (filesGaps != null)
                                 {
-                                    final SendGapsFilesToService sendGapsFilesToService = This.Services ().Get (SendGapsFilesToService.class);
+                                    final SendGapsFilesToService sendGapsFilesToService = This.GetService (SendGapsFilesToService.class);
 
                                     for (final GapsFiles filesGap : filesGaps)
                                     {
@@ -108,8 +108,8 @@ public final class StatusOfSentMessage
                                 }
                                 gapReadService.Repository.save (gapRead);
 
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded.name ());
-                                l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name () , SubmitRequestType.socket , false);
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.recorded);
+                                l.n (ToJson.To (request) , ValAnswer.not_found_gap.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.recorded.name () , SubmitRequestType.socket , false);
 
                                 /*
                                  * ba aks hast chon from mikhad bebine payami ke ersal karde to khondash ya na
@@ -120,20 +120,20 @@ public final class StatusOfSentMessage
                             }
                             else
                             {
-                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_gap.name ());
-                                l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_gap.name ()) , null , SubmitRequestType.socket , true);
+                                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_gap);
+                                l.n (ToJson.To (request) , ValAnswer.not_found_gap.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_gap) , SubmitRequestType.socket , true);
                             }
                         }
                         else
                         {
-                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gap_id.name ());
-                            l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap_id.name ()) , null , SubmitRequestType.socket , true);
+                            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gap_id);
+                            l.n (ToJson.To (request) , ValAnswer.not_found_gap.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_personal_gap_id) , SubmitRequestType.socket , true);
                         }
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_type.name ());
-                        l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , null , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_type.name ()) , ToJson.CreateClass.nj ("type" , request.getType ()) , SubmitRequestType.socket , true);
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_type);
+                        l.n (ToJson.To (request) , ValAnswer.not_found_gap.name () , null , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_type) , ToJson.CreateClass.nj ("type" , request.getType ()) , SubmitRequestType.socket , true);
                     }
                 }
                 else answer = both.getAnswerToClient ();
@@ -141,7 +141,7 @@ public final class StatusOfSentMessage
             else
             {
                 answer = AnswerToClient.BadRequest ();
-                l.n (ToJson.To (request) , EventName.status_of_sent_message.name () , null , answer , Thread.currentThread ().getStackTrace () , new Exception (getClass ().getName ()) , null , SubmitRequestType.socket , false);
+                l.n (ToJson.To (request) , ValAnswer.not_found_gap.name () , null , answer , Thread.currentThread ().getStackTrace () , l.e (getClass ().getName ()) , SubmitRequestType.socket , false);
             }
 
             if (online != null)

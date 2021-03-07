@@ -118,13 +118,13 @@ public final class RestGetOneProfilePictureGroup
                 }
                 else
                 {
-                    l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_not_found") , null);
+                    l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace (), l.e ("profile_picture_not_found"));
                     return toByte (Path.GetDefaultImage (Path.IMAGE_ERROR_500));
                 }
             }
             else
             {
-                l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_id_invalid") , null);
+                l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace (), l.e ("profile_picture_id_invalid"));
                 return toByte (Path.GetDefaultImage (Path.IC_COVER_DEFAULT));
             }
         }
@@ -141,7 +141,7 @@ public final class RestGetOneProfilePictureGroup
         }
         else
         {
-            l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace () , new Exception ("profile_picture_file_not_found") , file.getPath ());
+            l.n (request , router , mainAccount , null , Thread.currentThread ().getStackTrace (), l.e ("profile_picture_file_not_found") , file.getPath ());
             return toByte (Path.GetDefaultImage (Path.IMAGE_ERROR_500));
         }
     }

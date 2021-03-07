@@ -63,8 +63,8 @@ public final class CheckGapText
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.AccessDenied () , ValAnswer.access_denied_question_text.name ());
-                l.n (null , null , gapAccessLevel.getApplicant () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.access_denied_question_text.name ()) , null);
+                answer = AnswerToClient.OneAnswer (AnswerToClient.AccessDenied () , ValAnswer.access_denied_question_text);
+                l.n (gapAccessLevel.getApplicant () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.access_denied_question_text));
             }
         }
 
@@ -75,8 +75,8 @@ public final class CheckGapText
     {
         if ((textType = GapTextType.to (strTextType)) == null)
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_type.name ());
-            l.n (null , null , null , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_text_type.name ()) , null);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_type);
+            l.n (answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_text_type));
         }
     }
 
@@ -108,8 +108,8 @@ public final class CheckGapText
         }
         catch (Exception e)
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_yes_no.name ());
-            l.n (null , null , null , answer , Thread.currentThread ().getStackTrace () , e , ValAnswer.invalid_text_question_yes_no.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_yes_no);
+            l.n (answer , Thread.currentThread ().getStackTrace () , e , ValAnswer.invalid_text_question_yes_no);
         }
     }
 
@@ -152,8 +152,8 @@ public final class CheckGapText
         }
         catch (Exception e)
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_options.name ());
-            l.n (null , null , null , answer , Thread.currentThread ().getStackTrace () , e , ValAnswer.invalid_text_question_yes_no.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_text_question_options);
+            l.n (answer , Thread.currentThread ().getStackTrace () , e , ValAnswer.invalid_text_question_yes_no);
         }
     }
 

@@ -51,7 +51,7 @@ public final class RestGetAllProfilePictureGroup
         this.groupManagementService = _GroupManagementService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{ID_GROUP}"})
+    @RequestMapping (value = { "" , "/" , "/{ID_GROUP}" })
     public AnswerToClient getAll
             (HttpServletRequest req , HttpServletResponse res ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -78,46 +78,46 @@ public final class RestGetAllProfilePictureGroup
                 if (iluGroup.isValid ())
                 {
                     assert iluGroup.getGroup () != null;
-                    List<ProfilePictures> profilePictures = (iluGroup.getGroup ()).getProfilePictures ();
+                    List <ProfilePictures> profilePictures = (iluGroup.getGroup ()).getProfilePictures ();
 
                     if (profilePictures != null && profilePictures.size () > 0)
                     {
                         IsJoined isJoined = new IsJoined (joinGroupService , mainAccount , idGroup);
 
-                        List<Long> profilePicturesIds = (new SortProfilePictures (profilePictures)).getIds ();
+                        List <Long> profilePicturesIds = (new SortProfilePictures (profilePictures)).getIds ();
                         assert profilePicturesIds != null;
 
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
 
                         if (isJoined.is ())
-                            answerToClient.put (AnswerToClient.CUK.ids.name () , profilePicturesIds);
+                            answerToClient.put (AnswerToClient.CUK.ids , profilePicturesIds);
                         else
                         {
                             IsManager isManager = new IsManager (mainAccount , groupManagementService);
                             isManager.setILUGroup (iluGroup);
                             if (isManager.isManager ())
-                                answerToClient.put (AnswerToClient.CUK.ids.name () , profilePicturesIds);
+                                answerToClient.put (AnswerToClient.CUK.ids , profilePicturesIds);
                             else
-                                answerToClient.put (AnswerToClient.CUK.id.name () , profilePicturesIds.get (0));
+                                answerToClient.put (AnswerToClient.CUK.id , profilePicturesIds.get (0));
                         }
 
                         answerToClient.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , null);
+                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null);
                         r.n (mainAccount , type , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found));
                         r.n (mainAccount , type , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , null);
+                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_not_found));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -125,7 +125,7 @@ public final class RestGetAllProfilePictureGroup
             {
                 answerToClient = AnswerToClient.IdInvalid ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id invalid") , null);
+                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("id invalid"));
                 r.n (mainAccount , type , true);
             }
         }

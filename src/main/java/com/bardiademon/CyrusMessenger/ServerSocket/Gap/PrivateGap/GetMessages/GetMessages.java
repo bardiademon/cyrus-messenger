@@ -41,7 +41,7 @@ public final class GetMessages
 
     private void checkRequest ()
     {
-        final CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.get_messages.name ());
+        final CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.get_messages);
         if (both.isOk ())
         {
             strRequest = ToJson.To (request);
@@ -64,8 +64,8 @@ public final class GetMessages
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_type.name ());
-                l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_type.name ()) , ToJson.CreateClass.nj ("type" , request.getType ()) , SubmitRequestType.socket , true);
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_type);
+                l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_type) , ToJson.CreateClass.nj ("type" , request.getType ()) , SubmitRequestType.socket , true);
             }
         }
         else answer = both.getAnswerToClient ();
@@ -79,8 +79,8 @@ public final class GetMessages
             new GroupGetMessages (iluGroup.getGroup () , request.getPage () , answerGetMessages);
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_group.name ());
-            l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_id_group.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_group);
+            l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_id_group) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
         }
     }
 
@@ -103,34 +103,34 @@ public final class GetMessages
                         new UserGetMessages (user , personalGaps , request.getPage () , answerGetMessages , request);
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_user.name ());
-                        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_user);
+                        l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_user) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
                     }
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gaps_id.name ());
-                    l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gaps_id);
+                    l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_personal_gaps_id) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
                 }
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gaps_id.name ());
-                l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gaps_id.name ()) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gaps_id);
+                l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_personal_gaps_id) , ToJson.CreateClass.nj ("personal_gaps_id" , request.getPersonalGapsId ()) , SubmitRequestType.socket , true);
             }
 
         }
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_user.name ());
-            l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_id_user.name ()) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_id_user);
+            l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_id_user) , ToJson.CreateClass.nj ("id" , request.getId ()) , SubmitRequestType.socket , true);
         }
     }
 
     private void answerToClient ()
     {
         client.sendEvent (EventName.e_get_messages.name () , ToJson.To (answer));
-        l.n (strRequest , EventName.get_messages.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , "send to client" , SubmitRequestType.socket , false);
+        l.n (strRequest , EventName.get_messages , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , "send to client" , SubmitRequestType.socket , false);
     }
 
     private enum ValAnswer

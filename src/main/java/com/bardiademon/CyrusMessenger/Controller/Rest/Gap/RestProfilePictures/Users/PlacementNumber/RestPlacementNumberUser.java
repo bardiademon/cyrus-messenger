@@ -35,11 +35,11 @@ public final class RestPlacementNumberUser
         this.profilePicturesService = _ProfilePicturesService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient update
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req ,
-             @RequestBody List<PlacementNumber> request)
+             @RequestBody List <PlacementNumber> request)
     {
         AnswerToClient answerToClient;
 
@@ -62,7 +62,7 @@ public final class RestPlacementNumberUser
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
         }

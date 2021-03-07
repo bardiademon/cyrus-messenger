@@ -53,7 +53,7 @@ public final class RestChangeUsernameGroup
         this.service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient change
             (@CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              HttpServletResponse res , HttpServletRequest req , @RequestBody RequestChangeUsernameGroup request)
@@ -97,18 +97,18 @@ public final class RestChangeUsernameGroup
                                     Usernames findGroupname = findGroup.getGroupname ();
                                     if (findGroupname != null && findGroupname.getUsername ().equals (groupname.getUsername ()))
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.repetitive.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.repetitive);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.repetitive.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.repetitive));
                                         r.n (mainAccount , type , true);
                                     }
                                     else change = true;
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_username_used.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_username_used);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_username_used.name ()) , null);
+                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_username_used));
                                     r.n (mainAccount , type , true);
                                 }
                             }
@@ -136,9 +136,9 @@ public final class RestChangeUsernameGroup
                                 group.setGroupname (username);
                                 service.groupsService.Repository.save (group);
 
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed.name ());
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed);
                                 r.n (mainAccount , type , false);
                             }
                         }
@@ -146,7 +146,7 @@ public final class RestChangeUsernameGroup
                         {
                             answerToClient = manageGroup.getAnswerToClient ();
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ManageGroup.class.getName ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ManageGroup.class.getName ()));
                             r.n (mainAccount , type , true);
                         }
                     }
@@ -154,15 +154,15 @@ public final class RestChangeUsernameGroup
                     {
                         answerToClient = AnswerToClient.IdInvalid ();
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                         r.n (mainAccount , type , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.username_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.username_invalid);
                     answerToClient.setReqRes (req , res);
-                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.username_invalid.name ()) , null);
+                    l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.username_invalid));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -170,7 +170,7 @@ public final class RestChangeUsernameGroup
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
 

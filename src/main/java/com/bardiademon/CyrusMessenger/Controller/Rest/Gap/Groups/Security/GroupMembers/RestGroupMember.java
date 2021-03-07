@@ -89,9 +89,9 @@ public final class RestGroupMember
                     }
                     catch (Exception e)
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
+                        l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                         r.n (mainAccount , SubmitRequestType.group_members , true);
                         errorIdGroup = true;
                     }
@@ -101,9 +101,9 @@ public final class RestGroupMember
                         Groups group = groupsService.hasGroup (idGroup);
                         if (group == null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
+                            l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_not_found) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                             r.n (mainAccount , SubmitRequestType.group_members , true);
                         }
                         else
@@ -158,11 +158,11 @@ public final class RestGroupMember
 
                                         if (idMembers.size () > 0)
                                         {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                                            answerToClient.put (ValAnswer.id_members.name () , idMembers);
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                                            answerToClient.put (ValAnswer.id_members , idMembers);
                                         }
                                         else
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
 
                                         answerToClient.setReqRes (req , res);
                                         l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
@@ -170,25 +170,25 @@ public final class RestGroupMember
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.no_members_found.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.no_members_found);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.no_members_found.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
+                                        l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.no_members_found) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                                         r.n (mainAccount , SubmitRequestType.group_members , true);
                                     }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , AnswerToClient.CUV.access_has_been_disabled.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , AnswerToClient.CUV.access_has_been_disabled);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_has_been_disabled.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
+                                    l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_has_been_disabled) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                                     r.n (mainAccount , SubmitRequestType.group_members , true);
                                 }
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_are_not_a_member_of_the_group.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_are_not_a_member_of_the_group);
                                 answerToClient.setReqRes (req , res);
-                                l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_are_not_a_member_of_the_group.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
+                                l.n (strIdGroups , Domain.RNGap.RNGroups.Security.RN_SECURITY_GROUP_MEMBERS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_are_not_a_member_of_the_group) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , codeLogin).toJson ());
                                 r.n (mainAccount , SubmitRequestType.group_members , true);
                             }
 

@@ -46,66 +46,66 @@ public class Profile
                 {
                     answerToClient = AnswerToClient.OK ();
                     if (requestProfile.isSecBio ())
-                        answerToClient.put (KeyAnswer.sec_bio.name () , securityUserProfile.getShowBio ().name ());
+                        answerToClient.put (KeyAnswer.sec_bio , securityUserProfile.getShowBio ());
 
                     if (requestProfile.isSecCover ())
-                        answerToClient.put (KeyAnswer.sec_cover.name () , securityUserProfile.getShowCover ().name ());
+                        answerToClient.put (KeyAnswer.sec_cover , securityUserProfile.getShowCover ());
 
                     if (requestProfile.isSecShowInChannel ())
-                        answerToClient.put (KeyAnswer.sec_show_in_channel.name () ,
-                                securityUserProfile.getShowInChannel ().name ());
+                        answerToClient.put (KeyAnswer.sec_show_in_channel ,
+                                securityUserProfile.getShowInChannel ());
 
                     if (requestProfile.isSecShowInGroup ())
-                        answerToClient.put (KeyAnswer.sec_show_in_group.name () ,
-                                securityUserProfile.getShowInGroup ().name ());
+                        answerToClient.put (KeyAnswer.sec_show_in_group ,
+                                securityUserProfile.getShowInGroup ());
 
                     if (requestProfile.isSecShowProfile ())
-                        answerToClient.put (KeyAnswer.sec_show_profile.name () ,
-                                securityUserProfile.getShowInProfile ().name ());
+                        answerToClient.put (KeyAnswer.sec_show_profile ,
+                                securityUserProfile.getShowInProfile ());
 
                     if (requestProfile.isSecShowInSearch ())
-                        answerToClient.put (KeyAnswer.show_in_search.name () ,
-                                securityUserProfile.getShowInSearch ().name ());
+                        answerToClient.put (KeyAnswer.show_in_search ,
+                                securityUserProfile.getShowInSearch ());
 
                     if (requestProfile.isSecLastSeen ())
-                        answerToClient.put (KeyAnswer.sec_last_seen.name () ,
-                                securityUserProfile.getShowLastSeen ().name ());
+                        answerToClient.put (KeyAnswer.sec_last_seen ,
+                                securityUserProfile.getShowLastSeen ());
 
                     if (requestProfile.isSecMyLink ())
-                        answerToClient.put (KeyAnswer.sec_mylink.name () ,
-                                securityUserProfile.getShowMyLink ().name ());
+                        answerToClient.put (KeyAnswer.sec_mylink ,
+                                securityUserProfile.getShowMyLink ());
 
                     if (requestProfile.isSecName ())
-                        answerToClient.put (KeyAnswer.sec_name.name () ,
-                                securityUserProfile.getShowName ().name ());
+                        answerToClient.put (KeyAnswer.sec_name ,
+                                securityUserProfile.getShowName ());
 
                     if (requestProfile.isSecFamily ())
-                        answerToClient.put (KeyAnswer.sec_family.name () ,
-                                securityUserProfile.getShowFamily ().name ());
+                        answerToClient.put (KeyAnswer.sec_family ,
+                                securityUserProfile.getShowFamily ());
 
                     if (requestProfile.isSecEmail ())
-                        answerToClient.put (KeyAnswer.sec_email.name () ,
-                                securityUserProfile.getShowEmail ().name ());
+                        answerToClient.put (KeyAnswer.sec_email ,
+                                securityUserProfile.getShowEmail ());
 
                     if (requestProfile.isSecPersonalInformation ())
-                        answerToClient.put (KeyAnswer.sec_personal_information.name () ,
-                                securityUserProfile.getShowPersonalInformation ().name ());
+                        answerToClient.put (KeyAnswer.sec_personal_information ,
+                                securityUserProfile.getShowPersonalInformation ());
 
                     if (requestProfile.isSecPhone ())
-                        answerToClient.put (KeyAnswer.sec_phone.name () ,
-                                securityUserProfile.getShowPhone ().name ());
+                        answerToClient.put (KeyAnswer.sec_phone ,
+                                securityUserProfile.getShowPhone ());
 
                     if (requestProfile.isSecSeenMessage ())
-                        answerToClient.put (KeyAnswer.sec_seen_message.name () ,
-                                securityUserProfile.getShowSeenMessage ().name ());
+                        answerToClient.put (KeyAnswer.sec_seen_message ,
+                                securityUserProfile.getShowSeenMessage ());
 
                     if (requestProfile.isSecUsername ())
-                        answerToClient.put (KeyAnswer.sec_username.name () ,
-                                securityUserProfile.getShowUsername ().name ());
+                        answerToClient.put (KeyAnswer.sec_username ,
+                                securityUserProfile.getShowUsername ());
 
                     if (requestProfile.isSecListFriends ())
-                        answerToClient.put (KeyAnswer.sec_list_friends.name () ,
-                                securityUserProfile.getListFriends ().name ());
+                        answerToClient.put (KeyAnswer.sec_list_friends ,
+                                securityUserProfile.getListFriends ());
                 }
                 else answerToClient = AnswerToClient.ServerError ();
             }

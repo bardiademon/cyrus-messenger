@@ -55,7 +55,7 @@ public final class RestJoinGroup
         this.firedFromGroupService = _FiredFromGroupService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{id}" , "/{id}/leave"})
+    @RequestMapping (value = { "" , "/" , "/{id}" , "/{id}/leave" })
     public AnswerToClient join (HttpServletResponse res , HttpServletRequest req , @PathVariable (value = "id", required = false) String idStr ,
                                 @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin)
     {
@@ -98,9 +98,9 @@ public final class RestJoinGroup
                                                         Integer maxMember = group.getGroupSecurityProfile ().getMaxMember ();
                                                         if (group.getMembers ().size () >= maxMember)
                                                         {
-                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_members_have_been_completed.name ());
+                                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_members_have_been_completed);
                                                             answerToClient.setReqRes (req , res);
-                                                            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_members_have_been_completed.name ()) , null);
+                                                            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_members_have_been_completed));
                                                             r.n (mainAccount , SubmitRequestType.join_group , true);
                                                         }
                                                         else
@@ -113,16 +113,16 @@ public final class RestJoinGroup
                                                                 joinGroup.setJoinBy (JoinGroup.JoinBy.the_user_himself);
                                                                 joinGroupService.Repository.save (joinGroup);
 
-                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined.name ());
-                                                                answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joinGroup.getTimeJoin ()));
+                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.joined);
+                                                                answerToClient.put (AnswerToClient.CUK.time , Time.toString (joinGroup.getTimeJoin ()));
                                                                 answerToClient.setReqRes (req , res);
                                                                 l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.joined.name ());
                                                                 r.n (mainAccount , SubmitRequestType.join_group , false);
                                                             }
                                                             else
                                                             {
-                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.joining_is_disabled.name ());
-                                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.joining_is_disabled.name ()) , null);
+                                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.joining_is_disabled);
+                                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.joining_is_disabled));
                                                                 r.n (mainAccount , SubmitRequestType.join_group , true);
                                                             }
                                                         }
@@ -130,23 +130,23 @@ public final class RestJoinGroup
                                                     else
                                                     {
                                                         answerToClient = firedFromGroupService.createAnswerToClient (fired);
-                                                        l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_members_have_been_completed.name ()) , null);
+                                                        l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_members_have_been_completed));
                                                         r.n (mainAccount , SubmitRequestType.join_group , true);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.joining_has_been_disabled.name ());
+                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.joining_has_been_disabled);
                                                     answerToClient.setReqRes (req , res);
-                                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.joining_has_been_disabled.name ()) , null);
+                                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.joining_has_been_disabled));
                                                     r.n (mainAccount , SubmitRequestType.join_group , true);
                                                 }
                                             }
                                             else
                                             {
-                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_not_already_joined.name ());
+                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_not_already_joined);
                                                 answerToClient.setReqRes (req , res);
-                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_not_already_joined.name ()) , null);
+                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_not_already_joined));
                                                 r.n (mainAccount , SubmitRequestType.join_group , true);
                                             }
                                         }
@@ -154,19 +154,19 @@ public final class RestJoinGroup
                                         {
                                             if (!path.contains ("leave"))
                                             {
-                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_already_joined.name ());
-                                                answerToClient.put (AnswerToClient.CUK.time.name () , Time.toString (joined.getTimeJoin ()));
+                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_already_joined);
+                                                answerToClient.put (AnswerToClient.CUK.time , Time.toString (joined.getTimeJoin ()));
                                                 answerToClient.setReqRes (req , res);
-                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_already_joined.name ()) , null);
+                                                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_already_joined));
                                                 r.n (mainAccount , SubmitRequestType.join_group , true);
                                             }
                                             else
                                             {
                                                 if (joined.isLeaveGroup ())
                                                 {
-                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_not_already_joined.name ());
+                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_not_already_joined);
                                                     answerToClient.setReqRes (req , res);
-                                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_not_already_joined.name ()) , null);
+                                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_not_already_joined));
                                                     r.n (mainAccount , SubmitRequestType.join_group , true);
                                                 }
                                                 else
@@ -185,7 +185,7 @@ public final class RestJoinGroup
                                                         groupManagementService.Repository.save (groupManagement);
                                                     }
 
-                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.leaved.name ());
+                                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.leaved);
                                                     answerToClient.setReqRes (req , res);
                                                     l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.leaved.name ());
                                                     r.n (mainAccount , SubmitRequestType.join_group , false);
@@ -196,27 +196,27 @@ public final class RestJoinGroup
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_own_the_group.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_own_the_group);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_own_the_group.name ()) , null);
+                                        l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_own_the_group));
                                         r.n (mainAccount , SubmitRequestType.join_group , true);
                                     }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , null);
+                                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_not_found));
                                     r.n (req.getRemoteAddr () , SubmitRequestType.join_group , true);
                                 }
                             }
-                            else throw new Exception (AnswerToClient.CUV.id_invalid.name ());
+                            else throw l.e (AnswerToClient.CUV.id_invalid);
                         }
                         else
                         {
                             answerToClient = AnswerToClient.RequestIsNull ();
                             answerToClient.setReqRes (req , res);
-                            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("request is null") , null);
+                            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("request is null"));
                             r.n (req.getRemoteAddr () , SubmitRequestType.join_group , true);
                         }
                     }
@@ -224,7 +224,7 @@ public final class RestJoinGroup
                     {
                         if (e.getMessage () != null && e.getMessage ().matches (AnswerToClient.CUV.id_invalid.name ()))
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid);
                             answerToClient.setReqRes (req , res);
                             l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.id_invalid.name ());
                             r.n (req.getRemoteAddr () , SubmitRequestType.join_group , false);
@@ -242,14 +242,14 @@ public final class RestJoinGroup
                 {
                     answerToClient = checkBlockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+                    l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block by system"));
                 }
             }
             else
             {
                 answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
-                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
+                l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("not login"));
                 r.n (req.getRemoteAddr () , SubmitRequestType.join_group , true);
             }
         }
@@ -257,7 +257,7 @@ public final class RestJoinGroup
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+            l.n (reqJson , Domain.RNGap.RNGroups.RN_JOIN_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block by system"));
         }
         return answerToClient;
     }

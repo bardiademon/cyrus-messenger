@@ -36,7 +36,7 @@ public class SetOffline
     {
         if (request != null && !Str.IsEmpty (request.getCodeLogin ()))
         {
-            CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.set_offline.name ());
+            CBSIL both = CBSIL.Both (request , request.getCodeLogin () , EventName.set_offline);
             if (both.isOk ())
             {
                 assert both.getIsLogin () != null;
@@ -47,19 +47,19 @@ public class SetOffline
                     online = SIServer.Onlines.get (request.getCodeOnline ());
                     SIServer.Onlines.remove (request.getCodeOnline ());
 
-                    final OnlineService service = (OnlineService) This.Services ().Get (OnlineService.class);
+                    final OnlineService service = This.GetService (OnlineService.class);
 
                     service.setOffline (online);
 
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok.name ());
-                    l.n (ToJson.To (request) , EventName.set_offline.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.ok.name ());
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok);
+                    l.n (ToJson.To (request) , EventName.set_offline , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.ok);
 
                     disconnect = true;
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_online_invalid.name ());
-                    l.n (ToJson.To (request) , EventName.set_offline.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_online_invalid.name ()) , null);
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_online_invalid);
+                    l.n (ToJson.To (request) , EventName.set_offline , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e ( ValAnswer.code_online_invalid) , null);
                 }
             }
             else answer = both.getAnswerToClient ();
@@ -67,7 +67,7 @@ public class SetOffline
         else
         {
             answer = AnswerToClient.RequestIsNull ();
-            l.n (ToJson.To (request) , EventName.set_offline.name () , null , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+            l.n (ToJson.To (request) , EventName.set_offline , null , answer , Thread.currentThread ().getStackTrace () , l.e ( AnswerToClient.CUV.request_is_null) , null);
         }
     }
 

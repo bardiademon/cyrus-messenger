@@ -160,6 +160,11 @@ public final class ToJson
         @JsonProperty ("create_class")
         public Map <String, Object> createClass = new LinkedHashMap <> ();
 
+        public CreateClass put (Enum <?> key , Object value)
+        {
+            return put (key.name () , value);
+        }
+
         public CreateClass put (String key , Object value)
         {
             createClass.put (key , value);
@@ -208,9 +213,23 @@ public final class ToJson
 
         @JsonIgnore
         // n => New
+        public static CreateClass n (Enum <?> key , Object value)
+        {
+            return n (key.name () , value);
+        }
+
+        @JsonIgnore
+        // n => New
         public static CreateClass n (String key , Object value)
         {
             return ((new CreateClass ()).put (key , value));
+        }
+
+        @JsonIgnore
+        // n => New , j => to json
+        public static String nj (Enum <?> key , Object value)
+        {
+            return nj (key.name () , value);
         }
 
         @JsonIgnore

@@ -67,11 +67,11 @@ public final class SIServer
             {
                 String codeLogin;
                 if ((codeLogin = SetOnline (firstRequest.getOnline ())) != null)
-                    answer.put (KeyAnswer.code_online.name () , codeLogin);
+                    answer.put (KeyAnswer.code_online , codeLogin);
                 else
                 {
                     answer = AnswerToClient.ServerError ();
-                    l.n (data , EventName.firstr.name () , firstRequest.getOnline ().getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.error.name ()) , null);
+                    l.n (data , EventName.firstr.name () , firstRequest.getOnline ().getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.error));
                 }
             }
 
@@ -88,7 +88,7 @@ public final class SIServer
                     if (Time.Bigger (online.getAnnouncementOfPresence () , 15))
                     {
                         if (onlineService == null)
-                            onlineService = This.Services ().Get (OnlineService.class);
+                            onlineService = This.GetService (OnlineService.class);
 
                         onlineService.setOffline (online);
                         Onlines.remove (codeOnline);

@@ -127,16 +127,16 @@ public final class RestSeparateProfile
                             }
                             enumTypesService.Repository.saveAll (enumTypes);
                         }
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name ());
+                        l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed);
                         r.n (mainAccount , tRemove , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (AnswerToClient.CUV.not_found.name ());
+                        answerToClient = AnswerToClient.IdInvalid (AnswerToClient.CUV.not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+                        l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found));
                         r.n (mainAccount , tRemove , true);
                     }
                 }
@@ -144,7 +144,7 @@ public final class RestSeparateProfile
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                     r.n (mainAccount , tRemove , true);
                 }
 
@@ -153,7 +153,7 @@ public final class RestSeparateProfile
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , tRemove , true);
             }
         }
@@ -180,17 +180,17 @@ public final class RestSeparateProfile
             List <IdEnTy> idType = userSeparateProfilesService.findIdType (mainAccount.getId ());
             if (idType != null)
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                answerToClient.put (KeyAnswer.sep.name () , idType);
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                answerToClient.put (KeyAnswer.sep , idType);
                 answerToClient.setReqRes (req , res);
                 l.n (null , rGet , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (idType));
                 r.n (mainAccount , tGet , false);
             }
             else
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
                 answerToClient.setReqRes (req , res);
-                l.n (null , rGet , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                l.n (null , rGet , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found);
                 r.n (mainAccount , tGet , true);
             }
         }
@@ -225,21 +225,21 @@ public final class RestSeparateProfile
                 List <ETIdName> sepFor;
                 if (sep != null && (sepFor = enumTypesService.getEnumType (sep.getId ())) != null)
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
 
                     sep.setCreatedAtForShowClient (Time.toString (sep.getCreatedAt ()));
 
-                    answerToClient.put (KeyAnswer.sep.name () , sep);
-                    answerToClient.put (KeyAnswer.sep_for.name () , sepFor);
+                    answerToClient.put (KeyAnswer.sep , sep);
+                    answerToClient.put (KeyAnswer.sep_for , sepFor);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                    l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found);
                     r.n (request , tGetOne , false);
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_BAD_REQUEST) , AnswerToClient.CUV.not_found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_BAD_REQUEST) , AnswerToClient.CUV.not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                    l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found);
                     r.n (mainAccount , tGetOne , true);
                 }
             }
@@ -247,7 +247,7 @@ public final class RestSeparateProfile
             {
                 answerToClient = AnswerToClient.IdInvalid ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.id_invalid.name ());
+                l.n (request , rGetOne , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.id_invalid);
                 r.n (mainAccount , tGetOne , true);
             }
         }
@@ -343,9 +343,9 @@ public final class RestSeparateProfile
 
                     }
 
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.changed.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.changed);
                     answerToClient.setReqRes (req , res);
-                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.changed.name ());
+                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.changed);
                     r.n (mainAccount , tChange , false);
 
                     System.gc ();
@@ -355,7 +355,7 @@ public final class RestSeparateProfile
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , tChange , true);
             }
         }
@@ -371,42 +371,42 @@ public final class RestSeparateProfile
         {
             answerToClient = AnswerToClient.RequestIsNull ();
             answerToClient.setReqRes (req , res);
-            l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+            l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
             r.n (mainAccount , tChange , true);
         }
         else
         {
             if (!Str.IsEmpty (request.getGender ()) && UserGender.to (request.getGender ()) == null)
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid);
                 answerToClient.setReqRes (req , res);
-                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , tChange , true);
+                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.gender_invalid) , tChange , true);
             }
             else
             {
 //                if (Str.IsEmpty (request.getName ()))
 //                {
-//                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_is_empty.name ());
+//                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.name_is_empty);
 //                    answerToClient.setReqRes (req , res);
-//                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_is_empty.name ()) , null , tChange , true);
+//                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.name_is_empty) , null , tChange , true);
 //                }
 //                else
 //                {
                 if (!request.getId ().isValid () || !userSeparateProfilesService.idIsExists (request.getId ().getId () , mainAccount.getId ()))
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
-                    answerToClient.put (ValAnswer.which.name () , ValAnswer.id_sep.name ());
+                    answerToClient.put (ValAnswer.which , ValAnswer.id_sep);
                     answerToClient.setReqRes (req , res);
-                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                     r.n (mainAccount , tChange , true);
                 }
                 else
                 {
 //                    if (request.getProfileFor () == null || request.getProfileFor ().size () == 0)
 //                    {
-//                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_is_empty.name ());
+//                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.error400 () , ValAnswer.profile_for_is_empty);
 //                        answerToClient.setReqRes (req , res);
-//                        l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_is_empty.name ()) , null);
+//                        l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.profile_for_is_empty));
 //                        r.n (mainAccount , tChange , true);
 //                    }
 //                    else
@@ -421,9 +421,9 @@ public final class RestSeparateProfile
                                     || !enumTypesService.idIsExists (etIdName.getId () , request.getId ().getId ()))
                             {
                                 answerToClient = AnswerToClient.IdInvalid ();
-                                answerToClient.put (ValAnswer.which.name () , etIdName);
+                                answerToClient.put (ValAnswer.which , etIdName);
                                 answerToClient.setReqRes (req , res);
-                                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                                l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                                 r.n (mainAccount , tChange , true);
                                 break;
                             }
@@ -434,9 +434,9 @@ public final class RestSeparateProfile
                     {
                         if (!Str.IsEmpty (request.getMylink ()) && !taotl.isLink (request.getMylink ()))
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
+                            l.n (null , rChange , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.link_invalid));
                             r.n (mainAccount , tChange , true);
                         }
                     }
@@ -471,9 +471,9 @@ public final class RestSeparateProfile
                         UserGender gender = null;
                         if (!Str.IsEmpty (request.getGender ()) && (gender = (UserGender.to (request.getGender ()))) == null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , tAdd , false);
+                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.gender_invalid) , tAdd , false);
                         }
                         else
                         {
@@ -499,60 +499,60 @@ public final class RestSeparateProfile
                                         {
                                             toEnumTypesList (request.getProfileFor () , separateProfiles.getId ());
 
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added.name ());
-                                            answerToClient.put (AnswerToClient.CUV.id.name () , separateProfiles.getId ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added);
+                                            answerToClient.put (AnswerToClient.CUV.id , separateProfiles.getId ());
                                             answerToClient.setReqRes (req , res);
-                                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.added.name ());
+                                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.added);
                                             r.n (mainAccount , tAdd , false);
                                         }
                                         else
                                         {
                                             answerToClient = AnswerToClient.ServerError ();
                                             answerToClient.setReqRes (req , res);
-                                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                            l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
                                             r.n (mainAccount , tAdd , true);
                                         }
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_found.name ());
-                                        answerToClient.put (AnswerToClient.CUV.found.name () , found);
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_found);
+                                        answerToClient.put (AnswerToClient.CUV.found , found);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_found.name ()) , null);
+                                        l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.profile_for_found));
                                         r.n (mainAccount , tAdd , true);
                                     }
 
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_invalid.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.profile_for_invalid);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.profile_for_invalid.name ()) , null);
+                                    l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.profile_for_invalid));
                                     r.n (mainAccount , tAdd , true);
                                 }
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.link_invalid);
                                 answerToClient.setReqRes (req , res);
-                                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.link_invalid.name ()) , null);
+                                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.link_invalid));
                                 r.n (mainAccount , tAdd , true);
                             }
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_is_empty.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_is_empty);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_is_empty.name ()) , null);
+                        l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.name_is_empty));
                         r.n (mainAccount , tAdd , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.empty.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.empty);
                     answerToClient.setReqRes (req , res);
-                    l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.empty.name ()) , null);
+                    l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.empty));
                     r.n (mainAccount , tAdd , true);
                 }
             }
@@ -560,7 +560,7 @@ public final class RestSeparateProfile
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , rAdd , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , tAdd , true);
             }
         }

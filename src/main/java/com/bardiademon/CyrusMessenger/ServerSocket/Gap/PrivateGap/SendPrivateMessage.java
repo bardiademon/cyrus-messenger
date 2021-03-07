@@ -12,11 +12,11 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Mai
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.SIServer;
 import com.bardiademon.CyrusMessenger.This;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusJSON;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONObject;
 
 public final class SendPrivateMessage extends Thread implements Runnable
 {
@@ -44,29 +44,29 @@ public final class SendPrivateMessage extends Thread implements Runnable
 
     private void send (String onlineCode , Online online)
     {
-        final JSONObject message = new JSONObject ();
+        final CyrusJSON message = new CyrusJSON ();
 
         if (forSendToClient.isForward)
-            message.put (KeyAnswer.gap_id.name () , forSendToClient.emptyGap.getId ());
+            message.put (KeyAnswer.gap_id , forSendToClient.emptyGap.getId ());
         else
-            message.put (KeyAnswer.gap_id.name () , forSendToClient.gap.getId ());
+            message.put (KeyAnswer.gap_id , forSendToClient.gap.getId ());
 
         final GapTextType textType = forSendToClient.gap.getTextType ();
         if (textType != null)
-            message.put (KeyAnswer.text_type.name () , textType.name ());
+            message.put (KeyAnswer.text_type , textType);
 
         if (forSendToClient.questionText != null)
-            message.put (KeyAnswer.question_text_id.name () , forSendToClient.questionText.getId ());
+            message.put (KeyAnswer.question_text_id , forSendToClient.questionText.getId ());
 
-        message.put (KeyAnswer.text.name () , forSendToClient.gap.getText ());
-        message.put (KeyAnswer.send_at.name () , Time.timestamp (forSendToClient.gap.getSendAt ()).getTime ());
+        message.put (KeyAnswer.text , forSendToClient.gap.getText ());
+        message.put (KeyAnswer.send_at , Time.timestamp (forSendToClient.gap.getSendAt ()).getTime ());
 
         final MainAccount from = forSendToClient.from;
 
-        message.put (KeyAnswer.from.name () , from.getUsername ().getUsername ());
+        message.put (KeyAnswer.from , from.getUsername ().getUsername ());
 
         if (forSendToClient.isForward)
-            message.put (KeyAnswer.forward_from.name () , forSendToClient.gap.getFrom ().getUsername ().getUsername ());
+            message.put (KeyAnswer.forward_from , forSendToClient.gap.getFrom ().getUsername ().getUsername ());
 
         final List <GapTypes> gapTypes = forSendToClient.gap.getGapTypes ();
 
@@ -74,7 +74,7 @@ public final class SendPrivateMessage extends Thread implements Runnable
         {
             List <String> gapsTypes = new ArrayList <> ();
             for (GapTypes gapType : gapTypes) gapsTypes.add (gapType.getGapType ().name ());
-            message.put (KeyAnswer.gap_types.name () , gapsTypes);
+            message.put (KeyAnswer.gap_types , gapsTypes);
         }
 
         final List <GapsFiles> filesGaps = forSendToClient.gap.getFilesGaps ();
@@ -83,14 +83,14 @@ public final class SendPrivateMessage extends Thread implements Runnable
         if (filesGaps != null && filesGaps.size () > 0)
         {
             final List <String> codeFiles = new ArrayList <> ();
-            final GapsFilesUsageReportService gapsFilesUsageReportService = This.Services ().Get (GapsFilesUsageReportService.class);
+            final GapsFilesUsageReportService gapsFilesUsageReportService = This.GetService (GapsFilesUsageReportService.class);
 
             for (final GapsFiles filesGap : filesGaps)
             {
                 gapsFilesUsageReportService.used (filesGap , to , WhatDidDo.get_link);
                 codeFiles.add (filesGap.getCode ());
             }
-            message.put (KeyAnswer.files.name () , codeFiles);
+            message.put (KeyAnswer.files , codeFiles);
         }
 
         online.setAnnouncementOfPresence (LocalDateTime.now ());

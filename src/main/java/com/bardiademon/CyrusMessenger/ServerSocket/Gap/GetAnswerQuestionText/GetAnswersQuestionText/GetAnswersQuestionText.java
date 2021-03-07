@@ -18,6 +18,7 @@ import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.CheckPublicRequest;
 import com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap.CheckPublicRequest.Client;
 import com.bardiademon.CyrusMessenger.This;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusJSON;
 import com.bardiademon.CyrusMessenger.bardiademon.ID;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
@@ -31,6 +32,13 @@ import org.json.JSONObject;
  */
 public final class GetAnswersQuestionText
 {
+    private final String event;
+
+    public GetAnswersQuestionText ()
+    {
+        event = EventName.e_ssg_get_all_answer_question_text.name ();
+    }
+
     public void get (final GetAnswersQuestionTextRequest request , final Client client)
     {
         /**
@@ -72,7 +80,7 @@ public final class GetAnswersQuestionText
                                              * bayad barasi konim sath dastresi dare in karbar be in karbari ke javab dade ya na
                                              */
 
-                                            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                                            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
 
                                             final JSONArray usersIdsYes = new JSONArray ();
                                             final JSONArray usersIdsNo = new JSONArray ();
@@ -96,12 +104,12 @@ public final class GetAnswersQuestionText
                                             answersYesNos.clear ();
                                             System.gc ();
 
-                                            final JSONObject usersIds = new JSONObject ();
-                                            usersIds.put (ValAnswer.users_yes.name () , usersIdsYes);
-                                            usersIds.put (ValAnswer.users_no.name () , usersIdsNo);
+                                            final CyrusJSON usersIds = new CyrusJSON ();
+                                            usersIds.put (ValAnswer.users_yes , usersIdsYes);
+                                            usersIds.put (ValAnswer.users_no , usersIdsNo);
 
-                                            answer.put (ValAnswer.users.name () , usersIds.toString ());
-                                            l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , null , usersIds.toString () , SubmitRequestType.socket , true);
+                                            answer.put (ValAnswer.users , usersIds.toString ());
+                                            l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , null , usersIds.toString () , SubmitRequestType.socket , true);
                                         }
                                         else
                                         {
@@ -109,13 +117,13 @@ public final class GetAnswersQuestionText
                                              * khata darim chon bala ma tedad answer ha ro gereftim agar inja biyad moshkeli bish omade
                                              */
                                             answer = AnswerToClient.ServerError ();
-                                            l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ValAnswer.not_answer.name () , SubmitRequestType.socket , true);
+                                            l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again) , ValAnswer.not_answer.name () , SubmitRequestType.socket , true);
                                         }
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.IdInvalid (ValAnswer.not_answer.name ());
-                                        l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_answer.name ()) , null , SubmitRequestType.socket , true);
+                                        answer = AnswerToClient.IdInvalid (ValAnswer.not_answer);
+                                        l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_answer) , SubmitRequestType.socket , true);
                                     }
                                 }
                                 else
@@ -170,7 +178,7 @@ public final class GetAnswersQuestionText
                                                             /*
                                                              * inja dastersi vojod nadashte va ye log sabt mishe
                                                              */
-                                                            l.n (Thread.currentThread ().getStackTrace () , new Exception ("access denied") , accessLevel.toString ());
+                                                            l.n (Thread.currentThread ().getStackTrace () , l.e ("access denied") , accessLevel.toString ());
                                                         }
                                                     }
                                                     if (usersId.length () > 0)
@@ -180,20 +188,20 @@ public final class GetAnswersQuestionText
 
                                             if (answers.length () > 0)
                                             {
-                                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                                                answer.put (ValAnswer.users.name () , answers.toString ());
-                                                l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , false);
+                                                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                                                answer.put (ValAnswer.users , answers.toString ());
+                                                l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , null , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , false);
                                             }
                                             else
                                             {
-                                                answer = AnswerToClient.IdInvalid (ValAnswer.not_answer.name ());
-                                                l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_answer.name ()) , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
+                                                answer = AnswerToClient.IdInvalid (ValAnswer.not_answer);
+                                                l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_answer) , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
                                             }
                                         }
                                         catch (JSONException e)
                                         {
                                             answer = AnswerToClient.ServerError ();
-                                            l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
+                                            l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , e , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
                                         }
                                     }
                                     else
@@ -202,38 +210,38 @@ public final class GetAnswersQuestionText
                                          * agar (options == null && options.size () == 0) hatman moshkeli pish amade chon vaghti be in ghesmat miyad question option hast
                                          */
                                         answer = AnswerToClient.ServerError ();
-                                        l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
+                                        l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again) , ToJson.CreateClass.nj ("question_text_id" , questionText.getId ()) , SubmitRequestType.socket , true);
                                     }
                                 }
                             }
                             else
                             {
-                                answer = AnswerToClient.IdInvalid (ValAnswer.not_found_question_text.name ());
-                                l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_question_text.name ()) , null , SubmitRequestType.socket , true);
+                                answer = AnswerToClient.IdInvalid (ValAnswer.not_found_question_text);
+                                l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_question_text) , SubmitRequestType.socket , true);
                             }
                         }
                         else
                         {
-                            answer = AnswerToClient.IdInvalid (ValAnswer.not_found_gap.name ());
-                            l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_gap.name ()) , null , SubmitRequestType.socket , true);
+                            answer = AnswerToClient.IdInvalid (ValAnswer.not_found_gap);
+                            l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_gap) , SubmitRequestType.socket , true);
                         }
                     }
                     else
                     {
-                        answer = AnswerToClient.IdInvalid (ValAnswer.invalid_personal_gap_id.name ());
-                        l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gap_id.name ()) , null , SubmitRequestType.socket , true);
+                        answer = AnswerToClient.IdInvalid (ValAnswer.invalid_personal_gap_id);
+                        l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_personal_gap_id) , SubmitRequestType.socket , true);
                     }
                 }
                 else
                 {
-                    answer = AnswerToClient.IdInvalid (ValAnswer.invalid_gap_id.name ());
-                    l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_gap_id.name ()) , null , SubmitRequestType.socket , true);
+                    answer = AnswerToClient.IdInvalid (ValAnswer.invalid_gap_id);
+                    l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_gap_id) , SubmitRequestType.socket , true);
                 }
             }
             else
             {
-                answer = AnswerToClient.IdInvalid (ValAnswer.invalid_question_text_id.name ());
-                l.n (ToJson.To (request) , EventName.ssg_get_all_answer_question_text.name () , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_question_text_id.name ()) , null , SubmitRequestType.socket , true);
+                answer = AnswerToClient.IdInvalid (ValAnswer.invalid_question_text_id);
+                l.n (ToJson.To (request) , event , client.getMainAccount () , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_question_text_id) , SubmitRequestType.socket , true);
             }
 
             final String answerToJson = ToJson.To (answer);

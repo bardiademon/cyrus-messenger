@@ -132,26 +132,26 @@ public final class RestUploadProfilePictureUser
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed.name ());
-                            answerToClient.put (KeyAnswer.limit.name () , maxUploadProfilePictures);
+                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed);
+                            answerToClient.put (KeyAnswer.limit , maxUploadProfilePictures);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.upload_limit_completed.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.upload_limit_completed));
                             r.n (mainAccount , SubmitRequestType.upload_profile_picture_user , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_not_found.name ());
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_not_found.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_not_found));
                         r.n (mainAccount , SubmitRequestType.upload_profile_picture_user , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_invalid.name ());
+                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_invalid);
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_invalid));
                     r.n (mainAccount , SubmitRequestType.upload_profile_picture_user , true);
                 }
             }
@@ -231,8 +231,8 @@ public final class RestUploadProfilePictureUser
                     profilePicturesService.Repository.save (newProfilePictures);
                 }
 
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
-                answerToClient.put (AnswerToClient.CUK.id.name () , newProfilePictures.getId ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded);
+                answerToClient.put (AnswerToClient.CUK.id , newProfilePictures.getId ());
 
                 answerToClient.setReqRes (req , res);
                 l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.uploaded.name ());
@@ -243,7 +243,7 @@ public final class RestUploadProfilePictureUser
         catch (Exception e)
         {
             answerToClient = AnswerToClient.ServerError ();
-            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e);
         }
 
         return answerToClient;

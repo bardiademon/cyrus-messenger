@@ -31,7 +31,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException ignored)
         {
@@ -55,7 +55,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException e)
         {
@@ -77,7 +77,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException ignored)
         {
@@ -98,7 +98,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException ignored)
         {
@@ -119,7 +119,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException ignored)
         {
@@ -140,7 +140,7 @@ public final class DefaultService
                     throw new DefaultException (aDefault.toString ());
             }
             else
-                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key.name ()).toJson ());
+                throw new DefaultException (ToJson.CreateClass.n ("message" , "Default is null").put ("key" , key).toJson ());
         }
         catch (DefaultException e)
         {

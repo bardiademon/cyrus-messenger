@@ -392,7 +392,7 @@ public class UserProfileAccessLevel
         return "UserProfileAccessLevel{" +
                 "applicant=" + applicant.getId () +
                 ", user=" + user.getUsername () +
-                ", which=" + which.name () +
+                ", which=" + which +
                 ", desEnumTypes='" + desEnumTypes + '\'' +
                 ", userBlockedType='" + userBlockedType + '\'' +
                 ", separateProfile=" + separateProfile +

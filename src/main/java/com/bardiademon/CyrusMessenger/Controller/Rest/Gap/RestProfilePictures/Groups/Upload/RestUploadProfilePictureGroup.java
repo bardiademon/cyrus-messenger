@@ -135,8 +135,8 @@ public final class RestUploadProfilePictureGroup
                                             }
                                             else
                                             {
-                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found.name ());
-                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
+                                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found);
+                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_profile_picture_not_found));
                                                 r.n (mainAccount , type , false);
                                             }
                                         }
@@ -144,8 +144,8 @@ public final class RestUploadProfilePictureGroup
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid.name ());
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_invalid.name ()) , null);
+                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_profile_picture_invalid));
                                         r.n (mainAccount , type , false);
                                     }
 
@@ -162,10 +162,10 @@ public final class RestUploadProfilePictureGroup
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed.name ());
-                            answerToClient.put (KeyAnswer.limit.name () , maxUploadProfilePicture);
+                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.upload_limit_completed);
+                            answerToClient.put (KeyAnswer.limit , maxUploadProfilePicture);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.upload_limit_completed.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.upload_limit_completed));
                             r.n (mainAccount , type , true);
                         }
                     }
@@ -173,7 +173,7 @@ public final class RestUploadProfilePictureGroup
                     {
                         answerToClient = manageGroup.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("error from class CanManageGroup") , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("error from class CanManageGroup"));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -181,7 +181,7 @@ public final class RestUploadProfilePictureGroup
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id group invalid") , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("id group invalid"));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -261,9 +261,9 @@ public final class RestUploadProfilePictureGroup
 
                     profilePicturesService.Repository.save (profilePictures);
                     if (request.isReplace ())
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated);
                     else
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.uploaded);
                 }
                 else throw new Exception ("Cannot upload, path=" + path);
             }
@@ -273,7 +273,7 @@ public final class RestUploadProfilePictureGroup
         {
             answerToClient = AnswerToClient.ServerError ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e);
         }
 
         return answerToClient;

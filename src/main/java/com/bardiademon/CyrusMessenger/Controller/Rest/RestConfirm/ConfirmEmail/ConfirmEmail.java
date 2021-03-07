@@ -104,10 +104,10 @@ public final class ConfirmEmail
                 {
                     if (!userEmailsService.find ())
                     {
-                        final Integer min = defaultService.getInt (DefaultKey.ce_min_valid);
-                        if (min != null)
+                        final DefaultService.Value <Integer> min = defaultService.integerValue (DefaultKey.ce_min_valid);
+                        if (min.ok)
                         {
-                            ConfirmCode sendCode = confirmCodeService.Repository.findCode (LocalDateTime.now () , LocalDateTime.now ().plusMinutes (min));
+                            ConfirmCode sendCode = confirmCodeService.Repository.findCode (LocalDateTime.now () , LocalDateTime.now ().plusMinutes (min.value));
                             if (sendCode == null)
                             {
                                 List <ConfirmCode> lstFindCode
@@ -125,7 +125,7 @@ public final class ConfirmEmail
                                     confirmCodeService.Repository.saveAll (lstFindCode);
                                     answerToClient = AnswerToClient.ServerError ();
                                     answerToClient.setReqRes (req , res);
-                                    l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                    l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
                                     r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                                 }
                                 else
@@ -167,7 +167,7 @@ public final class ConfirmEmail
                                         }
                                         catch (InterruptedException e)
                                         {
-                                            l.n (request , routerSC , mainAccount , null , Thread.currentThread ().getStackTrace () , e , null);
+                                            l.n (request , routerSC , mainAccount , null , Thread.currentThread ().getStackTrace () , e );
                                         }
                                     }
                                     if (createCode.get ())
@@ -180,56 +180,56 @@ public final class ConfirmEmail
                                         confirm.setMainAccount (mainAccount);
                                         confirm.setSendCodeTo (email);
                                         confirm.setTimeToSendCode (LocalDateTime.now ());
-                                        confirm.setTimeToBeOutdated (confirm.getTimeToSendCode ().plusMinutes (min));
+                                        confirm.setTimeToBeOutdated (confirm.getTimeToSendCode ().plusMinutes (min.value));
 
                                         confirm = confirmCodeService.Repository.save (confirm);
 
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.was_send.name ());
-                                        answerToClient.put (AnswerToClient.CUV.id.name () , confirm.getId ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.was_send);
+                                        answerToClient.put (AnswerToClient.CUV.id , confirm.getId ());
                                         answerToClient.setReqRes (req , res);
-                                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
                                         r.nim (req.getRemoteAddr () , mainAccount , typeSC , false);
                                     }
                                     else
                                     {
                                         answerToClient = AnswerToClient.ServerError ();
                                         answerToClient.setReqRes (req , res);
-                                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
                                         r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                                     }
                                 }
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.was_send.name ());
-                                answerToClient.put (KeyAnswer.shipping_time.name () , Time.toString (sendCode.getTimeToSendCode ()));
-                                answerToClient.put (KeyAnswer.validity_time.name () , Time.toString (sendCode.getTimeToBeOutdated ()));
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.was_send);
+                                answerToClient.put (KeyAnswer.shipping_time , Time.toString (sendCode.getTimeToSendCode ()));
+                                answerToClient.put (KeyAnswer.validity_time , Time.toString (sendCode.getTimeToBeOutdated ()));
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.was_send.name ()) , null);
+                                l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.was_send));
                                 r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.ServerError ();
+                            answerToClient = min.answer;
                             answerToClient.setReqRes (req , res);
-                            l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , DefaultKey.ce_min_valid.name ());
+                            l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again) , DefaultKey.ce_min_valid.name ());
                             r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_found.name ()) , null);
+                        l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.email_found));
                         r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_invalid.name ()) , null);
+                    l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.email_invalid));
                     r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
                 }
             }
@@ -237,7 +237,7 @@ public final class ConfirmEmail
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.nim (req.getRemoteAddr () , mainAccount , typeSC , true);
             }
         }
@@ -305,33 +305,33 @@ public final class ConfirmEmail
                                 findCode.setTimeToConfirmed (LocalDateTime.now ());
                                 confirmCodeService.Repository.save (findCode);
 
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.confirmed.name ());
-                                answerToClient.put (ValAnswer.code.name () , confirm.getCode ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.confirmed);
+                                answerToClient.put (ValAnswer.code , confirm.getCode ());
                                 answerToClient.setReqRes (req , res);
                                 l.n (request , routerSC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.confirmed.name ());
                                 r.nim (req.getRemoteAddr () , mainAccount , typeC , false);
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid);
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid.name ()) , null);
+                                l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid));
                                 r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.email_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.email_invalid.name ()) , null);
+                            l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.email_invalid));
                             r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.code_invalid.name ()) , null);
+                        l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.code_invalid));
                         r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
                     }
                 }
@@ -339,7 +339,7 @@ public final class ConfirmEmail
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                     r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
                 }
             }
@@ -347,7 +347,7 @@ public final class ConfirmEmail
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (request , routerC , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.nim (req.getRemoteAddr () , mainAccount , typeC , true);
             }
         }

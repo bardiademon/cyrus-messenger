@@ -18,14 +18,13 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.Use
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.UserLogin.UserLoginService;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.FITD_Username;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusMap;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.r;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
 import com.bardiademon.CyrusMessenger.bardiademon.ToJson;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,9 +97,9 @@ public final class RestFriends
                     {
                         if (user.getId () == friend.getId ())
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_belongs_to_you.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_belongs_to_you);
                             answerToClient.setReqRes (req , res);
-                            l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_belongs_to_you.name ()) , null , tAdd , true);
+                            l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_belongs_to_you) , tAdd , true);
                         }
                         else
                         {
@@ -109,40 +108,40 @@ public final class RestFriends
                             {
                                 answerToClient = confirmationMethod (user , friend);
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , null , null , tAdd , false);
+                                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , tAdd , false);
                             }
                             else
                             {
                                 answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
-                                answerToClient.put (answer.name () , ValAnswer.is_found.name ());
-                                answerToClient.put (KeyAnswer.status.name () , validFriend.getStatus ().name ());
+                                answerToClient.put (answer , ValAnswer.is_found);
+                                answerToClient.put (KeyAnswer.status , validFriend.getStatus ());
                                 answerToClient.setReqRes (req , res);
-                                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.is_found.name ()) , null , tAdd , true);
+                                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.is_found) , tAdd , true);
                             }
                         }
                     }
                     else
                     {
                         answerToClient = AnswerToClient.BadRequest ();
-                        answerToClient.put (answer.name () , ValAnswer.username_not_found.name ());
+                        answerToClient.put (answer , ValAnswer.username_not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null , tAdd , true);
+                        l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_not_found) , tAdd , true);
                     }
                 }
                 else
                 {
                     answerToClient = AnswerToClient.BadRequest ();
-                    answerToClient.put (answer.name () , ValAnswer.username_not_found.name ());
+                    answerToClient.put (answer , ValAnswer.username_not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_not_found.name ()) , null , tAdd , true);
+                    l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_not_found) , tAdd , true);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.BadRequest ();
-                answerToClient.put (answer.name () , ValAnswer.username_invalid.name ());
+                answerToClient.put (answer , ValAnswer.username_invalid);
                 answerToClient.setReqRes (req , res);
-                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.username_invalid.name ()) , null , tAdd , true);
+                l.n (request , rAdd , user , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_invalid) , tAdd , true);
             }
         }
         else answerToClient = both.getAnswerToClient ();
@@ -159,7 +158,7 @@ public final class RestFriends
         {
             addFriend (StatusFriends.rejected , user , friend);
             answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED , false);
-            answerToClient.put (answer.name () , ValAnswer.friend_request_is_locked.name ());
+            answerToClient.put (answer , ValAnswer.friend_request_is_locked);
         }
         else if (friendConfirmationMethod.equals (StatusFriends.ApprovalMethod.approve_all))
         {
@@ -200,7 +199,7 @@ public final class RestFriends
         {
             addFriend (StatusFriends.awaiting_approval , user , friend);
             answerToClient = AnswerToClient.OK ();
-            answerToClient.put (answer.name () , ValAnswer.waiting_for_approval.name ());
+            answerToClient.put (answer , ValAnswer.waiting_for_approval);
         }
 
         return answerToClient;
@@ -239,16 +238,16 @@ public final class RestFriends
                     if (requests != null && requests.size () > 0)
                     {
                         answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
-                                AnswerToClient.CUK.answer.name () , AnswerToClient.CUV.found.name () ,
-                                KeyAnswer.usernames.name () , requests);
+                                AnswerToClient.CUK.answer , AnswerToClient.CUV.found ,
+                                KeyAnswer.usernames , requests);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found , tList , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , tList , true);
                     }
                 }
                 else
@@ -262,44 +261,44 @@ public final class RestFriends
 
                         if (userFriendsList.size () > 0)
                         {
-                            Map <String, String> friend;
+                            CyrusMap <String, String> friend;
                             UserFriends userFriends;
 
                             UserProfileAccessLevel checkUserAccessLevel;
 
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
                             for (int i = 0; i < userFriendsList.size (); i++)
                             {
                                 userFriends = userFriendsList.get (i);
-                                friend = new LinkedHashMap <> ();
+                                friend = new CyrusMap <> ();
 
                                 checkUserAccessLevel = new UserProfileAccessLevel (mainAccount , userFriends.getMainAccountFriend ());
                                 if (checkUserAccessLevel.hasAccess (Which.username))
-                                    friend.put (KeyAnswer.name.name () , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
+                                    friend.put (KeyAnswer.name , userFriends.getMainAccountFriend ().getUsername ().getUsername ());
 
-                                friend.put (KeyAnswer.status.name () , userFriends.getStatus ().name ());
-                                friend.put (KeyAnswer.created_at.name () , Time.toString (userFriends.getCreatedAt ()));
+                                friend.put (KeyAnswer.status , userFriends.getStatus ().name ());
+                                friend.put (KeyAnswer.created_at , Time.toString (userFriends.getCreatedAt ()));
                                 if (userFriends.getUpdatedAt () != null)
-                                    friend.put (KeyAnswer.updated_at.name () , Time.toString (userFriends.getUpdatedAt ()));
+                                    friend.put (KeyAnswer.updated_at , Time.toString (userFriends.getUpdatedAt ()));
 
                                 answerToClient.put (String.valueOf (i) , friend);
                             }
                             answerToClient.setReqRes (req , res);
-                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.found.name () , tList , false);
+                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , AnswerToClient.CUV.found , tList , false);
 
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null , tList , true);
+                            l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found) , tList , true);
                         }
                     }
                     catch (IllegalArgumentException e)
                     {
                         answerToClient = AnswerToClient.BadRequest ();
                         answerToClient.setReqRes (req , res);
-                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.error.name () , tList , true);
+                        l.n (request , rList , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , e , AnswerToClient.CUV.error , tList , true);
                     }
                 }
             }
@@ -349,17 +348,17 @@ public final class RestFriends
 
                     userFriendsService.Repository.save (friend);
 
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed.name ());
-                    answerToClient.put (KeyAnswer.status.name () , statusTemp);
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.removed);
+                    answerToClient.put (KeyAnswer.status , statusTemp);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed.name ());
+                    l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.removed);
                     r.n (mainAccount , tRemove , false);
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.friend_not_found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.friend_not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.friend_not_found.name ()) , null);
+                    l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.friend_not_found));
                     r.n (mainAccount , tRemove , true);
                 }
             }
@@ -367,7 +366,7 @@ public final class RestFriends
             {
                 answerToClient = fitd_username.getAnswer ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (FITD_Username.class.getName ()) , null);
+                l.n (request , rRemove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (FITD_Username.class.getName ()));
                 r.n (mainAccount , tRemove , true);
             }
         }
@@ -400,16 +399,16 @@ public final class RestFriends
                     friend.setStatus (StatusFriends.friend);
                     userFriendsService.Repository.save (friend);
 
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.approved.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.approved);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.approved.name ());
+                    l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.approved);
                     r.n (mainAccount , tApprove , false);
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.friend_not_found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.friend_not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.friend_not_found.name ()) , null);
+                    l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.friend_not_found));
                     r.n (mainAccount , tApprove , true);
                 }
             }
@@ -417,7 +416,7 @@ public final class RestFriends
             {
                 answerToClient = fitd_username.getAnswer ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (FITD_Username.class.getName ()) , null);
+                l.n (request , rApprove , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (FITD_Username.class.getName ()));
                 r.n (mainAccount , tApprove , true);
             }
         }

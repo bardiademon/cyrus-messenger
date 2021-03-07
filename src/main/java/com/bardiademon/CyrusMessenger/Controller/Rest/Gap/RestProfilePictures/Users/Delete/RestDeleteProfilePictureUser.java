@@ -76,16 +76,16 @@ public final class RestDeleteProfilePictureUser
                     profilePictures.setDeletedAt (Time.now ());
                     profilePicturesService.Repository.save (profilePictures);
 
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted);
                     answerToClient.setReqRes (req , res);
                     l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.deleted.name ());
                     r.n (mainAccount , submitType , false);
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found.name ());
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.not_found);
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found));
                     r.n (mainAccount , submitType , true);
                 }
             }
@@ -93,7 +93,7 @@ public final class RestDeleteProfilePictureUser
             {
                 answerToClient = AnswerToClient.IdInvalid ();
                 answerToClient.setReqRes (req , res);
-                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("id invalid") , null);
+                l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("id invalid"));
                 r.n (mainAccount , submitType , true);
             }
         }

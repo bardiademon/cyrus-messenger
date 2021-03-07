@@ -84,15 +84,15 @@ public final class RestPlacementNumberGroup
                     {
                         answerToClient = manageGroup.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_group_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_group_invalid));
                         r.n (mainAccount , type , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid.name ());
+                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid);
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_group_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_group_invalid));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -100,7 +100,7 @@ public final class RestPlacementNumberGroup
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("request is empty") , null);
+                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("request is empty"));
                 r.n (mainAccount , type , true);
             }
         }
@@ -112,7 +112,7 @@ public final class RestPlacementNumberGroup
 
     private enum ValAnswer
     {
-        id_group_invalid, updated
+        id_group_invalid
     }
 
 }

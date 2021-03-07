@@ -54,7 +54,7 @@ public final class ShowProfile
                         (isLogin.getVCodeLogin ().getMainAccount () , mainAccountGetProfile);
 
                 answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.OK () ,
-                        KeyAnswer.i_can.name () , accessLevel.hasAccess (Which.profile));
+                        KeyAnswer.i_can , accessLevel.hasAccess (Which.profile));
 
             }
             else answerToClient = idUsernameMainAccount.getAnswerToClient ();

@@ -69,8 +69,8 @@ public class RestLogin
             answerToClient.setReqRes (req , res);
 
             ToJson.CreateClass createClass = new ToJson.CreateClass ();
-            createClass.put ("blocked_for" , BlockedFor.submit_request.name ()).put ("submit_request_type" , SubmitRequestType.login.name ());
-            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("is_block") , createClass.toJson ());
+            createClass.put ("blocked_for" , BlockedFor.submit_request).put ("submit_request_type" , SubmitRequestType.login);
+            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ( "is_block") , createClass.toJson ());
         }
         else
         {
@@ -118,9 +118,9 @@ public class RestLogin
                         if (resNewLogin.isLogin ())
                         {
                             answerToClient = AnswerToClient.OK ();
-                            answerToClient.put (KeyAnswer.is_login.name () , true);
-                            answerToClient.put (KeyAnswer.code_login.name () , code);
-                            answerToClient.put (KeyAnswer.credit_up.name () , Time.toString (resNewLogin.getCreditUp ()));
+                            answerToClient.put (KeyAnswer.is_login , true);
+                            answerToClient.put (KeyAnswer.code_login , code);
+                            answerToClient.put (KeyAnswer.credit_up , Time.toString (resNewLogin.getCreditUp ()));
                             res.addCookie (MCookie.CookieApi (code));
                             submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , false);
 
@@ -134,7 +134,7 @@ public class RestLogin
 
                             ToJson.CreateClass createClass = new ToJson.CreateClass ();
                             createClass.put ("code" , code).put ("account" , ToJson.To (mainAccount)).put ("ip" , req.getRemoteAddr ());
-                            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("can not save new login") , createClass.toJson ());
+                            l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ( "can not save new login") , createClass.toJson ());
                         }
                         System.gc ();
                     }
@@ -143,23 +143,23 @@ public class RestLogin
                         answerToClient = AnswerToClient.ServerError ();
                         ToJson.CreateClass createClass = new ToJson.CreateClass ();
                         createClass.put ("code" , code).put ("account" , ToJson.To (mainAccount)).put ("ip" , req.getRemoteAddr ());
-                        l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("can not create code") , createClass.toJson ());
+                        l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ( "can not create code") , createClass.toJson ());
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , KeyAnswer.password_is_valid.name () , false);
+                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , KeyAnswer.password_is_valid , false);
 
                     answerToClient.setReqRes (req , res);
 
-                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (KeyAnswer.password_is_valid.name ()) , KeyAnswer.password_is_valid.name ());
+                    l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ( KeyAnswer.password_is_valid) , KeyAnswer.password_is_valid);
                     submitRequestService.newRequest (req.getRemoteAddr () , SubmitRequestType.login , true);
                 }
             }
             else
             {
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not valid info") , null);
+                l.n (ToJson.To (request) , Domain.RNLogin.RN_LOGIN , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("not valid info"));
             }
         }
         answerToClient.setReqRes (req , res);

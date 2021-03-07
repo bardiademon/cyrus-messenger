@@ -57,7 +57,7 @@ public final class RestGroups
         this.usernamesService = _UsernamesService;
     }
 
-    @RequestMapping (value = {"" , "/" , "/{strOwnerUser}"})
+    @RequestMapping (value = { "" , "/" , "/{strOwnerUser}" })
     public AnswerToClient get
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -79,7 +79,7 @@ public final class RestGroups
                         OwnerUser ownerUser = OwnerUser.to (strOwnerUser);
                         if (ownerUser != null)
                         {
-                            List<Groups> groups;
+                            List <Groups> groups;
                             if (ownerUser.equals (OwnerUser.owner))
                                 groups = groupsService.fromOwner (mainAccount.getId ());
                             else groups = joinGroupService.listGroupJoin (mainAccount.getId ());
@@ -87,19 +87,19 @@ public final class RestGroups
                             {
                                 RestFindGroups restFindGroups = new RestFindGroups (groupsService , groupSecurityProfileService , usernamesService);
                                 AnswerToClient byLink;
-                                Map<String, Object> message;
-                                Map<?, ?> infoGroup;
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , RestFindGroups.ValAnswer.found.name ());
-                                List<Map<?, ?>> infoGroups = new ArrayList<> ();
+                                Map <String, Object> message;
+                                Map <?, ?> infoGroup;
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , RestFindGroups.ValAnswer.found);
+                                List <Map <?, ?>> infoGroups = new ArrayList <> ();
                                 for (Groups group : groups)
                                 {
                                     try
                                     {
                                         byLink = restFindGroups.getInfoGroup (req , res , group , RestFindGroups.ValAnswer.link.name () , group.getLink ());
                                         message = byLink.getMessage ();
-                                        if (message.get (AnswerToClient.CUK.answer.name ()).equals (RestFindGroups.ValAnswer.found.name ()))
+                                        if (message.get (AnswerToClient.CUK.answer.name ()).equals (RestFindGroups.ValAnswer.found))
                                         {
-                                            infoGroup = (Map<?, ?>) message.get (RestFindGroups.ValAnswer.info_group.name ());
+                                            infoGroup = (Map <?, ?>) message.get (RestFindGroups.ValAnswer.info_group.name ());
                                             if (ownerUser.equals (OwnerUser.owner) || !((group.getGroupSecurityProfile ()).isShowOwner ()))
                                                 infoGroup.remove ("owner");
 
@@ -111,31 +111,31 @@ public final class RestGroups
                                         l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , e , ToJson.To (group));
                                     }
                                 }
-                                answerToClient.put (KeyAnswer.info_groups.name () , infoGroups);
-                                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , RestFindGroups.ValAnswer.found.name ());
+                                answerToClient.put (KeyAnswer.info_groups , infoGroups);
+                                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , RestFindGroups.ValAnswer.found);
                                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , false);
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
                                 answerToClient.setReqRes (req , res);
-                                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found.name ());
+                                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , AnswerToClient.CUV.not_found);
                                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.owner_or_user_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.owner_or_user_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.owner_or_user_invalid.name ());
+                            l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.owner_or_user_invalid);
                             r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_set_owner_or_user.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.not_set_owner_or_user);
                         answerToClient.setReqRes (req , res);
-                        l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_set_owner_or_user.name ()) , null);
+                        l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_set_owner_or_user));
                         r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
                     }
                 }
@@ -143,14 +143,14 @@ public final class RestGroups
                 {
                     answerToClient = checkBlockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+                    l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block by system"));
                 }
             }
             else
             {
                 answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
-                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+                l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block by system"));
                 r.n (req.getRemoteAddr () , SubmitRequestType.owner_groups , true);
             }
         }
@@ -158,7 +158,7 @@ public final class RestGroups
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block by system") , null);
+            l.n (strOwnerUser , Domain.RNGap.RNGroups.RN_GROUPS , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block by system"));
         }
         return answerToClient;
     }

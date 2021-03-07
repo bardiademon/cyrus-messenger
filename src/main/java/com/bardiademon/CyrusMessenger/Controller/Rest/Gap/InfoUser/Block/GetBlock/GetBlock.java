@@ -43,7 +43,7 @@ public final class GetBlock
 
             List <UserBlocked> userBlocked = UserProfileAccessLevel._Service.userBlockedService.listBlocked (mainAccount.getId ());
             if (userBlocked == null || userBlocked.size () == 0)
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
             else
             {
                 UserBlocked blocked;

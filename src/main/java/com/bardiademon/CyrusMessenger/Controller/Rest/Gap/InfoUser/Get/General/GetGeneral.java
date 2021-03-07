@@ -51,48 +51,48 @@ public class GetGeneral
                 answerToClient = AnswerToClient.OK ();
 
                 if (requestInfoUser.isGetName ())
-                    answerToClient.put (KeyAnswer.name.name () , mainAccount.getName ());
+                    answerToClient.put (KeyAnswer.name , mainAccount.getName ());
 
                 if (requestInfoUser.isGetFamily ())
-                    answerToClient.put (KeyAnswer.family.name () , mainAccount.getFamily ());
+                    answerToClient.put (KeyAnswer.family , mainAccount.getFamily ());
 
                 if (requestInfoUser.isGetUsername () && mainAccount.getUsername () != null)
-                    answerToClient.put (KeyAnswer.username.name () , mainAccount.getUsername ().getUsername ());
+                    answerToClient.put (KeyAnswer.username , mainAccount.getUsername ().getUsername ());
 
                 if (requestInfoUser.isGetEmail ())
-                    answerToClient.put (KeyAnswer.email.name () , mainAccount.getEmail ());
+                    answerToClient.put (KeyAnswer.email , mainAccount.getEmail ());
 
                 if (requestInfoUser.isGetPhone ())
-                    answerToClient.put (KeyAnswer.phone.name () , mainAccount.getPhone ());
+                    answerToClient.put (KeyAnswer.phone , mainAccount.getPhone ());
 
                 if (requestInfoUser.isGetMyLink ())
-                    answerToClient.put (KeyAnswer.mylink.name () , mainAccount.getMyLink ());
+                    answerToClient.put (KeyAnswer.mylink , mainAccount.getMyLink ());
 
                 if (requestInfoUser.isGetBio ())
-                    answerToClient.put (KeyAnswer.bio.name () , mainAccount.getBio ());
+                    answerToClient.put (KeyAnswer.bio , mainAccount.getBio ());
 
                 if (requestInfoUser.isGetListFriends ())
-                    answerToClient.put (KeyAnswer.list_friends.name () ,
+                    answerToClient.put (KeyAnswer.list_friends ,
                             getListFriend (mainAccount.getId () , StatusFriends.friend));
 
                 if (requestInfoUser.isGetListFriendsReject ())
-                    answerToClient.put (KeyAnswer.list_friends_reject.name () ,
+                    answerToClient.put (KeyAnswer.list_friends_reject ,
                             getListFriend (mainAccount.getId () , StatusFriends.rejected));
 
                 if (requestInfoUser.isGetListFriendsReject ())
-                    answerToClient.put (KeyAnswer.list_friends_reject.name () ,
+                    answerToClient.put (KeyAnswer.list_friends_reject ,
                             getListFriend (mainAccount.getId () , StatusFriends.rejected));
 
                 if (requestInfoUser.isGetListFriendsAwaitingApproval ())
-                    answerToClient.put (KeyAnswer.list_friends_awaiting_approval.name () ,
+                    answerToClient.put (KeyAnswer.list_friends_awaiting_approval ,
                             getListFriend (mainAccount.getId () , StatusFriends.awaiting_approval));
 
                 if (requestInfoUser.isGetListFriendsDeleted ())
-                    answerToClient.put (KeyAnswer.list_friends_deleted.name () ,
+                    answerToClient.put (KeyAnswer.list_friends_deleted ,
                             getListFriend (mainAccount.getId () , StatusFriends.deleted));
 
                 if (requestInfoUser.isGetGender ())
-                    answerToClient.put (KeyAnswer.gender.name () , mainAccount.getGender ().name ());
+                    answerToClient.put (KeyAnswer.gender , mainAccount.getGender ());
 
             }
             else answerToClient = AnswerToClient.BadRequest ();

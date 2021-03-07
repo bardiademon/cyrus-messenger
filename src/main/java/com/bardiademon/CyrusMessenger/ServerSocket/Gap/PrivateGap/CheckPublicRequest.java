@@ -25,21 +25,21 @@ public final class CheckPublicRequest
             online.setAnnouncementOfPresence (LocalDateTime.now ());
             online.setClient (client);
             SIServer.Onlines.replace (request.getCodeOnline () , online);
-            cbsil = CBSIL.Both (request , request.getCodeLogin () , eventName.name ());
+            cbsil = CBSIL.Both (request , request.getCodeLogin () , eventName);
             if (!cbsil.isOk ()) answer = cbsil.getAnswerToClient ();
         }
         else
         {
             answer = AnswerToClient.NotLoggedIn ();
-            answer.put (KeyAnswer.description.name () , ValAnswer.invalid_online_code.name ());
-            l.n (ToJson.To (request) , null , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , null);
+            answer.put (KeyAnswer.description , ValAnswer.invalid_online_code);
+            l.n (ToJson.To (request) , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_online_code));
         }
 
         if (answer != null)
         {
             try
             {
-                final EventName answerEvent = EventName.valueOf (String.format ("e_%s" , eventName.name ()));
+                final EventName answerEvent = EventName.valueOf (String.format ("e_%s" , eventName));
                 client.sendEvent (answerEvent.name () , ToJson.To (answer));
                 l.n (Thread.currentThread ().getStackTrace () , ToJson.To (answer));
             }

@@ -63,9 +63,9 @@ public final class UpdatePlacementNumber
 
         new SortProfilePictures (profilePicturesService , profilePictures);
 
-        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated.name ());
+        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated);
         answerToClient.setReqRes (req , res);
-        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.updated.name ());
+        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.updated);
         r.n (mainAccount , type , false);
     }
 

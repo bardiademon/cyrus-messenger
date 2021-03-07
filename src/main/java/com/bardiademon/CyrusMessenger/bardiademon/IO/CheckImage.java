@@ -111,46 +111,46 @@ public final class CheckImage
                     }
                     else
                     {
-                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.invalid_width_or_height.name ());
+                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.invalid_width_or_height);
 
-                        answer.put (AnswerToClient.CUK.acceptable_width_height.name () ,
+                        answer.put (AnswerToClient.CUK.acceptable_width_height ,
 
-                                ToJson.CreateClass.n (AnswerToClient.CUK.min_width.name () , minWidth)
-                                        .put (AnswerToClient.CUK.max_width.name () , maxWidth)
-                                        .put (AnswerToClient.CUK.min_width.name () , minWidth)
-                                        .put (AnswerToClient.CUK.min_height.name () , minHeight)
-                                        .put (AnswerToClient.CUK.max_height.name () , maxHeight).getCreateClass ())
+                                ToJson.CreateClass.n (AnswerToClient.CUK.min_width , minWidth)
+                                        .put (AnswerToClient.CUK.max_width , maxWidth)
+                                        .put (AnswerToClient.CUK.min_width , minWidth)
+                                        .put (AnswerToClient.CUK.min_height , minHeight)
+                                        .put (AnswerToClient.CUK.max_height , maxHeight).getCreateClass ())
 
-                                .put (KeyAnswer.your_image_width_height.name () ,
-                                        ToJson.CreateClass.n (AnswerToClient.CUK.width.name () , imageWidth)
-                                                .put (AnswerToClient.CUK.height.name () , imageHeight).getCreateClass ());
+                                .put (KeyAnswer.your_image_width_height ,
+                                        ToJson.CreateClass.n (AnswerToClient.CUK.width , imageWidth)
+                                                .put (AnswerToClient.CUK.height , imageHeight).getCreateClass ());
 
                         answer.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.invalid_width_or_height.name ()) , null , type , true);
+                        l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.invalid_width_or_height) , type , true);
                     }
                 }
                 else
                 {
                     answer = AnswerToClient.ServerError ();
                     answer.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null , type , true);
+                    l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again) , type , true);
                 }
             }
             else
             {
-                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.the_size_of_the_image_is_large.name ());
-                answer.put (AnswerToClient.CUK.acceptable_size.name () , GetSize.Get (maxSize));
-                answer.put (KeyAnswer.your_image_size.name () , GetSize.Get (this.getSize ()));
-                answer.put (AnswerToClient.CUK.extra_size.name () , GetSize.Get ((this.getSize () - maxSize)));
+                answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.the_size_of_the_image_is_large);
+                answer.put (AnswerToClient.CUK.acceptable_size , GetSize.Get (maxSize));
+                answer.put (KeyAnswer.your_image_size , GetSize.Get (this.getSize ()));
+                answer.put (AnswerToClient.CUK.extra_size , GetSize.Get ((this.getSize () - maxSize)));
                 answer.setReqRes (req , res);
-                l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.the_size_of_the_image_is_large.name ()) , null , type , true);
+                l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.the_size_of_the_image_is_large) , type , true);
             }
         }
         else
         {
             answer = AnswerToClient.ServerError ();
             answer.setReqRes (req , res);
-            l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , DefaultKey.max_size_sticker.name () , type , true);
+            l.n (request , router , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again) , DefaultKey.max_size_sticker.name () , type , true);
         }
         return answer;
     }

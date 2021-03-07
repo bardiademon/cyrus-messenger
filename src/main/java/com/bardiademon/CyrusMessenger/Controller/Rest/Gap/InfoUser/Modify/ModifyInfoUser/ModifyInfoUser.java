@@ -67,15 +67,15 @@ public final class ModifyInfoUser
                 {
                     answerToClient = AnswerToClient.RequestIsNull ();
                     answerToClient.setReqRes (req , res);
-                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , type , true);
+                    l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , type , true);
                 }
                 else
                 {
                     if (!IsEmpty (requestMIU.getGender ()) && (UserGender.to (requestMIU.getGender ())) == null)
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.gender_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.gender_invalid.name ()) , null , type , true);
+                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.gender_invalid) , type , true);
                     }
                     else
                     {
@@ -83,32 +83,32 @@ public final class ModifyInfoUser
                         answerToClient = AnswerToClient.OK ();
 
                         if (requestMIU.isUpdatedBio () || !IsEmpty (requestMIU.getBio ()))
-                            answerToClient.put (KeyAnswer.bio.name () , true);
+                            answerToClient.put (KeyAnswer.bio , true);
 
                         if (requestMIU.isUpdatedName () || !IsEmpty (requestMIU.getName ()))
-                            answerToClient.put (KeyAnswer.name.name () , true);
+                            answerToClient.put (KeyAnswer.name , true);
 
                         if (requestMIU.isUpdatedFamily () || !IsEmpty (requestMIU.getFamily ()))
-                            answerToClient.put (KeyAnswer.family.name () , true);
+                            answerToClient.put (KeyAnswer.family , true);
 
                         if (requestMIU.isUpdatedMylink () || !IsEmpty (requestMIU.getMylink ()))
-                            answerToClient.put (KeyAnswer.mylink.name () , true);
+                            answerToClient.put (KeyAnswer.mylink , true);
 
                         if (requestMIU.isUpdatedGender () || !IsEmpty (requestMIU.getGender ()))
-                            answerToClient.put (KeyAnswer.gender.name () , true);
+                            answerToClient.put (KeyAnswer.gender , true);
 
                         if (requestMIU.isUpdatePhone () || !IsEmpty (requestMIU.getCodeConfirmPhone ()))
-                            answerToClient.put (KeyAnswer.phone.name () , true);
+                            answerToClient.put (KeyAnswer.phone , true);
 
                         if (requestMIU.isUpdateEmail () || !IsEmpty (requestMIU.getCodeConfirmPhone ()))
-                            answerToClient.put (KeyAnswer.email.name () , true);
+                            answerToClient.put (KeyAnswer.email , true);
 
                         if (requestMIU.getMessage () != null)
-                            answerToClient.put (KeyAnswer.messages.name () , requestMIU.getMessage ());
+                            answerToClient.put (KeyAnswer.messages , requestMIU.getMessage ());
 
 
                         answerToClient.setReqRes (req , res);
-                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.check_the_request.name ()) , null , type , false);
+                        l.n (request , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.check_the_request) , type , false);
                     }
                 }
             }
@@ -116,7 +116,7 @@ public final class ModifyInfoUser
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null , type , true);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , type , true);
             }
 
         }

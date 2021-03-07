@@ -33,9 +33,9 @@ public final class FITD_Username
     {
         this.username = Username;
         if (validation ()) found = foundUsername ();
-        else answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_invalid.name ());
+        else answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_invalid);
 
-        if (answer != null) answer.put (KeyAnswer.valusername.name () , Username);
+        if (answer != null) answer.put (KeyAnswer.valusername , Username);
     }
 
     private boolean validation ()
@@ -53,7 +53,7 @@ public final class FITD_Username
         }
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_not_found.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_not_found);
             return false;
         }
     }

@@ -24,7 +24,7 @@ public final class FirstRequest
 
     private boolean isOnline;
 
-    public FirstRequest (String CodeLogin , SocketIOClient Client)
+    public FirstRequest (final String CodeLogin , final SocketIOClient Client)
     {
         this.codeLogin = CodeLogin;
         this.client = Client;
@@ -34,7 +34,7 @@ public final class FirstRequest
 
     private void online ()
     {
-        UserLoginService userLoginService = (UserLoginService) This.Services ().Get (UserLoginService.class);
+        UserLoginService userLoginService = This.GetService (UserLoginService.class);
         if (userLoginService != null)
         {
             CBSIL cbsil = CBSIL.Both (request , null , null , codeLogin , userLoginService , null , SubmitRequestType.socket);
@@ -52,7 +52,7 @@ public final class FirstRequest
                 online.setOnlineAt (LocalDateTime.now ());
                 online.setUuid (client.getSessionId ().toString ());
 
-                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.online.name ());
+                answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.online);
                 l.n (request , null , answer , Thread.currentThread ().getStackTrace () , null , ValAnswer.online.name ());
 
                 isOnline = true;
@@ -62,7 +62,7 @@ public final class FirstRequest
         else
         {
             answer = AnswerToClient.ServerError ();
-            l.n (request , null , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+            l.n (request , null , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
         }
     }
 
@@ -72,7 +72,7 @@ public final class FirstRequest
         {
             if (online.getMainAccount ().getUsername ().getUsername ().equals (username))
             {
-                OnlineService onlineService = (OnlineService) This.Services ().Get (OnlineService.class);
+                OnlineService onlineService = This.GetService (OnlineService.class);
                 if (onlineService != null)
                 {
                     onlineService.setOffline (online);

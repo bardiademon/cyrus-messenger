@@ -23,7 +23,7 @@ public final class CheckForward
 
     public CheckForward ()
     {
-        this.gapsService = This.Services ().Get (GapsService.class);
+        this.gapsService = This.GetService (GapsService.class);
     }
 
     public CheckRequestGapAnswer forward (final RequestGap requestGap , final MainAccount mainAccount)
@@ -50,25 +50,25 @@ public final class CheckForward
                                 if (personalGap != null)
                                 {
                                     answer = new CheckRequestGapAnswer (gaps);
-                                    l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (answer) , SubmitRequestType.socket , false);
+                                    l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , ToJson.To (answer) , SubmitRequestType.socket , false);
                                 }
                                 else
                                 {
-                                    answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gap.name ()));
-                                    l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_personal_gap.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                                    answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_personal_gap));
+                                    l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_personal_gap) , ToJson.To (answer) , SubmitRequestType.socket , true);
                                 }
                             }
                             else
                             {
                                 answer = new CheckRequestGapAnswer (idUsernameMainAccount.getAnswerToClient ());
-                                l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                                l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
                             }
                         }
                     }
                     else
                     {
-                        answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gap_id.name ()));
-                        l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_personal_gap_id.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                        answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_personal_gap_id));
+                        l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_personal_gap_id) , ToJson.To (answer) , SubmitRequestType.socket , true);
                     }
                 }
                 else
@@ -89,7 +89,7 @@ public final class CheckForward
                                     if (gaps.getGapFor ().equals (GapFor.ggroup))
                                     {
                                         answer = new CheckRequestGapAnswer (gaps);
-                                        l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (answer) , SubmitRequestType.socket , false);
+                                        l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (answer) , SubmitRequestType.socket , false);
                                     }
                                     else
                                     {
@@ -97,39 +97,39 @@ public final class CheckForward
                                         if (gaps != null)
                                         {
                                             answer = new CheckRequestGapAnswer (gaps);
-                                            l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (answer) , SubmitRequestType.socket , false);
+                                            l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , null , ToJson.To (answer) , SubmitRequestType.socket , false);
                                         }
                                         else
                                         {
                                             answer = new CheckRequestGapAnswer (AnswerToClient.AccessDenied ());
-                                            l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.access_denied.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                                            l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied) , ToJson.To (answer) , SubmitRequestType.socket , true);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_are_not_gap_a_member.name ()));
-                                    l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_are_not_gap_a_member.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                                    answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_are_not_gap_a_member));
+                                    l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_are_not_gap_a_member) , ToJson.To (answer) , SubmitRequestType.socket , true);
                                 }
                             }
                             else
                             {
-                                answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_group.name ()));
-                                l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_found_group.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                                answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_found_group));
+                                l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_found_group) , ToJson.To (answer) , SubmitRequestType.socket , true);
                             }
                         }
                     }
                     else
                     {
-                        answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_gap_id.name ()));
-                        l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_gap_id.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                        answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_gap_id));
+                        l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_gap_id) , ToJson.To (answer) , SubmitRequestType.socket , true);
                     }
                 }
             }
             else
             {
-                answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid.name ()));
-                l.n (request , null , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , ToJson.To (answer) , SubmitRequestType.socket , true);
+                answer = new CheckRequestGapAnswer (AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.id_invalid));
+                l.n (request , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid) , ToJson.To (answer) , SubmitRequestType.socket , true);
             }
         }
         return answer;

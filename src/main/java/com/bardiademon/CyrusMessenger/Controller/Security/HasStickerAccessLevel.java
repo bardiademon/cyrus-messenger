@@ -54,11 +54,11 @@ public final class HasStickerAccessLevel
                 if (group.getOwner ().getId () == mainAccount.getId () || new IsJoined (mainAccount , groupId).is ())
                     return null;
                 else
-                    return AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_are_not_a_member_of_this_group.name ());
+                    return AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_are_not_a_member_of_this_group);
             }
             else return AnswerToClient.AccessDenied ();
         }
-        else return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_group.name ());
+        else return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_group);
     }
 
     private enum ValAnswer

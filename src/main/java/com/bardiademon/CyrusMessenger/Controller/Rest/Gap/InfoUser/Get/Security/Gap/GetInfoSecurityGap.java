@@ -40,37 +40,37 @@ public class GetInfoSecurityGap
 
                 answerToClient = AnswerToClient.OK ();
                 if (requestGap.secSendEmoji)
-                    answerToClient.put (KeyAnswer.sec_send_emoji.name () , securityUserGap.getCanSendEmoji ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_emoji , securityUserGap.getCanSendEmoji ());
 
                 if (requestGap.isSecSendFileType ())
-                    answerToClient.put (KeyAnswer.sec_send_file.name () , securityUserGap.getCanSendFile ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_file , securityUserGap.getCanSendFile ());
 
                 if (requestGap.isSecSendGif ())
-                    answerToClient.put (KeyAnswer.sec_send_gif.name () , securityUserGap.getCanSendGif ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_gif , securityUserGap.getCanSendGif ());
 
                 if (requestGap.isSecSendInvitation ())
-                    answerToClient.put (KeyAnswer.sec_send_invitation.name () , securityUserGap.getCanSendInvitation ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_invitation , securityUserGap.getCanSendInvitation ());
 
                 if (requestGap.isSecSendMessage ())
-                    answerToClient.put (KeyAnswer.sec_send_message.name () , securityUserGap.getCanSendMessage ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_message , securityUserGap.getCanSendMessage ());
 
                 if (requestGap.isSecSendLink ())
-                    answerToClient.put (KeyAnswer.sec_send_link.name () , securityUserGap.getCanSendLink ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_link , securityUserGap.getCanSendLink ());
 
                 if (requestGap.isSecSendFileType ())
-                    answerToClient.put (KeyAnswer.sec_send_file_type.name () , securityUserGap.getCanSendFileTypes ());
+                    answerToClient.put (KeyAnswer.sec_send_file_type , securityUserGap.getCanSendFileTypes ());
 
                 if (requestGap.isSecSendNumberOfMessageUnread ())
-                    answerToClient.put (KeyAnswer.sec_send_number_of_message_unread.name () , securityUserGap.getCanSendNumberOfMessageUnread ());
+                    answerToClient.put (KeyAnswer.sec_send_number_of_message_unread , securityUserGap.getCanSendNumberOfMessageUnread ());
 
                 if (requestGap.isSecSendSticker ())
-                    answerToClient.put (KeyAnswer.sec_send_sticker.name () , securityUserGap.getCanSendSticker ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_sticker , securityUserGap.getCanSendSticker ());
 
                 if (requestGap.isSecSendVoice ())
-                    answerToClient.put (KeyAnswer.sec_send_voice.name () , securityUserGap.getCanSendVoice ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_voice , securityUserGap.getCanSendVoice ());
 
                 if (requestGap.isSecSendQuestionText ())
-                    answerToClient.put (KeyAnswer.sec_send_question_text.name () , securityUserGap.getCanSendQuestionText ().name ());
+                    answerToClient.put (KeyAnswer.sec_send_question_text , securityUserGap.getCanSendQuestionText ());
 
             }
             else answerToClient = AnswerToClient.BadRequest ();

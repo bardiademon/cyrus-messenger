@@ -113,7 +113,7 @@ public class RestIsValidUEP
         else
         {
             AnswerToClient answerToClient = AnswerToClient.AccountDeactive ();
-            answerToClient.put (KeyAnswer.is_valid.name () , true);
+            answerToClient.put (KeyAnswer.is_valid , true);
             submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , true);
             return answerToClient;
         }
@@ -122,9 +122,9 @@ public class RestIsValidUEP
     private AnswerToClient error401 (HttpServletRequest servletRequest , IsValidUEPRequest request)
     {
         AnswerToClient answerToClient = AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED);
-        answerToClient.put (KeyAnswer.uep.name () , request.getValueUEP ());
-        answerToClient.put (KeyAnswer.is_valid.name () , true);
-        answerToClient.put (KeyAnswer.email_is_confirmed.name () , false);
+        answerToClient.put (KeyAnswer.uep , request.getValueUEP ());
+        answerToClient.put (KeyAnswer.is_valid , true);
+        answerToClient.put (KeyAnswer.email_is_confirmed , false);
 
         submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , true);
 
@@ -136,8 +136,8 @@ public class RestIsValidUEP
         AnswerToClient answerToClient;
         answerToClient = (valid ? AnswerToClient.OK () : AnswerToClient.BadRequest ());
 
-        answerToClient.put (KeyAnswer.uep.name () , request.getValueUEP ());
-        answerToClient.put (KeyAnswer.is_valid.name () , valid);
+        answerToClient.put (KeyAnswer.uep , request.getValueUEP ());
+        answerToClient.put (KeyAnswer.is_valid , valid);
 
         if (!loginReq)
             submitRequestService.newRequest (servletRequest.getRemoteAddr () , SubmitRequestType.login , !valid);

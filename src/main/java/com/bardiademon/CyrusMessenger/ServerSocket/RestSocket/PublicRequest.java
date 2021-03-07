@@ -49,8 +49,8 @@ public class PublicRequest
             return true;
         else
         {
-            l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code.name ());
+            l.n (Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_online_code) , codeOnline);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code);
             return false;
         }
     }
@@ -61,8 +61,8 @@ public class PublicRequest
             return SIServer.Onlines.get (codeOnline);
         else
         {
-            l.n (Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_online_code.name ()) , codeOnline);
-            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code.name ());
+            l.n (Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_online_code) , codeOnline);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.invalid_online_code);
             return null;
         }
     }

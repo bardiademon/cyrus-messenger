@@ -88,10 +88,10 @@ public final class RestAddUserList
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.exists_other_type.name ());
-                                        answerToClient.put (KeyAnswer.type.name () , userList.getType ().name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.exists_other_type);
+                                        answerToClient.put (KeyAnswer.type , userList.getType ());
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.exists_other_type.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.exists_other_type));
                                         r.n (mainAccount , type , true);
                                     }
                                 }
@@ -100,7 +100,7 @@ public final class RestAddUserList
                                 if (ok)
                                 {
                                     userListService.add (mainAccount , idUsernameMainAccount.getMainAccount () , userListType);
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.added.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.added);
                                     answerToClient.setReqRes (req , res);
                                     l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.added.name ());
                                     r.n (mainAccount , type , false);
@@ -108,25 +108,25 @@ public final class RestAddUserList
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , AnswerToClient.CUV.found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , AnswerToClient.CUV.found);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.found));
                                 r.n (mainAccount , type , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.type_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.type_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.type_invalid.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.type_invalid));
                             r.n (mainAccount , type , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_cannot_put_yourself_in_the_list.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.you_cannot_put_yourself_in_the_list);
                         answerToClient.setReqRes (req , res);
-                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_cannot_put_yourself_in_the_list.name ()) , null);
+                        l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_cannot_put_yourself_in_the_list));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -134,7 +134,7 @@ public final class RestAddUserList
                 {
                     answerToClient = idUsernameMainAccount.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -142,7 +142,7 @@ public final class RestAddUserList
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
         }

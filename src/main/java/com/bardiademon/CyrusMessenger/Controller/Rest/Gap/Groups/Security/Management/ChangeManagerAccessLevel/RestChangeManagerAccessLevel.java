@@ -51,7 +51,7 @@ public final class RestChangeManagerAccessLevel
         service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient change
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -90,36 +90,36 @@ public final class RestChangeManagerAccessLevel
                                             {
                                                 answerToClient = AnswerToClient.ServerError ();
                                                 answerToClient.setReqRes (req , res);
-                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Server error") , null);
+                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("Server error"));
                                             }
                                             else
                                             {
                                                 answerToClient.setReqRes (req , res);
-                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed.name ());
+                                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed);
                                                 r.n (mainAccount , SubmitRequestType.change_manager , false);
                                             }
                                         }
                                         else
                                         {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_owns_the_group.name ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_owns_the_group);
                                             answerToClient.setReqRes (req , res);
-                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_owns_the_group.name ()) , null);
+                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_owns_the_group));
                                             r.n (mainAccount , SubmitRequestType.change_manager , true);
                                         }
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_id_belongs_to_you.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_id_belongs_to_you);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_id_belongs_to_you.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_id_belongs_to_you));
                                         r.n (mainAccount , SubmitRequestType.change_manager , true);
                                     }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_is_not_a_manager.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_is_not_a_manager);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_a_manager.name ()) , null);
+                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_a_manager));
                                     r.n (mainAccount , SubmitRequestType.change_manager , true);
                                 }
                             }
@@ -127,17 +127,17 @@ public final class RestChangeManagerAccessLevel
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_not_found.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_not_found));
                             r.n (mainAccount , SubmitRequestType.change_manager , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid.name ());
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_invalid));
                         r.n (mainAccount , SubmitRequestType.change_manager , true);
                     }
                 } // get answer from request.checkRequest ();
@@ -146,7 +146,7 @@ public final class RestChangeManagerAccessLevel
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_invalid));
                 r.n (mainAccount , SubmitRequestType.change_manager , true);
             }
         }
@@ -221,11 +221,11 @@ public final class RestChangeManagerAccessLevel
                 service.groupManagementService.Repository.save (groupManagement);
             }
 
-            return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());
+            return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed);
         }
         catch (Exception e)
         {
-            l.n (null , router , mainAccount , null , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (null , router , mainAccount , null , Thread.currentThread ().getStackTrace () , e);
             return null;
         }
     }

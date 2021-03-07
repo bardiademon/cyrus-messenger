@@ -39,7 +39,7 @@ public final class Typing
 
     private boolean checkRequest ()
     {
-        final CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.ssg_typing.name ());
+        final CBSIL both = CBSIL.Both (req , req.getCodeLogin () , EventName.ssg_typing);
 
         if (both.isOk ())
         {
@@ -77,7 +77,7 @@ public final class Typing
             return true;
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.to_is_offline.name ());
+            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.to_is_offline);
             return false;
         }
     }

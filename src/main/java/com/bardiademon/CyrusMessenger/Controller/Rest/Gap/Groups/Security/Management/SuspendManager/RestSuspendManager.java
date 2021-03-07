@@ -77,32 +77,32 @@ public final class RestSuspendManager
                                         service.groupManagementService
                                                 .suspend (isManager.getGroupManagement () , mainAccount , mainAccount , this.getClass ());
 
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.suspended.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.suspended);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.suspended.name ());
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.suspended);
                                         r.n (mainAccount , SubmitRequestType.remove_admin , false);
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.cannot_suspend_owner_of_group.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.cannot_suspend_owner_of_group);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.cannot_suspend_owner_of_group.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.cannot_suspend_owner_of_group));
                                         r.n (mainAccount , SubmitRequestType.remove_admin , true);
                                     }
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_is_not_a_manager.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_user_is_not_a_manager);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_a_manager.name ()) , null);
+                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_a_manager) );
                                     r.n (mainAccount , SubmitRequestType.remove_admin , true);
                                 }
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_not_found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_not_found);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_not_found.name ()) , null);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_not_found) );
                                 r.n (mainAccount , SubmitRequestType.remove_admin , true);
                             }
                         }
@@ -110,19 +110,19 @@ public final class RestSuspendManager
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid.name ());
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_invalid));
                         r.n (mainAccount , SubmitRequestType.remove_admin , true);
                     }
                 }
-                else answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid.name ());
+                else answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid);
             }
             else
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Request is null") , null);
+                l.n (null , router , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("Request is null"));
                 r.n (req.getRemoteAddr () , SubmitRequestType.remove_admin , true);
             }
         }

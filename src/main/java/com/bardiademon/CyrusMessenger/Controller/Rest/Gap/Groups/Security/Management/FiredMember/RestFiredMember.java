@@ -39,8 +39,8 @@ public final class RestFiredMember
 {
 
     private final UserLoginService userLoginService;
-    private JoinGroupService joinGroupService;
-    private FiredFromGroupService firedFromGroupService;
+    private final JoinGroupService joinGroupService;
+    private final FiredFromGroupService firedFromGroupService;
 
     private final ManageGroup.Service service;
 
@@ -57,7 +57,7 @@ public final class RestFiredMember
         service = new ManageGroup.Service (_MainAccountService , _GroupsService , _GroupManagementService);
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient remove
             (HttpServletResponse res , HttpServletRequest req , @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
              @RequestBody RequestFiredMember request)
@@ -103,9 +103,9 @@ public final class RestFiredMember
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.this_user_owns_the_group.name ());
+                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.this_user_owns_the_group);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_owns_the_group.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_owns_the_group));
                                         r.n (mainAccount , SubmitRequestType.remove_group_member , true);
                                     }
                                 }
@@ -115,9 +115,9 @@ public final class RestFiredMember
                                     if (isJoined.is ()) dismiss = true;
                                     else
                                     {
-                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.this_user_is_not_a_member_of_group.name ());
+                                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.this_user_is_not_a_member_of_group);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_a_member_of_group.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_a_member_of_group));
                                         r.n (mainAccount , SubmitRequestType.remove_group_member , true);
                                     }
                                 }
@@ -143,9 +143,9 @@ public final class RestFiredMember
 
                                     firedFromGroupService.Repository.save (firedFromGroup);
 
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.fired.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.fired);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_a_member_of_group.name ()) , null);
+                                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_a_member_of_group));
                                     r.n (mainAccount , SubmitRequestType.remove_group_member , false);
                                 }
 
@@ -154,25 +154,25 @@ public final class RestFiredMember
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_not_found.name ());
+                            answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_invalid));
                             r.n (mainAccount , SubmitRequestType.remove_group_member , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid.name ());
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_user_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_user_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_user_invalid));
                         r.n (mainAccount , SubmitRequestType.remove_group_member , true);
                     }
                 }
                 else
                 {
-                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.please_specify_the_cause.name ());
+                    answerToClient = AnswerToClient.IdInvalid (ValAnswer.please_specify_the_cause);
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.please_specify_the_cause.name ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.please_specify_the_cause));
                     r.n (mainAccount , SubmitRequestType.remove_group_member , true);
                 }
             }

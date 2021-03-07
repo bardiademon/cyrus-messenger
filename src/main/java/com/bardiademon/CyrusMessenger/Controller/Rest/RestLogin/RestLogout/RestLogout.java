@@ -39,7 +39,7 @@ public final class RestLogout
         {
             boolean logout;
             logout = userLoginService.logout (codeLogin);
-            answerToClient = AnswerToClient.OneAnswer ((logout ? AnswerToClient.OK () : AnswerToClient.ServerError ()) , KeyAnswer.logout.name () , logout);
+            answerToClient = AnswerToClient.OneAnswer ((logout ? AnswerToClient.OK () : AnswerToClient.ServerError ()) , KeyAnswer.logout , logout);
 
             MainAccount mainAccount = isLogin.getVCodeLogin ().getMainAccount ();
 

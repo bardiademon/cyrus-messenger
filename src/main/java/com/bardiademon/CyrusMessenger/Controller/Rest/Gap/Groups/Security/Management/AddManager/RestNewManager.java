@@ -97,42 +97,42 @@ public final class RestNewManager
                                             answerToClient = addManagement (manager.getGroup () , manager.getMainAccount () , mainAccountUser , manager.getGroupManagement () , request);
                                         else
                                         {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_user_is_manager.name ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_user_is_manager);
                                             answerToClient.setReqRes (req , res);
-                                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_manager.name ()) , cookieJson);
+                                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_manager) , cookieJson);
                                             r.n (mainAccount , SubmitRequestType.group_members , true);
                                         }
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_user_is_not_member_of_group.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_user_is_not_member_of_group);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_user_is_not_member_of_group.name ()) , cookieJson);
+                                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_user_is_not_member_of_group) , cookieJson);
                                         r.n (mainAccount , SubmitRequestType.group_members , true);
                                     }
 
                                 }
                                 else
                                 {
-                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_id_belongs_to_you.name ());
+                                    answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.this_id_belongs_to_you);
                                     answerToClient.setReqRes (req , res);
-                                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.this_id_belongs_to_you.name ()) , cookieJson);
+                                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.this_id_belongs_to_you) , cookieJson);
                                     r.n (mainAccount , SubmitRequestType.group_members , true);
                                 }
                             }
                             else
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.user_not_found.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.user_not_found);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.user_not_found.name ()) , cookieJson);
+                                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.user_not_found) , cookieJson);
                                 r.n (mainAccount , SubmitRequestType.group_members , true);
                             }
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_invalid.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_user_invalid);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error from CanManageGroup") , cookieJson);
+                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("Error from CanManageGroup") , cookieJson);
                             r.n (mainAccount , SubmitRequestType.group_members , true);
                         }
                     }
@@ -140,7 +140,7 @@ public final class RestNewManager
                     {
                         answerToClient = manageGroup.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("Error from CanManageGroup") , cookieJson);
+                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("Error from CanManageGroup") , cookieJson);
                         r.n (mainAccount , SubmitRequestType.group_members , true);
                     }
 
@@ -148,7 +148,7 @@ public final class RestNewManager
                 else
                 {
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.invalid_request.name ()) , cookieJson);
+                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.invalid_request) , cookieJson);
                     r.n (mainAccount , SubmitRequestType.group_members , true);
                 }
             }
@@ -156,7 +156,7 @@ public final class RestNewManager
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_group_invalid.name ()) , cookieJson);
+                l.n (null , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_group_invalid) , cookieJson);
                 r.n (mainAccount , SubmitRequestType.group_members , true);
             }
         }
@@ -219,13 +219,13 @@ public final class RestNewManager
                 groupManagementAccessLevelService.Repository.save (accessLevel);
             }
 
-            if (update) return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.update_manager.name ());
-            else return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added_manager.name ());
+            if (update) return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.update_manager);
+            else return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.added_manager);
         }
         catch (Exception e)
         {
             AnswerToClient answerToClient = AnswerToClient.ServerError ();
-            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , manager , answerToClient , Thread.currentThread ().getStackTrace () , e , null);
+            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.Security.RN_SECURITY_NEW_MANAGER , manager , answerToClient , Thread.currentThread ().getStackTrace () , e);
             return answerToClient;
         }
     }

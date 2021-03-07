@@ -26,14 +26,14 @@ public final class CheckPlacementNumber
     private final long id;
     private final HttpServletResponse res;
     private final HttpServletRequest req;
-    private final List<PlacementNumber> placementNumbers;
+    private final List <PlacementNumber> placementNumbers;
 
     private Answer answer;
 
     public CheckPlacementNumber
             (ProfilePicturesService _ProfilePicturesService , MainAccount _MainAccount ,
              String Router , SubmitRequestType Type , long Id , TypeId _TypeId ,
-             HttpServletResponse Res , HttpServletRequest Req , List<PlacementNumber> _PlacementNumbers)
+             HttpServletResponse Res , HttpServletRequest Req , List <PlacementNumber> _PlacementNumbers)
     {
         this.profilePicturesService = _ProfilePicturesService;
         this.mainAccount = _MainAccount;
@@ -49,7 +49,7 @@ public final class CheckPlacementNumber
 
     private void check ()
     {
-        List<PlacementNumberError> errors = new ArrayList<> ();
+        List <PlacementNumberError> errors = new ArrayList <> ();
 
         int numberMain = 0;
 
@@ -61,9 +61,9 @@ public final class CheckPlacementNumber
 
             if (numberMain >= 2)
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ErrAnswer.just_one_main.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ErrAnswer.just_one_main);
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (placementNumbers) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ErrAnswer.just_one_main.name ()) , null);
+                l.n (ToJson.To (placementNumbers) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ErrAnswer.just_one_main));
                 r.n (mainAccount , type , true);
 
                 answer = new Answer (answerToClient , null);
@@ -84,10 +84,10 @@ public final class CheckPlacementNumber
             }
         }
 
-        answer = new Answer (null , new ArrayList<> ());
+        answer = new Answer (null , new ArrayList <> ());
 
         ID id;
-        List<Long> ids = new ArrayList<> ();
+        List <Long> ids = new ArrayList <> ();
 
         ProfilePictures profilePicture = null;
         for (PlacementNumber placementNumber : placementNumbers)
@@ -109,26 +109,31 @@ public final class CheckPlacementNumber
                     }
 
                     if (profilePicture != null) answer.profilePictures.add (profilePicture);
-                    else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.id_not_found.name ()));
+                    else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.id_not_found));
                 }
-                else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.duplicate_id.name ()));
+                else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.duplicate_id));
             }
-            else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.id_invalid.name ()));
+            else errors.add (new PlacementNumberError (placementNumber , ErrAnswer.id_invalid));
         }
 
         if (errors.size () > 0)
         {
-            answer.answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.error.name ());
-            answer.answerToClient.put (KeyAnswer.result.name () , errors);
+            answer.answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.error);
+            answer.answerToClient.put (KeyAnswer.result , errors);
             answer.answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (placementNumbers) , router , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ErrAnswer.just_one_main.name ()) , null);
+            l.n (ToJson.To (placementNumbers) , router , mainAccount , answer.answerToClient , Thread.currentThread ().getStackTrace () , l.e (ErrAnswer.just_one_main));
             r.n (mainAccount , type , true);
         }
     }
 
     public static class PlacementNumberError extends PlacementNumber
     {
-        private String error;
+        private final String error;
+
+        public PlacementNumberError (final PlacementNumber _PlacementNumber , final Enum <?> Error)
+        {
+            this (_PlacementNumber , Error.name ());
+        }
 
         public PlacementNumberError (PlacementNumber _PlacementNumber , String Error)
         {
@@ -148,9 +153,9 @@ public final class CheckPlacementNumber
     public static class Answer
     {
         private AnswerToClient answerToClient;
-        private List<ProfilePictures> profilePictures;
+        private final List <ProfilePictures> profilePictures;
 
-        public Answer (AnswerToClient answerToClient , List<ProfilePictures> profilePictures)
+        public Answer (AnswerToClient answerToClient , List <ProfilePictures> profilePictures)
         {
             this.answerToClient = answerToClient;
             this.profilePictures = profilePictures;
@@ -161,7 +166,7 @@ public final class CheckPlacementNumber
             return answerToClient;
         }
 
-        public List<ProfilePictures> getProfilePictures ()
+        public List <ProfilePictures> getProfilePictures ()
         {
             return profilePictures;
         }

@@ -46,26 +46,26 @@ public class AnswerToClient
     @JsonIgnore
     public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Answer)
     {
-        return OneAnswer (_AnswerToClient , CUK.answer.name () , Answer.name ());
+        return OneAnswer (_AnswerToClient , CUK.answer , Answer);
     }
 
     @JsonIgnore
     public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Object Answer)
     {
-        return OneAnswer (_AnswerToClient , CUK.answer.name () , Answer);
+        return OneAnswer (_AnswerToClient , CUK.answer , Answer);
     }
 
     @JsonIgnore
     public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Key , final Enum <?> Answer)
     {
-        _AnswerToClient.put (Key.name () , Answer.name ());
+        _AnswerToClient.put (Key , Answer);
         return _AnswerToClient;
     }
 
     @JsonIgnore
     public static AnswerToClient OneAnswer (final AnswerToClient _AnswerToClient , final Enum <?> Key , final Object Answer)
     {
-        _AnswerToClient.put (Key.name () , Answer);
+        _AnswerToClient.put (Key , Answer);
         return _AnswerToClient;
     }
 
@@ -116,7 +116,7 @@ public class AnswerToClient
     {
         AnswerToClient answerToClient = new AnswerToClient (500 , false);
         answerToClient.put (CUK.answer , CUV.please_try_again);
-        answerToClient.put (AnswerToClient.CUK.system.name () , AnswerToClient.CUV.sorry_for_this_error.name ());
+        answerToClient.put (AnswerToClient.CUK.system , AnswerToClient.CUV.sorry_for_this_error);
         return answerToClient;
     }
 
@@ -129,7 +129,7 @@ public class AnswerToClient
     @JsonIgnore
     public static AnswerToClient IdInvalid (final Enum <?> ValAnswer)
     {
-        return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name ());
+        return AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer);
     }
 
     @Deprecated
@@ -203,7 +203,7 @@ public class AnswerToClient
 
     public AnswerToClient put (final Enum <?> key , final Enum <?> value)
     {
-        message.put (key.name () , value.name ());
+        message.put (key.name () , value);
         return this;
     }
 
@@ -213,7 +213,6 @@ public class AnswerToClient
         return this;
     }
 
-    @Deprecated
     public AnswerToClient put (final String key , final Object value)
     {
         message.put (key , value);

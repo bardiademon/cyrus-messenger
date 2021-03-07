@@ -81,7 +81,7 @@ public class ConfirmPhone
                 if (lstFindCode == null || lstFindCode.size () == 0 || (findCode = lstFindCode.get (0)) == null)
                 {
                     if (isExistsPhone (this.phone))
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_phone_has_account.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.this_phone_has_account);
                     else
                     {
                         new Thread (() -> Code.CreateCodeIsNotExists (Code.GetCodeNumber () , 10 , (code , last) ->
@@ -112,10 +112,10 @@ public class ConfirmPhone
                                 {
                                     new SendSMSConfirmPhone ("Quest" , ConfirmPhone.this.phone);
                                     answerToClient = AnswerToClient.OK ();
-                                    answerToClient.put (CUK.answer.name () , ValAnswer.code_send.name ());
-                                    answerToClient.put (KeyAnswer.to.name () , ConfirmPhone.this.phone);
-                                    answerToClient.put (KeyAnswer.id.name () , confirmCode.getId ());
-                                    answerToClient.put (KeyAnswer.waiting_time.name () , Time.getTime (confirmCode.getTimeToBeOutdated ()));
+                                    answerToClient.put (CUK.answer , ValAnswer.code_send);
+                                    answerToClient.put (KeyAnswer.to , ConfirmPhone.this.phone);
+                                    answerToClient.put (KeyAnswer.id , confirmCode.getId ());
+                                    answerToClient.put (KeyAnswer.waiting_time , Time.getTime (confirmCode.getTimeToBeOutdated ()));
                                 }
                                 else answerToClient = AnswerToClient.ServerError ();
 
@@ -142,15 +142,15 @@ public class ConfirmPhone
                 else
                 {
                     answerToClient = AnswerToClient.KeyAnswer (AnswerToClient.BadRequest () ,
-                            CUK.answer.name () , ValAnswer.the_code_has_been_sent.name () ,
-                            KeyAnswer.to.name () , findCode.getSendCodeTo () ,
-                            KeyAnswer.id.name () , findCode.getId () ,
-                            KeyAnswer.waiting_time.name () , Time.getTime (findCode.getTimeToBeOutdated ())
+                            CUK.answer , ValAnswer.the_code_has_been_sent ,
+                            KeyAnswer.to , findCode.getSendCodeTo () ,
+                            KeyAnswer.id , findCode.getId () ,
+                            KeyAnswer.waiting_time , Time.getTime (findCode.getTimeToBeOutdated ())
                     );
                 }
             }
             else
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.phone_invalid.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.phone_invalid);
         }
         answerToClient.setResponse (res);
         return answerToClient;
@@ -188,9 +188,9 @@ public class ConfirmPhone
                     if (this.code != null)
                     {
                         answerToClient = AnswerToClient.BadRequest ();
-                        answerToClient.put (CUK.answer.name () , ValAnswer.confirmed.name ());
-                        answerToClient.put (KeyAnswer.phone.name () , this.phone);
-                        answerToClient.put (KeyAnswer.code_confirmed_phone.name () , this.code);
+                        answerToClient.put (CUK.answer , ValAnswer.confirmed);
+                        answerToClient.put (KeyAnswer.phone , this.phone);
+                        answerToClient.put (KeyAnswer.code_confirmed_phone , this.code);
                     }
                     else
                         answerToClient = AnswerToClient.ServerError ();
@@ -198,13 +198,13 @@ public class ConfirmPhone
                 else
                 {
                     answerToClient = AnswerToClient.BadRequest ();
-                    answerToClient.put (CUK.answer.name () , ValAnswer.code_invalid.name ());
+                    answerToClient.put (CUK.answer , ValAnswer.code_invalid);
                 }
             }
             else
             {
                 answerToClient = AnswerToClient.BadRequest ();
-                answerToClient.put (CUK.answer.name () , ValAnswer.phone_invalid.name ());
+                answerToClient.put (CUK.answer , ValAnswer.phone_invalid);
             }
         }
         answerToClient.setResponse (res);

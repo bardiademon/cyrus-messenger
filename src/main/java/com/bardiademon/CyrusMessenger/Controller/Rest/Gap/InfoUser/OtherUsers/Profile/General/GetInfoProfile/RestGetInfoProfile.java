@@ -65,14 +65,14 @@ public final class RestGetInfoProfile
                     {
                         answerToClient = checkGet (request , accessLevel , mainAccountGetInfo);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace ());
                         r.n (mainAccount , type , false);
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.disabled_profile_display.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_UNAUTHORIZED) , ValAnswer.disabled_profile_display);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -80,7 +80,7 @@ public final class RestGetInfoProfile
                 {
                     answerToClient = idUsernameMainAccount.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -88,7 +88,7 @@ public final class RestGetInfoProfile
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
         }
@@ -102,7 +102,7 @@ public final class RestGetInfoProfile
         AnswerToClient answerToClient = AnswerToClient.OK ();
 
         if (request.isGetId () && accessLevel.hasAccess (Which.id))
-            answerToClient.put (GetGeneral.KeyAnswer.id.name () , mainAccount.getId ());
+            answerToClient.put (GetGeneral.KeyAnswer.id , mainAccount.getId ());
 
         UserSeparateProfiles separateProfiles = null;
         if (accessLevel.isSeparateProfile ()) separateProfiles = accessLevel.getSeparateProfile ();
@@ -112,9 +112,9 @@ public final class RestGetInfoProfile
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.name.name () , separateProfiles.getName ());
+                answerToClient.put (GetGeneral.KeyAnswer.name , separateProfiles.getName ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.name.name () , mainAccount.getName ());
+            else answerToClient.put (GetGeneral.KeyAnswer.name , mainAccount.getName ());
         }
 
         if (request.isGetFamily () && accessLevel.hasAccess (Which.family))
@@ -122,9 +122,9 @@ public final class RestGetInfoProfile
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.family.name () , separateProfiles.getFamily ());
+                answerToClient.put (GetGeneral.KeyAnswer.family , separateProfiles.getFamily ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.family.name () , mainAccount.getFamily ());
+            else answerToClient.put (GetGeneral.KeyAnswer.family , mainAccount.getFamily ());
         }
 
         if (request.isGetMyLink () && accessLevel.hasAccess (Which.mylink))
@@ -132,9 +132,9 @@ public final class RestGetInfoProfile
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.mylink.name () , separateProfiles.getMylink ());
+                answerToClient.put (GetGeneral.KeyAnswer.mylink , separateProfiles.getMylink ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.mylink.name () , mainAccount.getMyLink ());
+            else answerToClient.put (GetGeneral.KeyAnswer.mylink , mainAccount.getMyLink ());
         }
 
         if (request.isGetEmail () && accessLevel.hasAccess (Which.email))
@@ -142,35 +142,35 @@ public final class RestGetInfoProfile
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.email.name () , separateProfiles.getEmail ());
+                answerToClient.put (GetGeneral.KeyAnswer.email , separateProfiles.getEmail ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getEmail ());
+            else answerToClient.put (GetGeneral.KeyAnswer.email , mainAccount.getEmail ());
         }
         if (request.isGetGender () && accessLevel.hasAccess (Which.gender))
         {
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.gender.name () , separateProfiles.getGender ());
+                answerToClient.put (GetGeneral.KeyAnswer.gender , separateProfiles.getGender ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.email.name () , mainAccount.getGender ());
+            else answerToClient.put (GetGeneral.KeyAnswer.email , mainAccount.getGender ());
         }
 
         if (request.isGetPhone () && accessLevel.hasAccess (Which.phone))
-            answerToClient.put (GetGeneral.KeyAnswer.phone.name () , mainAccount.getPhone ());
+            answerToClient.put (GetGeneral.KeyAnswer.phone , mainAccount.getPhone ());
 
 
         if (request.isGetUsername () && accessLevel.hasAccess (Which.username))
-            answerToClient.put (GetGeneral.KeyAnswer.username.name () , mainAccount.getUsername ().getUsername ());
+            answerToClient.put (GetGeneral.KeyAnswer.username , mainAccount.getUsername ().getUsername ());
 
         if (request.isGetBio () && accessLevel.hasAccess (Which.bio))
         {
             if (accessLevel.isSeparateProfile ())
             {
                 assert separateProfiles != null;
-                answerToClient.put (GetGeneral.KeyAnswer.bio.name () , separateProfiles.getBio ());
+                answerToClient.put (GetGeneral.KeyAnswer.bio , separateProfiles.getBio ());
             }
-            else answerToClient.put (GetGeneral.KeyAnswer.bio.name () , mainAccount.getBio ());
+            else answerToClient.put (GetGeneral.KeyAnswer.bio , mainAccount.getBio ());
         }
 
         return answerToClient;

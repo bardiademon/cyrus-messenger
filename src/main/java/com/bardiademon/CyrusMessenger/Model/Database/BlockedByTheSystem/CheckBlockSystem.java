@@ -80,8 +80,8 @@ public final class CheckBlockSystem
 
     private void setAnswerToClient ()
     {
-        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_FORBIDDEN) , ValAnswer.blocked_by_the_system.name ());
-        answerToClient.put (KeyAnswer.time_to_free.name () , Time.toString (blockedByTheSystem.getValidityTime ()));
+        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.New (HttpServletResponse.SC_FORBIDDEN) , ValAnswer.blocked_by_the_system);
+        answerToClient.put (KeyAnswer.time_to_free , Time.toString (blockedByTheSystem.getValidityTime ()));
     }
 
     public AnswerToClient getAnswerToClient ()

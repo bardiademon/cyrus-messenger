@@ -45,7 +45,7 @@ public final class NewBlock
         this.userBlockedService = _UserBlockedService;
     }
 
-    @RequestMapping (value = {"" , "/"})
+    @RequestMapping (value = { "" , "/" })
     public AnswerToClient newBlock
             (HttpServletResponse res , HttpServletRequest req ,
              @CookieValue (value = MCookie.KEY_CODE_LOGIN_COOKIE, defaultValue = "") String codeLogin ,
@@ -74,9 +74,9 @@ public final class NewBlock
                         MainAccount username = idUsernameMainAccount.getMainAccount ();
                         if (mainAccount.getId () == username.getId ())
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_cannot_block_yourself.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_cannot_block_yourself);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.you_cannot_block_yourself.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.you_cannot_block_yourself));
                             r.n (mainAccount , type , true);
                         }
                         else
@@ -90,16 +90,16 @@ public final class NewBlock
 
                             if (request.isBlock () && plusUpTo == null)
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.plus_up_to_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.plus_up_to_invalid);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.plus_up_to_invalid.name ()) , null);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.plus_up_to_invalid));
                                 r.n (mainAccount , type , true);
                             }
                             else if (typeBlock == null)
                             {
-                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.type_invalid.name ());
+                                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.type_invalid);
                                 answerToClient.setReqRes (req , res);
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.type_invalid.name ()) , null);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.type_invalid));
                                 r.n (mainAccount , type , true);
                             }
                             else
@@ -129,7 +129,7 @@ public final class NewBlock
                                         blocked = userBlockedService.Repository.save (blocked);
                                         if (blocked.getId () > 0)
                                         {
-                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.blocked.name ());
+                                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.blocked);
                                             answerToClient.setReqRes (req , res);
                                             l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.blocked.name ());
                                             r.n (mainAccount , type , false);
@@ -138,15 +138,15 @@ public final class NewBlock
                                         {
                                             answerToClient = AnswerToClient.ServerError ();
                                             answerToClient.setReqRes (req , res);
-                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("server error") , null);
+                                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("server error"));
                                             r.n (mainAccount , type , true);
                                         }
                                     }
                                     else
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.already_blocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.already_blocked);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.already_blocked.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.already_blocked));
                                         r.n (mainAccount , type , true);
                                     }
                                 }
@@ -154,18 +154,18 @@ public final class NewBlock
                                 {
                                     if (blocked == null)
                                     {
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_blocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.not_blocked);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_blocked.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_blocked));
                                     }
                                     else
                                     {
                                         blocked.setUnblocked (true);
                                         blocked.setUnblockedAt (LocalDateTime.now ());
                                         userBlockedService.Repository.save (blocked);
-                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.unblocked.name ());
+                                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.unblocked);
                                         answerToClient.setReqRes (req , res);
-                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.unblocked.name ()) , null);
+                                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.unblocked));
                                     }
                                     r.n (mainAccount , type , true);
                                 }
@@ -178,7 +178,7 @@ public final class NewBlock
                     {
                         answerToClient = idUsernameMainAccount.getAnswerToClient ();
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (IdUsernameMainAccount.class.getName ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (IdUsernameMainAccount.class.getName ()));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -186,7 +186,7 @@ public final class NewBlock
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                     r.n (mainAccount , type , true);
                 }
             }

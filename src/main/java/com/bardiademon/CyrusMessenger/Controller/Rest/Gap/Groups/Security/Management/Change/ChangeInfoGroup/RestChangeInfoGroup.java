@@ -80,8 +80,8 @@ public final class RestChangeInfoGroup
                             if (!manageGroup.canManage ())
                             {
                                 answerToClient = manageGroup.getAnswerToClient ();
-                                answerToClient.put (Which.which.name () , Which.description.name ());
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (Which.description.name ()) , null);
+                                answerToClient.put (Which.which , Which.description);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (Which.description));
                                 r.n (mainAccount , type , true);
                                 error = true;
                             }
@@ -97,8 +97,8 @@ public final class RestChangeInfoGroup
                             if (!manageGroup.canManage ())
                             {
                                 answerToClient = manageGroup.getAnswerToClient ();
-                                answerToClient.put (Which.which.name () , Which.bio.name ());
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (Which.bio.name ()) , null);
+                                answerToClient.put (Which.which , Which.bio);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (Which.bio));
                                 r.n (mainAccount , type , true);
                                 error = true;
                             }
@@ -114,8 +114,8 @@ public final class RestChangeInfoGroup
                             if (!manageGroup.canManage ())
                             {
                                 answerToClient = manageGroup.getAnswerToClient ();
-                                answerToClient.put (Which.which.name () , Which.link.name ());
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (Which.link.name ()) , null);
+                                answerToClient.put (Which.which , Which.link);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (Which.link));
                                 r.n (mainAccount , type , true);
                                 error = true;
                             }
@@ -131,8 +131,8 @@ public final class RestChangeInfoGroup
                             if (!manageGroup.canManage ())
                             {
                                 answerToClient = manageGroup.getAnswerToClient ();
-                                answerToClient.put (Which.which.name () , Which.name.name ());
-                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (Which.name.name ()) , null);
+                                answerToClient.put (Which.which , Which.name);
+                                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (Which.name));
                                 r.n (mainAccount , type , true);
                                 error = true;
                             }
@@ -145,18 +145,18 @@ public final class RestChangeInfoGroup
                         if (!error && updatedOne)
                         {
                             service.groupsService.Repository.save (group);
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.changed);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed.name ());
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.changed);
                             r.n (mainAccount , type , false);
                         }
 
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.group_not_found);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.group_not_found.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.group_not_found));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -164,7 +164,7 @@ public final class RestChangeInfoGroup
                 {
                     answerToClient = AnswerToClient.IdInvalid ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.id_invalid.name ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.id_invalid));
                     r.n (mainAccount , type , true);
                 }
             }
@@ -172,7 +172,7 @@ public final class RestChangeInfoGroup
             {
                 answerToClient = AnswerToClient.RequestIsNull ();
                 answerToClient.setReqRes (req , res);
-                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.request_is_null.name ()) , null);
+                l.n (null , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
                 r.n (mainAccount , type , true);
             }
         }

@@ -57,7 +57,7 @@ public final class CBSIL
         {
             answerToClient = blockSystem.getAnswerToClient ();
             answerToClient.setReqRes (Req , Res);
-            l.n (Request , Router , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , null);
+            l.n (Request , Router , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.blocked_by_system));
             r.n (Req.getRemoteAddr () , Type , true);
             return new CBSIL (null , blockSystem , answerToClient , false);
         }
@@ -72,7 +72,7 @@ public final class CBSIL
                     answerToClient = blockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (Req , Res);
 
-                    l.n (Request , Router , login.getVCodeLogin ().getMainAccount () , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , null);
+                    l.n (Request , Router , login.getVCodeLogin ().getMainAccount () , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.blocked_by_system));
                     r.n (login.getVCodeLogin ().getMainAccount () , Type , true);
                     return new CBSIL (login , blockSystem , answerToClient , false);
                 }
@@ -93,9 +93,14 @@ public final class CBSIL
         return new IsLogin (CodeLogin , _UserLoginService.Repository);
     }
 
+    public static CBSIL Both (Object request , String CodeLogin , Enum <?> Router)
+    {
+        return Both (request , CodeLogin , Router.name ());
+    }
+
     public static CBSIL Both (Object request , String CodeLogin , String Router)
     {
-        return Both (request , null , null , CodeLogin , (UserLoginService) This.Services ().Get (UserLoginService.class) , Router , SubmitRequestType.socket);
+        return Both (request , null , null , CodeLogin , This.GetService (UserLoginService.class) , Router , SubmitRequestType.socket);
     }
 
     public static CBSIL Both
@@ -118,14 +123,14 @@ public final class CBSIL
                 {
                     _AnswerToClient = BlockSystem.getAnswerToClient ();
                     _AnswerToClient.setReqRes (Req , Res);
-                    l.n (ToJson.To (request) , Router , mainAccount , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+                    l.n (ToJson.To (request) , Router , mainAccount , _AnswerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.blocked_by_system) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
                 }
             }
             else
             {
                 _AnswerToClient = _IsLogin.getAnswerToClient ();
                 _AnswerToClient.setReqRes (Req , Res);
-                l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.not_login.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+                l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.not_login) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
                 if (Req != null) r.n (Req.getRemoteAddr () , type , true);
             }
         }
@@ -133,7 +138,7 @@ public final class CBSIL
         {
             _AnswerToClient = BlockSystem.getAnswerToClient ();
             _AnswerToClient.setReqRes (Req , Res);
-            l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.blocked_by_system.name ()) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
+            l.n (ToJson.To (request) , Router , null , _AnswerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.blocked_by_system) , ToJson.CreateClass.n (MCookie.KEY_CODE_LOGIN_COOKIE , CodeLogin).toJson ());
         }
         return new CBSIL (_IsLogin , BlockSystem , _AnswerToClient , OK);
     }

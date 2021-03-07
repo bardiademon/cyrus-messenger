@@ -83,24 +83,24 @@ public final class RestDeleteProfilePictureGroup
                             profilePictures.setDeletedAt (LocalDateTime.now ());
                             profilePicturesService.Repository.save (profilePictures);
 
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.deleted);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.deleted.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.deleted));
                             r.n (mainAccount , type , false);
                         }
                         else
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.id_profile_picture_not_found);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_not_found.name ()) , null);
+                            l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_profile_picture_not_found));
                             r.n (mainAccount , type , true);
                         }
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid.name ());
+                        answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_profile_picture_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_profile_picture_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_profile_picture_invalid));
                         r.n (mainAccount , type , true);
                     }
                 }
@@ -108,15 +108,15 @@ public final class RestDeleteProfilePictureGroup
                 {
                     answerToClient = manageGroup.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ManageGroup.class.getName ()) , null);
+                    l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ManageGroup.class.getName ()));
                     r.n (mainAccount , type , true);
                 }
             }
             else
             {
-                answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid.name ());
+                answerToClient = AnswerToClient.IdInvalid (ValAnswer.id_group_invalid);
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.id_group_invalid.name ()) , null);
+                l.n (ToJson.To (request) , router , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.id_group_invalid));
                 r.n (mainAccount , type , true);
             }
         }

@@ -82,10 +82,10 @@ public final class RestCreateGroup
                     }
                     else
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_have_made_too_many_groups.name ());
-                        answerToClient.put (KeyAnswer.construction_limit.name () , Groups.MAX_CREATE_GROUP);
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.you_have_made_too_many_groups);
+                        answerToClient.put (KeyAnswer.construction_limit , Groups.MAX_CREATE_GROUP);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("limit create group") , null);
+                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("limit create group"));
                         r.n (mainAccount , SubmitRequestType.create_group , true);
                     }
                 }
@@ -93,21 +93,21 @@ public final class RestCreateGroup
                 {
                     answerToClient = checkBlockSystem.getAnswerToClient ();
                     answerToClient.setReqRes (req , res);
-                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
+                    l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block for system"));
                 }
             }
             else
             {
                 answerToClient = isLogin.getAnswerToClient ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , null);
+                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("not login"));
             }
         }
         else
         {
             answerToClient = checkBlockSystem.getAnswerToClient ();
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("block for system") , null);
+            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("block for system"));
         }
 
         return answerToClient;
@@ -119,18 +119,18 @@ public final class RestCreateGroup
 
         if (Str.IsEmpty (request.getName ()))
         {
-            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_empty.name ());
+            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.name_empty);
             answerToClient.setReqRes (req , res);
-            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.name_empty.name ()) , null);
+            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.name_empty));
             r.n (mainAccount , SubmitRequestType.create_group , true);
         }
         else
         {
             if (Str.IsEmpty (request.getGroupname ()) && !request.isCreateLinkJoin ())
             {
-                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_and_link_join_empty.name ());
+                answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_and_link_join_empty);
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_and_link_join_empty.name ()) , null);
+                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.groupname_and_link_join_empty));
                 r.n (mainAccount , SubmitRequestType.create_group , true);
             }
             else
@@ -140,9 +140,9 @@ public final class RestCreateGroup
                     VUsername vUsername = new VUsername (request.getGroupname ());
                     if (!vUsername.check ())
                     {
-                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_invalid.name ());
+                        answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_invalid);
                         answerToClient.setReqRes (req , res);
-                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_invalid.name ()) , null);
+                        l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.groupname_invalid));
                         r.n (mainAccount , SubmitRequestType.create_group , true);
                     }
                     else
@@ -150,9 +150,9 @@ public final class RestCreateGroup
                         Usernames forGroup = usernamesService.findForGroup (request.getGroupname ());
                         if (forGroup != null)
                         {
-                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_is_exists.name ());
+                            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.groupname_is_exists);
                             answerToClient.setReqRes (req , res);
-                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception (ValAnswer.groupname_is_exists.name ()) , null);
+                            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , null , answerToClient , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.groupname_is_exists));
                             r.n (mainAccount , SubmitRequestType.create_group , true);
                         }
                     }
@@ -197,7 +197,7 @@ public final class RestCreateGroup
             {
                 answerToClient = AnswerToClient.ServerError ();
                 answerToClient.setReqRes (req , res);
-                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("server error") , "error for class LinkForJoin");
+                l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , l.e ("server error") , "error for class LinkForJoin");
             }
             else createCode = true;
         }
@@ -221,13 +221,13 @@ public final class RestCreateGroup
             }
 
 
-            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.created.name ());
+            answerToClient = AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.created);
             if (!Str.IsEmpty (request.getGroupname ()))
-                answerToClient.put (KeyAnswer.groupname.name () , groups.getGroupname ().getUsername ());
+                answerToClient.put (KeyAnswer.groupname , groups.getGroupname ().getUsername ());
 
-            if (createCode) answerToClient.put (KeyAnswer.link.name () , linkForJoin.getLink ());
+            if (createCode) answerToClient.put (KeyAnswer.link , linkForJoin.getLink ());
 
-            answerToClient.put (AnswerToClient.CUK.id.name () , groupSave.getId ());
+            answerToClient.put (AnswerToClient.CUK.id , groupSave.getId ());
 
             GroupSecurityProfile groupSecurityProfile = new GroupSecurityProfile ();
             groupSecurityProfile.setFamilyGroup (request.isFamilyGroup ());
@@ -243,7 +243,7 @@ public final class RestCreateGroup
             groupSecurityGap.setGroups (groups);
             groupSecurityGapService.Repository.save (groupSecurityGap);
 
-            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.created.name ());
+            l.n (ToJson.To (request) , Domain.RNGap.RNGroups.RN_CREATE_GROUP , mainAccount , answerToClient , Thread.currentThread ().getStackTrace () , null , ValAnswer.created);
             r.n (mainAccount , SubmitRequestType.create_group , false);
         }
         return answerToClient;

@@ -15,6 +15,7 @@ import com.bardiademon.CyrusMessenger.Model.Database.Gap.Gaps.QuestionText.Quest
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.MainAccount.MainAccount;
 import com.bardiademon.CyrusMessenger.ServerSocket.EventName.EventName;
 import com.bardiademon.CyrusMessenger.This;
+import com.bardiademon.CyrusMessenger.bardiademon.CyrusJSON;
 import com.bardiademon.CyrusMessenger.bardiademon.Pagination;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
 import com.bardiademon.CyrusMessenger.bardiademon.Time;
@@ -59,10 +60,10 @@ public final class UserGetMessages
 
         if (size > 0)
         {
-            final Integer maxGet = (This.GetService (DefaultService.class)).getInt (DefaultKey.max_get_gaps);
-            if (maxGet != null)
+            final DefaultService.Value <Integer> maxGet = (This.GetService (DefaultService.class)).integerValue (DefaultKey.max_get_gaps);
+            if (maxGet.ok)
             {
-                final Pagination.Answer paginationAnswer = This.getServer ().getServerSocketGap ().getPagination ().computing (page , size , maxGet);
+                final Pagination.Answer paginationAnswer = This.getServer ().getServerSocketGap ().getPagination ().computing (page , size , maxGet.value);
                 final List <Gaps> privateGaps = gapsService.getPrivateGaps (user.getId () , personalGaps , paginationAnswer);
                 if (privateGaps != null && privateGaps.size () > 0)
                 {
@@ -72,26 +73,26 @@ public final class UserGetMessages
 
                     System.out.println (gaps);
 
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found.name ());
-                    answer.put (KeyAnswer.gaps.name () , gaps.toString ());
-                    l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.found.name ()) , null);
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.found);
+                    answer.put (KeyAnswer.gaps , gaps.toString ());
+                    l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.found));
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
-                    l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
+                    l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found));
                 }
             }
             else
             {
-                answer = AnswerToClient.ServerError ();
-                l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.please_try_again.name ()) , null);
+                answer = maxGet.answer;
+                l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.please_try_again));
             }
         }
         else
         {
-            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found.name ());
-            l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , new Exception (AnswerToClient.CUV.not_found.name ()) , null);
+            answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.not_found);
+            l.n (ToJson.To (request) , EventName.get_messages.name () , user , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.not_found));
         }
     }
 
@@ -101,7 +102,7 @@ public final class UserGetMessages
         {
             if (!gap.isForwarded ())
             {
-                final JSONObject gaps = new JSONObject ();
+                final CyrusJSON gaps = new CyrusJSON ();
 
                 /*
                  * question text ro migirim
@@ -116,23 +117,23 @@ public final class UserGetMessages
 
                     gaps.put (KeyAnswer.is_question_text.name () , true);
 
-                    final JSONObject questionTextInfo = new JSONObject ();
+                    final CyrusJSON questionTextInfo = new CyrusJSON ();
 
-                    questionTextInfo.put (KeyAnswer.question.name () , questionText.getQuestion ());
-                    questionTextInfo.put (KeyAnswer.is_yes_no.name () , questionText.isYesNo ());
+                    questionTextInfo.put (KeyAnswer.question , questionText.getQuestion ());
+                    questionTextInfo.put (KeyAnswer.is_yes_no , questionText.isYesNo ());
 
                     if (!questionText.isYesNo ())
-                        questionTextInfo.put (KeyAnswer.question_text_options.name () , ToJson.To (questionText.getOptions ()));
+                        questionTextInfo.put (KeyAnswer.question_text_options , ToJson.To (questionText.getOptions ()));
 
-                    questionTextInfo.put (KeyAnswer.is_multiple_choices.name () , questionText.isMultipleChoices ());
+                    questionTextInfo.put (KeyAnswer.is_multiple_choices , questionText.isMultipleChoices ());
 
                     final AnswerQuestionsTextService answerQuestionsTextService = This.GetService (AnswerQuestionsTextService.class);
 
                     long lim = answerQuestionsTextService.limCount (questionText.getId ());
 
-                    questionTextInfo.put (KeyAnswer.lim.name () , questionText.getLim ());
-                    questionTextInfo.put (KeyAnswer.number_of_answers.name () , lim);
-                    questionTextInfo.put (KeyAnswer.time_end.name () , questionText.getUntilThe ());
+                    questionTextInfo.put (KeyAnswer.lim , questionText.getLim ());
+                    questionTextInfo.put (KeyAnswer.number_of_answers , lim);
+                    questionTextInfo.put (KeyAnswer.time_end , questionText.getUntilThe ());
 
                     /**
                      * barasi mikonam bebinam baste shode ya na
@@ -141,44 +142,44 @@ public final class UserGetMessages
                      * @see QuestionText
                      * @see AnswerQuestionsText
                      */
-                    questionTextInfo.put (KeyAnswer.closed.name () , (lim >= questionText.getLim () || Time.BiggerNow (questionText.getUntilThe ())));
+                    questionTextInfo.put (KeyAnswer.closed , (lim >= questionText.getLim () || Time.BiggerNow (questionText.getUntilThe ())));
 
                     if (questionText.isYesNo ())
-                        questionTextInfo.put (KeyAnswer.answers.name () , answerQuestionsTextService.getAnswersYesNo (questionText.getId ()));
+                        questionTextInfo.put (KeyAnswer.answers , answerQuestionsTextService.getAnswersYesNo (questionText.getId ()));
                     else
                     {
                         if (gap.getTextType () != null && gap.getTextType ().equals (GapTextType.question_options))
-                            questionTextInfo.put (KeyAnswer.answers.name () , ToJson.To (answerQuestionsTextService.countQuestionTextOptions (questionText.getId ())));
+                            questionTextInfo.put (KeyAnswer.answers , ToJson.To (answerQuestionsTextService.countQuestionTextOptions (questionText.getId ())));
                     }
-                    gaps.put (KeyAnswer.question_text.name () , questionTextInfo);
+                    gaps.put (KeyAnswer.question_text , questionTextInfo);
                 }
 
-                gaps.put (KeyAnswer.id.name () , gap.getId ());
-                gaps.put (KeyAnswer.text.name () , gap.getText ());
-                gaps.put (KeyAnswer.from.name () , gap.getFrom ().getId ());
-                gaps.put (KeyAnswer.to.name () , gap.getToUser ().getId ());
-                gaps.put (KeyAnswer.gap_types.name () , new JSONArray (ToJson.To (gap.getGapTypes ())));
+                gaps.put (KeyAnswer.id , gap.getId ());
+                gaps.put (KeyAnswer.text , gap.getText ());
+                gaps.put (KeyAnswer.from , gap.getFrom ().getId ());
+                gaps.put (KeyAnswer.to , gap.getToUser ().getId ());
+                gaps.put (KeyAnswer.gap_types , new JSONArray (ToJson.To (gap.getGapTypes ())));
 
                 if (messageForwardedFor != null)
-                    gaps.put (KeyAnswer.forwarded.name () , messageForwardedFor.getId ());
+                    gaps.put (KeyAnswer.forwarded , messageForwardedFor.getId ());
 
                 final List <GapsFiles> filesGaps = gap.getFilesGaps ();
                 if (filesGaps != null && filesGaps.size () > 0)
                 {
                     final JSONArray filesGapsCode = new JSONArray ();
                     for (GapsFiles filesGap : filesGaps) filesGapsCode.put (filesGap.getCode ());
-                    gaps.put (KeyAnswer.files.name () , filesGapsCode);
+                    gaps.put (KeyAnswer.files , filesGapsCode);
                 }
 
                 if (messageForwardedFor == null && gap.getReply () != null)
                 {
                     final Gaps reply = gap.getReply ();
 
-                    final JSONObject gapReply = new JSONObject ();
-                    gapReply.put (KeyAnswer.text.name () , reply.getText ());
-                    gapReply.put (KeyAnswer.reply_id.name () , reply.getId ());
-                    gapReply.put (KeyAnswer.has_file.name () , (reply.getFilesGaps () != null));
-                    gaps.put (KeyAnswer.reply.name () , gapReply);
+                    final CyrusJSON gapReply = new CyrusJSON ();
+                    gapReply.put (KeyAnswer.text , reply.getText ());
+                    gapReply.put (KeyAnswer.reply_id , reply.getId ());
+                    gapReply.put (KeyAnswer.has_file , (reply.getFilesGaps () != null));
+                    gaps.put (KeyAnswer.reply , gapReply);
                 }
                 return gaps;
             }

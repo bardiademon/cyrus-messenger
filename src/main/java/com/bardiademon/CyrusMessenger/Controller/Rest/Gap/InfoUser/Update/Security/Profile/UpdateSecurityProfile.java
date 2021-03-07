@@ -113,7 +113,7 @@ public final class UpdateSecurityProfile
         else
         {
             securityUserProfileService.Repository.save (securityUserProfile);
-            return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated.name ());
+            return AnswerToClient.OneAnswer (AnswerToClient.OK () , ValAnswer.updated);
         }
     }
 
