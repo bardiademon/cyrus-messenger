@@ -14,7 +14,7 @@ public final class IsJoined
 
     public IsJoined (final MainAccount _MainAccount , final ID IdGroup)
     {
-        this (((JoinGroupService) This.Services ().Get (JoinGroupService.class)) , _MainAccount , IdGroup);
+        this (This.GetService (JoinGroupService.class) , _MainAccount , IdGroup);
     }
 
     public IsJoined (final JoinGroupService _JoinGroupService , final MainAccount _MainAccount , final ID IdGroup)
@@ -33,6 +33,7 @@ public final class IsJoined
             return (joined != null);
         }
     }
+
 
     public JoinGroup getJoined ()
     {

@@ -29,6 +29,6 @@ public final class GroupManagementService
         groupManagement.setSuspendedAt (LocalDateTime.now ());
         groupManagement.setSuspendedBy (suspendedBy);
         Repository.save (groupManagement);
-        l.n (null , null , mainAccount , null , Thread.currentThread ().getStackTrace () , null , requestFrom.toString ());
+        l.n (null  , mainAccount , null , Thread.currentThread ().getStackTrace () , null , requestFrom.toString ());
     }
 }

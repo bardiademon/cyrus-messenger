@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface JoinGroupRepository extends JpaRepository<JoinGroup, Long>
+public interface JoinGroupRepository extends JpaRepository <JoinGroup, Long>
 {
     JoinGroup findByGroupsIdAndMainAccountIdAndLeaveGroupFalse (long idGroup , long idUser);
 
-    List<JoinGroup> findByMainAccountIdAndLeaveGroupFalse (long id);
+    List <JoinGroup> findByMainAccountIdAndLeaveGroupFalse (long id);
 }

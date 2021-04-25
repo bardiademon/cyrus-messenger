@@ -26,7 +26,7 @@ public class ILUGroup
 
     public ILUGroup (GroupsService _GroupsService)
     {
-        this (_GroupsService , This.Context ().getBean (UsernamesService.class));
+        this (_GroupsService , This.GetService (UsernamesService.class));
     }
 
     public ILUGroup (GroupsService _GroupsService , UsernamesService _UsernamesService)

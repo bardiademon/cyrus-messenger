@@ -37,7 +37,7 @@ public final class GFHasAccessLevel
             {
                 if (numberOfSubmissions > 1)
                 {
-                    l.n (Thread.currentThread ().getStackTrace () , new Exception ("GapsFilesSecurity.isJustOnce () === true") , ToJson.CreateClass.nj ("gaps_files_security_id" , security.getId ()));
+                    l.n (Thread.currentThread ().getStackTrace () , l.e ("GapsFilesSecurity.isJustOnce () === true") , ToJson.CreateClass.nj ("gaps_files_security_id" , security.getId ()));
                     return false;
                 }
             }

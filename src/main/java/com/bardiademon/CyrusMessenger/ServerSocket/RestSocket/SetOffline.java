@@ -59,7 +59,7 @@ public class SetOffline
                 else
                 {
                     answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.code_online_invalid);
-                    l.n (ToJson.To (request) , EventName.set_offline , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e ( ValAnswer.code_online_invalid) , null);
+                    l.n (ToJson.To (request) , EventName.set_offline , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e ( ValAnswer.code_online_invalid) );
                 }
             }
             else answer = both.getAnswerToClient ();
@@ -67,7 +67,7 @@ public class SetOffline
         else
         {
             answer = AnswerToClient.RequestIsNull ();
-            l.n (ToJson.To (request) , EventName.set_offline , null , answer , Thread.currentThread ().getStackTrace () , l.e ( AnswerToClient.CUV.request_is_null) , null);
+            l.n (ToJson.To (request) , EventName.set_offline , null , answer , Thread.currentThread ().getStackTrace () , l.e ( AnswerToClient.CUV.request_is_null) );
         }
     }
 

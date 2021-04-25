@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.Groups;
 
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupManagement.GroupManagement.GroupManagement;
+import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupSecurityGap.GroupSecurityGap;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.GroupSecurity.GroupSecurityProfile.GroupSecurityProfile;
 import com.bardiademon.CyrusMessenger.Model.Database.Groups.Groups.JoinGroup.JoinGroup;
 import com.bardiademon.CyrusMessenger.Model.Database.LinkForJoin.LinkForJoin;
@@ -57,6 +58,10 @@ public class Groups
     @OneToOne
     @JoinColumn (name = "id_group_security_profile", referencedColumnName = "id")
     private GroupSecurityProfile groupSecurityProfile;
+
+    @OneToOne
+    @JoinColumn (name = "id_group_security_gap", referencedColumnName = "id")
+    private GroupSecurityGap groupSecurityGap;
 
     @Column (nullable = false)
     private String name;
@@ -273,5 +278,15 @@ public class Groups
     public void setChannel (boolean channel)
     {
         isChannel = channel;
+    }
+
+    public GroupSecurityGap getGroupSecurityGap ()
+    {
+        return groupSecurityGap;
+    }
+
+    public void setGroupSecurityGap (GroupSecurityGap groupSecurityGap)
+    {
+        this.groupSecurityGap = groupSecurityGap;
     }
 }

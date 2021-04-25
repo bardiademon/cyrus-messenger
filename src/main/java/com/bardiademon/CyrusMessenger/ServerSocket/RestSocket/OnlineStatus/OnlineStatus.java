@@ -43,7 +43,7 @@ public final class OnlineStatus
         if (request == null || Str.IsEmpty (request.getUsername ()) || Str.IsEmpty (request.getCodeLogin ()))
         {
             answer = AnswerToClient.RequestIsNull ();
-            l.n (strReq , EventName.last_seen , null , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) , null);
+            l.n (strReq , EventName.last_seen , null , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null) );
         }
         else
         {
@@ -104,13 +104,13 @@ public final class OnlineStatus
                     {
                         // chon age gheire faal bashe namaesh profile va peyda kardan pas nabayad begam hamchin useri vojod dare
                         answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.username_not_found);
-                        l.n (strReq , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_not_found) , null);
+                        l.n (strReq , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_not_found) );
                     }
                 }
                 else
                 {
                     answer = fitd_username.getAnswer ();
-                    l.n (strReq , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_invalid) , null);
+                    l.n (strReq , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.username_invalid) );
                 }
 
 
@@ -124,7 +124,7 @@ public final class OnlineStatus
         if (client != null)
         {
             client.sendEvent (EventName.e_last_seen.name () , ToJson.To (answer));
-            l.n (ToJson.To (request) , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , null , null);
+            l.n (ToJson.To (request) , EventName.last_seen , mainAccount , answer , Thread.currentThread ().getStackTrace () , null );
         }
     }
 

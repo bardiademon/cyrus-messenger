@@ -1,5 +1,6 @@
 package com.bardiademon.CyrusMessenger;
 
+import com.bardiademon.CyrusMessenger.bardiademon.bardiademon;
 import com.bardiademon.CyrusMessenger.ServerSocket.Server;
 import com.bardiademon.CyrusMessenger.ServerSocket.Services;
 import com.bardiademon.CyrusMessenger.bardiademon.SmallSingleLetterClasses.l;
@@ -19,6 +20,7 @@ public class This
 
     public static void main (final String[] args)
     {
+        bardiademon.run ();
         Context = SpringApplication.run (This.class , args);
 
         l.ns ();

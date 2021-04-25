@@ -39,7 +39,7 @@ public final class IsLogin
         {
             valid = false;
             answerToClient = AnswerToClient.NotLoggedIn ();
-            l.n (codeLogin , null , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("not login") , createClass.toJson ());
+            l.n (codeLogin , null  , answerToClient , Thread.currentThread ().getStackTrace () , l.e("not login") , createClass.toJson ());
             return;
         }
 
@@ -49,9 +49,9 @@ public final class IsLogin
         if (!valid)
         {
             answerToClient = AnswerToClient.NotLoggedIn ();
-            l.n (codeLogin , null , null , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("invalid code login") , createClass.toJson ());
+            l.n (codeLogin , null  , answerToClient , Thread.currentThread ().getStackTrace () , new Exception ("invalid code login") , createClass.toJson ());
         }
-        else l.n (codeLogin , null , getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
+        else l.n (codeLogin , getVCodeLogin ().getMainAccount () , null , Thread.currentThread ().getStackTrace () , null , createClass.toJson ());
     }
 
     public boolean isValid ()

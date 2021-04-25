@@ -17,6 +17,8 @@ public enum EventName
     // ssg => Server Socket Gap
     ssg_send_message, e_ssg_send_message,
 
+    ssg_send_group_message, e_ssg_send_group_message,
+
     status_of_sent_message, e_status_of_sent_message,
 
     // baraye payam haye daryafti > private gaps

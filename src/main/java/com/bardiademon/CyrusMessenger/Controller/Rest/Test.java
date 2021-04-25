@@ -33,12 +33,15 @@ import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.S
 import com.bardiademon.CyrusMessenger.Model.Database.Users.Users.SubmitRequest.SubmitRequestType;
 import com.bardiademon.CyrusMessenger.Model.WorkingWithADatabase.IdUsernameMainAccount;
 import com.bardiademon.CyrusMessenger.This;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -226,7 +229,8 @@ public class Test
         final List <AnswersCountOptions> objects = This.GetService (AnswerQuestionsTextService.class).countQuestionTextOptions (10760);
 
         final StringBuilder result = new StringBuilder ();
-        if (objects != null) for (AnswersCountOptions answersCountOptions : objects) result.append (answersCountOptions.toString ());
+        if (objects != null)
+            for (AnswersCountOptions answersCountOptions : objects) result.append (answersCountOptions.toString ());
 
         return result.toString ();
     }
@@ -236,6 +240,59 @@ public class Test
     {
         return stickersService.Repository.getSticker (Long.parseLong (strIdSticker));
     }
+
+    @RequestMapping (value = "/test-id")
+    public TestId testId (@RequestBody TestId testId)
+    {
+        return testId;
+    }
+
+    public static class TestId
+    {
+        private long id;
+
+        @JsonProperty("my_name")
+        private String name;
+
+        @JsonIgnore
+        private String family;
+
+        public TestId ()
+        {
+        }
+
+        public long getId ()
+        {
+            return id;
+        }
+
+        public void setId (long id)
+        {
+            this.id = id;
+        }
+
+        public String getName ()
+        {
+            return name;
+        }
+
+        public void setName (String name)
+        {
+            this.name = name;
+        }
+
+        public String getFamily ()
+        {
+            return family;
+        }
+
+        public void setFamily (String family)
+        {
+            this.family = family;
+        }
+    }
+
+
 
     public enum TestEnum
     {

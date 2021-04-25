@@ -32,7 +32,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table (name = "gaps")
-
 public final class Gaps
 {
     @Id
@@ -364,6 +363,16 @@ public final class Gaps
         this.gapsPostedAgain = gapsPostedAgain;
     }
 
+    public GapsPostedAgain getPostedAgain ()
+    {
+        return postedAgain;
+    }
+
+    public void setPostedAgain (GapsPostedAgain postedAgain)
+    {
+        this.postedAgain = postedAgain;
+    }
+
     public GapsPostedAgain getForwarded ()
     {
         return forwarded;
@@ -402,16 +411,6 @@ public final class Gaps
     public void setPersonalGaps (PersonalGaps personalGaps)
     {
         this.personalGaps = personalGaps;
-    }
-
-    public GapsPostedAgain getPostedAgain ()
-    {
-        return postedAgain;
-    }
-
-    public void setPostedAgain (GapsPostedAgain postedAgain)
-    {
-        this.postedAgain = postedAgain;
     }
 
     public GapTextType getTextType ()

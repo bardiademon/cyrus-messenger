@@ -47,7 +47,7 @@ public final class l extends Thread implements Runnable
     // n => new
     public static void n (StackTraceElement[] StackTrace , Exception E)
     {
-        n (null , null , null , null , StackTrace , E , "");
+        n (null , ((String) null) , null , null , StackTrace , E , "");
     }
 
     // n => new
@@ -58,7 +58,7 @@ public final class l extends Thread implements Runnable
 
     public static void n (StackTraceElement[] StackTrace , Exception E , String Description)
     {
-        n (null , null , null , null , StackTrace , E , Description);
+        n (null , ((String) null) , null , null , StackTrace , E , Description);
     }
 
     // n => new
@@ -69,19 +69,19 @@ public final class l extends Thread implements Runnable
 
     public static void n (StackTraceElement[] StackTrace , String Description)
     {
-        n (null , null , null , null , StackTrace , null , Description);
+        n (null , ((String) null) , null , null , StackTrace , null , Description);
     }
 
     // n => new
     public static void n (StackTraceElement[] StackTrace)
     {
-        n (null , null , null , null , StackTrace , null , "");
+        n (null , ((String) null) , null , null , StackTrace , null , "");
     }
 
     // n => new
     public static void n (String Request , Enum <?> Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E)
     {
-        n (Request , Route.name () , _MainAccount , _AnswerToClient , StackTrace , E , "");
+        n (Request , Route.name () , _MainAccount , _AnswerToClient , StackTrace , E , ((String) null));
     }
 
     // n => new
@@ -99,7 +99,7 @@ public final class l extends Thread implements Runnable
     //  => new
     public static void n (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E)
     {
-        n (Request , Route , _MainAccount , _AnswerToClient , StackTrace , E , "");
+        n (Request , Route , _MainAccount , _AnswerToClient , StackTrace , E , ((String) null));
     }
 
     //  => new
@@ -111,13 +111,19 @@ public final class l extends Thread implements Runnable
     // n => new
     public static void n (String Request , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E)
     {
-        n (Request , null , _MainAccount , _AnswerToClient , StackTrace , E , "");
+        n (Request , ((String) null) , _MainAccount , _AnswerToClient , StackTrace , E , "");
     }
 
     // n => new
     public static void n (String Request , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , Enum <?> Description)
     {
-        n (Request , null , _MainAccount , _AnswerToClient , StackTrace , E , Description.name ());
+        n (Request , ((String) null) , _MainAccount , _AnswerToClient , StackTrace , E , Description.name ());
+    }
+
+    // n => new
+    public static void n (String Request , Enum <?> Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , String Description)
+    {
+        n (Request , Route.name () , _MainAccount , _AnswerToClient , StackTrace , E , Description);
     }
 
     // n => new
@@ -160,6 +166,12 @@ public final class l extends Thread implements Runnable
     public static void n (String Request , String Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , String Description , SubmitRequestType _TypeRequest , boolean Active)
     {
         n (Request , Route , _MainAccount , _AnswerToClient , StackTrace , Description , _TypeRequest , Active);
+    }
+
+    // n => new , r r => request
+    public static void n (String Request , Enum <?> Route , MainAccount _MainAccount , AnswerToClient _AnswerToClient , StackTraceElement[] StackTrace , Exception E , SubmitRequestType _TypeRequest , boolean Active)
+    {
+        n (Request , Route.name () , _MainAccount , _AnswerToClient , StackTrace , E , _TypeRequest , Active);
     }
 
     // n => new , r r => request

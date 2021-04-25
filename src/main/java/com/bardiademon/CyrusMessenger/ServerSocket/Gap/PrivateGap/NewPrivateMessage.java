@@ -1,6 +1,7 @@
 package com.bardiademon.CyrusMessenger.ServerSocket.Gap.PrivateGap;
 
 import com.bardiademon.CyrusMessenger.Controller.AnswerToClient;
+import com.bardiademon.CyrusMessenger.Controller.AnswerToClient.CUV;
 import com.bardiademon.CyrusMessenger.Controller.Security.CBSIL;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserGapAccessLevel;
 import com.bardiademon.CyrusMessenger.Controller.Security.UserAccessLevel.UserProfileAccessLevel;
@@ -49,10 +50,10 @@ import java.util.List;
 
 public class NewPrivateMessage
 {
-    private final SocketIOClient client;
-    private final RequestPrivateGap request;
+    protected final SocketIOClient client;
+    protected final RequestPrivateGap request;
 
-    private AnswerToClient answer;
+    protected AnswerToClient answer;
 
     private final List <GapType> gapTypes = new ArrayList <> ();
     private final List <GapsFiles> gapsFiles = new ArrayList <> ();
@@ -73,13 +74,13 @@ public class NewPrivateMessage
     private CheckForward.CheckRequestGapAnswer forward;
 
     protected CheckGapText checkGapText;
-    private final String event;
+    protected EventName event;
 
     public NewPrivateMessage (final SocketIOClient Client , final RequestPrivateGap Request)
     {
         this.client = Client;
         this.request = Request;
-        event = EventName.ssg_send_message.name ();
+        event = EventName.ssg_send_message;
     }
 
     public void doing ()
@@ -102,7 +103,7 @@ public class NewPrivateMessage
                         if (forward != null)
                         {
                             answer = forward.answerToClient;
-                            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (forward.getClass ().getName ()),  SubmitRequestType.socket , true);
+                            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (forward.getClass ().getName ()) , SubmitRequestType.socket , true);
                         }
                         else answer = checkGapText.getAnswer ();
                     }
@@ -110,7 +111,7 @@ public class NewPrivateMessage
                 else
                 {
                     answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.ceiling_to_send_unread_messages);
-                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.ceiling_to_send_unread_messages) );
+                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.ceiling_to_send_unread_messages));
                 }
             }
             else
@@ -128,7 +129,7 @@ public class NewPrivateMessage
         if (Str.IsEmpty (request.getText ())) return true;
 
         final FoundStkrEmjLnk foundStkrEmjLnk = new FoundStkrEmjLnk (checkGapText.getTextOrQuestion ());
-        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.access_denied);
+        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , CUV.access_denied);
         if ((!foundStkrEmjLnk.isFoundEmoji () || gapAccessLevel.hasAccess (Which.s_emoji)))
         {
             if (!foundStkrEmjLnk.isFoundSticker () || gapAccessLevel.hasAccess (Which.s_sticker))
@@ -139,21 +140,21 @@ public class NewPrivateMessage
                 {
                     answer = answerAccessDenied ();
                     answer.put (KeyAnswer.which , ValAnswer.link);
-                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied));
+                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.access_denied));
                 }
             }
             else
             {
                 answer = answerAccessDenied ();
                 answer.put (KeyAnswer.which , ValAnswer.sticker);
-                l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied));
+                l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.access_denied));
             }
         }
         else
         {
             answer = answerAccessDenied ();
             answer.put (KeyAnswer.which , ValAnswer.emoji);
-            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied));
+            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.access_denied));
         }
 
         return false;
@@ -207,7 +208,7 @@ public class NewPrivateMessage
                                         if ((request.getGapId () == 0 && Str.IsEmpty (request.getText ())) && !request.isHasFile ())
                                         {
                                             answer = AnswerToClient.RequestIsNull ();
-                                            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.request_is_null));
+                                            l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.request_is_null));
                                         }
                                         else
                                         {
@@ -242,14 +243,14 @@ public class NewPrivateMessage
                                     }
                                     else
                                     {
-                                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.access_denied);
-                                        l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.access_denied));
+                                        answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , CUV.access_denied);
+                                        l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.access_denied));
                                     }
                                 }
                                 else
                                 {
-                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , AnswerToClient.CUV.user_not_found);
-                                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (AnswerToClient.CUV.user_not_found));
+                                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , CUV.user_not_found);
+                                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.user_not_found));
                                 }
                             }
                             else
@@ -268,8 +269,8 @@ public class NewPrivateMessage
                 }
                 else
                 {
-                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.online_code_invalid);
-                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.online_code_invalid));
+                    answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , CUV.online_code_invalid);
+                    l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (CUV.online_code_invalid));
                 }
             }
             else
@@ -403,7 +404,7 @@ public class NewPrivateMessage
             }
         }
 
-        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , AnswerToClient.CUV.ok);
+        answer = AnswerToClient.OneAnswer (AnswerToClient.OK () , CUV.ok);
         answer.put (KeyAnswer.was_send , true);
 
         personalGaps.setLastIndex (lastIndex);
@@ -474,7 +475,7 @@ public class NewPrivateMessage
             {
                 answer = AnswerToClient.OneAnswer (AnswerToClient.BadRequest () , ValAnswer.file_code_invalid);
                 answer.put (KeyAnswer.code , code);
-                l.n (ToJson.To (request) , event , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.file_code_invalid) , ToJson.CreateClass.nj (KeyAnswer.code , code));
+                l.n (ToJson.To (request) , event.name () , mainAccount , answer , Thread.currentThread ().getStackTrace () , l.e (ValAnswer.file_code_invalid) , ToJson.CreateClass.nj (KeyAnswer.code , code));
                 gapsFiles.clear ();
                 gapTypes.clear ();
                 return false;
@@ -485,7 +486,7 @@ public class NewPrivateMessage
 
     private enum ValAnswer
     {
-        file_code_invalid, online_code_empty, online_code_invalid, unacceptable_file_type,
+        file_code_invalid, online_code_empty, unacceptable_file_type,
         ceiling_to_send_unread_messages, sticker, emoji, link, id_reply_invalid, id_reply_not_found, invalid_personal_gap_id, not_found_personal_gap_id
     }
 
